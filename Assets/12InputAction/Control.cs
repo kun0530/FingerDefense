@@ -70,7 +70,7 @@ public partial class @Control: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""86e4cab9-0212-4f61-a261-a898bb964377"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
@@ -81,18 +81,7 @@ public partial class @Control: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""31465b4f-f7d0-488e-b131-baf1f62a19bd"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
-                    ""interactions"": ""Press(behavior=1)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Release"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""19701d23-4853-4ee0-b790-561b7a12bd34"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
                     ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": """",
@@ -114,11 +103,22 @@ public partial class @Control: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7f156668-c121-4c7c-bd6f-5011d078391c"",
-                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""path"": ""<Touchscreen>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Drag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""19701d23-4853-4ee0-b790-561b7a12bd34"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Release"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
