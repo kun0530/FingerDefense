@@ -23,7 +23,7 @@ public class TestDrag : MonoBehaviour
             if (hit)
             {
                 var target = hit.collider.gameObject;
-                if (target.TryGetComponent<IControllable>(out var controller) && controller.TryTransitionToDragState())
+                if (target.TryGetComponent<MonsterController>(out var controller) && controller.TryTransitionToDragState())
                 {
                     dragTarget = target;
                     isDragging = true;
@@ -48,7 +48,7 @@ public class TestDrag : MonoBehaviour
             if (Input.GetMouseButtonUp(0))
             {
                 isDragging = false;
-                if (dragTarget.TryGetComponent<IControllable>(out var controller))
+                if (dragTarget.TryGetComponent<MonsterController>(out var controller))
                 {
                     controller.TryTransitionToMoveState();
                 }

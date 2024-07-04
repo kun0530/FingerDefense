@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,7 +59,7 @@ public class MonsterController : MonoBehaviour, IControllable
             stateMachine.TransitionTo<IdleState<MonsterController>>();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2)) 
         {
             stateMachine.TransitionTo<MoveState<MonsterController>>();
         }
