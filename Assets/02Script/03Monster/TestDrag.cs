@@ -16,7 +16,7 @@ public class TestDrag : MonoBehaviour
         {
             Logger.Log("Click");
             RaycastHit2D hit;
-            // ayerMask layerMask = 1 << LayerMask.NameToLayer("Monster");
+            // LayerMask layerMask = 1 << LayerMask.NameToLayer("Monster");
             var mouseScreenPos = Input.mousePosition;
             var mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
             hit = Physics2D.Raycast(mouseWorldPos, transform.forward, Mathf.Infinity);

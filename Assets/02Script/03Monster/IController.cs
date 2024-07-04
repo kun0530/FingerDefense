@@ -6,6 +6,5 @@ public interface IControllable
 {
     bool IsDraggable{ get; }
     bool TryTransitionToDragState();
-    bool TryTransitionToIdleState();
     bool TryTransitionToMoveState();
 }

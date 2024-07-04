@@ -5,6 +5,7 @@ using UnityEngine;
 public class MonsterController : MonoBehaviour, IControllable
 {
     private StateMachine<MonsterController> stateMachine;
+    public string testMonsterDragData; // 추후 삭제
     
     public bool IsDraggable
     {
@@ -27,11 +28,6 @@ public class MonsterController : MonoBehaviour, IControllable
         return false;
     }
 
-    public bool TryTransitionToIdleState()
-    {
-        return stateMachine.TransitionTo<IdleState<MonsterController>>();
-    }
-
     public bool TryTransitionToMoveState()
     {
         return stateMachine.TransitionTo<MoveState<MonsterController>>();
@@ -42,7 +38,8 @@ public class MonsterController : MonoBehaviour, IControllable
         // Idle, Move, Chase, Attack, Drag
         stateMachine = new StateMachine<MonsterController>(this);
         stateMachine.AddState(new IdleState<MonsterController>(this));
-        stateMachine.AddState(new DragState<MonsterController>(this, new TestDragColorChange(gameObject)));
+        var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
+        stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
         stateMachine.AddState(new MoveState<MonsterController>(this));
     }
 
