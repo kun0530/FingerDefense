@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 
 [DefaultExecutionOrder(-1)]
@@ -44,7 +45,6 @@ public class InputManager : MonoBehaviour
         control.MonsterDrag.Click.performed -= context => OnClick?.Invoke(context);
         control.MonsterDrag.Release.performed -= context => OnRelease?.Invoke(context);
         control.MonsterDrag.Drag.performed -= context => OnDrag?.Invoke(context);
-        
         
     }
 

@@ -14,7 +14,10 @@ public class TestDrag : MonoBehaviour
     {
         if (!isDragging && Input.GetMouseButtonDown(0))
         {
+#if UNITY_EDITOR
             Logger.Log("Click");
+#endif
+            
             RaycastHit2D hit;
             // LayerMask layerMask = 1 << LayerMask.NameToLayer("Monster");
             var mouseScreenPos = Input.mousePosition;
@@ -30,12 +33,18 @@ public class TestDrag : MonoBehaviour
                 }
                 else
                 {
-                    Logger.Log("This GameObject cannot be dragged!");
+#if UNITY_EDITOR
+                    Logger.Log("This GameObject cannot be dragged!"); 
+#endif
+                    
                 }
             }
             else
             {
+#if UNITY_EDITOR
                 Logger.Log("Nothing");
+#endif
+                
             }
         }
 

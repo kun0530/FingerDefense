@@ -13,7 +13,9 @@ public class IdleState<T> : IState where T : MonoBehaviour, IControllable
 
     public void Enter()
     {
+#if UNITY_EDITOR
         Logger.Log("Idle Enter");
+#endif
     }
 
     public void Update()
@@ -22,6 +24,9 @@ public class IdleState<T> : IState where T : MonoBehaviour, IControllable
 
     public void Exit()
     {
+#if UNITY_EDITOR
         Logger.Log("Idle Exit");
+#endif
+        
     }
 }

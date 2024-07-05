@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,12 @@ public class DragAndDrop : MonoBehaviour
     private bool isDragging = false;
     private Transform targetObject;
     public string draggableTag = "Draggable"; // 드래그 가능한 오브젝트의 태그 설정
+    
+    private void Awake()
+    {
+        mainCamera = Camera.main;
+        
+    }
 
     private void OnEnable()
     {
@@ -23,10 +30,7 @@ public class DragAndDrop : MonoBehaviour
         InputManager.Instance.OnDrag -= OnPointerDrag;
     }
 
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+    
 
     // 태그를 통해 드래그 가능한 오브젝트를 찾아서 드래그 가능 여부를 판단
     // 인터페이스가 있는지 여부를 가져와야함 
