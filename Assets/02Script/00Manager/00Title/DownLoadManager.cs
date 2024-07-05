@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
+
 
 public class DownLoadManager : MonoBehaviour
 {
@@ -16,20 +16,27 @@ public class DownLoadManager : MonoBehaviour
     public Slider downSlider;
     public TextMeshProUGUI sizeInfoText;
     public TextMeshProUGUI downValText;
+    public Button LoadingButton;
 
+     
     [Header("Label")]
     public AssetLabelReference defaultLabel;
 
     private long patchSize;
     private Dictionary<string, int> patchMap = new Dictionary<string, int>();
 
+    
+    //Release 해줄것 
     private void Start()
     {
         waitMessage.SetActive(true);
         downloadMessage.SetActive(false);
-
+        LoadingButton.interactable = false;
+        LoadingButton.onClick.AddListener(LoadGameScene); // 버튼 클릭 이벤트 추가
+        ButtonDownload(); // 다운로드 시작
         InitAddressable().Forget();
         CheckUpdateFiles().Forget();
+        
     }
 
     private async UniTask InitAddressable()
@@ -56,14 +63,14 @@ public class DownLoadManager : MonoBehaviour
         {
             waitMessage.SetActive(false);
             downloadMessage.SetActive(true);
-            sizeInfoText.text = GetFileSize(patchSize);
+            downValText.text = GetFileSize(patchSize);
+            sizeInfoText.text = "업데이트 용량을 확인하고 있습니다.";
         }
         else
         {
             downSlider.gameObject.SetActive(false);
-            sizeInfoText.text = "게임에 접속중...";
-            await UniTask.Delay(2000);
-            LoadGameScene();
+            sizeInfoText.text = "화면을 터치해 게임을 시작해주세요";
+            LoadingButton.interactable = true;
         }
     }
 
@@ -121,7 +128,8 @@ public class DownLoadManager : MonoBehaviour
 
             if (total == patchSize)
             {
-                LoadGameScene();
+                sizeInfoText.text = "다운로드 완료";
+                LoadingButton.interactable = true;
                 break;
             }
             total = 0;
@@ -131,7 +139,8 @@ public class DownLoadManager : MonoBehaviour
 
     private async UniTaskVoid Download(string label)
     {
-        patchMap.Add(label, 0);
+        patchMap.TryAdd(label, 0);
+
         var handle = Addressables.DownloadDependenciesAsync(label, false);
 
         while (!handle.IsDone)
@@ -144,9 +153,8 @@ public class DownLoadManager : MonoBehaviour
         Addressables.Release(handle);
     }
 
-    private void LoadGameScene()
+    public void LoadGameScene()
     {
-        // 게임 씬으로 전환
         LoadingManager.LoadScene("Test");
     }
 }

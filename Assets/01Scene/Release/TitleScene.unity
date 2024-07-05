@@ -157,6 +157,8 @@ MonoBehaviour:
   downSlider: {fileID: 8529325010958807331}
   sizeInfoText: {fileID: 4399741709327221999}
   downValText: {fileID: 1853643206}
+  LoadingButton: {fileID: 1591505942}
+  DownloadButton: {fileID: 0}
   defaultLabel:
     m_LabelString: default
 --- !u!4 &304610346
@@ -196,7 +198,11 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   assetReferences: []
-  audioClips: []
+  audioClips:
+  - m_AssetGUID: 555b7342e7c28604abb616b197df6a52
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   assetReferenceSprites: []
   textAssets: []
   playableAssets:
@@ -423,9 +429,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 304610347}
-        m_TargetAssemblyTypeName: AddressableManager, Assembly-CSharp
-        m_MethodName: ButtonClick
+      - m_Target: {fileID: 304610345}
+        m_TargetAssemblyTypeName: DownLoadManager, Assembly-CSharp
+        m_MethodName: LoadGameScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -608,18 +614,18 @@ PrefabInstance:
     - target: {fileID: 5907009749263749031, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 304610345}
+      objectReference: {fileID: 304610347}
     - target: {fileID: 5907009749263749031, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5907009749263749031, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ButtonDownload
+      value: ButtonClick
       objectReference: {fileID: 0}
     - target: {fileID: 5907009749263749031, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: DownLoadManager, Assembly-CSharp
+      value: AddressableManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5907009749263749031, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -660,6 +666,14 @@ PrefabInstance:
     - target: {fileID: 7832761901243463469, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_Name
       value: DownSizeText
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273097641533685030, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273097641533685030, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
+      propertyPath: m_fontSize
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 8273097641533685030, guid: 8d2646535ae137043bfdffa2ceed36ec, type: 3}
       propertyPath: m_fontColor.b

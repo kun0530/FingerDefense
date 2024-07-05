@@ -56,6 +56,6 @@ public class LoadingManager : MonoBehaviour
     public static void LoadScene(string sceneName)
     {
         nextScene = sceneName;
-        SceneManager.LoadScene("Test");
+        SceneManager.LoadSceneAsync("Test");
     }
 }
