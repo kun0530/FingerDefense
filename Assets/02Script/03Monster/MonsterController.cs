@@ -2,10 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class MonsterController : MonoBehaviour, IControllable
 {
+    public IObjectPool<MonsterController> pool;
+
     private StateMachine<MonsterController> stateMachine;
+    public MonsterData data { get; set; }
     public string testMonsterDragData; // 추후 삭제
     
     public bool IsDraggable
