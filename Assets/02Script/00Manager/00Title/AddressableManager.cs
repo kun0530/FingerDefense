@@ -47,6 +47,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
 
@@ -76,6 +77,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
 
@@ -94,6 +96,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
 
@@ -113,6 +116,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
 
@@ -131,6 +135,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
 
@@ -149,6 +154,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
 
@@ -171,6 +177,7 @@ public class AddressableManager : MonoBehaviour
                 {
                     Debug.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
+                Addressables.Release(load);
             };
         }
     }
