@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -9,38 +10,41 @@ public class MonsterController : MonoBehaviour, IControllable
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
-    public MonsterData data { get; set; }
+    public MonsterData Data { get; set; }
     public string testMonsterDragData; // 추후 삭제
     
     public bool IsDraggable
     {
         get
         {
-            // 세부 조건은 추후 구현
-            return true;
+            if (Data == null || Data.DragType <= (int)MonsterData.DragTypes.None || Data.DragType >= (int)MonsterData.DragTypes.Count)
+                return false;
+
+            switch ((MonsterData.DragTypes)Data.DragType)
+            {
+                case MonsterData.DragTypes.BOSS:
+                    return false;
+                case MonsterData.DragTypes.NORMAL:
+                    return true;
+                case MonsterData.DragTypes.SPECIAL:
+                    return true; // To-Do: 세이브 데이터로부터 해당 몬스터를 들 수 있는지, 조건문을 더 걸어야 합니다.
+                default:
+                    return false;
+            }
         }
     }
 
-    public bool TryTransitionToDragState()
+    public bool TryTransitionState<T>() where T : IState
     {
-        if (IsDraggable)
-        {
-            // Drag State로 전환
-            stateMachine.TransitionTo<DragState<MonsterController>>();
-            return true;
-        }
+        if (typeof(T) == typeof(DragState<MonsterController>) && !IsDraggable)
+            return false;
 
-        return false;
-    }
-
-    public bool TryTransitionToMoveState()
-    {
-        return stateMachine.TransitionTo<MoveState<MonsterController>>();
+        return stateMachine.TransitionTo<T>();
     }
 
     private void Awake()
     {
-        // Idle, Move, Chase, Attack, Drag
+        // Idle, Move, Chase, Attack, Drag, Fall
         stateMachine = new StateMachine<MonsterController>(this);
         stateMachine.AddState(new IdleState<MonsterController>(this));
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);

@@ -18,9 +18,11 @@ public class MonsterData
 {
     public enum DragTypes
     {
+        None = -1,
         BOSS,
         NORMAL,
-        SPECIAL
+        SPECIAL,
+        Count
     }
 
     public int ID { get; set; }

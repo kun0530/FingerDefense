@@ -5,4 +5,5 @@ using UnityEngine;
 
 public interface IControllable
 {
+    bool TryTransitionState<T>() where T : IState;
 }

@@ -31,13 +31,9 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
         if (states.TryGetValue(type, out var state))
         {
             CurrentState = state;
-            CurrentState.Enter();
+            CurrentState?.Enter();
 
             stateChanged?.Invoke(CurrentState);
-        }
-        else
-        {
-
         }
     }
 
@@ -49,9 +45,9 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
             if (CurrentState == nextState)
                 return false;
             
-            CurrentState.Exit();
+            CurrentState?.Exit();
             CurrentState = nextState;
-            CurrentState.Enter();
+            CurrentState?.Enter();
 
             stateChanged?.Invoke(CurrentState);
 
