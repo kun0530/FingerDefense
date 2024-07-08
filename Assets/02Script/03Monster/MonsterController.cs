@@ -13,6 +13,8 @@ public class MonsterController : MonoBehaviour, IControllable
     public string testMonsterDragData; // 추후 삭제
 
     public Transform moveTarget { get; set; }
+    public Transform attackMoveTarget { get; set; }
+    public PlayerCharacterController attackTarget { get; set; }
     
     public bool IsDraggable
     {
@@ -47,7 +49,7 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         // Idle, Move, Chase, Attack, Drag, Fall
         stateMachine = new StateMachine<MonsterController>(this);
-        stateMachine.AddState(new IdleState<MonsterController>(this));
+        // stateMachine.AddState(new IdleState<MonsterController>(this));
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
         stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
         stateMachine.AddState(new MoveState<MonsterController>(this));
@@ -61,16 +63,5 @@ public class MonsterController : MonoBehaviour, IControllable
     private void Update()
     {
         stateMachine.Update();
-
-        // 테스트 코드 - 삭제해야함
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            stateMachine.TransitionTo<IdleState<MonsterController>>();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2)) 
-        {
-            stateMachine.TransitionTo<MoveState<MonsterController>>();
-        }
     }
 }

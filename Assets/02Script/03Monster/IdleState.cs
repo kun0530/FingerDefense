@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState<T> : IState where T : MonoBehaviour, IControllable
+public class IdleState<T> : IState where T : PlayerCharacterController
 {
     private T controller;
+
+    private float patrolTimer = 0f;
+    private float patrolInterval = 0.25f;
 
     public IdleState(T controller)
     {
@@ -13,20 +16,43 @@ public class IdleState<T> : IState where T : MonoBehaviour, IControllable
 
     public void Enter()
     {
-#if UNITY_EDITOR
-        Logger.Log("Idle Enter");
-#endif
+        patrolTimer = 0f;
     }
 
     public void Update()
     {
+        patrolTimer += Time.deltaTime;
+
+        if (patrolTimer >= patrolInterval)
+        {
+            patrolTimer = 0f;
+
+            var colliders = Physics2D.OverlapCircleAll(controller.transform.position, controller.Data.AtkRange);
+            MonsterController nearCollider = null;
+            float nearDistance = float.MaxValue;
+            foreach (var col in colliders)
+            {
+                if (col.TryGetComponent<MonsterController>(out var monster))
+                {
+                    float distance = Vector2.Distance(monster.transform.position, controller.transform.position);
+                    if (distance < nearDistance)
+                    {
+                        nearCollider = monster;
+                        nearDistance = distance;
+                    }
+                }
+            }
+
+            if (nearCollider != null)
+            {
+                nearCollider.GetComponent<SpriteRenderer>().material.color = Color.red;
+                // attack state로 변경
+            }
+        }
     }
 
     public void Exit()
     {
-#if UNITY_EDITOR
         Logger.Log("Idle Exit");
-#endif
-        
     }
 }

@@ -16,10 +16,6 @@ public class TestDrag : MonoBehaviour
     {
         if (!isDragging && Input.GetMouseButtonDown(0))
         {
-#if UNITY_EDITOR
-            Logger.Log("Click");
-#endif
-            
             RaycastHit2D hit;
             // LayerMask layerMask = 1 << LayerMask.NameToLayer("Monster");
             var mouseScreenPos = Input.mousePosition;
@@ -35,20 +31,6 @@ public class TestDrag : MonoBehaviour
                     targetOriginY = dragTarget.transform.position.y;
                     isDragging = true;
                 }
-                else
-                {
-#if UNITY_EDITOR
-                    Logger.Log("This GameObject cannot be dragged!"); 
-#endif
-                    
-                }
-            }
-            else
-            {
-#if UNITY_EDITOR
-                Logger.Log("Nothing");
-#endif
-                
             }
         }
 
@@ -61,7 +43,7 @@ public class TestDrag : MonoBehaviour
             if (Input.GetMouseButtonUp(0))
             {
                 isDragging = false;
-                FallObject(dragTarget, targetOriginY).Forget();
+                FallObject(dragTarget, dragTarget.transform.position.y, targetOriginY).Forget();
 
                 targetOriginY = 0f;
                 dragTarget = null;
@@ -70,19 +52,22 @@ public class TestDrag : MonoBehaviour
     }
     
     // 타겟의 자유 낙하 운동을 비동기로 처리
-    private async UniTask FallObject(GameObject target, float targetHeight)
+    private async UniTask FallObject(GameObject target, float startY, float targetY)
     {
         var gravity = -9.8f;
         var velocity = 0f;
 
         while (target != null)
         {
-            if (target.transform.position.y <= targetHeight)
+            if (target.transform.position.y <= targetY)
             {
-                target.transform.position = new Vector3(target.transform.position.x, targetHeight, 0f);
+                target.transform.position = new Vector3(target.transform.position.x, targetY, 0f);
                 if (target != null && target.TryGetComponent<MonsterController>(out var controller))
                 {
-                    controller.TryTransitionState<MoveState<MonsterController>>();
+                    if (controller.Data.Height <= startY - targetY)
+                        controller.pool.Release(controller);
+                    else
+                        controller.TryTransitionState<MoveState<MonsterController>>();
                 }
                 break;
             }
