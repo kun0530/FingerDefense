@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,17 +8,21 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Playables;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.Networking;
 
 public class DownLoadManager : MonoBehaviour
 {
     [Header("UI")]
     public GameObject waitMessage;
     public GameObject downloadMessage;
+    public GameObject connectFailMessage;
     public Slider downSlider;
     public TextMeshProUGUI sizeInfoText;
     public TextMeshProUGUI downValText;
     public Button LoadingButton;
-
+    public Button QuitButton;
+    public Button DownLoadButton;
+    
     [Header("Label")]
     public AssetLabelReference defaultLabel;
 
@@ -31,15 +36,25 @@ public class DownLoadManager : MonoBehaviour
 
     private void Start()
     {
-        waitMessage.SetActive(true);
+        connectFailMessage.SetActive(false);
         downloadMessage.SetActive(false);
+        waitMessage.SetActive(true);
+        downSlider.gameObject.SetActive(false);
         LoadingButton.interactable = false;
         LoadingButton.onClick.AddListener(LoadGameScene);
+        DownLoadButton.onClick.AddListener(DownButtonClick);
+        QuitButton.onClick.AddListener(Application.Quit);
         InitAddressable().Forget();
     }
 
     private async UniTask InitAddressable()
     {
+        if(!await IsInternetAvailable())
+        {
+            ShowConnectionFailedMessage();
+            return;
+        }
+        
         var init = Addressables.InitializeAsync();
         await init;
         await CheckUpdateFiles();
@@ -91,9 +106,18 @@ public class DownLoadManager : MonoBehaviour
         return size;
     }
     #endregion
-
-    public void ButtonDownload()
+    
+    private void DownButtonClick()
     {
+        ButtonDownload().Forget();
+    }
+    public async UniTaskVoid ButtonDownload()
+    {
+        if (!await IsInternetAvailable())
+        {
+            ShowConnectionFailedMessage();
+            return;
+        }
         waitMessage.SetActive(true);
         downloadMessage.SetActive(false);
         sizeInfoText.text = "패치 파일을 다운로드 중입니다...";
@@ -128,6 +152,8 @@ public class DownLoadManager : MonoBehaviour
             sizeInfoText.text = "화면을 터치해 게임을 시작해주세요.";
             LoadingButton.interactable = true;
         }
+
+        
     }
 
     private async UniTask PatchFiles()
@@ -167,23 +193,53 @@ public class DownLoadManager : MonoBehaviour
         sizeInfoText.text = "화면을 터치해 게임을 시작해주세요";
         LoadAssets();
     }
-
+    
     private async UniTaskVoid Download(string label)
     {
         var handle = Addressables.DownloadDependenciesAsync(label, false);
 
-        while (!handle.IsDone)
+        int retryCount = 0;
+        const int maxRetries = 3;
+        bool success = false;
+
+        while (retryCount < maxRetries && !success)
         {
-            var status = handle.GetDownloadStatus();
-            patchMap[label] = (int)status.DownloadedBytes;
-            totalDownloadedSize = patchMap.Values.Sum();
-            await UniTask.DelayFrame(1);
+            try
+            {
+                while (!handle.IsDone)
+                {
+                    var status = handle.GetDownloadStatus();
+                    patchMap[label] = (int)status.DownloadedBytes;
+                    totalDownloadedSize = patchMap.Values.Sum();
+                    await UniTask.DelayFrame(1);
+                }
+
+                var finalStatus = handle.GetDownloadStatus();
+                patchMap[label] = (int)finalStatus.TotalBytes;
+                totalDownloadedSize = patchMap.Values.Sum();
+                success = true;
+            }
+            catch
+            {
+                retryCount++;
+                await UniTask.Delay(2000);
+            }
         }
 
-        var finalStatus = handle.GetDownloadStatus();
-        patchMap[label] = (int)finalStatus.TotalBytes;
-        totalDownloadedSize = patchMap.Values.Sum();
+        if (!success)
+        {
+            ShowConnectionFailedMessage();
+            return;
+        }
+
         Addressables.Release(handle);
+    }
+
+    private void ShowConnectionFailedMessage()
+    {
+        downloadMessage.SetActive(false);
+        waitMessage.SetActive(false);
+        connectFailMessage.SetActive(true);
     }
 
     private void LoadAssets()
@@ -241,7 +297,23 @@ public class DownLoadManager : MonoBehaviour
             // 필요한 경우 다른 자산 유형에 대해 else-if 블록을 추가
         }
     }
-
+    
+    private async UniTask<bool> IsInternetAvailable()
+    {
+        try
+        {
+            using (var request = UnityWebRequest.Head("https://www.google.com"))
+            {
+                request.timeout = 5;
+                await request.SendWebRequest();
+                return request.responseCode == 200;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
     public void LoadGameScene()
     {
         LoadingManager.LoadScene("Test");
