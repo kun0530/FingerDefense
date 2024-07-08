@@ -7,25 +7,37 @@ using UnityEngine;
 
 public class Logger : MonoBehaviour
 {
-#if UNITY_EDITOR
+
     public static void Log(string message)
     {
+#if UNITY_EDITOR
         Debug.Log(message);
+#endif
     }
     public static void Log(object message)
     {
+#if UNITY_EDITOR
         Debug.Log(message);
+#endif
+       
     }
     
     public static void LogWarning(string message)
     {
-        Debug.LogWarning(message);
+#if UNITY_EDITOR
+        Debug.LogWarning(message); 
+#endif
+        
     }
 
     public static void LogError(string message)
     {
+#if UNITY_EDITOR
         Debug.LogError(message);
-    }
 #endif
+        
+        
+    }
+
     
 }

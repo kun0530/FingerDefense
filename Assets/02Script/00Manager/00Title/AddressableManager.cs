@@ -41,11 +41,11 @@ public class AddressableManager : MonoBehaviour
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
                     var asset = op.Result;
-                    Debug.Log(asset.name);
+                    Logger.Log(asset.name);
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };
@@ -69,13 +69,13 @@ public class AddressableManager : MonoBehaviour
                         }
                         else
                         {
-                            Debug.LogError($"Failed to instantiate asset {t.RuntimeKey}");
+                            Logger.LogError($"Failed to instantiate asset {t.RuntimeKey}");
                         }
                     };
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };
@@ -90,11 +90,11 @@ public class AddressableManager : MonoBehaviour
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
                     var audio = op.Result;
-                    Debug.Log(audio.name);
+                    Logger.Log(audio.name);
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };
@@ -114,7 +114,7 @@ public class AddressableManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };
@@ -133,7 +133,7 @@ public class AddressableManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };
@@ -148,11 +148,11 @@ public class AddressableManager : MonoBehaviour
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
                     var playable = op.Result;
-                    Debug.Log(playable.name);
+                    Logger.Log(playable.name);
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };
@@ -170,12 +170,12 @@ public class AddressableManager : MonoBehaviour
                     var action = inputAction.FindAction("Click");
                     action.performed += (context) =>
                     {
-                        Debug.Log("Click");
+                        Logger.Log("Click");
                     };
                 }
                 else
                 {
-                    Debug.LogError($"Failed to load asset {t.RuntimeKey}");
+                    Logger.LogError($"Failed to load asset {t.RuntimeKey}");
                 }
                 Addressables.Release(load);
             };

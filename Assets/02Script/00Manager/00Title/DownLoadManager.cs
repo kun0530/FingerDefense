@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using TMPro;
-
+using UnityEngine.Playables;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class DownLoadManager : MonoBehaviour
 {
@@ -18,57 +18,59 @@ public class DownLoadManager : MonoBehaviour
     public TextMeshProUGUI downValText;
     public Button LoadingButton;
 
-     
     [Header("Label")]
     public AssetLabelReference defaultLabel;
 
+    [Header("Assets")]
+    [SerializeField] private AssetReference[] assetReferences;
+
+    private List<GameObject> gameObjects = new List<GameObject>();
     private long patchSize;
+    private long totalDownloadedSize;
     private Dictionary<string, int> patchMap = new Dictionary<string, int>();
 
-    
-    //Release 해줄것 
     private void Start()
     {
         waitMessage.SetActive(true);
         downloadMessage.SetActive(false);
         LoadingButton.interactable = false;
-        LoadingButton.onClick.AddListener(LoadGameScene); // 버튼 클릭 이벤트 추가
-        ButtonDownload(); // 다운로드 시작
+        LoadingButton.onClick.AddListener(LoadGameScene);
         InitAddressable().Forget();
-        CheckUpdateFiles().Forget();
-        
     }
 
     private async UniTask InitAddressable()
     {
         var init = Addressables.InitializeAsync();
         await init;
+        await CheckUpdateFiles();
     }
 
     #region UpdateCheck
     private async UniTask CheckUpdateFiles()
     {
         var labels = new List<string>() { defaultLabel.labelString };
-        patchSize = default;
+        patchSize = 0;
 
         foreach (var label in labels)
         {
             var handle = Addressables.GetDownloadSizeAsync(label);
             await handle;
-
             patchSize += handle.Result;
         }
 
         if (patchSize > 0)
         {
+            await UniTask.Delay(2000);
             waitMessage.SetActive(false);
             downloadMessage.SetActive(true);
             downValText.text = GetFileSize(patchSize);
+            downSlider.gameObject.SetActive(false);
             sizeInfoText.text = "업데이트 용량을 확인하고 있습니다.";
         }
         else
         {
             downSlider.gameObject.SetActive(false);
+            waitMessage.SetActive(true);
             sizeInfoText.text = "화면을 터치해 게임을 시작해주세요";
             LoadingButton.interactable = true;
         }
@@ -78,11 +80,11 @@ public class DownLoadManager : MonoBehaviour
     {
         var size = "0 bytes";
         if (byteCnt >= 1073741824.0)
-            size = $"{byteCnt / 1073741824.0:##.##}" + " GB";
+            size = $"{byteCnt / 1073741824.0:##.##} GB";
         else if (byteCnt >= 1048576.0)
-            size = $"{byteCnt / 1048576.0:##.##}" + " MB";
+            size = $"{byteCnt / 1048576.0:##.##} MB";
         else if (byteCnt >= 1024.0)
-            size = $"{byteCnt / 1024.0:##.##}" + " KB";
+            size = $"{byteCnt / 1024.0:##.##} KB";
         else if (byteCnt > 0 && byteCnt < 1024.0)
             size = byteCnt.ToString() + " bytes";
 
@@ -92,14 +94,45 @@ public class DownLoadManager : MonoBehaviour
 
     public void ButtonDownload()
     {
-        PatchFiles().Forget();
+        waitMessage.SetActive(true);
+        downloadMessage.SetActive(false);
+        sizeInfoText.text = "패치 파일을 다운로드 중입니다...";
+        downSlider.gameObject.SetActive(true);
+        
+        RecheckPatchFiles().Forget();
+    }
+
+    private async UniTask RecheckPatchFiles()
+    {
+        var labels = new List<string>() { defaultLabel.labelString };
+        patchSize = 0;
+        totalDownloadedSize = 0;
+        patchMap.Clear();
+
+        foreach (var label in labels)
+        {
+            var handle = Addressables.GetDownloadSizeAsync(label);
+            await handle;
+            patchSize += handle.Result;
+        }
+
+        if (patchSize > 0)
+        {
+            PatchFiles().Forget();
+        }
+        else
+        {
+            downloadMessage.SetActive(false);
+            downSlider.gameObject.SetActive(false);
+            waitMessage.SetActive(true);
+            sizeInfoText.text = "화면을 터치해 게임을 시작해주세요.";
+            LoadingButton.interactable = true;
+        }
     }
 
     private async UniTask PatchFiles()
     {
         var labels = new List<string>() { defaultLabel.labelString };
-
-        patchSize = default;
 
         foreach (var label in labels)
         {
@@ -115,42 +148,98 @@ public class DownLoadManager : MonoBehaviour
         await CheckDownload();
     }
 
-    private async Task CheckDownload()
+    private async UniTask CheckDownload()
     {
-        var total = 0;
         sizeInfoText.text = "0%";
 
-        while (true)
+        while (totalDownloadedSize < patchSize)
         {
-            total += patchMap.Sum(tmp => tmp.Value);
-            downSlider.value = (float)total / patchSize;
+            downSlider.value = (float)totalDownloadedSize / patchSize;
             sizeInfoText.text = $"{downSlider.value * 100:##}%";
-
-            if (total == patchSize)
-            {
-                sizeInfoText.text = "다운로드 완료";
-                LoadingButton.interactable = true;
-                break;
-            }
-            total = 0;
             await UniTask.DelayFrame(1);
         }
+
+        sizeInfoText.text = "다운로드 완료";
+        downSlider.value = 1f; 
+        LoadingButton.interactable = true;
+        await UniTask.Delay(1000);
+        downSlider.gameObject.SetActive(false);
+        sizeInfoText.text = "화면을 터치해 게임을 시작해주세요";
+        LoadAssets();
     }
 
     private async UniTaskVoid Download(string label)
     {
-        patchMap.TryAdd(label, 0);
-
         var handle = Addressables.DownloadDependenciesAsync(label, false);
 
         while (!handle.IsDone)
         {
-            patchMap[label] = (int)handle.GetDownloadStatus().DownloadedBytes;
+            var status = handle.GetDownloadStatus();
+            patchMap[label] = (int)status.DownloadedBytes;
+            totalDownloadedSize = patchMap.Values.Sum();
             await UniTask.DelayFrame(1);
         }
 
-        patchMap[label] = (int)handle.GetDownloadStatus().TotalBytes;
+        var finalStatus = handle.GetDownloadStatus();
+        patchMap[label] = (int)finalStatus.TotalBytes;
+        totalDownloadedSize = patchMap.Values.Sum();
         Addressables.Release(handle);
+    }
+
+    private void LoadAssets()
+    {
+        foreach (var t in assetReferences)
+        {
+            if (t == null) continue;
+
+            // 적절한 타입을 로드하도록 결정
+            if (t.RuntimeKey.ToString().EndsWith(".playable"))
+            {
+                var load = t.LoadAssetAsync<PlayableAsset>();
+                load.Completed += (op) =>
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        var asset = op.Result;
+                        Debug.Log($"Loaded PlayableAsset: {asset.name}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to load PlayableAsset {t.RuntimeKey}");
+                    }
+                    Addressables.Release(load);
+                };
+            }
+            else if (t.RuntimeKey.ToString().EndsWith(".prefab"))
+            {
+                var load = t.LoadAssetAsync<GameObject>();
+                load.Completed += (op) =>
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        var asset = op.Result;
+                        var inst = Addressables.InstantiateAsync(t);
+                        inst.Completed += (op2) =>
+                        {
+                            if (op2.Status == AsyncOperationStatus.Succeeded)
+                            {
+                                gameObjects.Add(op2.Result);
+                            }
+                            else
+                            {
+                                Debug.LogError($"Failed to instantiate asset {t.RuntimeKey}");
+                            }
+                        };
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to load GameObject {t.RuntimeKey}");
+                    }
+                    Addressables.Release(load);
+                };
+            }
+            // 필요한 경우 다른 자산 유형에 대해 else-if 블록을 추가
+        }
     }
 
     public void LoadGameScene()
