@@ -18,6 +18,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnEnable()
     {
+        
         InputManager.Instance.OnClick += OnPointerDown;
         InputManager.Instance.OnRelease += OnPointerUp;
         InputManager.Instance.OnDrag += OnPointerDrag;
@@ -46,6 +47,7 @@ public class DragAndDrop : MonoBehaviour
             targetObject = hitCollider.transform;
             var position = targetObject.position;
             offset = position - new Vector3(worldPosition.x, worldPosition.y, position.z);
+            
             isDragging = true;
         }
     }
@@ -54,6 +56,7 @@ public class DragAndDrop : MonoBehaviour
     {
         isDragging = false;
         targetObject = null;
+        
     }
 
     private void OnPointerDrag(InputAction.CallbackContext context)
@@ -71,10 +74,13 @@ public class DragAndDrop : MonoBehaviour
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
             return Touchscreen.current.primaryTouch.position.ReadValue();
+            
         }
         else
         {
             return Mouse.current.position.ReadValue();
         }
     }
+
+
 }

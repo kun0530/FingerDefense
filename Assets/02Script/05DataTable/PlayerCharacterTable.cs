@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using CsvHelper;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class PlayerCharacterData
 {
@@ -26,19 +27,14 @@ public class PlayerCharacterTable : DataTable
 
     public PlayerCharacterData Get(int id)
     {
-        if (table.TryGetValue(id, out var value))
-        {
-            return value;
-        }
-
-        return null;
+        return table.GetValueOrDefault(id);
     }
 
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
 
-        var textAsset = Resources.Load<TextAsset>(path);
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
 
         using (var reader = new StringReader(textAsset.text))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -46,8 +42,7 @@ public class PlayerCharacterTable : DataTable
             var records = csvReader.GetRecords<PlayerCharacterData>();
             foreach (var record in records)
             {
-                if (!table.ContainsKey(record.Id))
-                    table.Add(record.Id, record);
+                table.TryAdd(record.Id, record);
             }
         }
     }

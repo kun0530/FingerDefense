@@ -42,11 +42,12 @@ public class InputManager : MonoBehaviour
     private void OnDisable()
     {
         control.Disable();
-        control.MonsterDrag.Click.performed -= context => OnClick?.Invoke(context);
-        control.MonsterDrag.Release.performed -= context => OnRelease?.Invoke(context);
-        control.MonsterDrag.Drag.performed -= context => OnDrag?.Invoke(context);
+
+        control.MonsterDrag.Click.performed -= context => OnClick.Invoke(context);
+        control.MonsterDrag.Release.performed -= context => OnRelease.Invoke(context);
+        control.MonsterDrag.Drag.performed -= context => OnDrag.Invoke(context);
         
     }
 
-    
+
 }

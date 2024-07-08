@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using CsvHelper;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 // TO-DO: 추후 위치 변경해야 합니다.
 public enum Elements
@@ -55,19 +56,14 @@ public class MonsterTable : DataTable
 
     public MonsterData Get(int id)
     {
-        if (table.TryGetValue(id, out var value))
-        {
-            return value;
-        }
-
-        return null;
+        return table.GetValueOrDefault(id);
     }
 
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
 
-        var textAsset = Resources.Load<TextAsset>(path);
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
 
         using (var reader = new StringReader(textAsset.text))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -75,8 +71,7 @@ public class MonsterTable : DataTable
             var records = csvReader.GetRecords<MonsterData>();
             foreach (var record in records)
             {
-                if (!table.ContainsKey(record.ID))
-                    table.Add(record.ID, record);
+                table.TryAdd(record.ID, record);
             }
         }
     }

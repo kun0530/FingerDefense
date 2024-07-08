@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using CsvHelper;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class WaveData
 {
@@ -19,11 +20,7 @@ public class WaveTable : DataTable
 
     public WaveData Get((int, int) id)
     {
-        if (table.TryGetValue(id, out var value))
-        {
-            return value;
-        }
-        return null;
+        return table.GetValueOrDefault(id);
     }
 
     public WaveData Get(int stage, int wave)
@@ -35,7 +32,7 @@ public class WaveTable : DataTable
     {
         path = string.Format(FormatPath, path);
 
-        var textAsset = Resources.Load<TextAsset>(path);
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         var monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
 
         using (var reader = new StringReader(textAsset.text))
