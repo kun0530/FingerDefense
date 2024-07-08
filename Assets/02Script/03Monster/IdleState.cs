@@ -45,7 +45,6 @@ public class IdleState<T> : IState where T : PlayerCharacterController
 
             if (nearCollider != null)
             {
-                nearCollider.GetComponent<SpriteRenderer>().material.color = Color.red;
                 // attack state로 변경
             }
         }

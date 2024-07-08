@@ -9,8 +9,22 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     public PlayerCharacterData Data { get; set; }
 
     public Transform[] mosnterPosition;
-    public int monsterCount { get; set; } = 0;
-    public MonsterController[] monsters { get; set; } = new MonsterController[2];
+
+    public MonsterController monsterUp { get; set; }
+    public MonsterController monsterDown { get; set; }
+    public int MonsterCount
+    {
+        get
+        {
+            int count = 0;
+            if (monsterUp != null)
+                count++;
+            if (monsterDown != null)
+                count++;
+
+            return count;
+        }
+    }
 
     public bool TryTransitionState<T>() where T : IState
     {
@@ -27,11 +41,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     {
         stateMachine.Initialize<IdleState<PlayerCharacterController>>();
 
-        monsterCount = 0;
-        for (int i = 0; i < monsters.Length; i++)
-        {
-            monsters[i] = null;
-        }
+        monsterUp = null;
+        monsterDown = null;
     }
 
     private void Update()
@@ -41,33 +52,60 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
     public bool TryAddMonster(MonsterController monster)
     {
-        foreach (var mon in monsters) // 이미 존재하는 경우
-        {
-            if (mon == monster)
-                return false;
-        }
+        if (monster == monsterUp || monster == monsterDown)
+            return false;
 
-        switch (monsterCount)
+        if (MonsterCount == 2)
+            return false;
+
+        if (monsterUp == null)
+            monsterUp = monster;
+        else
+            monsterDown = monster;
+
+        monster.attackTarget = this;
+        UpdateMonsterPosition();
+        return true;
+    }
+
+    public bool TryRemoveMonster(MonsterController monster)
+    {
+        if (monsterUp != monster && monsterDown != monster)
+            return false;
+
+        if (monsterUp == monster)
+            monsterUp = null;
+        else
+            monsterDown = null;
+
+        monster.attackMoveTarget = null;
+        monster.attackTarget = null;
+        UpdateMonsterPosition();
+        return true;
+    }
+
+    public void UpdateMonsterPosition()
+    {
+        switch (MonsterCount)
         {
             case 0:
-                {
-                    monsters[0] = monster;
-                    monster.attackMoveTarget = mosnterPosition[0];
-                }
-                break;
+                return;
             case 1:
                 {
-                    monsters[1] = monster;
-                    monsters[0].attackMoveTarget = mosnterPosition[1];
-                    monster.attackMoveTarget = mosnterPosition[2];
+                    if (monsterUp == null)
+                    {
+                        monsterUp = monsterDown;
+                        monsterDown = null;
+                    }
+                    monsterUp.attackMoveTarget = mosnterPosition[0];
                 }
                 break;
             case 2:
-                return false;
+                {
+                    monsterUp.attackMoveTarget = mosnterPosition[1];
+                    monsterDown.attackMoveTarget = mosnterPosition[2];
+                }
+                break;
         }
-
-        monster.attackTarget = this;
-        monsterCount++;
-        return true;
     }
 }

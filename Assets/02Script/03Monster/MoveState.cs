@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveState<T> : IState where T : MonsterController
+public class MoveState : IState
 {
-    private T controller;
+    private MonsterController controller;
     private float moveSpeed = 1f;
     private Vector3 direction = new Vector3(1f, 0f, 0f);
 
@@ -12,18 +12,18 @@ public class MoveState<T> : IState where T : MonsterController
     private float patrolInterval = 0.25f;
     // private GameObject target;
 
-    public MoveState(T controller)
+    public MoveState(MonsterController controller)
     {
         this.controller = controller;
     }
 
-    public MoveState(T controller, Vector3 dir)
+    public MoveState(MonsterController controller, Vector3 dir)
     {
         this.controller = controller;
         direction = dir;
     }
 
-    public MoveState(T controller, GameObject target)
+    public MoveState(MonsterController controller, GameObject target)
     {
         this.controller = controller;
         // this.target = target;
@@ -65,7 +65,7 @@ public class MoveState<T> : IState where T : MonsterController
                     // }
                     // if (!canAttack)
                     //     continue;
-                    if (playerCharacter.monsterCount == 2)
+                    if (playerCharacter.MonsterCount == 2)
                         break;
 
                     float distance = Vector2.Distance(playerCharacter.transform.position, controller.transform.position);
@@ -89,6 +89,7 @@ public class MoveState<T> : IState where T : MonsterController
                 //         }
                 //     }
                 // }
+                controller.attackTarget?.TryRemoveMonster(controller);
                 nearCollider.TryAddMonster(controller);
 
                 // target = nearCollider.gameObject;

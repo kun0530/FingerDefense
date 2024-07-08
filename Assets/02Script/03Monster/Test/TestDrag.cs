@@ -67,7 +67,7 @@ public class TestDrag : MonoBehaviour
                     if (controller.Data.Height <= startY - targetY)
                         controller.pool.Release(controller);
                     else
-                        controller.TryTransitionState<MoveState<MonsterController>>();
+                        controller.TryTransitionState<MoveState>();
                 }
                 break;
             }

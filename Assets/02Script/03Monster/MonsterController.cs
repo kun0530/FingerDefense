@@ -52,12 +52,12 @@ public class MonsterController : MonoBehaviour, IControllable
         // stateMachine.AddState(new IdleState<MonsterController>(this));
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
         stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
-        stateMachine.AddState(new MoveState<MonsterController>(this));
+        stateMachine.AddState(new MoveState(this));
     }
 
     private void OnEnable()
     {
-        stateMachine.Initialize<MoveState<MonsterController>>();
+        stateMachine.Initialize<MoveState>();
     }
 
     private void Update()

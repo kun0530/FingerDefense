@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DragState<T> : IState where T : MonoBehaviour, IControllable
+public class DragState<T> : IState where T : MonsterController
 {
     private T controller;
     private IDraggable dragBehavior;
@@ -16,6 +16,11 @@ public class DragState<T> : IState where T : MonoBehaviour, IControllable
     public void Enter()
     {
         dragBehavior?.DragEnter();
+
+        if (controller.attackTarget == null)
+            return;
+
+        controller.attackTarget.TryRemoveMonster(controller);
     }
 
     public void Update()
