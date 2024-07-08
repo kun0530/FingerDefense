@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveState<T> : IState where T : MonoBehaviour, IControllable
+public class MoveState<T> : IState where T : MonsterController
 {
     private T controller;
     private float moveSpeed = 1f;
@@ -33,15 +33,18 @@ public class MoveState<T> : IState where T : MonoBehaviour, IControllable
     
     public void Update()
     {
+        if (controller.moveTarget == null)
+            return;
+
         if (target == null)
         {
-            controller.transform.position += direction * moveSpeed * Time.deltaTime;
+            var dir = (controller.moveTarget.position - controller.transform.position).normalized;
+            controller.transform.position += dir * moveSpeed * Time.deltaTime;
 
             // 주변 target 감지
         }
         else if (Vector3.Distance(controller.transform.position, target.transform.position) > 0.1)
         {
-            
             var dir = controller.transform.position - target.transform.position;
             dir.Normalize();
 

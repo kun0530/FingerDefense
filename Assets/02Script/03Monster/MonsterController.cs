@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -12,6 +11,8 @@ public class MonsterController : MonoBehaviour, IControllable
     private StateMachine<MonsterController> stateMachine;
     public MonsterData Data { get; set; }
     public string testMonsterDragData; // 추후 삭제
+
+    public Transform moveTarget { get; set; }
     
     public bool IsDraggable
     {

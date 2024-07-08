@@ -14,6 +14,8 @@ public class MonsterSpawner : MonoBehaviour
     private MonsterTable monsterTable;
     private WaveTable waveTable;
 
+    public Transform moveTarget;
+
     private int stageId = 1; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
     private int waveId = 1;
     private int monsterCount;
@@ -88,6 +90,7 @@ public class MonsterSpawner : MonoBehaviour
             {
                 var monsterGo = factory.GetMonster(monsterTable.Get(monster.monsterId));
                 monsterGo.transform.position = spawnPositions[monster.monsterCount + i - 1].position;
+                monsterGo.moveTarget = moveTarget;
                 monsterCount--;
             }
             await UniTask.WaitForSeconds(spawnGroupInterval);
