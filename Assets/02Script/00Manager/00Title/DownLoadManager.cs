@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Networking;
@@ -357,6 +358,24 @@ public class DownLoadManager : MonoBehaviour
                     Addressables.Release(load);
                 };
             }
+            else if (t.RuntimeKey.ToString().EndsWith(".inputactions"))
+            {
+                var load = t.LoadAssetAsync<InputAction>();
+                load.Completed += (op) =>
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        var asset = op.Result;
+                        Debug.Log($"Loaded InputAction: {asset.name}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to load InputAction {t.RuntimeKey}");
+                    }
+                    Addressables.Release(load);
+                };
+            }
+            
             // 필요한 경우 다른 자산 유형에 대해 else-if 블록을 추가
         }
     }
