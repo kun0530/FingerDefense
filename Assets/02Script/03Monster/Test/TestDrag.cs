@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 드래그 테스트용 스크립트이며, 터치 관련 시스템이 구축되면 삭제해야 합니다.
@@ -9,6 +10,7 @@ public class TestDrag : MonoBehaviour
 {
     private bool isDragging = false;
     private GameObject dragTarget;
+    private float targetOriginY;
 
     private void Update()
     {
@@ -26,9 +28,11 @@ public class TestDrag : MonoBehaviour
             if (hit)
             {
                 var target = hit.collider.gameObject;
-                if (target.TryGetComponent<IControllable>(out var controller) && controller.TryTransitionToDragState())
+                if (target.TryGetComponent<MonsterController>(out var controller)
+                && controller.TryTransitionState<DragState<MonsterController>>())
                 {
                     dragTarget = target;
+                    targetOriginY = dragTarget.transform.position.y;
                     isDragging = true;
                 }
                 else
@@ -57,12 +61,36 @@ public class TestDrag : MonoBehaviour
             if (Input.GetMouseButtonUp(0))
             {
                 isDragging = false;
-                if (dragTarget.TryGetComponent<IControllable>(out var controller))
-                {
-                    controller.TryTransitionToMoveState();
-                }
+                FallObject(dragTarget, targetOriginY).Forget();
+
+                targetOriginY = 0f;
                 dragTarget = null;
             }
+        }
+    }
+    
+    // 타겟의 자유 낙하 운동을 비동기로 처리
+    private async UniTask FallObject(GameObject target, float targetHeight)
+    {
+        var gravity = -9.8f;
+        var velocity = 0f;
+
+        while (target != null)
+        {
+            if (target.transform.position.y <= targetHeight)
+            {
+                target.transform.position = new Vector3(target.transform.position.x, targetHeight, 0f);
+                if (target != null && target.TryGetComponent<MonsterController>(out var controller))
+                {
+                    controller.TryTransitionState<MoveState<MonsterController>>();
+                }
+                break;
+            }
+
+            velocity += gravity * Time.deltaTime;
+            target.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
+
+            await UniTask.NextFrame();
         }
     }
 }
