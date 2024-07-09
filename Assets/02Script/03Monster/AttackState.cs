@@ -6,6 +6,9 @@ public class AttackState : IState
 {
     private MonsterController monster;
 
+    private float attackTimer;
+    private float attackCoolDown;
+
     public AttackState(MonsterController monster)
     {
         this.monster = monster;
@@ -13,6 +16,10 @@ public class AttackState : IState
 
     public void Enter()
     {
+        Logger.Log("!");
+
+        attackTimer = 0f;
+        attackCoolDown = monster.Data.AtkSpeed / 60f;
     }
 
     public void Update()
@@ -27,6 +34,12 @@ public class AttackState : IState
         {
             monster.TryTransitionState<ChaseState>();
             return;
+        }
+
+        attackTimer += Time.deltaTime;
+        if (attackTimer >= attackCoolDown)
+        {
+            Logger.Log("공격!");
         }
     }
 

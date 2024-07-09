@@ -9,9 +9,12 @@ public class PatrolState : IState
     private float patrolTimer = 0f;
     private float patrolInterval = 0.25f;
 
-    public PatrolState(MonsterController monster)
+    private IFindable findBehavior;
+
+    public PatrolState(MonsterController monster, IFindable findBehavior)
     {
         this.monster = monster;
+        this.findBehavior = findBehavior;
     }
 
     public void Enter()
@@ -59,26 +62,7 @@ public class PatrolState : IState
 
     private void FindTarget()
     {
-        LayerMask targetLayer = 1 << LayerMask.NameToLayer("Player");
-        var targets = Physics2D.OverlapCircleAll(monster.transform.position, 1f, targetLayer);
-        PlayerCharacterController nearCollider = null;
-        float nearDistance = float.MaxValue;
-        foreach (var target in targets)
-        {
-            if (target.TryGetComponent<PlayerCharacterController>(out var playerCharacter))
-            {
-                if (playerCharacter.MonsterCount == 2)
-                    continue;
-                    
-                float distance = Vector2.Distance(playerCharacter.transform.position, monster.transform.position);
-                if (distance < nearDistance)
-                {
-                    nearCollider = playerCharacter;
-                    nearDistance = distance;
-                }
-            }
- 
-        }
+        var nearCollider = findBehavior.FindTarget() as PlayerCharacterController;
 
         if (nearCollider != null && nearCollider.gameObject != monster.attackTarget)
         {

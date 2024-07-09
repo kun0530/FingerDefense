@@ -31,7 +31,7 @@ public class MonsterData
     public int Element { get; set; }
     public float MoveSpeed { get; set; }
     public float AtkDmg { get; set; }
-    public float AtkSpeed { get; set; } // 초당 데미지
+    public float AtkSpeed { get; set; } // 초당 공격횟수
     public bool IsRanger { get; set; } // 원거리 타입 여부
     public float AtkRange { get; set; } // 원거리 몬스터 공격 거리
     public float Height { get; set; } // 즉사 높이

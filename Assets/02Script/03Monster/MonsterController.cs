@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UIElements;
 
 public class MonsterController : MonoBehaviour, IControllable
 {
@@ -16,6 +17,8 @@ public class MonsterController : MonoBehaviour, IControllable
     public Transform moveTarget { get; set; }
     public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
+
+    public float findRange = 3f;
     
     public bool IsDraggable
     {
@@ -53,9 +56,11 @@ public class MonsterController : MonoBehaviour, IControllable
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
         stateMachine.AddState(new IdleState<MonsterController>(this));
         stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
+        // Fall State
         stateMachine.AddState(new MoveState(this));
-        stateMachine.AddState(new PatrolState(this));
+        stateMachine.AddState(new PatrolState(this, new FindingTargetInCircle(transform, findRange)));
         stateMachine.AddState(new ChaseState(this));
+        stateMachine.AddState(new AttackState(this));
     }
 
     private void OnEnable()
