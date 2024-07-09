@@ -12,6 +12,7 @@ public class MonsterController : MonoBehaviour, IControllable
     public MonsterData Data { get; set; }
     public string testMonsterDragData; // 추후 삭제
 
+    public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; }
     public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
@@ -49,15 +50,17 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         // Idle, Move, Chase, Attack, Drag, Fall
         stateMachine = new StateMachine<MonsterController>(this);
-        // stateMachine.AddState(new IdleState<MonsterController>(this));
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
+        stateMachine.AddState(new IdleState<MonsterController>(this));
         stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
         stateMachine.AddState(new MoveState(this));
+        stateMachine.AddState(new PatrolState(this));
     }
 
     private void OnEnable()
     {
         stateMachine.Initialize<MoveState>();
+        CanPatrol = false;
     }
 
     private void Update()
@@ -67,9 +70,9 @@ public class MonsterController : MonoBehaviour, IControllable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Castle"))
+        if (other.CompareTag("PatrolStartLine"))
         {
-            pool.Release(this);
+            CanPatrol = true;
         }
     }
 }
