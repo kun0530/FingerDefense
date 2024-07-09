@@ -40,10 +40,11 @@ public class MonsterController : MonoBehaviour, IControllable
             }
         }
     }
+    public float targetFallY { get; set; }
 
     public bool TryTransitionState<T>() where T : IState
     {
-        if (typeof(T) == typeof(DragState<MonsterController>) && !IsDraggable)
+        if (typeof(T) == typeof(DragState) && !IsDraggable)
             return false;
 
         return stateMachine.TransitionTo<T>();
@@ -55,8 +56,8 @@ public class MonsterController : MonoBehaviour, IControllable
         stateMachine = new StateMachine<MonsterController>(this);
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
         stateMachine.AddState(new IdleState<MonsterController>(this));
-        stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
-        // Fall State
+        stateMachine.AddState(new DragState(this, dragBehavior));
+        stateMachine.AddState(new FallState(this));
         stateMachine.AddState(new MoveState(this));
         stateMachine.AddState(new PatrolState(this, new FindingTargetInCircle(transform, findRange)));
         stateMachine.AddState(new ChaseState(this));

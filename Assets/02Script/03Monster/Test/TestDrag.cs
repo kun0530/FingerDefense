@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 드래그 테스트용 스크립트이며, 터치 관련 시스템이 구축되면 삭제해야 합니다.
@@ -25,7 +24,7 @@ public class TestDrag : MonoBehaviour
             {
                 var target = hit.collider.gameObject;
                 if (target.TryGetComponent<MonsterController>(out var controller)
-                && controller.TryTransitionState<DragState<MonsterController>>())
+                && controller.TryTransitionState<DragState>())
                 {
                     dragTarget = target;
                     targetOriginY = dragTarget.transform.position.y;
@@ -42,40 +41,14 @@ public class TestDrag : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
-                isDragging = false;
-                FallObject(dragTarget, dragTarget.transform.position.y, targetOriginY).Forget();
-
-                targetOriginY = 0f;
-                dragTarget = null;
-            }
-        }
-    }
-    
-    // 타겟의 자유 낙하 운동을 비동기로 처리
-    private async UniTask FallObject(GameObject target, float startY, float targetY)
-    {
-        var gravity = -9.8f;
-        var velocity = 0f;
-
-        while (target != null)
-        {
-            if (target.transform.position.y <= targetY)
-            {
-                target.transform.position = new Vector3(target.transform.position.x, targetY, 0f);
-                if (target != null && target.TryGetComponent<MonsterController>(out var controller))
+                if (dragTarget.TryGetComponent<MonsterController>(out var controller)
+                && controller.TryTransitionState<FallState>())
                 {
-                    if (controller.Data.Height <= startY - targetY)
-                        controller.pool.Release(controller);
-                    else
-                        controller.TryTransitionState<MoveState>();
+                    dragTarget = null;
+                    isDragging = false;
+                    targetOriginY = 0f;
                 }
-                break;
             }
-
-            velocity += gravity * Time.deltaTime;
-            target.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
-
-            await UniTask.NextFrame();
         }
     }
 }
