@@ -21,10 +21,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
                 count++;
             if (monsterDown != null)
                 count++;
-
+            test = count;
             return count;
         }
     }
+
+    public int test;
 
     public bool TryTransitionState<T>() where T : IState
     {

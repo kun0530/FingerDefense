@@ -55,6 +55,7 @@ public class MonsterController : MonoBehaviour, IControllable
         stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
         stateMachine.AddState(new MoveState(this));
         stateMachine.AddState(new PatrolState(this));
+        stateMachine.AddState(new ChaseState(this));
     }
 
     private void OnEnable()
