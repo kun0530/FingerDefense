@@ -64,4 +64,12 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         stateMachine.Update();
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Castle"))
+        {
+            pool.Release(this);
+        }
+    }
 }

@@ -101,8 +101,6 @@ public class MoveState : IState
         {
             var dir = (controller.moveTarget.position - controller.transform.position).normalized;
             controller.transform.position += dir * moveSpeed * Time.deltaTime;
-
-            // 주변 target 감지
         }
         else if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) > 0.1)
         {
