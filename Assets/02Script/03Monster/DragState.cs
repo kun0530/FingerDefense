@@ -17,10 +17,7 @@ public class DragState<T> : IState where T : MonsterController
     {
         dragBehavior?.DragEnter();
 
-        if (controller.attackTarget == null)
-            return;
-
-        controller.attackTarget.TryRemoveMonster(controller);
+        controller.attackTarget?.TryRemoveMonster(controller);
     }
 
     public void Update()

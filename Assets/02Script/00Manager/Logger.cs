@@ -19,7 +19,12 @@ public class Logger : MonoBehaviour
 #if UNITY_EDITOR
         Debug.Log(message);
 #endif
-       
+    }
+    public static void Log(string message, GameObject gameObject)
+    {
+#if UNITY_EDITOR
+        Debug.Log(message, gameObject);
+#endif
     }
     
     public static void LogWarning(string message)

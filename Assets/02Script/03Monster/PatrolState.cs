@@ -60,8 +60,7 @@ public class PatrolState : IState
     private void FindTarget()
     {
         LayerMask targetLayer = 1 << LayerMask.NameToLayer("Player");
-        //var targets = Physics2D.CircleCastAll(monster.transform.position, 1f, Vector2.zero, 0f, targetLayer);
-        var targets = Physics2D.OverlapCircleAll(monster.transform.position, 10f, targetLayer);
+        var targets = Physics2D.OverlapCircleAll(monster.transform.position, 1f, targetLayer);
         PlayerCharacterController nearCollider = null;
         float nearDistance = float.MaxValue;
         foreach (var target in targets)

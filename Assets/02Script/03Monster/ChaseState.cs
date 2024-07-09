@@ -29,7 +29,7 @@ public class ChaseState : IState
         if (Vector2.Distance(monster.transform.position, monster.attackMoveTarget.position) < 0.1)
         {
             monster.transform.position = monster.attackMoveTarget.position;
-            monster.TryTransitionState<IdleState<MonsterController>>(); // To-Do: Attack State로 변경
+            monster.TryTransitionState<AttackState>();
             return;
         }
     }
