@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class PlayerCharacterController : MonoBehaviour, IControllable
 {
-    private StateMachine<PlayerCharacterController> stateMachine;
     public CharacterStatus Status { get; set; }
     public PlayerCharacterData Data { get; set; }
 
@@ -35,31 +34,19 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
         get { return MonsterCount != 2; }
     }
 
-    public bool TryTransitionState<T>() where T : IState
-    {
-        return stateMachine.TransitionTo<T>();
-    }
-
     private void Awake()
     {
-        stateMachine = new StateMachine<PlayerCharacterController>(this);
-        stateMachine.AddState(new IdleState<PlayerCharacterController>(this));
-
         atkTimer = 0f;
     }
 
     private void OnEnable()
     {
-        stateMachine.Initialize<IdleState<PlayerCharacterController>>();
-
         monsterUp = null;
         monsterDown = null;
     }
 
     private void Update()
     {
-        stateMachine.Update();
-
         var atkCoolDown = 1f / Status.data.AtkSpeed;
         atkTimer += Time.deltaTime;
         if (atkTimer >= atkCoolDown)

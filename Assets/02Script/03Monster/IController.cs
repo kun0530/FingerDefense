@@ -6,5 +6,4 @@ using UnityEngine;
 public interface IControllable
 {
     bool IsTargetable { get; }
-    bool TryTransitionState<T>() where T : IState;
 }

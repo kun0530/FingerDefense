@@ -118,7 +118,6 @@ public class MonsterController : MonoBehaviour, IControllable
 
         if (Status.currentHp <= 0f)
         {
-            Logger.Log(gameObject.GetInstanceID());
             Status.currentHp = 0f;
             isDead = true;
             var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
