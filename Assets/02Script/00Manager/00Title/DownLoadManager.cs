@@ -29,7 +29,7 @@ public class DownLoadManager : MonoBehaviour
 
     [Header("Assets")]
     [SerializeField] private AssetReference[] assetReferences;
-
+    
     private List<GameObject> gameObjects = new List<GameObject>();
     private long patchSize;
     private long totalDownloadedSize;
@@ -117,7 +117,8 @@ public class DownLoadManager : MonoBehaviour
     }
     #endregion
 
-    private void ButtonDownloadWrapper()
+    #region DownLoad
+ private void ButtonDownloadWrapper()
     {
         ButtonDownload().Forget();
     }
@@ -263,6 +264,10 @@ public class DownLoadManager : MonoBehaviour
 
         Addressables.Release(handle);
     }
+    
+
+    #endregion
+   
 
     private void ShowConnectionFailedMessage()
     {
