@@ -22,11 +22,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
     public PlayerCharacterController SpawnPlayerCharacter(int id, int index)
     {
-        var data = playerCharacterTable.Get(id);
-        // To-Do: data에 따른 캐릭터 분기
-        var playerCharacter = GameObject.Instantiate(characterPrefab);
-        playerCharacter.Data = data;
-        return playerCharacter;
+        return SpawnPlayerCharacter(playerCharacterTable.Get(id), index);
     }
 
     public PlayerCharacterController SpawnPlayerCharacter(PlayerCharacterData data, int index)
@@ -35,7 +31,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         var playerCharacter = GameObject.Instantiate(characterPrefab);
         playerCharacter.transform.position = spawnPositions[index].position;
         playerCharacter.transform.SetParent(poolTransform);
-        playerCharacter.Data = data;
+        playerCharacter.Status = new CharacterStatus(data);
         return playerCharacter;
     }
 }

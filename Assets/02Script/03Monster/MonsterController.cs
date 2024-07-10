@@ -10,8 +10,8 @@ public class MonsterController : MonoBehaviour, IControllable
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
-    public MonsterData Data { get; set; }
-    public string testMonsterDragData; // 추후 삭제
+    public MonsterStatus status { get; set; }
+    public string testMonsterDragData; // 몬스터의 드래그 타입을 통해 행동 변경 -> 추후 삭제
 
     public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; }
@@ -24,10 +24,14 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         get
         {
-            if (Data == null || Data.DragType <= (int)MonsterData.DragTypes.None || Data.DragType >= (int)MonsterData.DragTypes.Count)
+            if (status.data.DragType <= (int)MonsterData.DragTypes.None
+            || status.data.DragType >= (int)MonsterData.DragTypes.Count)
                 return false;
 
-            switch ((MonsterData.DragTypes)Data.DragType)
+            if (stateMachine.CurrentState.GetType() == typeof(FallState))
+                return false;
+
+            switch ((MonsterData.DragTypes)status.data.DragType)
             {
                 case MonsterData.DragTypes.BOSS:
                     return false;

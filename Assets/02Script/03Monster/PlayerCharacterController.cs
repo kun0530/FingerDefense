@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerCharacterController : MonoBehaviour, IControllable
 {
     private StateMachine<PlayerCharacterController> stateMachine;
+    public CharacterStatus Status { get; set; }
     public PlayerCharacterData Data { get; set; }
 
     public Transform[] mosnterPosition;

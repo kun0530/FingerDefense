@@ -24,7 +24,7 @@ public class MoveState : IState
     
     public void Update()
     {
-        controller.transform.position += direction * controller.Data.MoveSpeed * Time.deltaTime;
+        controller.transform.position += direction * controller.status.currentMoveSpeed * Time.deltaTime;
 
         if (controller.CanPatrol)
             controller.TryTransitionState<PatrolState>();

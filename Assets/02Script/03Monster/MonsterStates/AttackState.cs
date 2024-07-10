@@ -19,7 +19,7 @@ public class AttackState : IState
         Logger.Log("!");
 
         attackTimer = 0f;
-        attackCoolDown = monster.Data.AtkSpeed / 60f;
+        attackCoolDown = monster.status.data.AtkSpeed / 60f;
     }
 
     public void Update()

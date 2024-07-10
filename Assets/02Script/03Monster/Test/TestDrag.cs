@@ -8,8 +8,7 @@ using UnityEngine;
 public class TestDrag : MonoBehaviour
 {
     private bool isDragging = false;
-    private GameObject dragTarget;
-    private float targetOriginY;
+    private MonsterController dragTarget;
 
     private void Update()
     {
@@ -26,8 +25,7 @@ public class TestDrag : MonoBehaviour
                 if (target.TryGetComponent<MonsterController>(out var controller)
                 && controller.TryTransitionState<DragState>())
                 {
-                    dragTarget = target;
-                    targetOriginY = dragTarget.transform.position.y;
+                    dragTarget = controller;
                     isDragging = true;
                 }
             }
@@ -41,13 +39,9 @@ public class TestDrag : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
-                if (dragTarget.TryGetComponent<MonsterController>(out var controller)
-                && controller.TryTransitionState<FallState>())
-                {
-                    dragTarget = null;
-                    isDragging = false;
-                    targetOriginY = 0f;
-                }
+                dragTarget.TryTransitionState<FallState>();
+                dragTarget = null;
+                isDragging = false;
             }
         }
     }

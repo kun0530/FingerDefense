@@ -59,7 +59,10 @@ public class MonsterFactory
     {
         // To-Do: 몬스터 데이터 처리
         var monster =  poolMonster.Get();
-        monster.Data = data;
+
+        var monsterStatus = new MonsterStatus(data);
+        monster.status = monsterStatus;
+
         return monster;
     }
 }
