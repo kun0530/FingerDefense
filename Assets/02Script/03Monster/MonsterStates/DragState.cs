@@ -37,7 +37,7 @@ public class DragState : IState
         if (dragAndDrop.IsDragging)
         {
             // To-Do: 터치 월드 포지션
-            var pos = Camera.main.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
+            var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
             pos.z = 0f;
             monster.transform.position = pos;
         }
