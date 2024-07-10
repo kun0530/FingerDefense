@@ -16,10 +16,8 @@ public class AttackState : IState
 
     public void Enter()
     {
-        Logger.Log("!");
-
-        attackTimer = 0f;
-        attackCoolDown = monster.status.data.AtkSpeed / 60f;
+        attackCoolDown = 1f / monster.status.data.AtkSpeed;
+        attackTimer = attackCoolDown;
     }
 
     public void Update()
@@ -39,7 +37,8 @@ public class AttackState : IState
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackCoolDown)
         {
-            Logger.Log("공격!");
+            monster.attackTarget.DamageHp(monster.status.currentAtk);
+            attackTimer = 0f;
         }
     }
 

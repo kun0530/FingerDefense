@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCharacterController : MonoBehaviour, IControllable
 {
     private StateMachine<PlayerCharacterController> stateMachine;
     public CharacterStatus Status { get; set; }
     public PlayerCharacterData Data { get; set; }
+
+    public Image hpBar;
 
     public Transform[] mosnterPosition;
 
@@ -107,5 +110,26 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
                 }
                 break;
         }
+    }
+
+    public void DamageHp(float damage)
+    {
+        if (damage < 0)
+            return;
+
+        Status.currentHp -= damage;
+        UpdateHpBar();
+
+        if (Status.currentHp <= 0f)
+        {
+            Status.currentHp = 0f;
+            Destroy(gameObject);
+        }
+    }
+
+    private void UpdateHpBar()
+    {
+        var hpPercent = Status.currentHp / Status.data.Hp;
+        hpBar.fillAmount = hpPercent;
     }
 }

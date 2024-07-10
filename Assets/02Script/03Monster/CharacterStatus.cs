@@ -18,7 +18,7 @@ public class CharacterStatus
 
     private void Init()
     {
-        if (data != null)
+        if (data == null)
             return;
 
         currentHp = data.Hp;
