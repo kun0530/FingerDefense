@@ -9,8 +9,9 @@ public class DragAndDrop : MonoBehaviour
     private float targetOriginY;
     private bool isDragging = false;
 
+    private GameObject draggingObject;
+    private const float autoDropTime = 2.0f; // 드래그 시작 후 2초 뒤에 자동으로 놓기
 
-    
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -29,26 +30,28 @@ public class DragAndDrop : MonoBehaviour
         InputManager.Instance.OnRelease -= OnPointerUp;
         InputManager.Instance.OnDrag -= OnPointerDrag;
     }
-    
-    // 태그를 통해 드래그 가능한 오브젝트를 찾아서 드래그 가능 여부를 판단
-    // 인터페이스가 있는지 여부를 가져와야함 
+
     private void OnPointerDown(InputAction.CallbackContext context)
     {
         if (!isDragging)
         {
             var mouseScreenPos = GetPointerPosition(context);
             var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-            var hit = Physics2D.Raycast(mouseWorldPos, transform.forward, Mathf.Infinity);
+            var hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
 
             if (hit)
             {
                 var target = hit.collider.gameObject;
                 if (target.TryGetComponent<MonsterController>(out var controller))
                 {
-                    if (controller.TryTransitionState<DragState<MonsterController>>())
+                    if (controller.TryTransitionState<DragState>())
                     {
                         targetOriginY = target.transform.position.y;
                         isDragging = true;
+                        draggingObject = target;
+
+                        // 일정 시간이 지나면 자동으로 놓기
+                        AutoDropAfterTime(autoDropTime).Forget();
                     }
                     else
                     {
@@ -67,9 +70,7 @@ public class DragAndDrop : MonoBehaviour
     {
         if (isDragging)
         {
-            isDragging = false;
-            FallObject(gameObject, targetOriginY).Forget();
-            targetOriginY = 0f;
+            DropObject();
         }
     }
 
@@ -78,10 +79,9 @@ public class DragAndDrop : MonoBehaviour
         if (isDragging)
         {
             var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition(context));
-            var transform1 = transform;
+            var transform1 = draggingObject.transform;
             pos.z = transform1.position.z;
             transform1.position = pos;
-            
         }
     }
 
@@ -90,12 +90,19 @@ public class DragAndDrop : MonoBehaviour
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
             return Touchscreen.current.primaryTouch.position.ReadValue();
-            
         }
         else
         {
             return Mouse.current.position.ReadValue();
         }
+    }
+
+    private void DropObject()
+    {
+        isDragging = false;
+        FallObject(draggingObject, targetOriginY).Forget();
+        targetOriginY = 0f;
+        draggingObject = null;
     }
 
     private async UniTask FallObject(GameObject target, float targetHeight)
@@ -105,19 +112,31 @@ public class DragAndDrop : MonoBehaviour
 
         while (target != null)
         {
-            if(target != null && target.transform.position.y <= targetHeight)
+            if (target.transform.position.y <= targetHeight)
             {
-                target.transform.position = new Vector3(target.transform.position.x, targetHeight, 0f);
+                var position = target.transform.position;
+                position = new Vector3(position.x, targetHeight, position.z);
+                target.transform.position = position;
                 if (target.TryGetComponent<MonsterController>(out var controller))
                 {
-                    controller.TryTransitionState<MoveState<MonsterController>>();
+                    controller.TryTransitionState<FallState>();
                 }
                 break;
             }
-            
+
             velocity += gravity * Time.deltaTime;
             target.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
             await UniTask.Yield();
+        }
+    }
+
+    private async UniTask AutoDropAfterTime(float delay)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(delay));
+
+        if (isDragging)
+        {
+            DropObject();
         }
     }
 }
