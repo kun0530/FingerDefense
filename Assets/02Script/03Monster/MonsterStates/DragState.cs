@@ -8,6 +8,8 @@ public class DragState : IState
     private SpriteRenderer renderer;
     private IDraggable dragBehavior;
 
+    private DragAndDrop dragAndDrop;
+
     public DragState(MonsterController monster, IDraggable dragBehavior)
     {
         this.monster = monster;
@@ -22,6 +24,8 @@ public class DragState : IState
         dragBehavior?.DragEnter();
         monster.attackTarget?.TryRemoveMonster(monster);
 
+        dragAndDrop = GameObject.FindGameObjectWithTag("InputManager").GetComponent<DragAndDrop>();
+
         // order layer 앞으로
         renderer.sortingOrder = 1;
     }
@@ -30,14 +34,13 @@ public class DragState : IState
     {
         dragBehavior?.DragUpdate();
 
-        if (Input.GetMouseButton(0))
+        if (dragAndDrop.IsDragging)
         {
-
-            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // To-Do: 터치 월드 포지션
             pos.z = 0f;
             monster.transform.position = pos;
         }
-        else if (Input.GetMouseButtonUp(0))
+        else
         {
             monster.TryTransitionState<FallState>();
         }

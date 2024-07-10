@@ -7,7 +7,7 @@ public class DragAndDrop : MonoBehaviour
 {
     private Camera mainCamera;
     private float targetOriginY;
-    private bool isDragging = false;
+    public bool IsDragging { get; private set; } = false;
 
     private GameObject draggingObject;
     private const float autoDropTime = 2.0f; // 드래그 시작 후 2초 뒤에 자동으로 놓기
@@ -33,7 +33,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
-        if (!isDragging)
+        if (!IsDragging)
         {
             var mouseScreenPos = GetPointerPosition(context);
             var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
@@ -47,7 +47,7 @@ public class DragAndDrop : MonoBehaviour
                     if (controller.TryTransitionState<DragState>())
                     {
                         targetOriginY = target.transform.position.y;
-                        isDragging = true;
+                        IsDragging = true;
                         draggingObject = target;
 
                         // 일정 시간이 지나면 자동으로 놓기
@@ -68,7 +68,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        if (isDragging)
+        if (IsDragging)
         {
             DropObject();
         }
@@ -76,7 +76,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDrag(InputAction.CallbackContext context)
     {
-        if (isDragging)
+        if (IsDragging)
         {
             var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition(context));
             var transform1 = draggingObject.transform;
@@ -85,7 +85,7 @@ public class DragAndDrop : MonoBehaviour
         }
     }
 
-    private Vector2 GetPointerPosition(InputAction.CallbackContext context)
+    public Vector2 GetPointerPosition(InputAction.CallbackContext context)
     {
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
@@ -99,7 +99,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void DropObject()
     {
-        isDragging = false;
+        IsDragging = false;
         FallObject(draggingObject, targetOriginY).Forget();
         targetOriginY = 0f;
         draggingObject = null;
@@ -134,7 +134,7 @@ public class DragAndDrop : MonoBehaviour
     {
         await UniTask.Delay(TimeSpan.FromSeconds(delay));
 
-        if (isDragging)
+        if (IsDragging)
         {
             DropObject();
         }
