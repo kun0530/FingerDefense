@@ -21,7 +21,7 @@ public class MonsterStatus
         Init();
     }
 
-    private void Init()
+    public void Init()
     {
         if (data == null)
             return;

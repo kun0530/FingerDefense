@@ -32,7 +32,7 @@ public class PatrolState : IState
 
         // 성 포탈까지 이동
         var direction = (monster.moveTarget.transform.position - monster.transform.position).normalized;
-        monster.transform.position += direction * monster.status.currentMoveSpeed * Time.deltaTime;
+        monster.transform.position += direction * monster.Status.currentMoveSpeed * Time.deltaTime;
         if (Vector2.Distance(monster.transform.position, monster.moveTarget.transform.position) < 0.1)
         {
             monster.transform.position = monster.moveTarget.transform.position;

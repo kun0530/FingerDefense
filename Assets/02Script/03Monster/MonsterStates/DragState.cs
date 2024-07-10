@@ -22,7 +22,8 @@ public class DragState : IState
     {
         monster.targetFallY = monster.transform.position.y;
         dragBehavior?.DragEnter();
-        monster.attackTarget?.TryRemoveMonster(monster);
+        if (monster.attackTarget)
+            monster.attackTarget.TryRemoveMonster(monster);
 
         dragAndDrop = GameObject.FindGameObjectWithTag("InputManager").GetComponent<DragAndDrop>();
 

@@ -10,6 +10,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     public CharacterStatus Status { get; set; }
     public PlayerCharacterData Data { get; set; }
 
+    private float atkTimer;
+
     public Image hpBar;
 
     public Transform[] mosnterPosition;
@@ -28,6 +30,10 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
             return count;
         }
     }
+    public bool IsTargetable
+    {
+        get { return MonsterCount != 2; }
+    }
 
     public bool TryTransitionState<T>() where T : IState
     {
@@ -38,6 +44,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     {
         stateMachine = new StateMachine<PlayerCharacterController>(this);
         stateMachine.AddState(new IdleState<PlayerCharacterController>(this));
+
+        atkTimer = 0f;
     }
 
     private void OnEnable()
@@ -51,6 +59,18 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     private void Update()
     {
         stateMachine.Update();
+
+        var atkCoolDown = 1f / Status.data.AtkSpeed;
+        atkTimer += Time.deltaTime;
+        if (atkTimer >= atkCoolDown)
+        {
+            var findBehavior = new FindingTargetInCircle<MonsterController>(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
+            var monster = findBehavior.FindTarget() as MonsterController;
+            if (monster == null)
+                return;
+            monster.DamageHp(Status.currentAtkDmg);
+            atkTimer = 0f;
+        }
     }
 
     public bool TryAddMonster(MonsterController monster)

@@ -2,37 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FindingTargetInCircle : IFindable
+public class FindingTargetInCircle<T> : IFindable where T : MonoBehaviour, IControllable
 {
     public Transform center;
     public float radius;
     public LayerMask targetLayer;
 
-    public FindingTargetInCircle(Transform center, float radius)
+    public FindingTargetInCircle(Transform center, float radius, LayerMask targetLayer)
     {
         this.center = center;
         this.radius = radius;
-
-        targetLayer = 1 << LayerMask.NameToLayer("Player");
+        
+        this.targetLayer = targetLayer;
     }
 
     public IControllable FindTarget()
     {
         var targets = Physics2D.OverlapCircleAll(center.position, radius, targetLayer);
-        PlayerCharacterController nearCollider = null;
+        T nearCollider = null;
         float nearDistance = float.MaxValue;
 
         foreach (var target in targets)
         {
-            if (target.TryGetComponent<PlayerCharacterController>(out var playerCharacter))
+            if (target.TryGetComponent<T>(out var controller))
             {
-                if (playerCharacter.MonsterCount == 2)
+                if (!controller.IsTargetable)
                     continue;
                     
-                float distance = Vector2.Distance(playerCharacter.transform.position, center.position);
+                float distance = Vector2.Distance(controller.transform.position, center.position);
                 if (distance < nearDistance)
                 {
-                    nearCollider = playerCharacter;
+                    nearCollider = controller;
                     nearDistance = distance;
                 }
             }

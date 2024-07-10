@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class MonsterController : MonoBehaviour, IControllable
 {
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
-    public MonsterStatus status { get; set; }
+    public MonsterStatus Status { get; set; }
     public string testMonsterDragData; // 몬스터의 드래그 타입을 통해 행동 변경 -> 추후 삭제
+
+    public Image hpBar;
+    private bool isDead = false;
 
     public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; }
@@ -24,14 +27,14 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         get
         {
-            if (status.data.DragType <= (int)MonsterData.DragTypes.None
-            || status.data.DragType >= (int)MonsterData.DragTypes.Count)
+            if (Status.data.DragType <= (int)MonsterData.DragTypes.None
+            || Status.data.DragType >= (int)MonsterData.DragTypes.Count)
                 return false;
 
             if (stateMachine.CurrentState.GetType() == typeof(FallState))
                 return false;
 
-            switch ((MonsterData.DragTypes)status.data.DragType)
+            switch ((MonsterData.DragTypes)Status.data.DragType)
             {
                 case MonsterData.DragTypes.BOSS:
                     return false;
@@ -43,6 +46,11 @@ public class MonsterController : MonoBehaviour, IControllable
                     return false;
             }
         }
+    }
+
+    public bool IsTargetable
+    {
+        get { return true; }
     }
     public float targetFallY { get; set; }
 
@@ -63,14 +71,19 @@ public class MonsterController : MonoBehaviour, IControllable
         stateMachine.AddState(new DragState(this, dragBehavior));
         stateMachine.AddState(new FallState(this));
         stateMachine.AddState(new MoveState(this));
-        stateMachine.AddState(new PatrolState(this, new FindingTargetInCircle(transform, findRange)));
+        stateMachine.AddState(new PatrolState(this, new FindingTargetInCircle<PlayerCharacterController>(transform, findRange, 1 << LayerMask.NameToLayer("Player"))));
         stateMachine.AddState(new ChaseState(this));
         stateMachine.AddState(new AttackState(this));
     }
 
     private void OnEnable()
     {
+        isDead = false;
+
         stateMachine.Initialize<MoveState>();
+        if (Status != null)
+            Status.Init();
+        hpBar.fillAmount = 1f;
         CanPatrol = false;
     }
 
@@ -85,5 +98,38 @@ public class MonsterController : MonoBehaviour, IControllable
         {
             CanPatrol = true;
         }
+
+        if (other.CompareTag("Castle"))
+        {
+            var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+            stageManager.DamageCastle(10f);
+            stageManager.MonsterCount--;
+            pool.Release(this);
+        }
+    }
+
+    public void DamageHp(float damage)
+    {
+        if (damage < 0 || isDead)
+            return;
+
+        Status.currentHp -= damage;
+        UpdateHpBar();
+
+        if (Status.currentHp <= 0f)
+        {
+            Logger.Log(gameObject.GetInstanceID());
+            Status.currentHp = 0f;
+            isDead = true;
+            var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+            stageManager.MonsterCount--;
+            pool.Release(this);
+        }
+    }
+
+    private void UpdateHpBar()
+    {
+        var hpPercent = Status.currentHp / Status.data.Hp;
+        hpBar.fillAmount = hpPercent;
     }
 }

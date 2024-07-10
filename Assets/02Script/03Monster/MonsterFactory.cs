@@ -61,7 +61,7 @@ public class MonsterFactory
         var monster =  poolMonster.Get();
 
         var monsterStatus = new MonsterStatus(data);
-        monster.status = monsterStatus;
+        monster.Status = monsterStatus;
 
         return monster;
     }

@@ -16,7 +16,7 @@ public class AttackState : IState
 
     public void Enter()
     {
-        attackCoolDown = 1f / monster.status.data.AtkSpeed;
+        attackCoolDown = 1f / monster.Status.data.AtkSpeed;
         attackTimer = attackCoolDown;
     }
 
@@ -37,8 +37,21 @@ public class AttackState : IState
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackCoolDown)
         {
-            monster.attackTarget.DamageHp(monster.status.currentAtk);
+            monster.attackTarget.DamageHp(monster.Status.currentAtk);
             attackTimer = 0f;
+
+            // monster.transform.position = 
+            return;
+        }
+
+        // 일단은 공격 모션 To-Do: 공격 애니메이션 받으면 삭제
+        if (attackTimer <= attackCoolDown / 2f) // attack target으로 이동
+        {
+            monster.transform.position = Vector2.Lerp(monster.transform.position, monster.attackTarget.transform.position, attackTimer / (attackCoolDown / 2f));
+        }
+        else // attack move target으로 이동
+        {
+            monster.transform.position = Vector2.Lerp(monster.transform.position, monster.attackMoveTarget.transform.position, attackTimer / (attackCoolDown / 2f));
         }
     }
 

@@ -18,10 +18,12 @@ public class MonsterSpawner : MonoBehaviour
 
     private int stageId = 1; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
     private int waveId = 1;
-    private int monsterCount;
+    public int MonsterCount { get; private set; }
 
     public float spawnGroupInterval = 0.5f;
-    private float spawnTimer = 0f;
+    private float spawnWaveTimer = 0f;
+    private float spawnGroupTimer = 0f;
+    private int spawnGroupIndex = 0;
     private WaveData currentWaveData;
     private bool isNextWave;
 
@@ -39,22 +41,22 @@ public class MonsterSpawner : MonoBehaviour
         // 스테이지 내 등장 몬스터 수(잘못된 id 몬스터는 나오지 않는걸로)
         // 죽거나 포털로 들어가면 카운트 다운 0
         int wave = 1;
-        monsterCount = 0;
+        MonsterCount = 0;
         WaveData waveData;
         while ((waveData = waveTable.Get(stageId, wave++))!= null)
         {
             var monsterList = waveData.monsters;
             foreach (var monster in monsterList)
             {
-                monsterCount += monster.monsterCount;
+                MonsterCount += monster.monsterCount;
             }
         }
-        Logger.Log($"{stageId}스테이지의 몬스터 수: {monsterCount}");
+        Logger.Log($"{stageId}스테이지의 몬스터 수: {MonsterCount}");
 
         currentWaveData = waveTable.Get(stageId, waveId);
         if (currentWaveData != null)
         {
-            spawnTimer = currentWaveData.Term;
+            spawnWaveTimer = currentWaveData.Term;
             isNextWave = true;
         }
     }
@@ -66,22 +68,27 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (monsterCount <= 0 || !isNextWave)
+        if (MonsterCount <= 0 || !isNextWave)
             return;
 
-        if (spawnTimer >= currentWaveData.Term)
+        // if (!isNextWave)
+        // {
+        //     SpawnMonsterGroup();
+        // }
+
+        if (spawnWaveTimer >= currentWaveData.Term)
         {
-            spawnTimer = 0f;
+            spawnWaveTimer = 0f;
             isNextWave = false;
-            SpawnMonsterGroup().Forget();
+            SpawnMonsterGroupUniTast().Forget();
         }
         else
         {
-            spawnTimer += Time.deltaTime;
+            spawnWaveTimer += Time.deltaTime;
         }
     }
 
-    private async UniTask SpawnMonsterGroup()
+    private async UniTask SpawnMonsterGroupUniTast()
     {
         var monsters = currentWaveData.monsters;
         foreach (var monster in monsters)
@@ -91,11 +98,35 @@ public class MonsterSpawner : MonoBehaviour
                 var monsterGo = factory.GetMonster(monsterTable.Get(monster.monsterId));
                 monsterGo.transform.position = spawnPositions[monster.monsterCount + i - 1].position;
                 monsterGo.moveTarget = moveTarget;
-                monsterCount--;
             }
             await UniTask.WaitForSeconds(spawnGroupInterval);
         }
         waveId++;
         isNextWave = true;
     }
+
+    // private void SpawnMonsterGroup()
+    // {
+    //     spawnGroupTimer += Time.deltaTime;
+    //     if (spawnGroupTimer >= spawnGroupInterval)
+    //     {
+    //         var monster = currentWaveData.monsters[spawnGroupIndex];
+    //         for (int i = 0; i < monster.monsterCount; i++)
+    //         {
+    //             var monsterGo = factory.GetMonster(monsterTable.Get(monster.monsterId));
+    //             monsterGo.transform.position = spawnPositions[monster.monsterCount + i - 1].position;
+    //             monsterGo.moveTarget = moveTarget;
+    //         }
+    //         spawnGroupIndex++;
+
+    //         if (spawnGroupIndex >= currentWaveData.monsters.Count - 1)
+    //         {
+    //             spawnGroupIndex = 0;
+    //             waveId++;
+    //             isNextWave = true;
+    //         }
+
+    //         spawnGroupTimer = 0f;
+    //     }
+    // }
 }
