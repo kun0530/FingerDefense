@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UIElements;
 
 public class MonsterController : MonoBehaviour, IControllable
 {
@@ -12,7 +13,12 @@ public class MonsterController : MonoBehaviour, IControllable
     public MonsterData Data { get; set; }
     public string testMonsterDragData; // 추후 삭제
 
+    public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; }
+    public Transform attackMoveTarget { get; set; }
+    public PlayerCharacterController attackTarget { get; set; }
+
+    public float findRange = 3f;
     
     public bool IsDraggable
     {
@@ -34,10 +40,11 @@ public class MonsterController : MonoBehaviour, IControllable
             }
         }
     }
+    public float targetFallY { get; set; }
 
     public bool TryTransitionState<T>() where T : IState
     {
-        if (typeof(T) == typeof(DragState<MonsterController>) && !IsDraggable)
+        if (typeof(T) == typeof(DragState) && !IsDraggable)
             return false;
 
         return stateMachine.TransitionTo<T>();
@@ -47,30 +54,32 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         // Idle, Move, Chase, Attack, Drag, Fall
         stateMachine = new StateMachine<MonsterController>(this);
-        stateMachine.AddState(new IdleState<MonsterController>(this));
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
-        stateMachine.AddState(new DragState<MonsterController>(this, dragBehavior));
-        stateMachine.AddState(new MoveState<MonsterController>(this));
+        stateMachine.AddState(new IdleState<MonsterController>(this));
+        stateMachine.AddState(new DragState(this, dragBehavior));
+        stateMachine.AddState(new FallState(this));
+        stateMachine.AddState(new MoveState(this));
+        stateMachine.AddState(new PatrolState(this, new FindingTargetInCircle(transform, findRange)));
+        stateMachine.AddState(new ChaseState(this));
+        stateMachine.AddState(new AttackState(this));
     }
 
     private void OnEnable()
     {
-        stateMachine.Initialize<MoveState<MonsterController>>();
+        stateMachine.Initialize<MoveState>();
+        CanPatrol = false;
     }
 
     private void Update()
     {
         stateMachine.Update();
+    }
 
-        // 테스트 코드 - 삭제해야함
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("PatrolStartLine"))
         {
-            stateMachine.TransitionTo<IdleState<MonsterController>>();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2)) 
-        {
-            stateMachine.TransitionTo<MoveState<MonsterController>>();
+            CanPatrol = true;
         }
     }
 }
