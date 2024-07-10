@@ -1,19 +1,20 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class DragAndDrop : MonoBehaviour
 {
     private Camera mainCamera;
-    private Vector3 offset;
+    private float targetOriginY;
     private bool isDragging = false;
-    private Transform targetObject;
-    public string draggableTag = "Draggable"; // 드래그 가능한 오브젝트의 태그 설정
-    
+
+    private GameObject draggingObject;
+    private const float autoDropTime = 2.0f; // 드래그 시작 후 2초 뒤에 자동으로 놓기
+
     private void Awake()
     {
         mainCamera = Camera.main;
-        
     }
 
     private void OnEnable()
@@ -30,39 +31,57 @@ public class DragAndDrop : MonoBehaviour
         InputManager.Instance.OnDrag -= OnPointerDrag;
     }
 
-    
-
-    // 태그를 통해 드래그 가능한 오브젝트를 찾아서 드래그 가능 여부를 판단
-    // 인터페이스가 있는지 여부를 가져와야함 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
-        Vector2 pointerPosition = GetPointerPosition(context);
-        Vector3 worldPosition = mainCamera.ScreenToWorldPoint(pointerPosition);
-        Collider2D hitCollider = Physics2D.OverlapPoint(worldPosition);
-
-        if (hitCollider != null && hitCollider.CompareTag(draggableTag))
+        if (!isDragging)
         {
-            //if(this==null) return;
-            targetObject = hitCollider.transform;
-            var position = targetObject.position;
-            offset = position - new Vector3(worldPosition.x, worldPosition.y, position.z);
-            isDragging = true;
+            var mouseScreenPos = GetPointerPosition(context);
+            var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
+            var hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
+
+            if (hit)
+            {
+                var target = hit.collider.gameObject;
+                if (target.TryGetComponent<MonsterController>(out var controller))
+                {
+                    if (controller.TryTransitionState<DragState>())
+                    {
+                        targetOriginY = target.transform.position.y;
+                        isDragging = true;
+                        draggingObject = target;
+
+                        // 일정 시간이 지나면 자동으로 놓기
+                        AutoDropAfterTime(autoDropTime).Forget();
+                    }
+                    else
+                    {
+                        Logger.Log("This GameObject cannot be dragged!");
+                    }
+                }
+            }
+        }
+        else
+        {
+            Logger.Log("Already dragging!");
         }
     }
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        isDragging = false;
-        targetObject = null;
+        if (isDragging)
+        {
+            DropObject();
+        }
     }
 
     private void OnPointerDrag(InputAction.CallbackContext context)
     {
-        if (isDragging && targetObject != null)
+        if (isDragging)
         {
-            Vector2 pointerPosition = GetPointerPosition(context);
-            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(pointerPosition);
-            targetObject.position = new Vector3(worldPosition.x, worldPosition.y, targetObject.position.z) + offset;
+            var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition(context));
+            var transform1 = draggingObject.transform;
+            pos.z = transform1.position.z;
+            transform1.position = pos;
         }
     }
 
@@ -75,6 +94,49 @@ public class DragAndDrop : MonoBehaviour
         else
         {
             return Mouse.current.position.ReadValue();
+        }
+    }
+
+    private void DropObject()
+    {
+        isDragging = false;
+        FallObject(draggingObject, targetOriginY).Forget();
+        targetOriginY = 0f;
+        draggingObject = null;
+    }
+
+    private async UniTask FallObject(GameObject target, float targetHeight)
+    {
+        const float gravity = -9.8f;
+        var velocity = 0f;
+
+        while (target != null)
+        {
+            if (target.transform.position.y <= targetHeight)
+            {
+                var position = target.transform.position;
+                position = new Vector3(position.x, targetHeight, position.z);
+                target.transform.position = position;
+                if (target.TryGetComponent<MonsterController>(out var controller))
+                {
+                    controller.TryTransitionState<FallState>();
+                }
+                break;
+            }
+
+            velocity += gravity * Time.deltaTime;
+            target.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
+            await UniTask.Yield();
+        }
+    }
+
+    private async UniTask AutoDropAfterTime(float delay)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(delay));
+
+        if (isDragging)
+        {
+            DropObject();
         }
     }
 }
