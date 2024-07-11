@@ -27,6 +27,8 @@ public class MonsterSpawner : MonoBehaviour
     private WaveData currentWaveData;
     private bool isNextWave;
 
+    private bool isWaveEnd;
+
 
     private void Awake()
     {
@@ -61,6 +63,11 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        isWaveEnd = false;
+    }
+
     private void Start()
     {
         factory.poolTransform = poolTransform;
@@ -68,7 +75,7 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (MonsterCount <= 0 || !isNextWave)
+        if (MonsterCount <= 0 || !isNextWave || isWaveEnd)
             return;
 
         // if (!isNextWave)
@@ -103,6 +110,13 @@ public class MonsterSpawner : MonoBehaviour
         }
         waveId++;
         isNextWave = true;
+
+        currentWaveData = waveTable.Get(stageId, waveId);
+        if (currentWaveData == null)
+        {
+            isNextWave = false;
+            isWaveEnd = true;
+        }
     }
 
     // private void SpawnMonsterGroup()

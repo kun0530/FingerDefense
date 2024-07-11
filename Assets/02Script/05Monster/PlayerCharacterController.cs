@@ -9,14 +9,15 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     public CharacterStatus Status { get; set; }
     public PlayerCharacterData Data { get; set; }
 
+    private MonsterController atkTarget;
     private float atkTimer;
-
     public Image hpBar;
 
     public Transform[] mosnterPosition;
 
     public MonsterController monsterUp { get; set; }
     public MonsterController monsterDown { get; set; }
+
     public int MonsterCount
     {
         get
@@ -41,8 +42,18 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
     private void OnEnable()
     {
+        atkTarget = null;
         monsterUp = null;
         monsterDown = null;
+
+        Status?.Init();
+        UpdateHpBar();
+    }
+
+    private void FixedUpdate()
+    {
+        var findBehavior = new FindingTargetInCircle<MonsterController>(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
+        atkTarget = findBehavior.FindTarget() as MonsterController;
     }
 
     private void Update()
@@ -51,11 +62,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
         atkTimer += Time.deltaTime;
         if (atkTimer >= atkCoolDown)
         {
-            var findBehavior = new FindingTargetInCircle<MonsterController>(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
-            var monster = findBehavior.FindTarget() as MonsterController;
-            if (monster == null)
-                return;
-            monster.DamageHp(Status.currentAtkDmg);
+            atkTarget?.DamageHp(Status.currentAtkDmg);
             atkTimer = 0f;
         }
     }
@@ -80,6 +87,9 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
     public bool TryRemoveMonster(MonsterController monster)
     {
+        if (monster == null)
+            return false;
+
         if (monsterUp != monster && monsterDown != monster)
             return false;
 
@@ -129,13 +139,18 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
         if (Status.currentHp <= 0f)
         {
+            TryRemoveMonster(monsterUp);
+            TryRemoveMonster(monsterDown);
             Status.currentHp = 0f;
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
     private void UpdateHpBar()
     {
+        if (hpBar == null || Status == null)
+            return;
+
         var hpPercent = Status.currentHp / Status.data.Hp;
         hpBar.fillAmount = hpPercent;
     }

@@ -121,6 +121,7 @@ public class MonsterController : MonoBehaviour, IControllable
             Status.currentHp = 0f;
             isDead = true;
             var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+            attackTarget?.TryRemoveMonster(this);
             stageManager.MonsterCount--;
             pool.Release(this);
         }
