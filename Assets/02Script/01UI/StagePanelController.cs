@@ -3,83 +3,77 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using DG.Tweening;
 
 public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public StageSlot[] stageSlots;
     public RectTransform stagePanel;
-    public float scaleFactor = 0.7f; // 가운데가 아닌 슬라이드의 크기 비율
-    public float spacing = 200f; // 각 StageSlot 간의 간격
-    public float animationDuration = 0.5f; // 애니메이션 지속 시간
+    public float scaleFactor = 0.7f; 
+    public float animationDuration = 0.5f; 
+    private readonly int[] leftPaddings =
+    {
+        200,10,-180,-380,-730
+    }; 
 
-    private Vector2 dragStartPosition;
-    private Vector2 panelStartPosition;
     private int currentIndex = 0;
+    private Vector2 dragStartPosition;
+    private HorizontalLayoutGroup layoutGroup;
 
     void Start()
     {
+        layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
+        UpdatePadding();
         UpdateStageSlots();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragStartPosition = eventData.position;
-        panelStartPosition = stageSlots[0].GetComponent<RectTransform>().anchoredPosition;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector2 dragDelta = eventData.position - dragStartPosition;
-        foreach (StageSlot slot in stageSlots)
-        {
-            RectTransform rect = slot.GetComponent<RectTransform>();
-            rect.anchoredPosition = panelStartPosition + new Vector2(dragDelta.x, 0);
-        }
-
-        UpdateStageSlots();
+        // 드래그 중에는 아무 작업도 하지 않음
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        float closestDistance = float.MaxValue;
-        for (int i = 0; i < stageSlots.Length; i++)
+        Vector2 dragDelta = eventData.position - dragStartPosition;
+
+        if (dragDelta.x > 0 && currentIndex > 0)
         {
-            float distance = Mathf.Abs(stageSlots[i].GetComponent<RectTransform>().anchoredPosition.x - panelStartPosition.x);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                currentIndex = i;
-            }
+            currentIndex--;
         }
-        SnapToSlot(currentIndex);
+        else if (dragDelta.x < 0 && currentIndex < leftPaddings.Length - 1)
+        {
+            currentIndex++;
+        }
+
+        UpdatePadding();
+        UpdateStageSlots();
     }
 
-    private void SnapToSlot(int index)
+    private void UpdatePadding()
     {
-        Vector2 targetPosition = new Vector2(-index * spacing, panelStartPosition.y);
-        foreach (StageSlot slot in stageSlots)
+        if (currentIndex < leftPaddings.Length)
         {
-            RectTransform rect = slot.GetComponent<RectTransform>();
-            rect.DOAnchorPos(targetPosition + new Vector2((slot.transform.GetSiblingIndex() - index) * spacing, 0), animationDuration).OnComplete(UpdateStageSlots);
+            layoutGroup.padding.left = leftPaddings[currentIndex];
+            LayoutRebuilder.ForceRebuildLayoutImmediate(stagePanel); 
         }
     }
 
     private void UpdateStageSlots()
     {
-        for (int i = 0; i < stageSlots.Length; i++)
+        for (int i = 0; i < stagePanel.childCount; i++)
         {
+            RectTransform rect = stagePanel.GetChild(i).GetComponent<RectTransform>();
             float distanceFromCenter = Mathf.Abs(i - currentIndex);
             float scale = Mathf.Lerp(1.0f, scaleFactor, distanceFromCenter);
-            stageSlots[i].transform.localScale = new Vector3(scale, scale, 1);
-
-            float positionX = panelStartPosition.x + (i - currentIndex) * spacing;
-            stageSlots[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(positionX, panelStartPosition.y);
+            rect.localScale = new Vector3(scale, scale, 1);
+            
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0);
         }
     }
 }
