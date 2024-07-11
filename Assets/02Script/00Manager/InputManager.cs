@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 
 [DefaultExecutionOrder(-1)]
@@ -11,12 +10,12 @@ public class InputManager : MonoBehaviour
     public event Action<InputAction.CallbackContext> OnClick;
     public event Action<InputAction.CallbackContext> OnRelease;
     public event Action<InputAction.CallbackContext> OnDrag;
+    public event Action<InputAction.CallbackContext> OnBack; 
     #endregion
     private Control control;
     
     private void Awake()
     {
-        
         if (Instance == null)
         {
             Instance = this;
@@ -37,16 +36,17 @@ public class InputManager : MonoBehaviour
         control.MonsterDrag.Click.performed += context => OnClick?.Invoke(context);
         control.MonsterDrag.Release.performed += context => OnRelease?.Invoke(context);
         control.MonsterDrag.Drag.performed += context => OnDrag?.Invoke(context);
+        control.UI.Back.performed += context => OnBack?.Invoke(context);
     }
     
     private void OnDisable()
     {
         control.Disable();
-        control.MonsterDrag.Click.performed -= context => OnClick?.Invoke(context);
-        control.MonsterDrag.Release.performed -= context => OnRelease?.Invoke(context);
-        control.MonsterDrag.Drag.performed -= context => OnDrag?.Invoke(context);
+
+        control.UI.Back.performed -= context => OnBack?.Invoke(context);
         
     }
-
     
+    
+
 }
