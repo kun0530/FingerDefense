@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public RectTransform stagePanel;
-    public float scaleFactor = 0.7f; 
-    public float animationDuration = 0.5f; 
-    private readonly int[] leftPaddings =
-    {
-        200,10,-180,-380,-730
-    }; 
+    public float scaleFactor = 0.7f;
+    public float animationDuration = 0.5f;
+    private readonly int[] leftPaddings = { 200, 10, -180, -380, -730 };
 
     private int currentIndex = 0;
     private Vector2 dragStartPosition;
@@ -21,8 +17,9 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
-        UpdatePadding();
-        UpdateStageSlots();
+        UpdatePadding(true); 
+        UpdateStageSlots(true); 
+        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -32,7 +29,6 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnDrag(PointerEventData eventData)
     {
-        // 드래그 중에는 아무 작업도 하지 않음
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -52,28 +48,48 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
         UpdateStageSlots();
     }
 
-    private void UpdatePadding()
+    private void UpdatePadding(bool instant = false)
     {
         if (currentIndex < leftPaddings.Length)
         {
-            layoutGroup.padding.left = leftPaddings[currentIndex];
-            LayoutRebuilder.ForceRebuildLayoutImmediate(stagePanel); 
+            if (instant)
+            {
+                layoutGroup.padding.left = leftPaddings[currentIndex];
+                LayoutRebuilder.ForceRebuildLayoutImmediate(stagePanel);
+            }
+            else
+            {
+                DOTween.To(() => layoutGroup.padding.left, x => layoutGroup.padding.left = x, leftPaddings[currentIndex], animationDuration)
+                    .SetEase(Ease.InOutQuad)
+                    .OnUpdate(() =>
+                    {
+                        LayoutRebuilder.ForceRebuildLayoutImmediate(stagePanel);
+                    });
+            }
         }
     }
 
-    private void UpdateStageSlots()
+    private void UpdateStageSlots(bool instant = false)
     {
         for (int i = 0; i < stagePanel.childCount; i++)
         {
             RectTransform rect = stagePanel.GetChild(i).GetComponent<RectTransform>();
             float distanceFromCenter = Mathf.Abs(i - currentIndex);
             float scale = Mathf.Lerp(1.0f, scaleFactor, distanceFromCenter);
-            rect.localScale = new Vector3(scale, scale, 1);
+
+            if (instant)
+            {
+                rect.localScale = new Vector3(scale, scale, 1);
+            }
+            else
+            {
+                rect.DOScale(new Vector3(scale, scale, 1), animationDuration).SetEase(Ease.InOutQuad);
+            }
             
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0);
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0); 
         }
     }
 }
