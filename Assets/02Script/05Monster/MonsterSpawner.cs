@@ -22,8 +22,6 @@ public class MonsterSpawner : MonoBehaviour
 
     public float spawnGroupInterval = 0.5f;
     private float spawnWaveTimer = 0f;
-    private float spawnGroupTimer = 0f;
-    private int spawnGroupIndex = 0;
     private WaveData currentWaveData;
     private bool isNextWave;
 
@@ -77,12 +75,7 @@ public class MonsterSpawner : MonoBehaviour
     {
         if (MonsterCount <= 0 || !isNextWave || isWaveEnd)
             return;
-
-        // if (!isNextWave)
-        // {
-        //     SpawnMonsterGroup();
-        // }
-
+        
         if (spawnWaveTimer >= currentWaveData.Term)
         {
             spawnWaveTimer = 0f;
@@ -118,29 +111,4 @@ public class MonsterSpawner : MonoBehaviour
             isWaveEnd = true;
         }
     }
-
-    // private void SpawnMonsterGroup()
-    // {
-    //     spawnGroupTimer += Time.deltaTime;
-    //     if (spawnGroupTimer >= spawnGroupInterval)
-    //     {
-    //         var monster = currentWaveData.monsters[spawnGroupIndex];
-    //         for (int i = 0; i < monster.monsterCount; i++)
-    //         {
-    //             var monsterGo = factory.GetMonster(monsterTable.Get(monster.monsterId));
-    //             monsterGo.transform.position = spawnPositions[monster.monsterCount + i - 1].position;
-    //             monsterGo.moveTarget = moveTarget;
-    //         }
-    //         spawnGroupIndex++;
-
-    //         if (spawnGroupIndex >= currentWaveData.monsters.Count - 1)
-    //         {
-    //             spawnGroupIndex = 0;
-    //             waveId++;
-    //             isNextWave = true;
-    //         }
-
-    //         spawnGroupTimer = 0f;
-    //     }
-    // }
 }
