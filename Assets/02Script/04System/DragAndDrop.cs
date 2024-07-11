@@ -12,7 +12,7 @@ public class DragAndDrop : MonoBehaviour
     private GameObject draggingObject;
     private const float autoDropTime = 2.0f; // 드래그 시작 후 2초 뒤에 자동으로 놓기
 
-    
+    private static readonly RaycastHit2D[] hits = new RaycastHit2D[10];
 
     private void Awake()
     {
@@ -21,16 +21,22 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnEnable()
     {
-        InputManager.Instance.OnClick += OnPointerDown;
-        InputManager.Instance.OnRelease += OnPointerUp;
-        InputManager.Instance.OnDrag += OnPointerDrag;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.OnClick += OnPointerDown;
+            InputManager.Instance.OnRelease += OnPointerUp;
+            InputManager.Instance.OnDrag += OnPointerDrag;
+        }
     }
 
     private void OnDisable()
     {
-        InputManager.Instance.OnClick -= OnPointerDown;
-        InputManager.Instance.OnRelease -= OnPointerUp;
-        InputManager.Instance.OnDrag -= OnPointerDrag;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.OnClick -= OnPointerDown;
+            InputManager.Instance.OnRelease -= OnPointerUp;
+            InputManager.Instance.OnDrag -= OnPointerDrag;
+        }
     }
 
     private void OnPointerDown(InputAction.CallbackContext context)
@@ -39,12 +45,30 @@ public class DragAndDrop : MonoBehaviour
         {
             var mouseScreenPos = GetPointerPosition();
             var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-            var hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero); 
             LayerMask mask = LayerMask.GetMask("Monster");
-            
-            if (mask == (mask | (1 << hit.collider.gameObject.layer)))
+
+            int hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
+        
+            GameObject highestSortingOrderObject = null;
+            int highestSortingOrder = int.MinValue;
+
+            for (int i = 0; i < hitCount; i++)
             {
-                var target = hit.collider.gameObject;
+                var hit = hits[i];
+                if (hit.collider != null && mask == (mask | (1 << hit.collider.gameObject.layer)))
+                {
+                    var spriteRenderer = hit.collider.gameObject.GetComponent<SpriteRenderer>();
+                    if (spriteRenderer != null && spriteRenderer.sortingOrder > highestSortingOrder)
+                    {
+                        highestSortingOrder = spriteRenderer.sortingOrder;
+                        highestSortingOrderObject = hit.collider.gameObject;
+                    }
+                }
+            }
+
+            if (highestSortingOrderObject != null)
+            {
+                var target = highestSortingOrderObject;
                 if (target.TryGetComponent<MonsterController>(out var controller))
                 {
                     if (controller.TryTransitionState<DragState>())
