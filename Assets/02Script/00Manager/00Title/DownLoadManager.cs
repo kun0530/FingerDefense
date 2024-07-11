@@ -299,7 +299,6 @@ public class DownLoadManager : MonoBehaviour
         {
             try
             {
-                sizeInfoText.text = $"접속 재시도 중... {i + 1}/{maxRetries}";
                 await action();
                 return;
             }
