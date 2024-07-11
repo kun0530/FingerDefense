@@ -7,18 +7,19 @@ using UnityEngine.UI;
 
 public class MonsterController : MonoBehaviour, IControllable
 {
+    private StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
     public MonsterStatus Status { get; set; }
-    public string testMonsterDragData; // 몬스터의 드래그 타입을 통해 행동 변경 -> 추후 삭제
+    public string testMonsterDragData; // To-Do: 추후 삭제 -> 몬스터의 드래그 타입을 통해 행동 변경
 
     public Image hpBar;
     private bool isDead = false;
 
     public bool CanPatrol { get; set; }
-    public Transform moveTarget { get; set; }
-    public Transform attackMoveTarget { get; set; }
+    public Transform moveTarget { get; set; } // castle 위치
+    public Transform attackMoveTarget { get; set; } // 공격 위치
     public PlayerCharacterController attackTarget { get; set; }
 
     public float findRange = 3f;
@@ -27,20 +28,16 @@ public class MonsterController : MonoBehaviour, IControllable
     {
         get
         {
-            if (Status.data.DragType <= (int)MonsterData.DragTypes.None
-            || Status.data.DragType >= (int)MonsterData.DragTypes.Count)
-                return false;
-
             if (stateMachine.CurrentState.GetType() == typeof(FallState))
                 return false;
 
-            switch ((MonsterData.DragTypes)Status.data.DragType)
+            switch (Status.data.DragType)
             {
-                case MonsterData.DragTypes.BOSS:
+                case (int)MonsterData.DragTypes.BOSS:
                     return false;
-                case MonsterData.DragTypes.NORMAL:
+                case (int)MonsterData.DragTypes.NORMAL:
                     return true;
-                case MonsterData.DragTypes.SPECIAL:
+                case (int)MonsterData.DragTypes.SPECIAL:
                     return true; // To-Do: 세이브 데이터로부터 해당 몬스터를 들 수 있는지, 조건문을 더 걸어야 합니다.
                 default:
                     return false;
@@ -50,8 +47,9 @@ public class MonsterController : MonoBehaviour, IControllable
 
     public bool IsTargetable
     {
-        get { return true; }
+        get { return !isDead; }
     }
+
     public float targetFallY { get; set; }
 
     public bool TryTransitionState<T>() where T : IState
@@ -69,7 +67,7 @@ public class MonsterController : MonoBehaviour, IControllable
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
         var findBehavior = new FindingTargetInCircle<PlayerCharacterController>(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
         
-        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 삭제
+        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게 변경
         stateMachine.AddState(new DragState(this, dragBehavior));
         stateMachine.AddState(new FallState(this));
         stateMachine.AddState(new MoveState(this));
@@ -78,6 +76,11 @@ public class MonsterController : MonoBehaviour, IControllable
         stateMachine.AddState(new AttackState(this));
 
         stateMachine.Initialize<MoveState>();
+    }
+
+    private void Start()
+    {
+        stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
     }
 
     public void ResetMonsterData()
@@ -105,7 +108,6 @@ public class MonsterController : MonoBehaviour, IControllable
 
         if (other.CompareTag("Castle"))
         {
-            var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
             stageManager.DamageCastle(10f);
             stageManager.MonsterCount--;
             pool.Release(this);
@@ -130,12 +132,8 @@ public class MonsterController : MonoBehaviour, IControllable
     private void Die()
     {
         isDead = true;
-
         attackTarget?.TryRemoveMonster(this);
-
-        var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
         stageManager.MonsterCount--;
-        
         pool.Release(this);
     }
 

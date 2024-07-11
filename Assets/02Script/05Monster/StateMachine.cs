@@ -10,7 +10,7 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
     private Dictionary<Type, IState> states = new();
     public IState CurrentState { get; private set; }
 
-    public event Action<IState> stateChanged;
+    // public event Action<IState> stateChanged;
  
     public StateMachine(T controller)
     {
@@ -33,7 +33,7 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
             CurrentState = state;
             CurrentState?.Enter();
 
-            stateChanged?.Invoke(CurrentState);
+            // stateChanged?.Invoke(CurrentState);
         }
     }
 
@@ -49,7 +49,7 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
             CurrentState = nextState;
             CurrentState?.Enter();
 
-            stateChanged?.Invoke(CurrentState);
+            // stateChanged?.Invoke(CurrentState);
 
             return true;
         }

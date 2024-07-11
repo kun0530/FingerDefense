@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
@@ -9,8 +10,9 @@ public class StageManager : MonoBehaviour
     private float castleMaxHp = 100f;
     public float CastleHp { get; private set; }
     public Image castleHpBar;
-    public TextMeshProUGUI gameOverText;
-    public TextMeshProUGUI gameClearText;
+    public GameObject gameOverUi;
+    public GameObject gameClearUi;
+    public GameObject gameUi;
     public TextMeshProUGUI monsterCountText;
     private int monsterCount;
     public int MonsterCount
@@ -39,8 +41,9 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        gameOverText.enabled = false;
-        gameClearText.enabled = false;
+        gameUi.SetActive(true);
+        gameOverUi.SetActive(false);
+        gameClearUi.SetActive(false);
         MonsterCount = monsterSpawner.MonsterCount;
     }
 
@@ -67,12 +70,20 @@ public class StageManager : MonoBehaviour
     private void GameClear()
     {
         Time.timeScale = 0f;
-        gameClearText.enabled = true;
+        gameUi.SetActive(false);
+        gameClearUi.SetActive(true);
     }
 
     private void GameOver()
     {
         Time.timeScale = 0f;
-        gameOverText.enabled = true;
+        gameUi.SetActive(false);
+        gameOverUi.SetActive(true);
+    }
+
+    public void RestartScene()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
     }
 }
