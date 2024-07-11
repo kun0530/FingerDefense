@@ -12,6 +12,8 @@ public class DragAndDrop : MonoBehaviour
     private GameObject draggingObject;
     private const float autoDropTime = 2.0f; // 드래그 시작 후 2초 뒤에 자동으로 놓기
 
+    
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -35,7 +37,7 @@ public class DragAndDrop : MonoBehaviour
     {
         if (!IsDragging)
         {
-            var mouseScreenPos = GetPointerPosition(context);
+            var mouseScreenPos = GetPointerPosition();
             var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
             var hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
 
@@ -78,14 +80,14 @@ public class DragAndDrop : MonoBehaviour
     {
         if (IsDragging)
         {
-            var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition(context));
+            var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition());
             var transform1 = draggingObject.transform;
             pos.z = transform1.position.z;
             transform1.position = pos;
         }
     }
 
-    public Vector2 GetPointerPosition(InputAction.CallbackContext context)
+    public Vector2 GetPointerPosition()
     {
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
@@ -96,7 +98,9 @@ public class DragAndDrop : MonoBehaviour
             return Mouse.current.position.ReadValue();
         }
     }
-
+    
+   
+    
     private void DropObject()
     {
         IsDragging = false;
@@ -139,4 +143,6 @@ public class DragAndDrop : MonoBehaviour
             DropObject();
         }
     }
+
+    
 }
