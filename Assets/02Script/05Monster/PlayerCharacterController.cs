@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 public class PlayerCharacterController : MonoBehaviour, IControllable
 {
+    public PlayerCharacterSpawner spawner { get; set; }
+
     public CharacterStatus Status { get; set; }
-    public PlayerCharacterData Data { get; set; }
+    public bool IsDead { get; set; } = true;
 
     private MonsterController atkTarget;
     private float atkTimer;
@@ -48,6 +50,11 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
         Status?.Init();
         UpdateHpBar();
+    }
+
+    public void ResetPlayerData()
+    {
+        IsDead = false;
     }
 
     private void FixedUpdate()
@@ -142,6 +149,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
             TryRemoveMonster(monsterUp);
             TryRemoveMonster(monsterDown);
             Status.currentHp = 0f;
+            IsDead = true;
+            spawner.RemoveActiveCharacter(this);
             gameObject.SetActive(false);
         }
     }

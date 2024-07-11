@@ -6,12 +6,12 @@ public class PlayerCharacterSpawner : MonoBehaviour
 {
     public PlayerCharacterController[] characterPrefabs; // To-Do: 추후 AssetReference로 변경
     public Transform poolTransform;
-    public Transform[] spawnPositions = new Transform[6];
+    public Transform[] spawnPositions; // 6개 (전열: 0, 1 / 중열: 2, 3 / 후열: 4, 5)
 
     private PlayerCharacterTable playerCharacterTable;
 
-    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8];
-    private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6];
+    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8]; // 사용할 캐릭터들
+    private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
 
     private void Awake()
     {
@@ -42,6 +42,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         var playerCharacter = Instantiate(characterPrefabs[data.AssetNo]);
         playerCharacter.transform.SetParent(poolTransform);
         playerCharacter.Status = new CharacterStatus(data);
+        playerCharacter.spawner = this;
         playerCharacter.gameObject.SetActive(false);
 
         return playerCharacter;
@@ -51,10 +52,9 @@ public class PlayerCharacterSpawner : MonoBehaviour
     {
         // 버튼 클릭
         // 해당 버튼의 쿨타임 확인
-        // 
         var playerCharacter = playerCharacters[index];
 
-        if (playerCharacter == null || playerCharacter.gameObject.activeSelf) // To-Do: 리스폰 쿨타임 조건 추가
+        if (playerCharacter == null || !playerCharacter.IsDead) // To-Do: 리스폰 쿨타임 조건 추가
             return;
 
         var spawnPriority = playerCharacter.Status.data.Priority;
@@ -74,9 +74,21 @@ public class PlayerCharacterSpawner : MonoBehaviour
             return;
         }
 
+        playerCharacter.ResetPlayerData();
         playerCharacter.gameObject.SetActive(true);
         // To-Do: 초기화
 
         // playerCharacterSpawner.SpawnPlayerCharacter(index);
+    }
+
+    public void RemoveActiveCharacter(PlayerCharacterController character)
+    {
+        for (int i = 0; i < activePlayerCharacters.Length; i++)
+        {
+            if (activePlayerCharacters[i] == character)
+            {
+                activePlayerCharacters[i] = null;
+            }
+        }
     }
 }
