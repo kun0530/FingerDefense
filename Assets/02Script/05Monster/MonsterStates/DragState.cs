@@ -27,7 +27,6 @@ public class DragState : IState
 
         dragAndDrop = GameObject.FindGameObjectWithTag("InputManager").GetComponent<DragAndDrop>();
 
-        // order layer 앞으로
         renderer.sortingOrder = 1;
     }
 
@@ -37,7 +36,6 @@ public class DragState : IState
 
         if (dragAndDrop.IsDragging)
         {
-            // To-Do: 터치 월드 포지션
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
             pos.z = 0f;
             monster.transform.position = pos;
@@ -52,7 +50,6 @@ public class DragState : IState
     {
         dragBehavior?.DragExit();
 
-        // order layer 원래대로
         renderer.sortingOrder = 0;
     }
 }
