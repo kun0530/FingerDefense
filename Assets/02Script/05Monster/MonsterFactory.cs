@@ -62,6 +62,7 @@ public class MonsterFactory
 
         var monsterStatus = new MonsterStatus(data);
         monster.Status = monsterStatus;
+        monster.ResetMonsterData();
 
         return monster;
     }

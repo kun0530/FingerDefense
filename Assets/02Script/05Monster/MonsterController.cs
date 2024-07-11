@@ -64,26 +64,30 @@ public class MonsterController : MonoBehaviour, IControllable
 
     private void Awake()
     {
-        // Idle, Move, Chase, Attack, Drag, Fall
         stateMachine = new StateMachine<MonsterController>(this);
+
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
-        stateMachine.AddState(new IdleState<MonsterController>(this));
+        var findBehavior = new FindingTargetInCircle<PlayerCharacterController>(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
+        
+        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 삭제
         stateMachine.AddState(new DragState(this, dragBehavior));
         stateMachine.AddState(new FallState(this));
         stateMachine.AddState(new MoveState(this));
-        stateMachine.AddState(new PatrolState(this, new FindingTargetInCircle<PlayerCharacterController>(transform, findRange, 1 << LayerMask.NameToLayer("Player"))));
+        stateMachine.AddState(new PatrolState(this, findBehavior));
         stateMachine.AddState(new ChaseState(this));
         stateMachine.AddState(new AttackState(this));
+
+        stateMachine.Initialize<MoveState>();
     }
 
-    private void OnEnable()
+    public void ResetMonsterData()
     {
         isDead = false;
 
-        stateMachine.Initialize<MoveState>();
-        if (Status != null)
-            Status.Init();
-        hpBar.fillAmount = 1f;
+        stateMachine.TransitionTo<MoveState>();
+        Status.Init();
+        UpdateHpBar();
+
         CanPatrol = false;
     }
 
@@ -119,16 +123,27 @@ public class MonsterController : MonoBehaviour, IControllable
         if (Status.currentHp <= 0f)
         {
             Status.currentHp = 0f;
-            isDead = true;
-            var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
-            attackTarget?.TryRemoveMonster(this);
-            stageManager.MonsterCount--;
-            pool.Release(this);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        isDead = true;
+
+        attackTarget?.TryRemoveMonster(this);
+
+        var stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+        stageManager.MonsterCount--;
+        
+        pool.Release(this);
     }
 
     private void UpdateHpBar()
     {
+        if (hpBar == null || Status == null)
+            return;
+
         var hpPercent = Status.currentHp / Status.data.Hp;
         hpBar.fillAmount = hpPercent;
     }
