@@ -39,9 +39,10 @@ public class DragAndDrop : MonoBehaviour
         {
             var mouseScreenPos = GetPointerPosition();
             var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-            var hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
-
-            if (hit)
+            var hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero); 
+            LayerMask mask = LayerMask.GetMask("Monster");
+            
+            if (mask == (mask | (1 << hit.collider.gameObject.layer)))
             {
                 var target = hit.collider.gameObject;
                 if (target.TryGetComponent<MonsterController>(out var controller))
