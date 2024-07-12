@@ -13,6 +13,7 @@ public class GameUiManager : MonoBehaviour
     public GameObject gameOverUi;
     public GameObject gameClearUi;
 
+    public TextMeshProUGUI eranedGoldText;
     public TextMeshProUGUI monsterCountText;
 
     public Image castleHpBar;
@@ -45,5 +46,10 @@ public class GameUiManager : MonoBehaviour
     public void UpdateMonsterCount(int monsterCount)
     {
         monsterCountText.text = $"Monster: {monsterCount}";
+    }
+
+    public void UpdateEarnedGold(int gold)
+    {
+        eranedGoldText.text = $"Gold: {gold}";
     }
 }

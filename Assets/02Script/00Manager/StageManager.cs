@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public enum StageState
 {
-    Playing, GameOver, GameClear
+    None, Playing, GameOver, GameClear
 }
 
 public class StageManager : MonoBehaviour
@@ -37,6 +37,17 @@ public class StageManager : MonoBehaviour
                 CurrentState = StageState.GameClear;
         }
     }
+
+    private int earnedGold;
+    public int EarnedGold
+    {
+        get => earnedGold;
+        set
+        {
+            earnedGold = value;
+            gameUiManager.UpdateEarnedGold(earnedGold);
+        }
+    }
     
     private StageState currentState;
     public StageState CurrentState
@@ -44,7 +55,7 @@ public class StageManager : MonoBehaviour
         get => currentState;
         private set
         {
-            if (currentState == value)
+            if (currentState == value || value == StageState.None)
                 return;
 
             currentState = value;
@@ -65,6 +76,7 @@ public class StageManager : MonoBehaviour
         CastleHp = CastleMaxHp;
         CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
+        EarnedGold = 0;
     }
 
     public void DamageCastle(float damage)

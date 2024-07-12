@@ -140,6 +140,7 @@ public class MonsterController : MonoBehaviour, IControllable
         isDead = true;
         attackTarget?.TryRemoveMonster(this);
         stageManager.MonsterCount--;
+        stageManager.EarnedGold += Status.data.DropGold;
         pool.Release(this);
     }
 
