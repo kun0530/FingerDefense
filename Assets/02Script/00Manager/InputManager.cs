@@ -44,6 +44,9 @@ public class InputManager : MonoBehaviour
         control.Disable();
 
         control.UI.Back.performed -= context => OnBack?.Invoke(context);
+        control.MonsterDrag.Click.performed -= context => OnClick?.Invoke(context);
+        control.MonsterDrag.Release.performed -= context => OnRelease?.Invoke(context);
+        control.MonsterDrag.Drag.performed -= context => OnDrag?.Invoke(context);
         
     }
     

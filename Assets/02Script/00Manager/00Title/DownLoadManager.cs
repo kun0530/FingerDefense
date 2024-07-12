@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class DownLoadManager : MonoBehaviour
 {
@@ -387,6 +388,8 @@ public class DownLoadManager : MonoBehaviour
 
     public void LoadGameScene()
     {
-        LoadingManager.LoadScene("Test");
+        SceneManager.LoadScene(1);
     }
+    
+    
 }

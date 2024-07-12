@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class LoadingManager : MonoBehaviour
 {
-    public static string nextScene;
+    private static string nextScene;
 
     public Slider loadingBar;
 
@@ -56,6 +56,6 @@ public class LoadingManager : MonoBehaviour
     public static void LoadScene(string sceneName)
     {
         nextScene = sceneName;
-        SceneManager.LoadSceneAsync("Test");
+        SceneManager.LoadSceneAsync(nextScene);
     }
 }
