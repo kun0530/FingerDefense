@@ -388,7 +388,7 @@ public class DownLoadManager : MonoBehaviour
 
     public void LoadGameScene()
     {
-        SceneManager.LoadScene("MonsterTestScene1");
+        SceneManager.LoadScene(1);
     }
     
     
