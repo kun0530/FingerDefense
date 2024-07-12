@@ -56,7 +56,8 @@ public class WaveTable : DataTable
                     (int monsterId, int monsterCount) monster = (csvReader.GetField<int>(i), csvReader.GetField<int>(i + 1));
                     if (!monsterTable.IsExist(monster.monsterId))
                     {
-                        Logger.LogError($"존재하지 않는 몬스터 ID: {monster.monsterId}"); // 예외 던져야 함
+                        if (monster.monsterId != 0)
+                            Logger.LogError($"존재하지 않는 몬스터 ID: {monster.monsterId}"); // 예외 던져야 함
                         continue;
                     }
                     waveData.monsters.Add(monster);
