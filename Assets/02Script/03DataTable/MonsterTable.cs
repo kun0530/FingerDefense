@@ -26,22 +26,23 @@ public class MonsterData
         Count
     }
 
-    public int ID { get; set; }
+    public int Id { get; set; }
     public float Hp{ get; set; }
     public int DragType { get; set; }
     public int Element { get; set; }
     public float MoveSpeed { get; set; }
     public float AtkDmg { get; set; }
     public float AtkSpeed { get; set; } // 초당 공격횟수
-    public bool IsRanger { get; set; } // 원거리 타입 여부
-    public float AtkRange { get; set; } // 원거리 몬스터 공격 거리
+    // public bool IsRanger { get; set; } // 원거리 타입 여부
+    // public float AtkRange { get; set; } // 원거리 몬스터 공격 거리
     public float Height { get; set; } // 즉사 높이
     public int Skill { get; set; }
+    public int DropGold { get; set; }
     public int AssetNo { get; set; }
 
     public override string ToString()
     {
-        return $"{ID}: {Hp} / {(DragTypes)DragType} / {Element}";
+        return $"{Id}: {Hp} / {(DragTypes)DragType} / {Element}";
     }
 }
 
@@ -72,7 +73,7 @@ public class MonsterTable : DataTable
             var records = csvReader.GetRecords<MonsterData>();
             foreach (var record in records)
             {
-                table.TryAdd(record.ID, record);
+                table.TryAdd(record.Id, record);
             }
         }
     }
