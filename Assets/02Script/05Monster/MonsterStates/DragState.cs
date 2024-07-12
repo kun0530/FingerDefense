@@ -6,6 +6,7 @@ public class DragState : IState
 {
     private MonsterController monster;
     private SpriteRenderer renderer;
+    private Collider2D collider;
     private IDraggable dragBehavior;
 
     private DragAndDrop dragAndDrop;
@@ -16,6 +17,7 @@ public class DragState : IState
         this.dragBehavior = dragBehavior;
 
         renderer = monster.GetComponent<SpriteRenderer>();
+        collider = monster.GetComponent<BoxCollider2D>();
     }
 
     public void Enter()
@@ -27,6 +29,7 @@ public class DragState : IState
 
         dragAndDrop = GameObject.FindGameObjectWithTag("InputManager").GetComponent<DragAndDrop>();
 
+        collider.enabled = false;
         renderer.sortingOrder = 1;
     }
 

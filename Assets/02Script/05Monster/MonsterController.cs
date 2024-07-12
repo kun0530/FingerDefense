@@ -47,7 +47,11 @@ public class MonsterController : MonoBehaviour, IControllable
 
     public bool IsTargetable
     {
-        get { return !isDead; }
+        get
+        {
+            var currentState = stateMachine.CurrentState.GetType();
+            return !isDead && currentState != typeof(DragState) && currentState != typeof(FallState);
+        }
     }
 
     public float targetFallY { get; set; }
@@ -108,9 +112,11 @@ public class MonsterController : MonoBehaviour, IControllable
 
         if (other.CompareTag("Castle"))
         {
+            // if (!IsTargetable)
+            //     return;
+            
             stageManager.DamageCastle(10f);
-            stageManager.MonsterCount--;
-            pool.Release(this);
+            Die();
         }
     }
 

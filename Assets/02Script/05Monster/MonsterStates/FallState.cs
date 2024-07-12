@@ -5,6 +5,7 @@ using UnityEngine;
 public class FallState : IState
 {
     MonsterController monster;
+    private Collider2D collider;
     private float startY;
     
     private float velocity;
@@ -13,6 +14,7 @@ public class FallState : IState
     public FallState(MonsterController monster)
     {
         this.monster = monster;
+        collider = monster.GetComponent<BoxCollider2D>();
     }
 
     public void Enter()
@@ -39,6 +41,6 @@ public class FallState : IState
 
     public void Exit()
     {
-        
+        collider.enabled = true;
     }
 }
