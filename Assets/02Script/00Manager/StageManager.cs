@@ -5,6 +5,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum StageState
+{
+    Game, GameOver, GameClear
+}
+
 public class StageManager : MonoBehaviour
 {
     private float castleMaxHp = 100f;
@@ -22,12 +27,15 @@ public class StageManager : MonoBehaviour
         {
             monsterCount = value;
             monsterCountText.text = $"Monster: {monsterCount}";
-            if (monsterCount <= 0)
+            if (monsterCount <= 0 && CastleHp > 0f)
             {
                 GameClear();
             }
         }
     }
+    public StageState State { get; private set; }
+
+
 
     public MonsterSpawner monsterSpawner;
     public PlayerCharacterSpawner playerCharacterSpawner;
@@ -37,6 +45,7 @@ public class StageManager : MonoBehaviour
     private void Awake()
     {
         CastleHp = castleMaxHp;
+        State = StageState.Game;
     }
 
     private void Start()
@@ -72,6 +81,7 @@ public class StageManager : MonoBehaviour
         Time.timeScale = 0f;
         gameUi.SetActive(false);
         gameClearUi.SetActive(true);
+        State = StageState.GameClear;
     }
 
     private void GameOver()
@@ -79,6 +89,7 @@ public class StageManager : MonoBehaviour
         Time.timeScale = 0f;
         gameUi.SetActive(false);
         gameOverUi.SetActive(true);
+        State = StageState.GameOver;
     }
 
     public void RestartScene()
