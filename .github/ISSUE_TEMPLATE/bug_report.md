@@ -1,38 +1,36 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: 버그 제보
+about: 버그나 수정사항 제보
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**버그에 대한 설명을 적어주세요**
+예시) 게임 오버와 게임 클리어가 동시에 출력됩니다.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**우선도에 대해 적어주세요(상,중,하)**
+예시) 상
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**버그가 발생한 순서에 대해서 적어주세요**
+예시)
+1.	유저 체력 1
+2.	마지막 몬스터가 포탈에 진입
+3.	게임 오버, 게임 클리어 화면이 동시에 출력
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**해결 방향에 대해서 설명해 주세요**
+예시)
+승리 조건과 패배 조건이 동시에 만족했을 때 패배 조건을 우선한다.
+위와 같은 상황에서 게임 오버만 표시.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**버그 스크린샷**
+ 
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**스마트폰 기기 정보:**
+•	Device: [e.g. 삼성 S22]
+•	OS: [e.g. 안드로이드 14]
+•	Version [e.g. OneUI6.1]
 
-**Additional context**
-Add any other context about the problem here.
+**추가적인 설명이 필요하면 적어 주세요**
+예시) 위와 같은 상황으로 버그 리포트 작성해주세요
