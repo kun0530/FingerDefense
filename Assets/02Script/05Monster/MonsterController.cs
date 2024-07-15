@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
-public class MonsterController : MonoBehaviour, IControllable
+public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITargetable
 {
     private StageManager stageManager;
     public IObjectPool<MonsterController> pool;
@@ -69,7 +69,7 @@ public class MonsterController : MonoBehaviour, IControllable
         stateMachine = new StateMachine<MonsterController>(this);
 
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
-        var findBehavior = new FindingTargetInCircle<PlayerCharacterController>(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
+        var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
         
         stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게 변경
         stateMachine.AddState(new DragState(this, dragBehavior));
@@ -120,7 +120,7 @@ public class MonsterController : MonoBehaviour, IControllable
         }
     }
 
-    public void DamageHp(float damage)
+    public void TakeDamage(float damage)
     {
         if (damage < 0 || isDead)
             return;

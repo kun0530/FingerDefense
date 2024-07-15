@@ -62,13 +62,15 @@ public class PatrolState : IState
 
     private void FindTarget()
     {
-        var nearCollider = findBehavior.FindTarget() as PlayerCharacterController;
-
-        if (nearCollider != null && nearCollider.gameObject != monster.attackTarget)
+        var nearCollider = findBehavior.FindTarget();
+        if (nearCollider == null)
+            return;
+        
+        if (nearCollider.TryGetComponent<PlayerCharacterController>(out var target)
+        && target != monster.attackTarget)
         {
             monster.attackTarget?.TryRemoveMonster(monster);
-            nearCollider.TryAddMonster(monster);
+            target.TryAddMonster(monster);
         }
-
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerCharacterController : MonoBehaviour, IControllable
+public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageable, ITargetable
 {
     public PlayerCharacterSpawner spawner { get; set; }
 
@@ -59,8 +59,22 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
     private void FixedUpdate()
     {
-        var findBehavior = new FindingTargetInCircle<MonsterController>(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
-        atkTarget = findBehavior.FindTarget() as MonsterController;
+        var findBehavior = new FindingTargetInCircle(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
+        var nearCollider = findBehavior.FindTarget();
+        if (nearCollider == null)
+        {
+            atkTarget = null;
+            return;
+        }
+        
+        if (nearCollider.TryGetComponent<MonsterController>(out var target))
+        {
+            atkTarget = target;
+        }
+        else
+        {
+            atkTarget = null;
+        }
     }
 
     private void Update()
@@ -69,7 +83,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
         atkTimer += Time.deltaTime;
         if (atkTimer >= atkCoolDown)
         {
-            atkTarget?.DamageHp(Status.currentAtkDmg);
+            atkTarget?.TakeDamage(Status.currentAtkDmg);
             atkTimer = 0f;
         }
     }
@@ -136,7 +150,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
         }
     }
 
-    public void DamageHp(float damage)
+    public void TakeDamage(float damage)
     {
         if (damage < 0)
             return;

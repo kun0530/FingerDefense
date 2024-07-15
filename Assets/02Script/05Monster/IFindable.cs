@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IFindable
 {
-    IControllable FindTarget();
+    GameObject FindTarget();
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FindingTargetInCircle<T> : IFindable where T : MonoBehaviour, IControllable
+public class FindingTargetInCircle : IFindable
 {
     public Transform center;
     public float radius;
@@ -16,28 +16,28 @@ public class FindingTargetInCircle<T> : IFindable where T : MonoBehaviour, ICont
         this.targetLayer = targetLayer;
     }
 
-    public IControllable FindTarget()
+    public GameObject FindTarget()
     {
         var targets = Physics2D.OverlapCircleAll(center.position, radius, targetLayer);
-        T nearCollider = null;
+        GameObject nearObject = null;
         float nearDistance = float.MaxValue;
 
         foreach (var target in targets)
         {
-            if (target.TryGetComponent<T>(out var controller))
+            if (target.TryGetComponent<ITargetable>(out var targetable))
             {
-                if (!controller.IsTargetable)
+                if (!targetable.IsTargetable)
                     continue;
                     
-                float distance = Vector2.Distance(controller.transform.position, center.position);
+                float distance = Vector2.Distance(target.transform.position, center.position);
                 if (distance < nearDistance)
                 {
-                    nearCollider = controller;
+                    nearObject = target.gameObject;
                     nearDistance = distance;
                 }
             }
         }
 
-        return nearCollider;
+        return nearObject;
     }
 }
