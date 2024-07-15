@@ -18,9 +18,28 @@ public class FindingTargetInCircle : IFindable
 
     public GameObject FindTarget()
     {
-        var targets = Physics2D.OverlapCircleAll(center.position, radius, targetLayer);
+        var nearObjects = FindTargets();
+
         GameObject nearObject = null;
         float nearDistance = float.MaxValue;
+
+        foreach (var target in nearObjects)
+        {
+            float distance = Vector2.Distance(target.transform.position, center.position);
+            if (distance < nearDistance)
+            {
+                nearObject = target.gameObject;
+                nearDistance = distance;
+            }
+        }
+
+        return nearObject;
+    }
+
+    public List<GameObject> FindTargets()
+    {
+        var targets = Physics2D.OverlapCircleAll(center.position, radius, targetLayer);
+        List<GameObject> nearObjects = new List<GameObject>();
 
         foreach (var target in targets)
         {
@@ -29,15 +48,10 @@ public class FindingTargetInCircle : IFindable
                 if (!targetable.IsTargetable)
                     continue;
                     
-                float distance = Vector2.Distance(target.transform.position, center.position);
-                if (distance < nearDistance)
-                {
-                    nearObject = target.gameObject;
-                    nearDistance = distance;
-                }
+                nearObjects.Add(target.gameObject);
             }
         }
 
-        return nearObject;
+        return nearObjects;
     }
 }

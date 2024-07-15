@@ -9,6 +9,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
     public Transform[] spawnPositions; // 6개 (전열: 0, 1 / 중열: 2, 3 / 후열: 4, 5)
 
     private PlayerCharacterTable playerCharacterTable;
+    private SkillTable skillTable;
 
     private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8]; // 사용할 캐릭터들
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
@@ -16,6 +17,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
+        skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
 
         // PlayerCharacterData 배열을 초기에 받는다
 
@@ -42,6 +44,11 @@ public class PlayerCharacterSpawner : MonoBehaviour
         var playerCharacter = Instantiate(characterPrefabs[data.AssetNo]);
         playerCharacter.transform.SetParent(poolTransform);
         playerCharacter.Status = new CharacterStatus(data);
+
+        // var skillData = skillTable.Get(data.Skill);
+        // ISkill skill = new AttackSkill(skillData, new FindingTargetInCircle(playerCharacter.transform, skillData.RangeValue, 1 << LayerMask.NameToLayer("Monster"))); // To-Do: skill factory에서 skill 생성
+        // playerCharacter.skill = skill;
+
         playerCharacter.spawner = this;
         playerCharacter.gameObject.SetActive(false);
 

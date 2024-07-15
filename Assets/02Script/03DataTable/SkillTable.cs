@@ -9,7 +9,7 @@ public class SkillData
 {
     public int Id { get; set; }
     public int Target { get; set; } // 플레이어, 몬스터
-    public int Range { get; set; } // 범위, 단일
+    public int RangeType { get; set; } // 단일, 범위, 장판
     public float RangeValue { get; set; } // 범위 스킬의 범위
     public float Damage { get; set; }
     public float CoolTime { get; set; }

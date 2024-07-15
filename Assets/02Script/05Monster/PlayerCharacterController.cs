@@ -85,6 +85,9 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         {
             atkTarget?.TakeDamage(Status.currentAtkDmg);
             atkTimer = 0f;
+
+            // 스킬이 준비되면, 일반 스킬은 일시 중지
+            // 스킬 캐스팅
         }
     }
 

@@ -7,6 +7,7 @@ public static class DataTableIds
     public static readonly string Monster = "MonsterTable";
     public static readonly string Wave = "WaveTable";
     public static readonly string PlayerCharacter = "PlayerCharacterTable";
+    public static readonly string Skill = "SkillTable";
 }
 
 public static class DataTableManager
@@ -26,6 +27,10 @@ public static class DataTableManager
         PlayerCharacterTable playerCharacterTable = new PlayerCharacterTable();
         playerCharacterTable.Load(DataTableIds.PlayerCharacter);
         tables.Add(DataTableIds.PlayerCharacter, playerCharacterTable);
+
+        SkillTable skillTable = new SkillTable();
+        skillTable.Load(DataTableIds.Skill);
+        tables.Add(DataTableIds.Skill, skillTable);
     }
 
     // public static StringTable GetStringTable()
