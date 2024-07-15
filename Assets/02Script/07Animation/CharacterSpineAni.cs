@@ -4,13 +4,14 @@ using UnityEngine;
 using Spine.Unity;
 using Spine;
 
+[RequireComponent(typeof(PlayerCharacterController))]
 public class CharacterSpineAni : MonoBehaviour
 {
     public SkeletonAnimation[] skeletonAnimation;
     public AnimationReferenceAsset[] characterAnimClip;
 
     private Spine.AnimationState spineAnimationState;
-    private CharacterController characterController;
+    private PlayerCharacterController characterController;
 
     private CharacterState characterState;
     private string currentAnimation;
@@ -30,6 +31,7 @@ public class CharacterSpineAni : MonoBehaviour
 
     private void Awake()
     {
+        skeletonAnimation = GetComponentsInChildren<SkeletonAnimation>();
         if (skeletonAnimation.Length > 2)
         {
             originalSortingOrder = skeletonAnimation[2].GetComponent<MeshRenderer>().sortingOrder;
@@ -42,7 +44,7 @@ public class CharacterSpineAni : MonoBehaviour
 
     private void Start()
     {
-        characterController = TryGetComponent(out CharacterController controller) ? controller : null;
+        characterController = TryGetComponent(out PlayerCharacterController controller) ? controller : null;
         if (skeletonAnimation.Length > 2)
         {
             skeletonAnimation[2].AnimationState.Event += HandleSpineEvent;

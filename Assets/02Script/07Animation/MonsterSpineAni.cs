@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 using Spine;
 
+[RequireComponent(typeof(MonsterController))]
 public class MonsterSpineAni : MonoBehaviour
 {
     public SkeletonAnimation skeletonAnimation;
@@ -25,12 +27,19 @@ public class MonsterSpineAni : MonoBehaviour
         LAYDOWN_AFTER,
         WALK,
     }
-    
+
+    private void Awake()
+    {
+        skeletonAnimation = GetComponentInChildren(typeof(SkeletonAnimation)) as SkeletonAnimation;
+    }
+
     private void Start()
     {
         monsterController = TryGetComponent(out MonsterController controller) ? controller : null;
         
+        spineAnimationState = skeletonAnimation.AnimationState;
         SetAnimation(MonsterState.IDLE, true, 0.3f);
+        
     }
     
     public void SetAnimation(MonsterState state, bool loop, float timeScale)
