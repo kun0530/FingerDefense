@@ -51,6 +51,8 @@ public class CharacterSpineAni : MonoBehaviour
         {
             Logger.LogWarning("해당 캐릭터는 방패가 없습니다.");
         }
+        
+        SetAnimation(CharacterState.IDLE, true, 0.3f);
     }
 
     private void HandleSpineEvent(TrackEntry trackEntry, Spine.Event e)
@@ -80,32 +82,32 @@ public class CharacterSpineAni : MonoBehaviour
 
     private void Update()
     {
-        if (!characterController)
-            return;
+        // if (!characterController)
+        //     return;
 
         if (Input.GetKey(KeyCode.Alpha1))
         {
-            SetAnimation(CharacterState.ATTACK, true, 1f);
+            SetAnimation(CharacterState.ATTACK, true, 0.3f);
         }
         else if (Input.GetKey(KeyCode.Alpha2))
         {
-            SetAnimation(CharacterState.ATTACK_SHEILD, true, 1f);
+            SetAnimation(CharacterState.ATTACK_SHEILD, true, 0.3f);
         }
         else if (Input.GetKey(KeyCode.Alpha3))
         {
-            SetAnimation(CharacterState.HIT, true, 1f);
+            SetAnimation(CharacterState.HIT, true, 0.3f);
         }
         else if (Input.GetKey(KeyCode.Alpha4))
         {
-            SetAnimation(CharacterState.IDLE, true, 1f);
+            SetAnimation(CharacterState.IDLE, true, 0.3f);
         }
         else if (Input.GetKey(KeyCode.Alpha5))
         {
-            SetAnimation(CharacterState.PASSOUT, true, 1f);
+            SetAnimation(CharacterState.PASSOUT, true, 0.3f);
         }
         else if (Input.GetKey(KeyCode.Alpha6))
         {
-            SetAnimation(CharacterState.RUN, true, 1f);
+            SetAnimation(CharacterState.RUN, true, 0.3f);
         }
     }
 
@@ -125,7 +127,7 @@ public class CharacterSpineAni : MonoBehaviour
         SetCharacterState(state);
     }
 
-    public void SetCharacterState(CharacterState state)
+    private void SetCharacterState(CharacterState state)
     {
         switch (state)
         {
@@ -134,7 +136,7 @@ public class CharacterSpineAni : MonoBehaviour
                 if (skeletonAnimation.Length > 2)
                 {
                     skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
-                    renderer.sortingOrder = -1;
+                    renderer.sortingOrder = 1;
                 }
             }
                 break;
@@ -143,13 +145,23 @@ public class CharacterSpineAni : MonoBehaviour
                 if (skeletonAnimation.Length > 2)
                 {
                     skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
-                    renderer.sortingOrder = 0;
+                    renderer.sortingOrder = -1;
                 }
 
             }
                 break;
+            case CharacterState.PASSOUT:
+            {
+                if (skeletonAnimation.Length > 2)
+                {
+                    skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
+                    renderer.sortingOrder = -1;
+                }
+            }
+                break;
+            }
         }
     }
-}
+
     
 
