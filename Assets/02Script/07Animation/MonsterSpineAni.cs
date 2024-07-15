@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Spine;
 using UnityEngine;
 using Spine.Unity;
-using Spine;
+
 
 [RequireComponent(typeof(MonsterController))]
 public class MonsterSpineAni : MonoBehaviour
@@ -17,6 +15,8 @@ public class MonsterSpineAni : MonoBehaviour
     
     private MonsterState monsterState;
     private string currentAnimation;
+    
+    
     
     public enum MonsterState
     {
@@ -36,8 +36,8 @@ public class MonsterSpineAni : MonoBehaviour
     private void Start()
     {
         monsterController = TryGetComponent(out MonsterController controller) ? controller : null;
-        
         spineAnimationState = skeletonAnimation.AnimationState;
+
         SetAnimation(MonsterState.IDLE, true, 0.3f);
         
     }
@@ -86,5 +86,13 @@ public class MonsterSpineAni : MonoBehaviour
         {
             SetAnimation(MonsterState.DEAD, true, 0.3f);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            
+            
+        }
     }
+
+    
 }
