@@ -1,20 +1,17 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: 요청 사항
+about: 리소스나 진행에 필요한 요청 사항을 적어주세요 
 title: ''
 labels: ''
 assignees: ''
 
 ---
+**요청 사항 제목**
+리소스 요청일 경우 제목에 [리소스 요청]을 붙여서 올려주세요.
+그 외 요청 사항일 경우 [요청 사항]을 붙여서 올려주세요
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**해당 에셋 링크를 올려주세요**
+리소스 요청일 경우 해당 에셋 링크를 올려주세요
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**요청사항 세부사항을 올려주세요**
+요청 사항 내용에 대해서 적어주세요
