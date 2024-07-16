@@ -100,6 +100,15 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             skill.UseSkill();
             skillTimer = 0f;
         }
+
+        Status.buffHandler.TimerUpdate();
+        // test code
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            var buffTable = DataTableManager.Get<BuffTable>(DataTableIds.Buff);
+            var buffData = buffTable.Get(51200301);
+            Status.buffHandler.AddBuff(buffData);
+        }
     }
 
     public bool TryAddMonster(MonsterController monster)
