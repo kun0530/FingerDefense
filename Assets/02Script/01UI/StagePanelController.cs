@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
+
 public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public RectTransform stagePanel;
@@ -13,15 +14,14 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private int currentIndex = 0;
     private Vector2 dragStartPosition;
     private HorizontalLayoutGroup layoutGroup;
-
+    
     void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
         UpdatePadding(true); 
         UpdateStageSlots(true); 
-        
     }
-
+    
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragStartPosition = eventData.position;
