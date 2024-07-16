@@ -16,8 +16,6 @@ public class MonsterSpineAni : MonoBehaviour
     private MonsterState monsterState;
     private string currentAnimation;
     
-    
-    
     public enum MonsterState
     {
         ATTACK,

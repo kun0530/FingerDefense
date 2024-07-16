@@ -20,6 +20,7 @@ public class StageData
     public int Reward2Id { get; set; }
     public int Reward2Value { get; set; }
     
+
 }
 
 public class StageTable : DataTable
@@ -31,9 +32,11 @@ public class StageTable : DataTable
         return table.GetValueOrDefault(id);
     }
     
+    
+    
     public override void Load(string path)
     {
-        path = string.Format(FormatPath, path);
+        path=string.Format(FormatPath, path);
         
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         
@@ -46,5 +49,6 @@ public class StageTable : DataTable
                 table.TryAdd(record.StageId, record);
             }
         }
+        
     }
 }
