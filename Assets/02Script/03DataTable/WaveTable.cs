@@ -32,8 +32,8 @@ public class WaveTable : DataTable
     {
         path = string.Format(FormatPath, path);
 
-        // var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
-        var textAsset = Resources.Load<TextAsset>(path);
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
+        //var textAsset = Resources.Load<TextAsset>(path);
         var monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
 
         using (var reader = new StringReader(textAsset.text))
