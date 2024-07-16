@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class StageSlot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int stageNum;
+    public Image MonsterImage;
+    
+    public void SetSlot(int stageNum)
     {
-        
+        this.stageNum = stageNum;
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    public void OnClickSlot()
     {
+        //덱 편성 UI 호출
         
     }
 }
