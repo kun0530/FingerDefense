@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SkillRangeTypes
+{
+    SingleTarget, MultipleTarget, AreaTarget
+}
+
 public abstract class BaseSkill
 {
     public List<ISkillAction> skillActions = new List<ISkillAction>();

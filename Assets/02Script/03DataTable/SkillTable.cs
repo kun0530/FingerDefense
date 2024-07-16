@@ -15,7 +15,7 @@ public class SkillData
     public float CoolTime { get; set; }
     public float Duration { get; set; } // 설치 공격 지속 시간
     public float CastingTime { get; set; } // 플레이어의 애니메이션 지속 시간
-    public int IsDot { get; set; } // 도트 스킬
+    // public int IsDot { get; set; } // 도트 스킬
     public int BuffId { get; set; }
     public int AssetNo { get; set; }
 }

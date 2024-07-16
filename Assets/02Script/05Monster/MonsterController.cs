@@ -71,7 +71,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
         var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
         
-        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게 변경
+        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게(Death) 변경
         stateMachine.AddState(new DragState(this, dragBehavior));
         stateMachine.AddState(new FallState(this));
         stateMachine.AddState(new MoveState(this));

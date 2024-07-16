@@ -15,6 +15,10 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     private float atkTimer;
     public Image hpBar;
 
+    public BaseSkill skill;
+    public SkillData skillData;
+    private float skillTimer;
+
     public Transform[] mosnterPosition;
 
     public MonsterController monsterUp { get; set; }
@@ -88,6 +92,13 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
             // 스킬이 준비되면, 일반 스킬은 일시 중지
             // 스킬 캐스팅
+        }
+
+        skillTimer += Time.deltaTime;
+        if (skillTimer >= skillData.CoolTime)
+        {
+            skill.UseSkill();
+            skillTimer = 0f;
         }
     }
 

@@ -45,9 +45,9 @@ public class PlayerCharacterSpawner : MonoBehaviour
         playerCharacter.transform.SetParent(poolTransform);
         playerCharacter.Status = new CharacterStatus(data);
 
-        // var skillData = skillTable.Get(data.Skill);
-        // ISkill skill = new AttackSkill(skillData, new FindingTargetInCircle(playerCharacter.transform, skillData.RangeValue, 1 << LayerMask.NameToLayer("Monster"))); // To-Do: skill factory에서 skill 생성
-        // playerCharacter.skill = skill;
+        var skillData = skillTable.Get(data.Skill);
+        playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
+        playerCharacter.skillData = skillData;
 
         playerCharacter.spawner = this;
         playerCharacter.gameObject.SetActive(false);

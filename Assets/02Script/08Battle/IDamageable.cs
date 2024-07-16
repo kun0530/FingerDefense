@@ -5,4 +5,5 @@ using UnityEngine;
 public interface IDamageable
 {
     void TakeDamage(float hp);
+    // void TakeDamage(float hp, 공격자)
 }
