@@ -11,7 +11,6 @@ public class MainUiManager : MonoBehaviour
     void Start()
     {
         LoadPrefab();
-        stageButton.onClick.AddListener(OnClickStartButton);
     }
 
     private void LoadPrefab()
@@ -45,13 +44,6 @@ public class MainUiManager : MonoBehaviour
                 Debug.LogError("Failed to load prefab.");
             }
         };
-    }
-    
-    
-    public void OnClickStartButton()
-    {
-        // 게임 시작 버튼을 누르면 방금 생성한 StageUI를 활성화합니다.
-        loadCanvas.transform.GetChild(1).gameObject.SetActive(true);
     }
     
     

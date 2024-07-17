@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -12,7 +13,16 @@ public class StageSlot : MonoBehaviour
     public GameObject monsterSlotPrefab; 
     public GameObject rewardSlotPrefab;
     public Button DeckButton;
+
     
+    public void Start()
+    {
+        DeckButton.onClick.AddListener(() =>
+        {
+            Debug.Log("DeckButton Clicked");
+        });
+    }
+
     public void Configure(StageData stageData)
     {
         stageNameText.text = stageData.StageNameId.ToString();
