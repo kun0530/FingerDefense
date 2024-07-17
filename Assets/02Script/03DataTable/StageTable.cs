@@ -32,23 +32,23 @@ public class StageTable : DataTable
         return table.GetValueOrDefault(id);
     }
     
-    
+    public IEnumerable<StageData> GetAll()
+    {
+        return table.Values;
+    }
     
     public override void Load(string path)
     {
         path=string.Format(FormatPath, path);
         
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
-        
-        using (var reader = new StringReader(textAsset.text))
-        using (var csvReader = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+
+        using var reader = new StringReader(textAsset.text);
+        using var csvReader = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+        var records = csvReader.GetRecords<StageData>();
+        foreach (var record in records)
         {
-            var records = csvReader.GetRecords<StageData>();
-            foreach (var record in records)
-            {
-                table.TryAdd(record.StageId, record);
-            }
+            table.TryAdd(record.StageId, record);
         }
-        
     }
 }
