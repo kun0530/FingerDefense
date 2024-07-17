@@ -10,8 +10,9 @@ public class StageSlot : MonoBehaviour
     public RectTransform rewardSlotParent;
 
     public GameObject monsterSlotPrefab; 
-    public GameObject rewardSlotPrefab;  
-
+    public GameObject rewardSlotPrefab;
+    public Button DeckButton;
+    
     public void Configure(StageData stageData)
     {
         stageNameText.text = stageData.StageNameId.ToString();
