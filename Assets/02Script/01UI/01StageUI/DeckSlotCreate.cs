@@ -8,6 +8,9 @@ public class DeckSlotCreate : MonoBehaviour
     public RectTransform filterringSlotParent;
     
     private PlayerCharacterTable playerCharacterTable;
+    
+    public CharacterSlotUI characterSlotPrefab;
+    //public ItemSlotUI itemSlotPrefab;
     private void Start()
     {
         playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
@@ -19,9 +22,6 @@ public class DeckSlotCreate : MonoBehaviour
     
     private void CreateCharacterSlots()
     {
-        
-        
-        
         
     }
     
