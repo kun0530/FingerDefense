@@ -41,74 +41,83 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
-        if (!IsDragging)
+        if (context.control.device is Mouse || context.control.device is Touchscreen)
         {
-            var mouseScreenPos = GetPointerPosition();
-            var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-            LayerMask mask = LayerMask.GetMask("Monster");
-
-            int hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
-        
-            GameObject highestSortingOrderObject = null;
-            int highestSortingOrder = int.MinValue;
-
-            for (int i = 0; i < hitCount; i++)
+            if (!IsDragging)
             {
-                var hit = hits[i];
-                if (hit.collider != null && mask == (mask | (1 << hit.collider.gameObject.layer)))
+                var mouseScreenPos = GetPointerPosition();
+                var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
+                LayerMask mask = LayerMask.GetMask("Monster");
+
+                int hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
+
+                GameObject highestSortingOrderObject = null;
+                int highestSortingOrder = int.MinValue;
+
+                for (int i = 0; i < hitCount; i++)
                 {
-                    var spriteRenderer = hit.collider.gameObject.GetComponent<SpriteRenderer>();
-                    if (spriteRenderer != null && spriteRenderer.sortingOrder > highestSortingOrder)
+                    var hit = hits[i];
+                    if (hit.collider != null && mask == (mask | (1 << hit.collider.gameObject.layer)))
                     {
-                        highestSortingOrder = spriteRenderer.sortingOrder;
-                        highestSortingOrderObject = hit.collider.gameObject;
+                        var spriteRenderer = hit.collider.gameObject.GetComponent<SpriteRenderer>();
+                        if (spriteRenderer != null && spriteRenderer.sortingOrder > highestSortingOrder)
+                        {
+                            highestSortingOrder = spriteRenderer.sortingOrder;
+                            highestSortingOrderObject = hit.collider.gameObject;
+                        }
+                    }
+                }
+
+                if (highestSortingOrderObject != null)
+                {
+                    var target = highestSortingOrderObject;
+                    if (target.TryGetComponent<MonsterController>(out var controller))
+                    {
+                        if (controller.TryTransitionState<DragState>())
+                        {
+                            targetOriginY = target.transform.position.y;
+                            IsDragging = true;
+                            draggingObject = target;
+
+                            // 일정 시간이 지나면 자동으로 놓기
+                            AutoDropAfterTime(autoDropTime).Forget();
+                        }
+                        else
+                        {
+                            Logger.Log("This GameObject cannot be dragged!");
+                        }
                     }
                 }
             }
-
-            if (highestSortingOrderObject != null)
+            else
             {
-                var target = highestSortingOrderObject;
-                if (target.TryGetComponent<MonsterController>(out var controller))
-                {
-                    if (controller.TryTransitionState<DragState>())
-                    {
-                        targetOriginY = target.transform.position.y;
-                        IsDragging = true;
-                        draggingObject = target;
-
-                        // 일정 시간이 지나면 자동으로 놓기
-                        AutoDropAfterTime(autoDropTime).Forget();
-                    }
-                    else
-                    {
-                        Logger.Log("This GameObject cannot be dragged!");
-                    }
-                }
+                Logger.Log("Already dragging!");
             }
-        }
-        else
-        {
-            Logger.Log("Already dragging!");
         }
     }
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        if (IsDragging)
+        if (context.control.device is Mouse || context.control.device is Touchscreen)
         {
-            DropObject();
+            if (IsDragging)
+            {
+                DropObject();
+            }
         }
     }
 
     private void OnPointerDrag(InputAction.CallbackContext context)
     {
-        if (IsDragging)
+        if (context.control.device is Mouse || context.control.device is Touchscreen)
         {
-            var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition());
-            var transform1 = draggingObject.transform;
-            pos.z = transform1.position.z;
-            transform1.position = pos;
+            if (IsDragging)
+            {
+                var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition());
+                var transform1 = draggingObject.transform;
+                pos.z = transform1.position.z;
+                transform1.position = pos;
+            }
         }
     }
 
@@ -123,9 +132,7 @@ public class DragAndDrop : MonoBehaviour
             return Mouse.current.position.ReadValue();
         }
     }
-    
-   
-    
+
     private void DropObject()
     {
         IsDragging = false;
@@ -161,13 +168,11 @@ public class DragAndDrop : MonoBehaviour
 
     private async UniTask AutoDropAfterTime(float delay)
     {
-        await UniTask.Delay(TimeSpan.FromTicks((long)delay));
+        await UniTask.Delay(TimeSpan.FromSeconds(delay));
 
         if (IsDragging)
         {
             DropObject();
         }
     }
-
-    
 }
