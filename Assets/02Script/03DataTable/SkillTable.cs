@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using CsvHelper;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class SkillData
 {
@@ -33,8 +34,8 @@ public class SkillTable : DataTable
     {
         path = string.Format(FormatPath, path);
 
-        // var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
-        var textAsset = Resources.Load<TextAsset>(path);
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
+        //var textAsset = Resources.Load<TextAsset>(path);
 
         using (var reader = new StringReader(textAsset.text))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))

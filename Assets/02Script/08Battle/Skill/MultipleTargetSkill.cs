@@ -19,7 +19,7 @@ public class MultipleTargetSkill : BaseSkill
             if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
             {
                 ApplySkillActions(damageable);
-                EffectFactory.CreateParticleSystem(101, target);
+                // EffectFactory.CreateParticleSystem(101, target);
             }
         }
     }

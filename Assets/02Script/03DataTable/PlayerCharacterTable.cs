@@ -5,6 +5,7 @@ using System.IO;
 using CsvHelper;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class PlayerCharacterData
 {
@@ -33,10 +34,10 @@ public class PlayerCharacterTable : DataTable
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
-
-        // var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
-        var textAsset = Resources.Load<TextAsset>(path);
-
+        
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
+        //var textAsset = Resources.Load<TextAsset>(path);
+        
         using (var reader = new StringReader(textAsset.text))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
@@ -46,5 +47,8 @@ public class PlayerCharacterTable : DataTable
                 table.TryAdd(record.Id, record);
             }
         }
+        
+        
+        
     }
 }
