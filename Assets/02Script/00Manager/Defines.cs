@@ -11,7 +11,7 @@ namespace Defines
         public static readonly LayerMask MONSTER_LAYER = 1 << LayerMask.NameToLayer("Monster");
     }
 
-    public class Tags
+    public static class Tags
     {
         public static readonly string PLAYER_TAG = "PlayerCharacter";
         public static readonly string MONSTER_TAG = "Monster";

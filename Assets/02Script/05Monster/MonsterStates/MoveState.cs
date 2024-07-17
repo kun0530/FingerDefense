@@ -20,6 +20,11 @@ public class MoveState : IState
 
     public void Enter()
     {
+        if (controller.moveTarget != null)
+        {
+            direction.x = controller.moveTarget.transform.position.x
+            > controller.transform.position.x ? 1f : -1f;
+        }
     }
     
     public void Update()

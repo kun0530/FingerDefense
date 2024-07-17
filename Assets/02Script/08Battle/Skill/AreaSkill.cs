@@ -32,5 +32,11 @@ public class AreaSkill : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // 1. other가 타겟인지
+        // 2. otehr가 IDamageable을 갖고 있는지
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
     }
 }
