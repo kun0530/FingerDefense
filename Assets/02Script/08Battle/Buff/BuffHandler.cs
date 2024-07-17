@@ -7,9 +7,9 @@ public class BuffHandler
     public List<BuffData> activeBuffs = new();
     private List<float> timers = new();
 
-    private CharacterStatus status;
+    private IStatus status;
 
-    public BuffHandler(CharacterStatus status)
+    public BuffHandler(IStatus status)
     {
         this.status = status;
     }

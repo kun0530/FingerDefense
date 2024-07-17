@@ -101,6 +101,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     private void Update()
     {
         stateMachine.Update();
+        Status.buffHandler.TimerUpdate();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -133,6 +134,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
             Status.currentHp = 0f;
             Die();
         }
+    }
+
+    public void TakeBuff(BuffData buffData)
+    {
+        Status.buffHandler.AddBuff(buffData);
     }
 
     private void Die()

@@ -40,7 +40,9 @@ public static class SkillFactory
         }
         if (data.BuffId != 0)
         {
-            skill.skillActions.Add(new BuffSkill());
+            var buffTable = DataTableManager.Get<BuffTable>(DataTableIds.Buff);
+            var buffData = buffTable.Get(data.BuffId);
+            skill.skillActions.Add(new BuffSkill(buffData));
         }
 
         return skill;

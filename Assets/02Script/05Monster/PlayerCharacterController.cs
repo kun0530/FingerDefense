@@ -102,13 +102,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         }
 
         Status.buffHandler.TimerUpdate();
-        // test code
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            var buffTable = DataTableManager.Get<BuffTable>(DataTableIds.Buff);
-            var buffData = buffTable.Get(51200301);
-            Status.buffHandler.AddBuff(buffData);
-        }
     }
 
     public bool TryAddMonster(MonsterController monster)
@@ -190,6 +183,11 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             spawner.RemoveActiveCharacter(this);
             gameObject.SetActive(false);
         }
+    }
+
+    public void TakeBuff(BuffData buffData)
+    {
+        Status.buffHandler.AddBuff(buffData);
     }
 
     private void UpdateHpBar()

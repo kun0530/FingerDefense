@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterStatus
+public class CharacterStatus : IStatus
 {
     public PlayerCharacterData data;
     public BuffHandler buffHandler;
 
     public float currentHp;
     public float currentAtkDmg;
-    public float currnetAtkSpeed;
+    public float currentAtkSpeed;
 
     public CharacterStatus(PlayerCharacterData data)
     {
@@ -25,13 +25,13 @@ public class CharacterStatus
 
         currentHp = data.Hp;
         currentAtkDmg = data.AtkDmg;
-        currnetAtkSpeed = data.AtkSpeed;
+        currentAtkSpeed = data.AtkSpeed;
     }
 
     public void UpdateCurrentState()
     {
         currentAtkDmg = data.AtkDmg;
-        currnetAtkSpeed = data.AtkSpeed;
+        currentAtkSpeed = data.AtkSpeed;
 
         foreach (var buff in buffHandler.activeBuffs)
         {
@@ -40,7 +40,7 @@ public class CharacterStatus
                 switch ((BuffType)buffAction.type)
                 {
                     case BuffType.ATK_SPEED:
-                        currnetAtkSpeed += buffAction.value;
+                        currentAtkSpeed += buffAction.value;
                         break;
                     case BuffType.ATK:
                         currentAtkDmg += buffAction.value;
@@ -50,7 +50,7 @@ public class CharacterStatus
         }
 
         currentAtkDmg = currentAtkDmg < 0f ? 0f : currentAtkDmg;
-        currnetAtkSpeed = currnetAtkSpeed < 0f ? 0f : currnetAtkSpeed;
+        currentAtkSpeed = currentAtkSpeed < 0f ? 0f : currentAtkSpeed;
 
         Logger.Log($"기본 공격력: {data.AtkDmg} / 현재 공격력: {currentAtkDmg}");
     }

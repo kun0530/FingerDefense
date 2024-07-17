@@ -6,4 +6,6 @@ public interface IDamageable
 {
     void TakeDamage(float hp);
     // void TakeDamage(float hp, 공격자)
+
+    void TakeBuff(BuffData buffData);
 }
