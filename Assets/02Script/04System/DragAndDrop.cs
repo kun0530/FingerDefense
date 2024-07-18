@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -59,11 +60,14 @@ public class DragAndDrop : MonoBehaviour
                     var hit = hits[i];
                     if (hit.collider != null && mask == (mask | (1 << hit.collider.gameObject.layer)))
                     {
-                        var spriteRenderer = hit.collider.gameObject.GetComponent<SpriteRenderer>();
-                        if (spriteRenderer != null && spriteRenderer.sortingOrder > highestSortingOrder)
+                        var spriteRenderer = hit.collider.gameObject.GetComponentInChildren<MeshRenderer>();
+                        if (spriteRenderer != null)
                         {
-                            highestSortingOrder = spriteRenderer.sortingOrder;
-                            highestSortingOrderObject = hit.collider.gameObject;
+                            if (spriteRenderer.sortingOrder > highestSortingOrder)
+                            {
+                                highestSortingOrder = spriteRenderer.sortingOrder;
+                                highestSortingOrderObject = hit.collider.gameObject;
+                            }
                         }
                     }
                 }
@@ -98,7 +102,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        if (context.control.device is Mouse || context.control.device is Touchscreen)
+        if (context.control.device is Mouse or Touchscreen)
         {
             if (IsDragging)
             {
@@ -109,7 +113,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDrag(InputAction.CallbackContext context)
     {
-        if (context.control.device is Mouse || context.control.device is Touchscreen)
+        if (context.control.device is Mouse or Touchscreen)
         {
             if (IsDragging)
             {

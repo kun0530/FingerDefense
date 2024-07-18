@@ -5,7 +5,7 @@ using UnityEngine;
 public class DragState : IState
 {
     private MonsterController monster;
-    private SpriteRenderer renderer;
+    private MeshRenderer renderer;
     private Collider2D collider;
 
     private DragAndDrop dragAndDrop;
@@ -14,8 +14,8 @@ public class DragState : IState
     {
         this.monster = monster;
 
-        renderer = monster.GetComponent<SpriteRenderer>();
-        collider = monster.GetComponent<BoxCollider2D>();
+        renderer = monster.GetComponentInChildren<MeshRenderer>();
+        collider = monster.GetComponent<Collider2D>();
     }
 
     public void Enter()

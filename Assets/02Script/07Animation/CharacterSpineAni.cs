@@ -44,6 +44,8 @@ public class CharacterSpineAni : MonoBehaviour
         {
             Logger.LogWarning("해당 캐릭터는 방패가 없습니다.");
         }
+        
+        
     }
 
     private void Start()
@@ -60,8 +62,9 @@ public class CharacterSpineAni : MonoBehaviour
             Logger.LogWarning("해당 캐릭터는 방패가 없습니다.");
         }
         
+        
+        
         OnTakeDamage += HandleTakeDamage;
-        SetAnimation(CharacterState.IDLE, true, 0.3f);
     }
 
     private void HandleSpineEvent(TrackEntry trackEntry, Spine.Event e)
@@ -73,11 +76,7 @@ public class CharacterSpineAni : MonoBehaviour
             {
                 if (e.Data.Name == "End")
                 {
-                    if (currentAnimation == "ATTACK")
-                    {
-                        OnTakeDamage?.Invoke(); 
-                        
-                    }
+                    SetAnimation(CharacterState.IDLE, true, 0.5f);
                     
                     if (skeletonAnimation.Length > 2)
                     {
@@ -85,6 +84,15 @@ public class CharacterSpineAni : MonoBehaviour
                         renderer.sortingOrder = originalSortingOrder;
                     }
                     
+                }
+            }
+                break;
+            
+            case "PASSOUT":
+            {
+                if (e.Data.Name == "End")
+                {
+                    characterController.IsDead = true;
                 }
             }
                 break;

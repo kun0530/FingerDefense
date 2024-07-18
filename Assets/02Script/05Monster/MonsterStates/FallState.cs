@@ -12,7 +12,7 @@ public class FallState : IState
     public FallState(MonsterController monster)
     {
         this.monster = monster;
-        collider = monster.GetComponent<BoxCollider2D>();
+        collider = monster.GetComponent<Collider2D>();
     }
 
     public void Enter()
