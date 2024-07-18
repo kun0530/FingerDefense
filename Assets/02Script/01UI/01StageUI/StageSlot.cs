@@ -13,16 +13,23 @@ public class StageSlot : MonoBehaviour
     public GameObject monsterSlotPrefab; 
     public GameObject rewardSlotPrefab;
     public Button DeckButton;
-
+    //public Button CloseButton;
+    
+    [SerializeField]private GameObject deckUI;
+    
+    public GameObject MonsterSlotPrefab { get => monsterSlotPrefab; set => monsterSlotPrefab = value; }
+    public GameObject RewardSlotPrefab { get => rewardSlotPrefab; set => rewardSlotPrefab = value; }
     
     public void Start()
-    {
-        DeckButton.onClick.AddListener(() =>
-        {
-            Debug.Log("DeckButton Clicked");
-        });
+    { 
+        //해당 오브젝트는 생성하는 오브젝트인데 
+        //DeckUI를 찾아오는 방법
+        DeckButton.onClick.AddListener(OnClick);
     }
-
+    public void SetDeckUI(GameObject deckUI)
+    {
+        this.deckUI = deckUI;
+    }
     public void Configure(StageData stageData)
     {
         stageNameText.text = stageData.StageNameId.ToString();
@@ -73,5 +80,10 @@ public class StageSlot : MonoBehaviour
         }
 
         rewardText.text = $"{rewardValue}";
+    }
+    
+    public void OnClick()
+    {
+        deckUI.SetActive(true);
     }
 }

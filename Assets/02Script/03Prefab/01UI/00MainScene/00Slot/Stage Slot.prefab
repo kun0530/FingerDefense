@@ -220,7 +220,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7502661454653039446}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3404883178300235451}
+        m_TargetAssemblyTypeName: StageSlot, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1986339739439902773
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,3 +969,4 @@ MonoBehaviour:
   monsterSlotPrefab: {fileID: 4038222820789242196, guid: 20877ec03469ec041b7b0f5076eb016b, type: 3}
   rewardSlotPrefab: {fileID: 1400826845383990849, guid: ff96ade08a49df042942b599184cd02e, type: 3}
   DeckButton: {fileID: 2143682741744288827}
+  DeckUI: {fileID: 0}

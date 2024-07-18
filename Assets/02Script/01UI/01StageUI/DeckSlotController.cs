@@ -13,7 +13,7 @@ public class DeckSlotController : MonoBehaviour
     private List<CharacterSlotUI> filterSlots = new List<CharacterSlotUI>();
     private HashSet<int> addedCharacters = new HashSet<int>();
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
-
+    
     private void Start()
     {
         playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);

@@ -6,7 +6,8 @@ public class StageSlotCreate : MonoBehaviour
     private StageTable stageTable;
     public StageSlot stageSlotPrefab;
     public RectTransform[] slotParents;
-
+    public GameObject deckUI;
+    
     private void Start()
     {
         stageTable ??= DataTableManager.Get<StageTable>(DataTableIds.Stage);
@@ -43,6 +44,7 @@ public class StageSlotCreate : MonoBehaviour
         {
             StageSlot slot = Instantiate(stageSlotPrefab, parent);
             slot.Configure(stageData);
+            slot.SetDeckUI(deckUI);
         }
     }
 }

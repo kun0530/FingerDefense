@@ -16,4 +16,6 @@ namespace Defines
         public static readonly string PLAYER_TAG = "PlayerCharacter";
         public static readonly string MONSTER_TAG = "Monster";
     }
+    
+    
 }

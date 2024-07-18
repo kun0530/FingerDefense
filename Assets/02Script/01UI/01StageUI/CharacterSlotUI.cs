@@ -34,6 +34,9 @@ public class CharacterSlotUI : MonoBehaviour
             spineInstance.transform.localPosition = Vector3.zero; // 필요한 경우 위치 조정
         }
         
+        //ChoicePanel이 제일 마지막에 활성화되도록 설정
+        
+        
         for (var i = 0; i <= characterData.Grade; i++)
         {
             var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
@@ -46,14 +49,14 @@ public class CharacterSlotUI : MonoBehaviour
         if (elementImage != null && characterData.Element >= 0 && characterData.Element < elementImages.Length)
         {
             elementImage.sprite = elementImages[characterData.Element];
-            elementImage.gameObject.SetActive(true); // 활성화
+            elementImage.gameObject.SetActive(true);
         }
         
         var skillImage = skillParent.GetComponent<Image>();
         if (skillImage != null && characterData.Priority >= 0 && characterData.Priority < skillImages.Length)
         {
             skillImage.sprite = skillImages[characterData.Priority];
-            skillImage.gameObject.SetActive(true); // 활성화
+            skillImage.gameObject.SetActive(true);
         }
         
         ChoiceButton.onClick.AddListener(OnClick);
