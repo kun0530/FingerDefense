@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveState : IState
 {
     private MonsterController controller;
-    private Vector3 direction = new Vector3(1f, 0f, 0f);
+    private Vector3 direction = new Vector3(-1f, 0f, 0f);
 
     public MoveState(MonsterController controller)
     {
