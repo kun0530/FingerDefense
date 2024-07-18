@@ -11,6 +11,8 @@ public class SkillArea : MonoBehaviour
     private AreaTargetSkill areaTargetSkill;
     private float timer;
 
+    public Dictionary<IDamageable, Buff> Buffs { get; private set; } = new();
+
     private void OnEnable()
     {
         timer = 0f;
@@ -33,29 +35,17 @@ public class SkillArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // 1. other가 타겟인지
-        switch (skillData.Target)
+        if (TryGetTarget(other, out var damageable))
         {
-            case 0:
-                break;
-            case 1:
-                break;
-            default:
-                break;
-        }
-
-        // 2. otehr가 IDamageable을 갖고 있는지
-        if (other.TryGetComponent<IDamageable>(out var damageable))
-        {
-            areaTargetSkill.EnterArea(damageable);
+            areaTargetSkill.EnterArea(damageable, this);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent<IDamageable>(out var damageable))
+        if (TryGetTarget(other, out var damageable))
         {
-            areaTargetSkill.ExitArea(damageable);
+            areaTargetSkill.ExitArea(damageable, this);
         }
     }
 

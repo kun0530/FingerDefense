@@ -5,7 +5,7 @@ using UnityEngine;
 public class BuffSkill : ISkillAction
 {
     // 버프 데이터 저장
-    private BuffData buffData;
+    public BuffData buffData { get; private set; }
 
     public BuffSkill(BuffData data) // 버프 데이터 받음
     {
@@ -16,5 +16,13 @@ public class BuffSkill : ISkillAction
     {
         // 버프 및 디버프 부여
         damageable.TakeBuff(buffData);
+    }
+
+    public Buff ApplySkillEnterAreaAction(IDamageable damageable)
+    {
+        var buff = new Buff(buffData, true);
+        damageable.TakeBuff(buff);
+
+        return buff;
     }
 }

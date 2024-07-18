@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BuffHandler
 {
-    public List<BuffData> activeBuffs = new();
-    private List<float> timers = new();
+    public List<Buff> buffs = new();
 
     private IStatus status;
 
@@ -16,16 +15,18 @@ public class BuffHandler
 
     private void ResetBuff()
     {
-        activeBuffs.Clear();
-        timers.Clear();
+        // activeBuffs.Clear();
+        // timers.Clear();
+
+        buffs.Clear();
     }
 
     public void TimerUpdate()
     {
-        for (int i = 0; i < timers.Count; i++)
+        for (int i = 0; i < buffs.Count; i++)
         {
-            timers[i] += Time.deltaTime;
-            if (timers[i] >= activeBuffs[i].LastingTime)
+            buffs[i].TimerUpdate();
+            if (buffs[i].IsBuffExpired)
             {
                 RemoveBuff(i);
             }
@@ -34,28 +35,31 @@ public class BuffHandler
 
     public void AddBuff(BuffData data)
     {
-        if (activeBuffs.Count >= 3)
+        var buff = new Buff(data);
+    }
+
+    public void AddBuff(Buff buff)
+    {
+        if (buffs.Count >= 3)
         {
-            Logger.Log($"Buff 최대({activeBuffs.Count}): {data.Id}");
+            Logger.Log($"Buff 최대({buffs.Count}): {buff.ToString()}");
             return;
         }
 
-        activeBuffs.Add(data);
-        timers.Add(0f);
+        buffs.Add(buff);
         status.UpdateCurrentState();
 
-        Logger.Log($"Buff 추가: {data.Id}");
+        Logger.Log($"Buff 추가: {buff.ToString()}");
     }
 
     private void RemoveBuff(int index)
     {
-        if (index < 0 || index >= activeBuffs.Count)
+        if (index < 0 || index >= buffs.Count)
             return;
 
-        Logger.Log($"Buff 제거: {activeBuffs[index].Id}");
+        Logger.Log($"Buff 제거: {buffs[index].ToString()}");
 
-        activeBuffs.RemoveAt(index);
-        timers.RemoveAt(index);
+        buffs.RemoveAt(index);
         status.UpdateCurrentState();
     }
 }

@@ -19,13 +19,26 @@ public class AreaTargetSkill : BaseSkill
         area.transform.position = damageable.transform.position;
     }
 
-    public void EnterArea(IDamageable damageable)
+    public void EnterArea(IDamageable damageable, SkillArea area)
     {
+        if (buffSkill != null)
+        {
+            var buff = buffSkill.ApplySkillEnterAreaAction(damageable);
+            area.Buffs.Add(damageable, buff);
+        }
 
+        if (attackSkill != null)
+        {
+            attackSkill.ApplySkillAction(damageable);
+        }
     }
 
-    public void ExitArea(IDamageable damageable)
+    public void ExitArea(IDamageable damageable, SkillArea area)
     {
-        
+        if (buffSkill != null && area.Buffs.TryGetValue(damageable, out var buff))
+        {
+            buff.IsTimerStop = true;
+            area.Buffs.Remove(damageable);
+        }
     }
 }

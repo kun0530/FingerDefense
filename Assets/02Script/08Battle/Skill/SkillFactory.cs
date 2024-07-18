@@ -36,13 +36,15 @@ public static class SkillFactory
 
         if (data.Damage != 0f)
         {
-            skill.skillActions.Add(new AttackSkill(data.Damage));
+            // skill.skillActions.Add(new AttackSkill(data.Damage));
+            skill.attackSkill = new AttackSkill(data.Damage);
         }
         if (data.BuffId != 0)
         {
             var buffTable = DataTableManager.Get<BuffTable>(DataTableIds.Buff);
             var buffData = buffTable.Get(data.BuffId);
-            skill.skillActions.Add(new BuffSkill(buffData));
+            // skill.skillActions.Add(new BuffSkill(buffData));
+            skill.buffSkill = new BuffSkill(buffData);
         }
 
         return skill;

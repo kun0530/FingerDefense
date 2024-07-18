@@ -195,6 +195,11 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         Status.buffHandler.AddBuff(buffData);
     }
 
+    public void TakeBuff(Buff buff)
+    {
+        Status.buffHandler.AddBuff(buff);
+    }
+
     private void UpdateHpBar()
     {
         if (hpBar == null || Status == null)

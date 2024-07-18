@@ -144,6 +144,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         Status.buffHandler.AddBuff(buffData);
     }
 
+    public void TakeBuff(Buff buff)
+    {
+        Status.buffHandler.AddBuff(buff);
+    }
+
     private void Die()
     {
         isDead = true;

@@ -9,15 +9,15 @@ public enum SkillRangeTypes
 
 public abstract class BaseSkill
 {
-    public List<ISkillAction> skillActions = new List<ISkillAction>();
+    // public List<ISkillAction> skillActions = new List<ISkillAction>();
+    public BuffSkill buffSkill;
+    public AttackSkill attackSkill;
 
     public abstract void UseSkill();
 
     protected void ApplySkillActions(IDamageable damageable)
     {
-        foreach (var skillAction in skillActions)
-        {
-            skillAction.ApplySkillAction(damageable);
-        }
+        attackSkill?.ApplySkillAction(damageable);
+        buffSkill?.ApplySkillAction(damageable);
     }
 }
