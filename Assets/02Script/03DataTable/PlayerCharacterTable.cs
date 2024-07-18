@@ -30,6 +30,11 @@ public class PlayerCharacterTable : DataTable
     {
         return table.GetValueOrDefault(id);
     }
+    
+    public IEnumerable<PlayerCharacterData> GetAll()
+    {
+        return table.Values;
+    }
 
     public override void Load(string path)
     {

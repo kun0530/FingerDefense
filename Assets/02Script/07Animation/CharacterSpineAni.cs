@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 using Spine;
 
 [RequireComponent(typeof(PlayerCharacterController))]
 public class CharacterSpineAni : MonoBehaviour
+
 {
     public SkeletonAnimation[] skeletonAnimation;
     public AnimationReferenceAsset[] characterAnimClip;
@@ -18,7 +17,12 @@ public class CharacterSpineAni : MonoBehaviour
 
     [Tooltip("케이 캐릭터의 방패에 대한 레이어를 담아두는 변수")]
     private int originalSortingOrder;
-
+    
+    //delegate로 데미지를 주는 이벤트를 받아서 처리할 수 있도록 함
+    public delegate void OnTakeDamageDelegate();
+    public event OnTakeDamageDelegate OnTakeDamage;
+    
+    
     public enum CharacterState
     {
         ATTACK,
@@ -45,15 +49,18 @@ public class CharacterSpineAni : MonoBehaviour
     private void Start()
     {
         characterController = TryGetComponent(out PlayerCharacterController controller) ? controller : null;
+        
         if (skeletonAnimation.Length > 2)
         {
             skeletonAnimation[2].AnimationState.Event += HandleSpineEvent;
+            skeletonAnimation[2].AnimationState.Complete += HandleCompleteAnimation;
         }
         else
         {
             Logger.LogWarning("해당 캐릭터는 방패가 없습니다.");
         }
         
+        OnTakeDamage += HandleTakeDamage;
         SetAnimation(CharacterState.IDLE, true, 0.3f);
     }
 
@@ -66,51 +73,39 @@ public class CharacterSpineAni : MonoBehaviour
             {
                 if (e.Data.Name == "End")
                 {
+                    if (currentAnimation == "ATTACK")
+                    {
+                        OnTakeDamage?.Invoke(); 
+                    }
+                    
                     if (skeletonAnimation.Length > 2)
                     {
                         skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
                         renderer.sortingOrder = originalSortingOrder;
                     }
-                    else
-                    {
-                        return;
-                    }
+                    
                 }
             }
                 break;
         }
     }
-
+    private void HandleCompleteAnimation(TrackEntry trackEntry)
+    {
+        if (currentAnimation == "ATTACK")
+        {
+            OnTakeDamage?.Invoke();
+        }
+    }
+    private void HandleTakeDamage()
+    {
+        Logger.Log("Take Damage");
+        characterController.TakeDamage(10f);
+    }
 
     private void Update()
     {
         // if (!characterController)
         //     return;
-
-        if (Input.GetKey(KeyCode.Alpha1))
-        {
-            SetAnimation(CharacterState.ATTACK, true, 0.3f);
-        }
-        else if (Input.GetKey(KeyCode.Alpha2))
-        {
-            SetAnimation(CharacterState.ATTACK_SHEILD, true, 0.3f);
-        }
-        else if (Input.GetKey(KeyCode.Alpha3))
-        {
-            SetAnimation(CharacterState.HIT, true, 0.3f);
-        }
-        else if (Input.GetKey(KeyCode.Alpha4))
-        {
-            SetAnimation(CharacterState.IDLE, true, 0.3f);
-        }
-        else if (Input.GetKey(KeyCode.Alpha5))
-        {
-            SetAnimation(CharacterState.PASSOUT, true, 0.3f);
-        }
-        else if (Input.GetKey(KeyCode.Alpha6))
-        {
-            SetAnimation(CharacterState.RUN, true, 0.3f);
-        }
     }
 
     public void SetAnimation(CharacterState state, bool loop, float timeScale)
