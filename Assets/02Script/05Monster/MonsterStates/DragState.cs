@@ -7,14 +7,12 @@ public class DragState : IState
     private MonsterController monster;
     private SpriteRenderer renderer;
     private Collider2D collider;
-    private IDraggable dragBehavior;
 
     private DragAndDrop dragAndDrop;
 
-    public DragState(MonsterController monster, IDraggable dragBehavior)
+    public DragState(MonsterController monster)
     {
         this.monster = monster;
-        this.dragBehavior = dragBehavior;
 
         renderer = monster.GetComponent<SpriteRenderer>();
         collider = monster.GetComponent<BoxCollider2D>();
@@ -23,7 +21,7 @@ public class DragState : IState
     public void Enter()
     {
         monster.targetFallY = monster.transform.position.y;
-        dragBehavior?.DragEnter();
+
         if (monster.attackTarget)
             monster.attackTarget.TryRemoveMonster(monster);
 
@@ -35,8 +33,6 @@ public class DragState : IState
 
     public void Update()
     {
-        dragBehavior?.DragUpdate();
-
         if (dragAndDrop.IsDragging)
         {
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
@@ -51,8 +47,6 @@ public class DragState : IState
 
     public void Exit()
     {
-        dragBehavior?.DragExit();
-
         renderer.sortingOrder = 0;
     }
 }

@@ -15,5 +15,8 @@ namespace Defines
     {
         public static readonly string PLAYER_TAG = "PlayerCharacter";
         public static readonly string MONSTER_TAG = "Monster";
+
+        public static readonly string CASTLE_TAG = "Castle";
+        public static readonly string PATROL_LINE_TAG = "PatrolStartLine";
     }
 }

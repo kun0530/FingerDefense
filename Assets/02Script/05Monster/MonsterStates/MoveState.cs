@@ -25,6 +25,7 @@ public class MoveState : IState
             direction.x = controller.moveTarget.transform.position.x
             > controller.transform.position.x ? 1f : -1f;
         }
+        controller.SetFlip(direction.x > 0);
     }
     
     public void Update()
