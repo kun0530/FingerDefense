@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeckSlotCreate : MonoBehaviour
+public class DeckSlotController : MonoBehaviour
 {
     public RectTransform characterSlotParent;
     public RectTransform filterringSlotParent;
@@ -56,6 +56,13 @@ public class DeckSlotCreate : MonoBehaviour
         {
             if (addedCharacters.Contains(clickedSlot.characterData.Id))
             {
+                Logger.Log("이미 추가된 캐릭터입니다.");
+                return;
+            }
+            
+            if(addedCharacters.Count >= 8)
+            {
+                Logger.Log("최대 8개까지만 추가 가능합니다.");
                 return;
             }
 
