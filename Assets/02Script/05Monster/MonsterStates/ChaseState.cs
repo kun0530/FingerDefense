@@ -26,6 +26,7 @@ public class ChaseState : IState
 
         var direction = (monster.attackMoveTarget.position - monster.transform.position).normalized;
         monster.transform.position += direction * monster.Status.currentMoveSpeed * Time.deltaTime;
+        monster.SetFlip(direction.x > 0);
         if (Vector2.Distance(monster.transform.position, monster.attackMoveTarget.position) < 0.1)
         {
             monster.transform.position = monster.attackMoveTarget.position;

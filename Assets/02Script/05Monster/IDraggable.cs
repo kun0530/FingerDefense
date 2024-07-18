@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IDraggable
 {
-    void DragEnter();
-    void DragUpdate();
-    void DragExit();
+    bool IsDraggable { get; }
+    bool TryDrag();
+    bool TryFall();
 }

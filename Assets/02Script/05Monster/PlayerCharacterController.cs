@@ -24,6 +24,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     public MonsterController monsterUp { get; set; }
     public MonsterController monsterDown { get; set; }
 
+    private CharacterSpineAni anim;
+
     public int MonsterCount
     {
         get
@@ -44,6 +46,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     private void Awake()
     {
         atkTimer = 0f;
+
+        anim = GetComponent<CharacterSpineAni>();
     }
 
     private void OnEnable()
@@ -85,8 +89,9 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     {
         var atkCoolDown = 1f / Status.data.AtkSpeed;
         atkTimer += Time.deltaTime;
-        if (atkTimer >= atkCoolDown)
+        if (atkTarget != null && atkTimer >= atkCoolDown)
         {
+            anim?.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
             atkTarget?.TakeDamage(Status.currentAtkDmg);
             atkTimer = 0f;
 

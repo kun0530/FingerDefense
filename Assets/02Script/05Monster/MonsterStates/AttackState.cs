@@ -18,6 +18,8 @@ public class AttackState : IState
     {
         attackCoolDown = 1f / monster.Status.data.AtkSpeed;
         attackTimer = attackCoolDown;
+
+        monster.SetFlip(false);
     }
 
     public void Update()
