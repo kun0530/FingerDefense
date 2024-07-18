@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Defines
 {
-    public static class Laysers
+    public static class Layers
     {
         public static readonly LayerMask DEFAULT_LAYER = 1 << LayerMask.NameToLayer("Default");
         public static readonly LayerMask PLAYER_LAYER = 1 << LayerMask.NameToLayer("Player");

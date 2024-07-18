@@ -7,14 +7,14 @@ public static class SkillFactory
 {
     public static BaseSkill CreateSkill(SkillData data, Transform center)
     {
-        LayerMask layerMask = Laysers.DEFAULT_LAYER;
+        LayerMask layerMask = Layers.DEFAULT_LAYER;
         switch (data.Target)
         {
             case 0:
-                layerMask = Laysers.PLAYER_LAYER;
+                layerMask = Layers.PLAYER_LAYER;
                 break;
             case 1:
-                layerMask = Laysers.MONSTER_LAYER;
+                layerMask = Layers.MONSTER_LAYER;
                 break;
         }
         IFindable findable = new FindingTargetInCircle(center, data.RangeValue, layerMask);

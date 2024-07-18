@@ -76,6 +76,7 @@ public class CharacterSpineAni : MonoBehaviour
                     if (currentAnimation == "ATTACK")
                     {
                         OnTakeDamage?.Invoke(); 
+                        
                     }
                     
                     if (skeletonAnimation.Length > 2)

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class DeckSlotController : MonoBehaviour
 {
@@ -14,12 +16,18 @@ public class DeckSlotController : MonoBehaviour
     private HashSet<int> addedCharacters = new HashSet<int>();
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
     
+    public Button startButton;
     private void Start()
     {
         playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
 
         CreateCharacterSlots();
         CreateFilteringSlots();
+        
+        startButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(2);
+        });
     }
 
     private void CreateCharacterSlots()
