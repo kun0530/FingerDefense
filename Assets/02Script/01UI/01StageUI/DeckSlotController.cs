@@ -60,7 +60,7 @@ public class DeckSlotController : MonoBehaviour
         characterSlots.Add(slot);
     }
 
-    public void HandleCharacterSlotClick(CharacterSlotUI clickedSlot)
+    private void HandleCharacterSlotClick(CharacterSlotUI clickedSlot)
     {
         if (clickedSlot.transform.parent == filterringSlotParent)
         {

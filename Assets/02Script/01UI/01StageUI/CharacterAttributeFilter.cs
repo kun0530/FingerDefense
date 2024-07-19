@@ -20,8 +20,8 @@ public class CharacterAttributeFilter : MonoBehaviour
     private void Start()
     {
         playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
-        
-        deckSlotController = FindObjectOfType<DeckSlotController>();
+
+        deckSlotController = GameObject.FindWithTag("DeckUI").GetComponent<DeckSlotController>();
         
         ApplyButton.onClick.AddListener(ApplyFilter);
         ResetButton.onClick.AddListener(ResetFilter);
@@ -42,7 +42,8 @@ public class CharacterAttributeFilter : MonoBehaviour
         bool isAnyClassChecked = ClassToggles.Any(t => t.isOn);
         bool isAnyGradeChecked = GradeToggles.Any(t => t.isOn);
 
-        foreach (var character in characters)
+        var playerCharacterData = characters.ToList();
+        foreach (var character in playerCharacterData)
         {
             if (IsCharacterMatched(character, isAnyElementChecked, isAnyClassChecked, isAnyGradeChecked))
             {
@@ -53,7 +54,7 @@ public class CharacterAttributeFilter : MonoBehaviour
         // 필터 조건이 모두 꺼져있는 경우 모든 캐릭터를 반환
         if (!isAnyElementChecked && !isAnyClassChecked && !isAnyGradeChecked)
         {
-            return characters.ToList();
+            return playerCharacterData.ToList();
         }
 
         return filteredCharacters;
@@ -65,7 +66,7 @@ public class CharacterAttributeFilter : MonoBehaviour
         bool isClassMatched = !isAnyClassChecked || ClassToggles.Any(t => t.isOn && character.Priority == System.Array.IndexOf(ClassToggles, t));
         bool isGradeMatched = !isAnyGradeChecked || GradeToggles.Any(t => t.isOn && character.Grade == System.Array.IndexOf(GradeToggles, t));
 
-        Debug.Log($"Character ID: {character.Id}, ElementMatched: {isElementMatched}, ClassMatched: {isClassMatched}, GradeMatched: {isGradeMatched}");
+        Logger.Log($"Character ID: {character.Id}, ElementMatched: {isElementMatched}, ClassMatched: {isClassMatched}, GradeMatched: {isGradeMatched}");
 
         // 각각의 조건이 모두 맞아야 매칭되도록 변경
         return (!isAnyElementChecked || isElementMatched) 
