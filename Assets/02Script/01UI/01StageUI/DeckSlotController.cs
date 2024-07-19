@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ public class DeckSlotController : MonoBehaviour
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
     
     public Button startButton;
+    public Button AttributeFilterButton;
     
     private void Start()
     {
@@ -86,9 +88,11 @@ public class DeckSlotController : MonoBehaviour
                     addedCharacters.Add(clickedSlot.characterData.Id);
                     activeChoicePanelSlots.Add(clickedSlot);
                     UpdateChoicePanels();
+                    
                     break;
                 }
             }
+            SortCharacterSlots();
         }
         else if (clickedSlot.transform.parent == characterSlotParent)
         {
@@ -107,6 +111,37 @@ public class DeckSlotController : MonoBehaviour
             characterSlots.Remove(clickedSlot);
             Destroy(clickedSlot.gameObject);
             AddEmptyCharacterSlot();
+            
+            SortCharacterSlots();
+        }
+    }
+
+    private void SortCharacterSlots()
+    {
+        // Priority > Grade > Element 순서대로 정렬
+        characterSlots = characterSlots
+            .OrderBy(slot => slot.characterData?.Priority ?? int.MaxValue)
+            .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
+            .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
+            .ToList();
+    
+        // 정렬된 캐릭터 슬롯을 로그로 출력하여 확인
+        foreach (var slot in characterSlots)
+        {
+            if (slot.characterData != null)
+            {
+                Debug.Log($"Priority: {slot.characterData.Priority}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}");
+            }
+            else
+            {
+                Debug.Log("빈 슬롯");
+            }
+        }
+    
+        // UI 요소를 정렬된 순서에 맞게 재배치
+        for (var i = 0; i < characterSlots.Count; i++)
+        {
+            characterSlots[i].transform.SetSiblingIndex(i);
         }
     }
 
