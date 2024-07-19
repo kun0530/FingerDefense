@@ -89,7 +89,7 @@ public class CharacterSlotUI : MonoBehaviour
                 skillImage.gameObject.SetActive(false);
             }
         }
-        
+        ChoicePanel.transform.SetAsLastSibling();
         
         ChoiceButton.onClick.AddListener(OnClick);
     }
