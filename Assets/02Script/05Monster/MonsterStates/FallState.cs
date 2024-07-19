@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FallState : IState
@@ -14,7 +12,7 @@ public class FallState : IState
     public FallState(MonsterController monster)
     {
         this.monster = monster;
-        collider = monster.GetComponent<BoxCollider2D>();
+        collider = monster.GetComponent<Collider2D>();
     }
 
     public void Enter()
@@ -33,7 +31,7 @@ public class FallState : IState
             monster.transform.position = new Vector3(monster.transform.position.x, monster.targetFallY, 0f);
 
             if (monster.Status.data.Height <= startY - monster.targetFallY)
-                monster.DamageHp(monster.Status.currentHp);
+                monster.TakeDamage(monster.Status.currentHp);
             else
                 monster.TryTransitionState<PatrolState>();
         }

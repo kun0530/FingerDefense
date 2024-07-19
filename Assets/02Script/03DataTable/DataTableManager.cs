@@ -7,6 +7,10 @@ public static class DataTableIds
     public static readonly string Monster = "MonsterTable";
     public static readonly string Wave = "WaveTable";
     public static readonly string PlayerCharacter = "PlayerCharacterTable";
+    public static readonly string Skill = "SkillTable";
+    public static readonly string Buff = "BuffDebuffTable";
+    public static readonly string Stage = "StageTable";
+
 }
 
 public static class DataTableManager
@@ -15,17 +19,30 @@ public static class DataTableManager
 
     static DataTableManager()
     {
-        MonsterTable monsterTable = new MonsterTable();
+        MonsterTable monsterTable = new();
         monsterTable.Load(DataTableIds.Monster);
         tables.Add(DataTableIds.Monster, monsterTable);
 
-        WaveTable waveTable = new WaveTable();
+        WaveTable waveTable = new();
         waveTable.Load(DataTableIds.Wave);
         tables.Add(DataTableIds.Wave, waveTable);
 
-        PlayerCharacterTable playerCharacterTable = new PlayerCharacterTable();
+        PlayerCharacterTable playerCharacterTable = new();
         playerCharacterTable.Load(DataTableIds.PlayerCharacter);
         tables.Add(DataTableIds.PlayerCharacter, playerCharacterTable);
+        
+        SkillTable skillTable = new();
+        skillTable.Load(DataTableIds.Skill);
+        tables.Add(DataTableIds.Skill, skillTable);
+
+        BuffTable buffTable = new();
+        buffTable.Load(DataTableIds.Buff);
+        tables.Add(DataTableIds.Buff, buffTable);
+        
+        StageTable stageTable = new StageTable();
+        stageTable.Load(DataTableIds.Stage);
+        tables.Add(DataTableIds.Stage, stageTable);
+
     }
 
     // public static StringTable GetStringTable()

@@ -33,6 +33,7 @@ public class PatrolState : IState
         // 성 포탈까지 이동
         var direction = (monster.moveTarget.transform.position - monster.transform.position).normalized;
         monster.transform.position += direction * monster.Status.currentMoveSpeed * Time.deltaTime;
+        monster.SetFlip(direction.x > 0);
         if (Vector2.Distance(monster.transform.position, monster.moveTarget.transform.position) < 0.1)
         {
             monster.transform.position = monster.moveTarget.transform.position;
@@ -62,13 +63,15 @@ public class PatrolState : IState
 
     private void FindTarget()
     {
-        var nearCollider = findBehavior.FindTarget() as PlayerCharacterController;
-
-        if (nearCollider != null && nearCollider.gameObject != monster.attackTarget)
+        var nearCollider = findBehavior.FindTarget();
+        if (nearCollider == null)
+            return;
+        
+        if (nearCollider.TryGetComponent<PlayerCharacterController>(out var target)
+        && target != monster.attackTarget)
         {
             monster.attackTarget?.TryRemoveMonster(monster);
-            nearCollider.TryAddMonster(monster);
+            target.TryAddMonster(monster);
         }
-
     }
 }
