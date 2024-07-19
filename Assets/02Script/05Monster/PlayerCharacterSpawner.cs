@@ -9,6 +9,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
     public Transform[] spawnPositions; // 6개 (전열: 0, 1 / 중열: 2, 3 / 후열: 4, 5)
 
     private PlayerCharacterTable playerCharacterTable;
+    private SkillTable skillTable;
 
     private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8]; // 사용할 캐릭터들
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
@@ -16,6 +17,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
+        skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
 
         // PlayerCharacterData 배열을 초기에 받는다
 
@@ -39,9 +41,14 @@ public class PlayerCharacterSpawner : MonoBehaviour
     {
         var data = playerCharacterTable.Get(id);
 
-        var playerCharacter = Instantiate(characterPrefabs[data.AssetNo]);
-        playerCharacter.transform.SetParent(poolTransform);
+        var playerCharacter = Instantiate(characterPrefabs[data.AssetNo], poolTransform, true);
         playerCharacter.Status = new CharacterStatus(data);
+
+        // 에러로 인해 비활성화 : 방민호
+        // var skillData = skillTable.Get(data.Skill);
+        // playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
+        // playerCharacter.skillData = skillData;
+
         playerCharacter.spawner = this;
         playerCharacter.gameObject.SetActive(false);
 

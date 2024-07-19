@@ -5,46 +5,77 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum StageState
+{
+    None, Playing, GameOver, GameClear
+}
+
 public class StageManager : MonoBehaviour
 {
-    private float castleMaxHp = 100f;
-    public float CastleHp { get; private set; }
-    public Image castleHpBar;
-    public GameObject gameOverUi;
-    public GameObject gameClearUi;
-    public GameObject gameUi;
-    public TextMeshProUGUI monsterCountText;
+    public float CastleMaxHp { get; private set; } = 100f;
+    private float castleHp;
+    public float CastleHp
+    {
+        get => castleHp;
+        private set
+        {
+            castleHp = value;
+            gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+        }
+    }
+
     private int monsterCount;
     public int MonsterCount
     {
-        get { return monsterCount; }
+        get => monsterCount;
         set
         {
             monsterCount = value;
-            monsterCountText.text = $"Monster: {monsterCount}";
-            if (monsterCount <= 0)
-            {
-                GameClear();
-            }
+            gameUiManager.UpdateMonsterCount(monsterCount);
+            if (monsterCount <= 0 && CastleHp > 0f)
+                CurrentState = StageState.GameClear;
+        }
+    }
+
+    private int earnedGold;
+    public int EarnedGold
+    {
+        get => earnedGold;
+        set
+        {
+            earnedGold = value;
+            gameUiManager.UpdateEarnedGold(earnedGold);
+        }
+    }
+    
+    private StageState currentState;
+    public StageState CurrentState
+    {
+        get => currentState;
+        private set
+        {
+            if (currentState == value || value == StageState.None)
+                return;
+
+            currentState = value;
+            gameUiManager.SetStageStateUi(currentState);
+            if (currentState == StageState.GameClear || currentState == StageState.GameOver)
+                Time.timeScale = 0f;
+            else
+                Time.timeScale = 1f;
         }
     }
 
     public MonsterSpawner monsterSpawner;
     public PlayerCharacterSpawner playerCharacterSpawner;
-
-
-
-    private void Awake()
-    {
-        CastleHp = castleMaxHp;
-    }
+    public GameUiManager gameUiManager;
 
     private void Start()
     {
-        gameUi.SetActive(true);
-        gameOverUi.SetActive(false);
-        gameClearUi.SetActive(false);
+        CastleHp = CastleMaxHp;
+        CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
+        EarnedGold = 0;
     }
 
     public void DamageCastle(float damage)
@@ -53,37 +84,13 @@ public class StageManager : MonoBehaviour
             return;
 
         CastleHp -= damage;
-        UpdateHpBar();
 
         if (CastleHp <= 0f)
-        {
-            GameOver();
-        }
-    }
-
-    private void UpdateHpBar()
-    {
-        var hpPercent = CastleHp / castleMaxHp;
-        castleHpBar.fillAmount = hpPercent;
-    }
-
-    private void GameClear()
-    {
-        Time.timeScale = 0f;
-        gameUi.SetActive(false);
-        gameClearUi.SetActive(true);
-    }
-
-    private void GameOver()
-    {
-        Time.timeScale = 0f;
-        gameUi.SetActive(false);
-        gameOverUi.SetActive(true);
+            CurrentState = StageState.GameOver;
     }
 
     public void RestartScene()
     {
-        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

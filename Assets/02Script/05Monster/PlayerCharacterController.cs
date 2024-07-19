@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerCharacterController : MonoBehaviour, IControllable
+public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageable, ITargetable
 {
     public PlayerCharacterSpawner spawner { get; set; }
 
@@ -15,19 +15,25 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     private float atkTimer;
     public Image hpBar;
 
+    public BaseSkill skill;
+    public SkillData skillData;
+    private float skillTimer;
+
     public Transform[] mosnterPosition;
 
     public MonsterController monsterUp { get; set; }
     public MonsterController monsterDown { get; set; }
+
+    private CharacterSpineAni anim;
 
     public int MonsterCount
     {
         get
         {
             int count = 0;
-            if (monsterUp != null)
+            if (monsterUp)
                 count++;
-            if (monsterDown != null)
+            if (monsterDown)
                 count++;
             return count;
         }
@@ -40,6 +46,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
     private void Awake()
     {
         atkTimer = 0f;
+
+        anim = GetComponent<CharacterSpineAni>();
     }
 
     private void OnEnable()
@@ -59,18 +67,50 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
     private void FixedUpdate()
     {
-        var findBehavior = new FindingTargetInCircle<MonsterController>(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
-        atkTarget = findBehavior.FindTarget() as MonsterController;
+        var findBehavior = new FindingTargetInCircle(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
+        var nearCollider = findBehavior.FindTarget();
+        if (!nearCollider)
+        {
+            atkTarget = null;
+            return;
+        }
+        
+        // 코드 ?: 연산자로 변경 : 방민호
+        atkTarget = nearCollider.TryGetComponent<MonsterController>(out var target) ? target : null;
     }
 
     private void Update()
     {
         var atkCoolDown = 1f / Status.data.AtkSpeed;
         atkTimer += Time.deltaTime;
-        if (atkTimer >= atkCoolDown)
+        if (atkTarget && atkTimer >= atkCoolDown && !IsDead)
         {
-            atkTarget?.DamageHp(Status.currentAtkDmg);
+            anim.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 0.1f);
+            atkTarget?.TakeDamage(Status.currentAtkDmg);
             atkTimer = 0f;
+
+            // 스킬이 준비되면, 일반 스킬은 일시 중지
+            // 스킬 캐스팅
+        }
+        // 테스트용 코드 : 공격중이 아니면 Idle 상태 유지 (방민호)
+        else
+        {
+            anim.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 0.1f);
+        }
+        
+        // 에러로 인해 비활성화 : 방민호
+        //skillTimer += Time.deltaTime;
+        // if (skillTimer >= skillData.CoolTime)
+        // {
+        //     skill.UseSkill();
+        //     skillTimer = 0f;
+        // }
+
+        Status.buffHandler.TimerUpdate();
+
+        if (IsDead)
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -82,7 +122,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
         if (MonsterCount == 2)
             return false;
 
-        if (monsterUp == null)
+        if (!monsterUp)
             monsterUp = monster;
         else
             monsterDown = monster;
@@ -94,7 +134,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
 
     public bool TryRemoveMonster(MonsterController monster)
     {
-        if (monster == null)
+        if (!monster)
             return false;
 
         if (monsterUp != monster && monsterDown != monster)
@@ -119,7 +159,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
                 return;
             case 1:
                 {
-                    if (monsterUp == null)
+                    if (!monsterUp)
                     {
                         monsterUp = monsterDown;
                         monsterDown = null;
@@ -136,7 +176,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
         }
     }
 
-    public void DamageHp(float damage)
+    public void TakeDamage(float damage)
     {
         if (damage < 0)
             return;
@@ -150,14 +190,25 @@ public class PlayerCharacterController : MonoBehaviour, IControllable
             TryRemoveMonster(monsterDown);
             Status.currentHp = 0f;
             IsDead = true;
+            
+            // PASSOUT 상태로 변경 : 방민호
+            anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 0.01f);
             spawner.RemoveActiveCharacter(this);
-            gameObject.SetActive(false);
+            
+            //현재 비활성화 하는 부분 주석처리하고 , PASSOUT 상태가 끝나면 이벤트를 통해 IsDead를 True로 변경해서 반응하도록 수정'
+            //위에 Update에서 확인가능 : 방민호
+            // gameObject.SetActive(false);
         }
+    }
+
+    public void TakeBuff(BuffData buffData)
+    {
+        Status.buffHandler.AddBuff(buffData);
     }
 
     private void UpdateHpBar()
     {
-        if (hpBar == null || Status == null)
+        if (!hpBar || Status == null)
             return;
 
         var hpPercent = Status.currentHp / Status.data.Hp;

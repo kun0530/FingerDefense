@@ -32,8 +32,8 @@ public class WaveTable : DataTable
     {
         path = string.Format(FormatPath, path);
 
-        // var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
-        var textAsset = Resources.Load<TextAsset>(path);
+        var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
+        //var textAsset = Resources.Load<TextAsset>(path);
         var monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
 
         using (var reader = new StringReader(textAsset.text))
@@ -56,7 +56,8 @@ public class WaveTable : DataTable
                     (int monsterId, int monsterCount) monster = (csvReader.GetField<int>(i), csvReader.GetField<int>(i + 1));
                     if (!monsterTable.IsExist(monster.monsterId))
                     {
-                        Logger.LogError($"존재하지 않는 몬스터 ID: {monster.monsterId}"); // 예외 던져야 함
+                        if (monster.monsterId != 0)
+                            Logger.LogError($"존재하지 않는 몬스터 ID: {monster.monsterId}"); // 예외 던져야 함
                         continue;
                     }
                     waveData.monsters.Add(monster);

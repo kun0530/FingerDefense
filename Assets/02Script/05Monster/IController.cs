@@ -5,5 +5,4 @@ using UnityEngine;
 
 public interface IControllable
 {
-    bool IsTargetable { get; }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveState : IState
 {
     private MonsterController controller;
-    private Vector3 direction = new Vector3(1f, 0f, 0f);
+    private Vector3 direction = new Vector3(-1f, 0f, 0f);
 
     public MoveState(MonsterController controller)
     {
@@ -20,6 +20,12 @@ public class MoveState : IState
 
     public void Enter()
     {
+        if (controller.moveTarget != null)
+        {
+            direction.x = controller.moveTarget.transform.position.x
+            > controller.transform.position.x ? 1f : -1f;
+        }
+        controller.SetFlip(direction.x > 0);
     }
     
     public void Update()

@@ -5,14 +5,13 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
-public class MonsterController : MonoBehaviour, IControllable
+public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITargetable, IDraggable
 {
     private StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
     public MonsterStatus Status { get; set; }
-    public string testMonsterDragData; // To-Do: 추후 삭제 -> 몬스터의 드래그 타입을 통해 행동 변경
 
     public Image hpBar;
     private bool isDead = false;
@@ -23,6 +22,8 @@ public class MonsterController : MonoBehaviour, IControllable
     public PlayerCharacterController attackTarget { get; set; }
 
     public float findRange = 3f;
+    [SerializeField] private bool isDirectedRight = true;
+    private float defaultRightScale;
     
     public bool IsDraggable
     {
@@ -66,13 +67,15 @@ public class MonsterController : MonoBehaviour, IControllable
 
     private void Awake()
     {
+        defaultRightScale = isDirectedRight ? transform.localScale.x : -transform.localScale.x;
+
         stateMachine = new StateMachine<MonsterController>(this);
 
-        var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
-        var findBehavior = new FindingTargetInCircle<PlayerCharacterController>(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
+        // var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
+        var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
         
-        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게 변경
-        stateMachine.AddState(new DragState(this, dragBehavior));
+        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게(Death) 변경
+        stateMachine.AddState(new DragState(this));
         stateMachine.AddState(new FallState(this));
         stateMachine.AddState(new MoveState(this));
         stateMachine.AddState(new PatrolState(this, findBehavior));
@@ -101,16 +104,17 @@ public class MonsterController : MonoBehaviour, IControllable
     private void Update()
     {
         stateMachine.Update();
+        Status.buffHandler.TimerUpdate();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("PatrolStartLine"))
+        if (other.CompareTag(Defines.Tags.PATROL_LINE_TAG))
         {
             CanPatrol = true;
         }
 
-        if (other.CompareTag("Castle"))
+        if (other.CompareTag(Defines.Tags.CASTLE_TAG))
         {
             // if (!IsTargetable)
             //     return;
@@ -120,7 +124,7 @@ public class MonsterController : MonoBehaviour, IControllable
         }
     }
 
-    public void DamageHp(float damage)
+    public void TakeDamage(float damage)
     {
         if (damage < 0 || isDead)
             return;
@@ -135,20 +139,48 @@ public class MonsterController : MonoBehaviour, IControllable
         }
     }
 
+    public void TakeBuff(BuffData buffData)
+    {
+        Status.buffHandler.AddBuff(buffData);
+    }
+
     private void Die()
     {
         isDead = true;
-        attackTarget?.TryRemoveMonster(this);
+        attackTarget.TryRemoveMonster(this);
         stageManager.MonsterCount--;
+        stageManager.EarnedGold += Status.data.DropGold;
         pool.Release(this);
     }
 
     private void UpdateHpBar()
     {
-        if (hpBar == null || Status == null)
+        if (!hpBar || Status == null)
             return;
 
         var hpPercent = Status.currentHp / Status.data.Hp;
         hpBar.fillAmount = hpPercent;
+    }
+
+    public void SetFlip(bool isRight)
+    {
+        var newScaleX = isRight ? defaultRightScale : defaultRightScale * -1f;
+        var transform1 = transform;
+        var newScale = new Vector2(newScaleX, transform1.localScale.y);
+
+        transform1.localScale = newScale;
+    }
+
+    public bool TryDrag()
+    {
+        if (!IsDraggable)
+            return false;
+
+        return stateMachine.TransitionTo<DragState>();
+    }
+
+    public bool TryFall()
+    {
+        return stateMachine.TransitionTo<FallState>();
     }
 }
