@@ -18,7 +18,6 @@ public class DeckSlotController : MonoBehaviour
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
     
     public Button startButton;
-    public Button AttributeFilterButton;
     
     private void Start()
     {
@@ -77,14 +76,13 @@ public class DeckSlotController : MonoBehaviour
                 return;
             }
 
-            // 필터링 슬롯에서 클릭됨
             foreach (var slot in characterSlots)
             {
                 if (slot.characterData == null)
                 {
                     slot.SetCharacterSlot(clickedSlot.characterData);
-                    slot.ChoicePanel.SetActive(false); // characterSlotParent에 추가된 슬롯은 ChoicePanel 비활성화
-                    clickedSlot.ChoiceButton.interactable = false; // 원본 슬롯의 버튼을 비활성화
+                    slot.ChoicePanel.SetActive(false);
+                    clickedSlot.ChoiceButton.interactable = false;
                     addedCharacters.Add(clickedSlot.characterData.Id);
                     activeChoicePanelSlots.Add(clickedSlot);
                     UpdateChoicePanels();
@@ -96,7 +94,6 @@ public class DeckSlotController : MonoBehaviour
         }
         else if (clickedSlot.transform.parent == characterSlotParent)
         {
-            // 캐릭터 슬롯에서 클릭됨
             var originalSlot = activeChoicePanelSlots.Find(slot => slot.characterData == clickedSlot.characterData);
             if (originalSlot != null)
             {
@@ -116,29 +113,38 @@ public class DeckSlotController : MonoBehaviour
         }
     }
 
+    public void UpdateFilteredSlots(List<PlayerCharacterData> filteredCharacters)
+    {
+        foreach (var slot in filterSlots)
+        {
+            if (filteredCharacters.Contains(slot.characterData))
+            {
+                slot.gameObject.SetActive(true);
+                Logger.Log($"Character ID: {slot.characterData.Id} is visible.");
+            }
+            else
+            {
+                slot.gameObject.SetActive(false);
+                Logger.Log($"Character ID: {slot.characterData.Id} is hidden.");
+            }
+        }
+    }
+
     private void SortCharacterSlots()
     {
-        // Priority > Grade > Element 순서대로 정렬
         characterSlots = characterSlots
             .OrderBy(slot => slot.characterData?.Priority ?? int.MaxValue)
             .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
             .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
             .ToList();
     
-        // 정렬된 캐릭터 슬롯을 로그로 출력하여 확인
         foreach (var slot in characterSlots)
         {
-            if (slot.characterData != null)
-            {
-                Debug.Log($"Priority: {slot.characterData.Priority}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}");
-            }
-            else
-            {
-                Debug.Log("빈 슬롯");
-            }
+            Logger.Log(slot.characterData != null
+                ? $"Priority: {slot.characterData.Priority}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
+                : "빈 슬롯");
         }
     
-        // UI 요소를 정렬된 순서에 맞게 재배치
         for (var i = 0; i < characterSlots.Count; i++)
         {
             characterSlots[i].transform.SetSiblingIndex(i);

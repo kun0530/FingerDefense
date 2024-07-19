@@ -8,6 +8,7 @@ public class StageSlotCreate : MonoBehaviour
     public RectTransform[] slotParents;
     public GameObject deckUI;
     
+    public GameObject[] monsterPrefabs;
     private void Start()
     {
         stageTable ??= DataTableManager.Get<StageTable>(DataTableIds.Stage);
