@@ -42,7 +42,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
-        if (context.control.device is Mouse || context.control.device is Touchscreen)
+        if (context.control.device is Mouse or Touchscreen)
         {
             if (!IsDragging)
             {
@@ -50,12 +50,12 @@ public class DragAndDrop : MonoBehaviour
                 var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
                 LayerMask mask = LayerMask.GetMask("Monster");
 
-                int hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
+                var hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
 
                 GameObject highestSortingOrderObject = null;
-                int highestSortingOrder = int.MinValue;
+                var highestSortingOrder = int.MinValue;
 
-                for (int i = 0; i < hitCount; i++)
+                for (var i = 0; i < hitCount; i++)
                 {
                     var hit = hits[i];
                     if (hit.collider != null && mask == (mask | (1 << hit.collider.gameObject.layer)))

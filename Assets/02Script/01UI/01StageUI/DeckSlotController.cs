@@ -17,6 +17,7 @@ public class DeckSlotController : MonoBehaviour
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
     
     public Button startButton;
+    
     private void Start()
     {
         playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);

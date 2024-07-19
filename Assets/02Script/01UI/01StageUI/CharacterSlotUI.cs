@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using Spine.Unity;
 using UnityEngine;
@@ -23,6 +23,27 @@ public class CharacterSlotUI : MonoBehaviour
     public SlotClickDelegate OnSlotClick;
 
     public PlayerCharacterData characterData { get; private set; }
+
+    private Dictionary<int, int> skillIndexMapping = new Dictionary<int, int>();
+
+    private void Awake()
+    {
+        MapSkillsToIndices();
+    }
+
+    private void MapSkillsToIndices()
+    {
+        int[] skillValues = { 1000, 1001, 1002 }; // Example skill values
+        for (var i = 0; i < skillValues.Length; i++)
+        {
+            skillIndexMapping[skillValues[i]] = i;
+        }
+    }
+
+    private int GetSkillIndex(int skillValue)
+    {
+        return skillIndexMapping.GetValueOrDefault(skillValue, -1);
+    }
 
     public void SetCharacterSlot(PlayerCharacterData characterData)
     {
@@ -52,12 +73,29 @@ public class CharacterSlotUI : MonoBehaviour
             elementImage.gameObject.SetActive(true);
         }
         
+        // var skillImage = skillParent.GetComponent<Image>();
+        // if (skillImage != null && characterData.Priority >= 0 && characterData.Priority < skillImages.Length)
+        // {
+        //     skillImage.sprite = skillImages[characterData.Priority];
+        //     skillImage.gameObject.SetActive(true);
+        // }
+        
         var skillImage = skillParent.GetComponent<Image>();
-        if (skillImage != null && characterData.Priority >= 0 && characterData.Priority < skillImages.Length)
+        if (skillImage != null)
         {
-            skillImage.sprite = skillImages[characterData.Priority];
-            skillImage.gameObject.SetActive(true);
+            int skillIndex = GetSkillIndex(characterData.Skill);
+            Logger.Log("Character Skill: " + characterData.Skill + ", Mapped Index: " + skillIndex);
+            if (skillIndex >= 0 && skillIndex < skillImages.Length)
+            {
+                skillImage.sprite = skillImages[skillIndex];
+                skillImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                skillImage.gameObject.SetActive(false);
+            }
         }
+        
         
         ChoiceButton.onClick.AddListener(OnClick);
     }
