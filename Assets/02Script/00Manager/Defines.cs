@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Defines
@@ -19,6 +17,12 @@ namespace Defines
         public static readonly string CASTLE_TAG = "Castle";
         public static readonly string PATROL_LINE_TAG = "PatrolStartLine";
     }
-    
+
+    public static class LoadTable
+    {
+        //테스트 (스테이지 UI 버튼을 누르면 그 스테이지 id를 넘겨줄 예정)
+        public static int stageId;
+        public static readonly int[] characterIds = {};
+    }
     
 }

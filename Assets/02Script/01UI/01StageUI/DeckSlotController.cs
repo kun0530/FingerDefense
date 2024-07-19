@@ -18,6 +18,7 @@ public class DeckSlotController : MonoBehaviour
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
     
     public Button startButton;
+    public Button closeButton;
     
     private void Start()
     {
@@ -29,6 +30,12 @@ public class DeckSlotController : MonoBehaviour
         startButton.onClick.AddListener(() =>
         {
             SceneManager.LoadScene(2);
+        });
+        closeButton.onClick.AddListener(() =>
+        {
+            //할당 되어있는 값을 초기화 시킨다.
+            Defines.LoadTable.stageId = 0;
+            Logger.Log("스테이지 선택 화면으로 이동합니다.");
         });
     }
 

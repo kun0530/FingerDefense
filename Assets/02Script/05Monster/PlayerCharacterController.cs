@@ -98,13 +98,13 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             anim.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 0.1f);
         }
         
-
-        skillTimer += Time.deltaTime;
-        if (skillTimer >= skillData.CoolTime)
-        {
-            skill.UseSkill();
-            skillTimer = 0f;
-        }
+        // 에러로 인해 비활성화 : 방민호
+        //skillTimer += Time.deltaTime;
+        // if (skillTimer >= skillData.CoolTime)
+        // {
+        //     skill.UseSkill();
+        //     skillTimer = 0f;
+        // }
 
         Status.buffHandler.TimerUpdate();
 

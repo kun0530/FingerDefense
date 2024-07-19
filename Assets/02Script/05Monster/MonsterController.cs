@@ -147,7 +147,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     private void Die()
     {
         isDead = true;
-        attackTarget?.TryRemoveMonster(this);
+        attackTarget.TryRemoveMonster(this);
         stageManager.MonsterCount--;
         stageManager.EarnedGold += Status.data.DropGold;
         pool.Release(this);
@@ -155,7 +155,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private void UpdateHpBar()
     {
-        if (hpBar == null || Status == null)
+        if (!hpBar || Status == null)
             return;
 
         var hpPercent = Status.currentHp / Status.data.Hp;
@@ -165,9 +165,10 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public void SetFlip(bool isRight)
     {
         var newScaleX = isRight ? defaultRightScale : defaultRightScale * -1f;
-        var newScale = new Vector2(newScaleX, transform.localScale.y);
+        var transform1 = transform;
+        var newScale = new Vector2(newScaleX, transform1.localScale.y);
 
-        transform.localScale = newScale;
+        transform1.localScale = newScale;
     }
 
     public bool TryDrag()

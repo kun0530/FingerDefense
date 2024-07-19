@@ -15,7 +15,7 @@ public class CharacterSlotUI : MonoBehaviour
     public RectTransform gradeParent;
     public RectTransform classParent;
 
-    public GameObject[] spinePrefabs; // AssetNo에 따라 스폰할 스파인 프리팹 배열
+    public GameObject[] spinePrefabs; // AssetNo에 따라 스폰할 스파인 프리팹 배열, 테스트용 삭제 예정 
     public GameObject ChoicePanel;
     public Button ChoiceButton;
 
@@ -49,6 +49,7 @@ public class CharacterSlotUI : MonoBehaviour
     {
         this.characterData = characterData;
         
+        //AssetNo에 해당하는 번호에 따라서 스파인 프리팹을 생성
         if (characterData.AssetNo >= 0 && characterData.AssetNo < spinePrefabs.Length)
         {
             var spineInstance = Instantiate(spinePrefabs[characterData.AssetNo], classParent);
@@ -72,13 +73,6 @@ public class CharacterSlotUI : MonoBehaviour
             elementImage.sprite = elementImages[characterData.Element];
             elementImage.gameObject.SetActive(true);
         }
-        
-        // var skillImage = skillParent.GetComponent<Image>();
-        // if (skillImage != null && characterData.Priority >= 0 && characterData.Priority < skillImages.Length)
-        // {
-        //     skillImage.sprite = skillImages[characterData.Priority];
-        //     skillImage.gameObject.SetActive(true);
-        // }
         
         var skillImage = skillParent.GetComponent<Image>();
         if (skillImage != null)

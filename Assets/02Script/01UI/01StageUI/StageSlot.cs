@@ -13,6 +13,8 @@ public class StageSlot : MonoBehaviour
     public GameObject monsterSlotPrefab; 
     public GameObject rewardSlotPrefab;
     public Button DeckButton;
+
+    private int StageId;
     //public Button CloseButton;
     
     [SerializeField]private GameObject deckUI;
@@ -22,6 +24,7 @@ public class StageSlot : MonoBehaviour
     
     public void Start()
     { 
+        
         //해당 오브젝트는 생성하는 오브젝트인데 
         //DeckUI를 찾아오는 방법
         DeckButton.onClick.AddListener(OnClick);
@@ -33,7 +36,7 @@ public class StageSlot : MonoBehaviour
     public void Configure(StageData stageData)
     {
         stageNameText.text = stageData.StageNameId.ToString();
-
+        StageId = stageData.StageId;
         if (stageData.Monster1Id != 0) AddMonsterSlot(stageData.Monster1Id);
         if (stageData.Monster2Id != 0) AddMonsterSlot(stageData.Monster2Id);
         if (stageData.Monster3Id != 0) AddMonsterSlot(stageData.Monster3Id);
@@ -45,19 +48,10 @@ public class StageSlot : MonoBehaviour
     private void AddMonsterSlot(int monsterId)
     {
         var monsterSlot = Instantiate(monsterSlotPrefab, monsterSlotParent);
-        var monsterImage = monsterSlot.GetComponentInChildren<Image>();
         var monsterText = monsterSlot.GetComponentInChildren<TextMeshProUGUI>();
         
         // To-Do 데이터 테이블로 불러올 수 있도록 수정 예정
-        var monsterSprite = Resources.Load<Sprite>($"Monsters/{monsterId}") ? Resources.Load<Sprite>($"Monsters/{monsterId}") : Resources.Load<Sprite>("PlaceholderImage");
-        if (monsterSprite != null)
-        {
-            monsterImage.sprite = monsterSprite;
-        }
-        else
-        {
-            Debug.LogWarning($"Monster image not found for ID: {monsterId}");
-        }
+        GameObject monsterPrefab = Resources.Load<GameObject>($"Monsters/{monsterId}") ? Resources.Load<GameObject>($"Monsters/{monsterId}") : Resources.Load<GameObject>("PlaceholderImage");
 
         monsterText.text = monsterId.ToString();
     }
@@ -85,5 +79,7 @@ public class StageSlot : MonoBehaviour
     public void OnClick()
     {
         deckUI.SetActive(true);
+        Defines.LoadTable.stageId = StageId;
+        Logger.Log($"스테이지 {StageId} 선택");
     }
 }

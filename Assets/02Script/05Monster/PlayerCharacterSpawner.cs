@@ -41,13 +41,13 @@ public class PlayerCharacterSpawner : MonoBehaviour
     {
         var data = playerCharacterTable.Get(id);
 
-        var playerCharacter = Instantiate(characterPrefabs[data.AssetNo]);
-        playerCharacter.transform.SetParent(poolTransform);
+        var playerCharacter = Instantiate(characterPrefabs[data.AssetNo], poolTransform, true);
         playerCharacter.Status = new CharacterStatus(data);
 
-        var skillData = skillTable.Get(data.Skill);
-        playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
-        playerCharacter.skillData = skillData;
+        // 에러로 인해 비활성화 : 방민호
+        // var skillData = skillTable.Get(data.Skill);
+        // playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
+        // playerCharacter.skillData = skillData;
 
         playerCharacter.spawner = this;
         playerCharacter.gameObject.SetActive(false);

@@ -43,7 +43,7 @@ public class MonsterSpawner : MonoBehaviour
         int wave = 1;
         MonsterCount = 0;
         WaveData waveData;
-        while ((waveData = waveTable.Get(stageId, wave++))!= null)
+        while ((waveData = waveTable.Get(Defines.LoadTable.stageId, wave++))!= null)
         {
             var monsterList = waveData.monsters;
             foreach (var monster in monsterList)
