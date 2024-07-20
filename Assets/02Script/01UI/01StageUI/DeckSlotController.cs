@@ -140,7 +140,7 @@ public class DeckSlotController : MonoBehaviour
     private void SortCharacterSlots()
     {
         characterSlots = characterSlots
-            .OrderBy(slot => slot.characterData?.Priority ?? int.MaxValue)
+            .OrderBy(slot => slot.characterData?.Class ?? int.MaxValue)
             .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
             .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
             .ToList();
@@ -148,7 +148,7 @@ public class DeckSlotController : MonoBehaviour
         foreach (var slot in characterSlots)
         {
             Logger.Log(slot.characterData != null
-                ? $"Priority: {slot.characterData.Priority}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
+                ? $"Priority: {slot.characterData.Class}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
                 : "빈 슬롯");
         }
     
