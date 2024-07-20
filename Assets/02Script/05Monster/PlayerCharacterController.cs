@@ -8,12 +8,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 {
     public PlayerCharacterSpawner spawner { get; set; }
 
-    public CharacterStatus Status { get; set; }
+    public CharacterStatus Status { get; set; } = new CharacterStatus( null );
     public bool IsDead { get; set; } = true;
 
     private MonsterController atkTarget;
     private float atkTimer;
-    public Image hpBar;
+    private Image hpBar;
 
     public BaseSkill skill;
     public SkillData skillData;
@@ -21,12 +21,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     public Transform[] mosnterPosition;
 
-    public MonsterController monsterUp { get; set; }
+    public MonsterController monsterUp { get; set; }= null;
     public MonsterController monsterDown { get; set; }
 
     private CharacterSpineAni anim;
 
-    public int MonsterCount
+    private int MonsterCount
     {
         get
         {
@@ -38,23 +38,21 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             return count;
         }
     }
-    public bool IsTargetable
-    {
-        get { return MonsterCount != 2; }
-    }
+    public bool IsTargetable => MonsterCount != 2;
 
     private void Awake()
     {
         atkTimer = 0f;
 
         anim = GetComponent<CharacterSpineAni>();
+        hpBar=GameObject.FindWithTag("PlayerCharacterHp").GetComponent<Image>();
     }
 
     private void OnEnable()
     {
-        atkTarget = null;
-        monsterUp = null;
-        monsterDown = null;
+        // atkTarget = null;
+        // monsterUp = null;
+        // monsterDown = null;
 
         Status?.Init();
         UpdateHpBar();
@@ -151,7 +149,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         return true;
     }
 
-    public void UpdateMonsterPosition()
+    private void UpdateMonsterPosition()
     {
         switch (MonsterCount)
         {

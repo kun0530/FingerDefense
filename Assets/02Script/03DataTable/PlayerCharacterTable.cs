@@ -36,7 +36,7 @@ public class PlayerCharacterTable : DataTable
 
     public PlayerCharacterData Get(int id)
     {
-        return table.GetValueOrDefault(id);
+        return table.GetValueOrDefault(id);    
     }
     
     public IEnumerable<PlayerCharacterData> GetAll()

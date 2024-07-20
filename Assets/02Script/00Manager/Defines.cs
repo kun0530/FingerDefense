@@ -22,7 +22,8 @@ namespace Defines
     {
         //테스트 (스테이지 UI 버튼을 누르면 그 스테이지 id를 넘겨줄 예정)
         public static int stageId;
-        public static readonly int[] characterIds = {};
+        //여기다가 슬롯 UI에서 선택한 캐릭터 ID를 넘겨줄 예정
+        public static int[] characterIds = new int[8];
     }
     
 }

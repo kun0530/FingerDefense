@@ -14,6 +14,7 @@ public class CharacterStatus : IStatus
     public CharacterStatus(PlayerCharacterData data)
     {
         this.data = data;
+        
         buffHandler = new(this);
         Init();
     }

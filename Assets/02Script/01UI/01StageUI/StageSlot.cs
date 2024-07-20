@@ -49,7 +49,7 @@ public class StageSlot : MonoBehaviour
     {
         if (assetListTable == null)
         {
-            Debug.LogError("AssetListTable is not set.");
+            Logger.LogError("AssetListTable is not set.");
             return;
         }
 
