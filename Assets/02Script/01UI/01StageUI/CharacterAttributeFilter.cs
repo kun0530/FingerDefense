@@ -63,7 +63,7 @@ public class CharacterAttributeFilter : MonoBehaviour
     private bool IsCharacterMatched(PlayerCharacterData character, bool isAnyElementChecked, bool isAnyClassChecked, bool isAnyGradeChecked)
     {
         bool isElementMatched = !isAnyElementChecked || ElementToggles.Any(t => t.isOn && character.Element == System.Array.IndexOf(ElementToggles, t));
-        bool isClassMatched = !isAnyClassChecked || ClassToggles.Any(t => t.isOn && character.Priority == System.Array.IndexOf(ClassToggles, t));
+        bool isClassMatched = !isAnyClassChecked || ClassToggles.Any(t => t.isOn && character.Class == System.Array.IndexOf(ClassToggles, t));
         bool isGradeMatched = !isAnyGradeChecked || GradeToggles.Any(t => t.isOn && character.Grade == System.Array.IndexOf(GradeToggles, t));
 
         Logger.Log($"Character ID: {character.Id}, ElementMatched: {isElementMatched}, ClassMatched: {isClassMatched}, GradeMatched: {isGradeMatched}");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
 
 public class CharacterSlotUI : MonoBehaviour
 {
@@ -15,7 +16,6 @@ public class CharacterSlotUI : MonoBehaviour
     public RectTransform gradeParent;
     public RectTransform classParent;
 
-    public GameObject[] spinePrefabs; // AssetNo에 따라 스폰할 스파인 프리팹 배열, 테스트용 삭제 예정 
     public GameObject ChoicePanel;
     public Button ChoiceButton;
 
@@ -25,10 +25,12 @@ public class CharacterSlotUI : MonoBehaviour
     public PlayerCharacterData characterData { get; private set; }
 
     private Dictionary<int, int> skillIndexMapping = new Dictionary<int, int>();
-
+    private AssetListTable assetListTable;
     private void Awake()
     {
         MapSkillsToIndices();
+        
+        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
     }
 
     private void MapSkillsToIndices()
@@ -49,14 +51,18 @@ public class CharacterSlotUI : MonoBehaviour
     {
         this.characterData = characterData;
         
-        //AssetNo에 해당하는 번호에 따라서 스파인 프리팹을 생성
-        if (characterData.AssetNo >= 0 && characterData.AssetNo < spinePrefabs.Length)
+        var assetName = assetListTable.Get(characterData.AssetNo);
+        if (!string.IsNullOrEmpty(assetName))
         {
-            var spineInstance = Instantiate(spinePrefabs[characterData.AssetNo], classParent);
-            spineInstance.transform.localPosition = Vector3.zero; // 필요한 경우 위치 조정
+            // TO-DO: Addressables.LoadAssetAsync<GameObject>($"Prefabs/{assetName}")를 사용하여 프리팹을 로드하도록 수정해야 합니다.
+            //GameObject prefab = Addressables.LoadAssetAsync<GameObject>($"Prefab/{assetName}").WaitForCompletion();
+            GameObject prefab = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetName}");
+            if (prefab != null)
+            {
+                var spineInstance = Instantiate(prefab, classParent);
+                spineInstance.transform.localPosition = Vector3.zero; 
+            }
         }
-        
-        //ChoicePanel이 제일 마지막에 활성화되도록 설정
         
         
         for (var i = 0; i <= characterData.Grade; i++)

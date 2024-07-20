@@ -63,8 +63,8 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
         if (playerCharacter == null || !playerCharacter.IsDead) // To-Do: 리스폰 쿨타임 조건 추가
             return;
-
-        var spawnPriority = playerCharacter.Status.data.Priority;
+        //var spawnPriority = playerCharacter.Status.data.Priority;
+        var spawnPriority = playerCharacter.Status.data.Class;
         if (activePlayerCharacters[spawnPriority * 2] == null || !activePlayerCharacters[spawnPriority * 2].gameObject.activeSelf)
         {
             activePlayerCharacters[spawnPriority * 2] = playerCharacter;
