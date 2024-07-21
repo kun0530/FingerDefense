@@ -17,19 +17,19 @@ public static class SkillFactory
                 layerMask = Layers.MONSTER_LAYER;
                 break;
         }
-        
+
         IFindable findable = new FindingTargetInCircle(center, data.RangeValue, layerMask);
-        BaseSkill skill = null;
+        SkillType skill = null;
         switch ((SkillRangeTypes)data.RangeType)
         {
             case SkillRangeTypes.SingleTarget:
-                skill = new SingleTargetSkill(findable);
+                skill = new SingleTargetSkill();
                 break;
             case SkillRangeTypes.MultipleTarget:
-                skill = new MultipleTargetSkill(findable);
+                skill = new MultipleTargetSkill();
                 break;
             case SkillRangeTypes.AreaTarget:
-                skill = new AreaTargetSkill(findable);
+                skill = new AreaTargetSkill();
                 break;
         }
 
@@ -46,6 +46,8 @@ public static class SkillFactory
             skill.buffSkill = new BuffSkill(buffData);
         }
 
-        return skill;
+        BaseSkill baseSkill = new InstantSkill(skill, findable); // To-Do: Instant Skill과 Projectile Skill 분기
+
+        return baseSkill;
     }
 }

@@ -2,15 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingleTargetSkill : BaseSkill
+public class SingleTargetSkill : SkillType
 {
-    public SingleTargetSkill(IFindable findable) : base(findable)
+    public override void UseSkill(GameObject target)
     {
-    }
-
-    public override void UseSkill()
-    {
-        var target = targetingMethod.FindTarget();
         if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
         {
             ApplySkillActions(damageable);

@@ -2,24 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaTargetSkill : BaseSkill
+public class AreaTargetSkill : SkillType
 {
     private SkillArea skillArea;
-
-    public AreaTargetSkill(IFindable findable) : base(findable)
-    {
-    }
 
     // public AreaTargetSkill(AreaSkill area)
     // {
     //     this.area = area;
     // }
 
-    public override void UseSkill()
+    public override void UseSkill(GameObject target)
     {
-        var damageable = targetingMethod.FindTarget();
         var area = GameObject.Instantiate(skillArea);
-        area.transform.position = damageable.transform.position;
+        area.transform.position = target.transform.position;
     }
 
     public void EnterArea(IDamageable damageable, SkillArea area)
