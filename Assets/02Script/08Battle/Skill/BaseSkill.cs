@@ -9,9 +9,16 @@ public enum SkillRangeTypes
 
 public abstract class BaseSkill
 {
+    protected IFindable targetingMethod;
+
     // public List<ISkillAction> skillActions = new List<ISkillAction>();
     public BuffSkill buffSkill;
     public AttackSkill attackSkill;
+
+    public BaseSkill(IFindable findable)
+    {
+        targetingMethod = findable;
+    }
 
     public abstract void UseSkill();
 

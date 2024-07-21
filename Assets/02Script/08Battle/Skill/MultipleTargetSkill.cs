@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class MultipleTargetSkill : BaseSkill
 {
-    IFindable findBehavior;
-
-    public MultipleTargetSkill(IFindable findBehavior)
+    public MultipleTargetSkill(IFindable findable) : base(findable)
     {
-        this.findBehavior = findBehavior;
     }
 
     public override void UseSkill()
     {
-        var targets = findBehavior.FindTargets();
+        var targets = targetingMethod.FindTargets();
         foreach (var target in targets)
         {
             if (target != null && target.TryGetComponent<IDamageable>(out var damageable))

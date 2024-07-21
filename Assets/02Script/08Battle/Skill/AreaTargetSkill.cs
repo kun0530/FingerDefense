@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class AreaTargetSkill : BaseSkill
 {
-    IFindable findBehavior;
     private SkillArea skillArea;
+
+    public AreaTargetSkill(IFindable findable) : base(findable)
+    {
+    }
 
     // public AreaTargetSkill(AreaSkill area)
     // {
@@ -14,7 +17,7 @@ public class AreaTargetSkill : BaseSkill
 
     public override void UseSkill()
     {
-        var damageable = findBehavior.FindTarget();
+        var damageable = targetingMethod.FindTarget();
         var area = GameObject.Instantiate(skillArea);
         area.transform.position = damageable.transform.position;
     }

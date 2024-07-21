@@ -17,10 +17,9 @@ public static class SkillFactory
                 layerMask = Layers.MONSTER_LAYER;
                 break;
         }
+        
         IFindable findable = new FindingTargetInCircle(center, data.RangeValue, layerMask);
-
         BaseSkill skill = null;
-
         switch ((SkillRangeTypes)data.RangeType)
         {
             case SkillRangeTypes.SingleTarget:
@@ -30,7 +29,7 @@ public static class SkillFactory
                 skill = new MultipleTargetSkill(findable);
                 break;
             case SkillRangeTypes.AreaTarget:
-                skill = new AreaTargetSkill();
+                skill = new AreaTargetSkill(findable);
                 break;
         }
 
