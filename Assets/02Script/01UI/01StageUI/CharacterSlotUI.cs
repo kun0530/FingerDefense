@@ -26,6 +26,7 @@ public class CharacterSlotUI : MonoBehaviour
 
     private Dictionary<int, int> skillIndexMapping = new Dictionary<int, int>();
     private AssetListTable assetListTable;
+    
     private void Awake()
     {
         MapSkillsToIndices();

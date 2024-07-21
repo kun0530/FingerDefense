@@ -9,7 +9,7 @@ public class MonsterStatus : IStatus
     public MonsterData data;
     public BuffHandler buffHandler;
 
-    public float currentHp;
+    public float currentHp=0;
     public float currentAtk;
     public float currentMoveSpeed;
     public float currentAtkSpeed;
@@ -34,6 +34,7 @@ public class MonsterStatus : IStatus
 
     public void UpdateCurrentState()
     {
+        currentHp = data.Hp;
         currentAtk = data.AtkDmg;
         currentMoveSpeed = data.MoveSpeed;
         currentAtkSpeed = data.AtkSpeed;

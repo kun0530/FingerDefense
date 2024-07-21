@@ -11,7 +11,20 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
-    public MonsterStatus Status { get; set; }
+    private MonsterStatus status=new MonsterStatus(null);
+    public MonsterStatus Status
+    {
+        get => status;
+        set
+        {
+            status = value;
+            if (status != null)
+            {
+                status.Init();
+                UpdateHpBar();
+            }
+        }    
+    }
 
     public Image hpBar;
     private bool isDead = false;
@@ -128,7 +141,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     {
         if (damage < 0 || isDead)
             return;
-
+        if (Status == null) // Null 검사 추가
+        {
+            Logger.LogError("상태가 초기화되지 않았습니다.");
+            return;
+        }
         Status.currentHp -= damage;
         UpdateHpBar();
 
@@ -147,10 +164,38 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     private void Die()
     {
         isDead = true;
-        attackTarget.TryRemoveMonster(this);
-        stageManager.MonsterCount--;
-        stageManager.EarnedGold += Status.data.DropGold;
-        pool.Release(this);
+        // attackTarget.TryRemoveMonster(this);
+        // stageManager.MonsterCount--;
+        // stageManager.EarnedGold += Status.data.DropGold;
+        // pool.Release(this);
+        
+        if (attackTarget) // Null 검사 추가
+        {
+            attackTarget.TryRemoveMonster(this);
+        }
+        else
+        {
+            Logger.LogError("공격 대상이 할당되지 않았습니다.");
+        }
+
+        if (stageManager) // Null 검사 추가
+        {
+            stageManager.MonsterCount--;
+            stageManager.EarnedGold += Status.data.DropGold;
+        }
+        else
+        {
+            Logger.LogError("스테이지 매니저가 할당되지 않았습니다.");
+        }
+
+        if (pool != null) // Null 검사 추가
+        {
+            pool.Release(this);
+        }
+        else
+        {
+            Logger.LogError("풀이 할당되지 않았습니다.");
+        }
     }
 
     private void UpdateHpBar()

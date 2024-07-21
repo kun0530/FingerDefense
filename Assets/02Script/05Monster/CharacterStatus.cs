@@ -7,6 +7,9 @@ public class CharacterStatus : IStatus
     public PlayerCharacterData data;
     public BuffHandler buffHandler;
 
+    //초기 체력
+    public float maxHp;
+    //현재 체력
     public float currentHp;
     public float currentAtkDmg;
     public float currentAtkSpeed;
@@ -22,15 +25,24 @@ public class CharacterStatus : IStatus
     public void Init()
     {
         if (data == null)
-            return;
-
-        currentHp = data.Hp;
+        {
+            return; 
+        }
+            
+        maxHp= data.Hp;
+        currentHp = maxHp;
         currentAtkDmg = data.AtkDmg;
         currentAtkSpeed = data.AtkSpeed;
     }
 
     public void UpdateCurrentState()
     {
+        if(data == null)
+        {
+            return;
+        }
+        
+        currentHp = data.Hp;
         currentAtkDmg = data.AtkDmg;
         currentAtkSpeed = data.AtkSpeed;
 

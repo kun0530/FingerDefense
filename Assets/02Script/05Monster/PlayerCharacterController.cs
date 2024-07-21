@@ -8,7 +8,20 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 {
     public PlayerCharacterSpawner spawner { get; set; }
 
-    public CharacterStatus Status { get; set; } = new CharacterStatus( null );
+    private CharacterStatus status=new CharacterStatus(null);
+    public CharacterStatus Status
+    {
+        get => status;
+        set
+        {
+            status = value;
+            if (status != null)
+            {
+                status.Init();
+                UpdateHpBar();
+            }
+        }    
+    }
     public bool IsDead { get; set; } = true;
 
     private MonsterController atkTarget;
@@ -21,7 +34,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     public Transform[] mosnterPosition;
 
-    public MonsterController monsterUp { get; set; }= null;
+    public MonsterController monsterUp { get; set; }
     public MonsterController monsterDown { get; set; }
 
     private CharacterSpineAni anim;
@@ -46,6 +59,11 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
         anim = GetComponent<CharacterSpineAni>();
         hpBar=GameObject.FindWithTag("PlayerCharacterHp").GetComponent<Image>();
+        
+        if (hpBar == null)
+        {
+            Logger.LogError("hpBar is not found with tag 'PlayerCharacterHp'");
+        }
     }
 
     private void OnEnable()
@@ -53,7 +71,11 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         // atkTarget = null;
         // monsterUp = null;
         // monsterDown = null;
-
+        if (Status == null)
+        {
+            Logger.LogError("상태가 초기화되지 않았습니다.");
+            return;
+        }
         Status?.Init();
         UpdateHpBar();
     }
@@ -61,6 +83,14 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     public void ResetPlayerData()
     {
         IsDead = false;
+        if (Status != null)
+        {
+            Status.currentHp = Status.data.Hp; 
+        }
+        else
+        {
+            Logger.LogError("상태가 초기화되지 않았습니다.");
+        }
     }
 
     private void FixedUpdate()
@@ -178,10 +208,16 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     {
         if (damage < 0)
             return;
-
+        
+        if (Status == null)
+        {
+            Logger.LogError("상태가 초기화되지 않았습니다.");
+            return;
+        }
+        
         Status.currentHp -= damage;
         UpdateHpBar();
-
+        
         if (Status.currentHp <= 0f)
         {
             TryRemoveMonster(monsterUp);
@@ -191,7 +227,18 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             
             // PASSOUT 상태로 변경 : 방민호
             anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 0.01f);
-            spawner.RemoveActiveCharacter(this);
+            
+            //이게 지금 몬스터랑 플레이어랑 서로 사용하는거 같은데 이거 땜시 에러가 납니다 확인 필요 
+            //spawner.RemoveActiveCharacter(this);
+            
+            if (spawner) // Null 검사 추가
+            {
+                spawner.RemoveActiveCharacter(this);
+            }
+            else
+            {
+                Logger.LogError("스포너가 할당되지 않았습니다.");
+            }
             
             //현재 비활성화 하는 부분 주석처리하고 , PASSOUT 상태가 끝나면 이벤트를 통해 IsDead를 True로 변경해서 반응하도록 수정'
             //위에 Update에서 확인가능 : 방민호
@@ -206,10 +253,25 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void UpdateHpBar()
     {
-        if (!hpBar || Status == null)
+        if (!hpBar)
+        {
+            Logger.LogError("hpBar is not assigned.");
             return;
+        }
 
-        var hpPercent = Status.currentHp / Status.data.Hp;
+        if (Status == null)
+        {
+            Logger.LogError("Status is not assigned.");
+            return;
+        }
+
+        var hpPercent = Status.maxHp == 0 ? 0 : Status.currentHp / Status.maxHp;
         hpBar.fillAmount = hpPercent;
+        
+        // if (!hpBar || Status == null)
+        //     return;
+        //
+        // var hpPercent = Status.currentHp / Status.data.Hp;
+        // hpBar.fillAmount = hpPercent;
     }
 }

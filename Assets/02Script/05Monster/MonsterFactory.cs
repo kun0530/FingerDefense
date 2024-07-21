@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.AddressableAssets;
 using System;
+using Object = UnityEngine.Object;
 
 // [Serializable]
 // public class AssetReferenceMonster : AssetReferenceT<MonsterController>
@@ -33,7 +34,7 @@ public class MonsterFactory
     private MonsterController CreatedPooledMonster()
     {
         // var monster = Instantiate(monsterPrefab.Asset as MonsterController);
-        var monster = GameObject.Instantiate(monsterPrefab);
+        var monster = Object.Instantiate(monsterPrefab);
         if (poolTransform != null)
             monster.transform.SetParent(poolTransform);
         monster.pool = poolMonster;
@@ -52,7 +53,7 @@ public class MonsterFactory
 
     private void OnDestroyPoolObject(MonsterController monster)
     {
-        GameObject.Destroy(monster);
+        Object.Destroy(monster);
     }
 
     public MonsterController GetMonster(MonsterData data)
