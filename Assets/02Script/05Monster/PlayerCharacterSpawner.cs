@@ -43,7 +43,10 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
         var playerCharacter = Instantiate(characterPrefabs[data.AssetNo]);
         playerCharacter.transform.SetParent(poolTransform);
-        playerCharacter.Status = new CharacterStatus(data);
+        playerCharacter.Status = new CharacterStatus(data)
+        {
+            buffHandler = playerCharacter.buffHandler
+        };
 
         var skillData = skillTable.Get(data.Skill);
         playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);

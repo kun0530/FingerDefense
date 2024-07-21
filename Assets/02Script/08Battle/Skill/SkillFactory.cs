@@ -29,7 +29,7 @@ public static class SkillFactory
                 skill = new MultipleTargetSkill();
                 break;
             case SkillRangeTypes.AreaTarget:
-                skill = new AreaTargetSkill();
+                skill = new SingleTargetSkill();
                 break;
         }
 

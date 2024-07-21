@@ -60,8 +60,12 @@ public class MonsterFactory
         // To-Do: 몬스터 데이터 처리
         var monster =  poolMonster.Get();
 
-        var monsterStatus = new MonsterStatus(data);
+        var monsterStatus = new MonsterStatus(data)
+        {
+            buffHandler = monster.buffHandler
+        };
         monster.Status = monsterStatus;
+        monster.buffHandler.status = monsterStatus;
         monster.ResetMonsterData();
 
         return monster;

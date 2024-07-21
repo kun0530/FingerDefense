@@ -12,6 +12,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private StateMachine<MonsterController> stateMachine;
     public MonsterStatus Status { get; set; }
+    [HideInInspector] public BuffHandler buffHandler;
 
     public Image hpBar;
     private bool isDead = false;
@@ -83,6 +84,18 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         stateMachine.AddState(new AttackState(this));
 
         stateMachine.Initialize<MoveState>();
+
+        buffHandler = new(Status);
+    }
+
+    private void OnEnable()
+    {
+        buffHandler.OnDotDamage += TakeDamage;
+    }
+
+    private void OnDisable()
+    {
+        buffHandler.OnDotDamage -= TakeDamage;
     }
 
     private void Start()
@@ -141,12 +154,12 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     public void TakeBuff(BuffData buffData)
     {
-        Status.buffHandler.AddBuff(buffData);
+        buffHandler.AddBuff(buffData);
     }
 
     public void TakeBuff(Buff buff)
     {
-        Status.buffHandler.AddBuff(buff);
+        buffHandler.AddBuff(buff);
     }
 
     private void Die()

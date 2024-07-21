@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,8 @@ public class BuffHandler
 {
     public List<Buff> buffs = new();
 
-    private IStatus status;
+    public IStatus status;
+    public event Action<float> OnDotDamage;
 
     public BuffHandler(IStatus status)
     {
@@ -30,16 +32,34 @@ public class BuffHandler
             {
                 RemoveBuff(i);
             }
+            if (buffs[i].isDotDamage)
+            {
+                OnDotDamage?.Invoke(buffs[i].dotDamage);
+                buffs[i].isDotDamage = false;
+            }
         }
     }
 
     public void AddBuff(BuffData data)
     {
+        if (data == null)
+        {
+            Logger.LogError("해당 버프의 정보가 없습니다.");
+            return;
+        }
+
         var buff = new Buff(data);
+        AddBuff(buff);
     }
 
     public void AddBuff(Buff buff)
     {
+        if (buff == null)
+        {
+            Logger.LogError("해당 버프의 정보가 없습니다.");
+            return;
+        }
+
         if (buffs.Count >= 3)
         {
             Logger.Log($"Buff 최대({buffs.Count}): {buff.ToString()}");

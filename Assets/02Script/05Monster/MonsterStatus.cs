@@ -17,7 +17,6 @@ public class MonsterStatus : IStatus
     public MonsterStatus(MonsterData data)
     {
         this.data = data;
-        buffHandler = new(this);
         Init();
     }
 
