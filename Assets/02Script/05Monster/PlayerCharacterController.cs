@@ -15,13 +15,11 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         set
         {
             status = value;
-            if (status != null)
-            {
-                status.Init();
-                UpdateHpBar();
-            }
+            status?.Init();
+            //UpdateHpBar();
         }    
     }
+    
     public bool IsDead { get; set; } = true;
 
     private MonsterController atkTarget;
@@ -77,7 +75,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             return;
         }
         Status?.Init();
-        UpdateHpBar();
+        //UpdateHpBar();
     }
 
     public void ResetPlayerData()
@@ -85,7 +83,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         IsDead = false;
         if (Status != null)
         {
-            Status.currentHp = Status.data.Hp; 
+            Status.currentHp = Status.data.Hp;
         }
         else
         {
@@ -216,7 +214,9 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         }
         
         Status.currentHp -= damage;
-        UpdateHpBar();
+        if (Status.currentHp < 0) Status.currentHp = 0;
+        UpdateHpBar(status.currentHp, damage);
+        
         
         if (Status.currentHp <= 0f)
         {
@@ -251,7 +251,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         Status.buffHandler.AddBuff(buffData);
     }
 
-    private void UpdateHpBar()
+    private void UpdateHpBar(float currentHp, float damage)
     {
         if (!hpBar)
         {
@@ -265,13 +265,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             return;
         }
 
-        var hpPercent = Status.maxHp == 0 ? 0 : Status.currentHp / Status.maxHp;
-        hpBar.fillAmount = hpPercent;
-        
-        // if (!hpBar || Status == null)
-        //     return;
-        //
-        // var hpPercent = Status.currentHp / Status.data.Hp;
-        // hpBar.fillAmount = hpPercent;
+        double hpPercent = currentHp / (currentHp-damage);
+        hpBar.fillAmount =(float)hpPercent;
     }
+    
 }

@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class CharacterStatus : IStatus
 {
     public PlayerCharacterData data;
     public BuffHandler buffHandler;
-
-    //초기 체력
-    public float maxHp;
+    
     //현재 체력
     public float currentHp;
+    //초기 체력
+    public float maxHp;
     public float currentAtkDmg;
     public float currentAtkSpeed;
 
@@ -28,8 +24,7 @@ public class CharacterStatus : IStatus
         {
             return; 
         }
-            
-        maxHp= data.Hp;
+        maxHp = data.Hp;
         currentHp = maxHp;
         currentAtkDmg = data.AtkDmg;
         currentAtkSpeed = data.AtkSpeed;
@@ -42,7 +37,6 @@ public class CharacterStatus : IStatus
             return;
         }
         
-        currentHp = data.Hp;
         currentAtkDmg = data.AtkDmg;
         currentAtkSpeed = data.AtkSpeed;
 

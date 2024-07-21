@@ -112,8 +112,6 @@ public class PlayerCharacterSpawner : MonoBehaviour
         activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.ResetPlayerData();
         playerCharacter.gameObject.SetActive(true);
-
-        Logger.Log($"Spawned character at: {playerCharacter.transform.position}");
     }
 
     public void RemoveActiveCharacter(PlayerCharacterController character)
