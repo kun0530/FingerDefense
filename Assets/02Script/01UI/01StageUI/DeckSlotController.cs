@@ -118,6 +118,23 @@ public class DeckSlotController : MonoBehaviour
             
             SortCharacterSlots();
         }
+
+        UpdateCharacterIds();
+    }
+
+    private void UpdateCharacterIds()
+    {
+        for (var i = 0; i < characterSlots.Count; i++)
+        {
+            if (characterSlots[i].characterData != null)
+            {
+                Defines.LoadTable.characterIds[i] = characterSlots[i].characterData.Id;
+            }
+            else
+            {
+                Defines.LoadTable.characterIds[i] = 0; // 빈 슬롯 처리
+            }
+        }
     }
 
     public void UpdateFilteredSlots(List<PlayerCharacterData> filteredCharacters)
@@ -140,7 +157,7 @@ public class DeckSlotController : MonoBehaviour
     private void SortCharacterSlots()
     {
         characterSlots = characterSlots
-            .OrderBy(slot => slot.characterData?.Priority ?? int.MaxValue)
+            .OrderBy(slot => slot.characterData?.Class ?? int.MaxValue)
             .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
             .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
             .ToList();
@@ -148,7 +165,7 @@ public class DeckSlotController : MonoBehaviour
         foreach (var slot in characterSlots)
         {
             Logger.Log(slot.characterData != null
-                ? $"Priority: {slot.characterData.Priority}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
+                ? $"Priority: {slot.characterData.Class}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
                 : "빈 슬롯");
         }
     

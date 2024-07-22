@@ -16,7 +16,7 @@ public class MonsterSpawner : MonoBehaviour
 
     public Transform moveTarget;
 
-    private int stageId = 1; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
+    private int stageId = Defines.LoadTable.stageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
     private int waveId = 1;
     public int MonsterCount { get; private set; }
 
@@ -43,7 +43,7 @@ public class MonsterSpawner : MonoBehaviour
         int wave = 1;
         MonsterCount = 0;
         WaveData waveData;
-        while ((waveData = waveTable.Get(Defines.LoadTable.stageId, wave++))!= null)
+        while ((waveData = waveTable.Get(stageId, wave++))!= null)
         {
             var monsterList = waveData.monsters;
             foreach (var monster in monsterList)
@@ -80,7 +80,7 @@ public class MonsterSpawner : MonoBehaviour
         {
             spawnWaveTimer = 0f;
             isNextWave = false;
-            SpawnMonsterGroupUniTast().Forget();
+            SpawnMonsterGroupUniTask().Forget();
         }
         else
         {
@@ -88,15 +88,37 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
-    private async UniTask SpawnMonsterGroupUniTast()
+    private async UniTask SpawnMonsterGroupUniTask()
     {
+        // var monsters = currentWaveData.monsters;
+        // foreach (var monster in monsters)
+        // {
+        //     for (int i = 0; i < monster.monsterCount; i++)
+        //     {
+        //         var monsterGo = factory.GetMonster(monsterTable.Get(monster.monsterId));
+        //         monsterGo.transform.position = spawnPositions[monster.monsterCount + i - 1].position;
+        //         monsterGo.moveTarget = moveTarget;
+        //     }
+        //     await UniTask.WaitForSeconds(spawnGroupInterval);
+        // }
+        // waveId++;
+        // isNextWave = true;
+        //
+        // currentWaveData = waveTable.Get(stageId, waveId);
+        // if (currentWaveData == null)
+        // {
+        //     isNextWave = false;
+        //     isWaveEnd = true;
+        // }
+        
         var monsters = currentWaveData.monsters;
         foreach (var monster in monsters)
         {
             for (int i = 0; i < monster.monsterCount; i++)
             {
                 var monsterGo = factory.GetMonster(monsterTable.Get(monster.monsterId));
-                monsterGo.transform.position = spawnPositions[monster.monsterCount + i - 1].position;
+                int spawnIndex = (monster.monsterCount + i - 1) % spawnPositions.Length;
+                monsterGo.transform.position = spawnPositions[spawnIndex].position;
                 monsterGo.moveTarget = moveTarget;
             }
             await UniTask.WaitForSeconds(spawnGroupInterval);
@@ -109,6 +131,10 @@ public class MonsterSpawner : MonoBehaviour
         {
             isNextWave = false;
             isWaveEnd = true;
+        }
+        else
+        {
+            Debug.Log($"Next wave: {waveId}, Monster Count: {currentWaveData.monsters.Count}");
         }
     }
 }

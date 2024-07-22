@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.AddressableAssets;
 using System;
+using Object = UnityEngine.Object;
 
 // [Serializable]
 // public class AssetReferenceMonster : AssetReferenceT<MonsterController>
@@ -33,7 +34,8 @@ public class MonsterFactory
     private MonsterController CreatedPooledMonster()
     {
         // var monster = Instantiate(monsterPrefab.Asset as MonsterController);
-        var monster = GameObject.Instantiate(monsterPrefab);
+        //AssetList의 Monster의 번호를 기준으로 해당 이름을 찾아서 생성
+        var monster = Object.Instantiate(monsterPrefab);
         if (poolTransform != null)
             monster.transform.SetParent(poolTransform);
         monster.pool = poolMonster;
@@ -52,7 +54,7 @@ public class MonsterFactory
 
     private void OnDestroyPoolObject(MonsterController monster)
     {
-        GameObject.Destroy(monster);
+        Object.Destroy(monster);
     }
 
     public MonsterController GetMonster(MonsterData data)
@@ -64,8 +66,10 @@ public class MonsterFactory
         {
             buffHandler = monster.buffHandler
         };
-        monster.Status = monsterStatus;
+
         monster.buffHandler.status = monsterStatus;
+        //모호한 Reference로 인한 주석처리
+        //monster.Status = monsterStatus;
         monster.ResetMonsterData();
 
         return monster;

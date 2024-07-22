@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
 
 public class StageSlot : MonoBehaviour
 {
@@ -15,23 +16,22 @@ public class StageSlot : MonoBehaviour
     public Button DeckButton;
 
     private int StageId;
-    //public Button CloseButton;
+    private AssetListTable assetListTable;
     
     [SerializeField]private GameObject deckUI;
-    
-    public GameObject MonsterSlotPrefab { get => monsterSlotPrefab; set => monsterSlotPrefab = value; }
-    public GameObject RewardSlotPrefab { get => rewardSlotPrefab; set => rewardSlotPrefab = value; }
-    
+
     public void Start()
     { 
-        
-        //해당 오브젝트는 생성하는 오브젝트인데 
-        //DeckUI를 찾아오는 방법
         DeckButton.onClick.AddListener(OnClick);
     }
     public void SetDeckUI(GameObject deckUI)
     {
         this.deckUI = deckUI;
+    }
+    public void SetAssetListTable(AssetListTable assetListTable)
+    {
+        this.assetListTable = assetListTable;
+        Logger.Log("SetAssetListTable");
     }
     public void Configure(StageData stageData)
     {
@@ -47,13 +47,38 @@ public class StageSlot : MonoBehaviour
 
     private void AddMonsterSlot(int monsterId)
     {
-        var monsterSlot = Instantiate(monsterSlotPrefab, monsterSlotParent);
-        var monsterText = monsterSlot.GetComponentInChildren<TextMeshProUGUI>();
-        
-        // To-Do 데이터 테이블로 불러올 수 있도록 수정 예정
-        GameObject monsterPrefab = Resources.Load<GameObject>($"Monsters/{monsterId}") ? Resources.Load<GameObject>($"Monsters/{monsterId}") : Resources.Load<GameObject>("PlaceholderImage");
+        if (assetListTable == null)
+        {
+            Logger.LogError("AssetListTable is not set.");
+            return;
+        }
 
-        monsterText.text = monsterId.ToString();
+        // AssetListTable을 사용하여 프리팹 이름 가져오기
+        string prefabName = assetListTable.Get(monsterId);
+        if (!string.IsNullOrEmpty(prefabName))
+        {
+            // Resources.Load를 사용하여 프리팹 로드 ,To-Do: Addressable로 변경 예정
+            GameObject monsterPrefab = Resources.Load<GameObject>($"Prefab/01MonsterUI/{prefabName}");
+            if (monsterPrefab != null)
+            {
+                var monsterSlot = Instantiate(monsterSlotPrefab, monsterSlotParent);
+                var monsterInstance = Instantiate(monsterPrefab, monsterSlot.transform); // monsterSlot의 자식으로 추가
+                monsterInstance.transform.localPosition = new Vector3(0,3,0); // 필요한 경우 위치 조정
+                monsterInstance.transform.localScale = Vector3.one; // 필요한 경우 스케일 조정
+
+                var monsterText = monsterSlot.GetComponentInChildren<TextMeshProUGUI>();
+                //monsterText.text = monsterId.ToString();
+            }
+            else
+            {
+                Logger.LogWarning($"Prefab not found for {prefabName}");
+            }
+        }
+        else
+        {
+            Logger.LogWarning($"Prefab name not found for Monster ID: {monsterId}");
+        }
+       
     }
 
     private void AddRewardSlot(int rewardId, int rewardValue)
@@ -70,7 +95,7 @@ public class StageSlot : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"Reward image not found for ID: {rewardId}");
+            Logger.LogWarning($"Reward image not found for ID: {rewardId}");
         }
 
         rewardText.text = $"{rewardValue}";

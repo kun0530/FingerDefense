@@ -7,12 +7,13 @@ public class StageSlotCreate : MonoBehaviour
     public StageSlot stageSlotPrefab;
     public RectTransform[] slotParents;
     public GameObject deckUI;
+    private AssetListTable assetListTable;
     
-    public GameObject[] monsterPrefabs;
     private void Start()
     {
         stageTable ??= DataTableManager.Get<StageTable>(DataTableIds.Stage);
-
+        assetListTable ??= DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
+        
         CreateStageSlots();
     }
 
@@ -44,8 +45,10 @@ public class StageSlotCreate : MonoBehaviour
         foreach (var stageData in batch)
         {
             StageSlot slot = Instantiate(stageSlotPrefab, parent);
+            slot.SetAssetListTable(assetListTable);
             slot.Configure(stageData);
             slot.SetDeckUI(deckUI);
+            
         }
     }
 }

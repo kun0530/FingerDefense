@@ -10,43 +10,68 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
     private PlayerCharacterTable playerCharacterTable;
     private SkillTable skillTable;
-
-    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8]; // 사용할 캐릭터들
+    private AssetListTable assetListTable;
+    private PlayerCharacterData[] playerCharacters = new PlayerCharacterData[8]; // 사용할 캐릭터 데이터들
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
 
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
+        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
 
-        // PlayerCharacterData 배열을 초기에 받는다
+        if (playerCharacterTable == null)
+        {
+            Logger.LogError("PlayerCharacterTable is not initialized.");
+            return;
+        }
+        if (assetListTable == null)
+        {
+            Logger.LogError("AssetListTable is not initialized.");
+            return;
+        }
 
-        // To-Do: 임시로 할당, 나중에 덱 편성으로부터 받아야 함
-        playerCharacters[0] = GeneratePlayerCharacter(100);
-        playerCharacters[1] = GeneratePlayerCharacter(101);
-        playerCharacters[2] = GeneratePlayerCharacter(102);
-        playerCharacters[3] = GeneratePlayerCharacter(103);
-        playerCharacters[4] = GeneratePlayerCharacter(104);
-        playerCharacters[5] = GeneratePlayerCharacter(105);
-        playerCharacters[6] = GeneratePlayerCharacter(106);
-        playerCharacters[7] = GeneratePlayerCharacter(107);
+        for (var i = 0; i < Defines.LoadTable.characterIds.Length; i++)
+        {
+            if (Defines.LoadTable.characterIds[i] != 0)
+            {
+                playerCharacters[i] = playerCharacterTable.Get(Defines.LoadTable.characterIds[i]);
+            }
+        }
     }
 
-    private void Update()
+    private PlayerCharacterController CreatePlayerCharacter(PlayerCharacterData data)
     {
+        if (data == null)
+        {
+            Logger.LogError("Character data is null.");
+            return null;
+        }
 
-    }
+        var assetName = assetListTable.Get(data.AssetNo);
+        if (string.IsNullOrEmpty(assetName))
+        {
+            Logger.LogError($"Asset name not found for AssetNo {data.AssetNo}");
+            return null;
+        }
 
-    private PlayerCharacterController GeneratePlayerCharacter(int id)
-    {
-        var data = playerCharacterTable.Get(id);
+        var prefab = Resources.Load<GameObject>($"Prefab/02CharacterGame/{assetName}");
+        if (prefab == null)
+        {
+            Logger.LogError($"Prefab not found for asset name {assetName}");
+            return null;
+        }
 
-        var playerCharacter = Instantiate(characterPrefabs[data.AssetNo], poolTransform, true);
+        var playerCharacter = Instantiate(prefab, poolTransform).GetComponent<PlayerCharacterController>();
+        if (playerCharacter == null)
+        {
+            Logger.LogError($"PlayerCharacterController not found on prefab {assetName}");
+            return null;
+        }
         playerCharacter.Status = new CharacterStatus(data)
         {
             buffHandler = playerCharacter.buffHandler
         };
-
         // 에러로 인해 비활성화 : 방민호
         // var skillData = skillTable.Get(data.Skill);
         // playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
@@ -60,30 +85,43 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
     public void SpawnPlayerCharacter(int index)
     {
-        // 버튼 클릭
-        // 해당 버튼의 쿨타임 확인
-        var playerCharacter = playerCharacters[index];
+        var data = playerCharacters[index];
 
-        if (playerCharacter == null || !playerCharacter.IsDead) // To-Do: 리스폰 쿨타임 조건 추가
-            return;
-
-        var spawnPriority = playerCharacter.Status.data.Priority;
-        if (activePlayerCharacters[spawnPriority * 2] == null || !activePlayerCharacters[spawnPriority * 2].gameObject.activeSelf)
+        if (data == null)
         {
-            activePlayerCharacters[spawnPriority * 2] = playerCharacter;
-            playerCharacter.gameObject.transform.position = spawnPositions[spawnPriority * 2].position;
-        }
-        else if (activePlayerCharacters[spawnPriority * 2 + 1] == null || !activePlayerCharacters[spawnPriority * 2 + 1].gameObject.activeSelf)
-        {
-            activePlayerCharacters[spawnPriority * 2 + 1] = playerCharacter;
-            playerCharacter.gameObject.transform.position = spawnPositions[spawnPriority * 2 + 1].position;
-        }
-        else
-        {
-            Logger.Log("모든 자리가 차있습니다.");
+            Logger.LogError("해당 캐릭터 데이터가 없습니다.");
             return;
         }
 
+        var playerCharacter = CreatePlayerCharacter(data);
+
+        if (playerCharacter == null) // To-Do: 리스폰 쿨타임 조건 추가
+            return;
+
+        var spawnClass = playerCharacter.Status.data.Class;
+        Logger.Log($"Spawning character with Class {spawnClass}");
+
+        var positionIndex = spawnClass switch
+        {
+            // 전열
+            0 => activePlayerCharacters[0] == null || !activePlayerCharacters[0]?.gameObject.activeSelf == true ? 0 : 1,
+            // 중열
+            1 => activePlayerCharacters[2] == null || !activePlayerCharacters[2]?.gameObject.activeSelf == true ? 2 : 3,
+            // 후열
+            2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4]?.gameObject.activeSelf == true ? 4 : 5,
+            _ => -1
+        };
+
+        if (positionIndex == -1 || positionIndex >= spawnPositions.Length)
+        {
+            Logger.LogError("해당 위치에 캐릭터를 배치할 수 없습니다.");
+            return;
+        }
+
+        // 캐릭터 위치 설정 후 활성화
+        playerCharacter.transform.position = spawnPositions[positionIndex].position;
+
+        activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.ResetPlayerData();
         playerCharacter.gameObject.SetActive(true);
         // To-Do: 초기화
@@ -93,7 +131,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
     public void RemoveActiveCharacter(PlayerCharacterController character)
     {
-        for (int i = 0; i < activePlayerCharacters.Length; i++)
+        for (var i = 0; i < activePlayerCharacters.Length; i++)
         {
             if (activePlayerCharacters[i] == character)
             {

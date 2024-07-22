@@ -24,7 +24,7 @@ public class AttackState : IState
 
     public void Update()
     {
-        if (monster.attackTarget == null) // 그 외 추가 조건(공격 중단) 확인바람
+        if (!monster.attackTarget) // 그 외 추가 조건(공격 중단) 확인바람
         {
             monster.TryTransitionState<PatrolState>();
             return;

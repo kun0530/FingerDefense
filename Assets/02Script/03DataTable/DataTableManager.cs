@@ -6,10 +6,11 @@ public static class DataTableIds
 {
     public static readonly string Monster = "MonsterTable";
     public static readonly string Wave = "WaveTable";
-    public static readonly string PlayerCharacter = "PlayerCharacterTable";
+    public static readonly string PlayerCharacter = "CharacterTable";
     public static readonly string Skill = "SkillTable";
     public static readonly string Buff = "BuffDebuffTable";
     public static readonly string Stage = "StageTable";
+    public static readonly string Asset = "AssetListTable";
 
 }
 
@@ -43,6 +44,9 @@ public static class DataTableManager
         stageTable.Load(DataTableIds.Stage);
         tables.Add(DataTableIds.Stage, stageTable);
 
+        AssetListTable assetList = new AssetListTable();
+        assetList.Load(DataTableIds.Asset);
+        tables.Add(DataTableIds.Asset, assetList);
     }
 
     // public static StringTable GetStringTable()
