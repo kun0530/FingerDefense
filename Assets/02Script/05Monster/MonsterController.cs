@@ -153,6 +153,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         if (Status.CurrentHp <= 0f)
         {
             Status.CurrentHp = 0f;
+            stageManager.EarnedGold += Status.Data.DropGold;
             Die();
         }
     }
@@ -187,7 +188,6 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         if (stageManager) // Null 검사 추가
         {
             stageManager.MonsterCount--;
-            stageManager.EarnedGold += Status.Data.DropGold;
         }
         else
         {

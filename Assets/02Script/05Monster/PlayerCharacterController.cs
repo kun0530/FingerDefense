@@ -15,7 +15,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private MonsterController atkTarget;
     private float atkTimer;
-    private Image hpBar;
+    public Image hpBar;
 
     public BaseSkill skill;
     public SkillData skillData;
@@ -50,12 +50,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         buffHandler = new(Status);
 
         anim = GetComponent<CharacterSpineAni>();
-        hpBar=GameObject.FindWithTag("PlayerCharacterHp").GetComponent<Image>();
-        
-        if (hpBar == null)
-        {
-            Logger.LogError("hpBar is not found with tag 'PlayerCharacterHp'");
-        }
     }
 
     private void OnEnable()
@@ -63,6 +57,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         atkTarget = null;
         monsterUp = null;
         monsterDown = null;
+
+        IsDead = false;
 
         Status.OnHpBarUpdate += UpdateHpBar;
         buffHandler.OnDotDamage += TakeDamage;
@@ -72,19 +68,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     {
         Status.OnHpBarUpdate -= UpdateHpBar;
         buffHandler.OnDotDamage -= TakeDamage;
-    }
-
-    public void ResetPlayerData()
-    {
-        IsDead = false;
-        if (Status != null)
-        {
-            Status.CurrentHp = Status.Data.Hp;
-        }
-        else
-        {
-            Logger.LogError("상태가 초기화되지 않았습니다.");
-        }
     }
 
     private void FixedUpdate()
@@ -234,18 +217,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void UpdateHpBar()
     {
-        if (!hpBar)
-        {
-            Logger.LogError("hpBar is not assigned.");
-            return;
-        }
-
-        if (Status == null)
-        {
-            Logger.LogError("Status is not assigned.");
-            return;
-        }
-
         var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;
     }

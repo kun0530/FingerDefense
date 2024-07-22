@@ -18,7 +18,7 @@ public class CharacterStatus : BaseStatus
 
     public CharacterStatus(BuffHandler buffHandler) : base(buffHandler) { }
 
-    protected override void Init()
+    public override void Init()
     {
         if (Data == null)
             return;

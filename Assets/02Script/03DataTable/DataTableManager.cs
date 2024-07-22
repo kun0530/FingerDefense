@@ -60,6 +60,8 @@ public static class DataTableManager
         {
             return value as T;
         }
+
+        Logger.LogError($"해당 데이터 테이블의 내용이 없습니다: {id}");
         return null;
     }
 }
