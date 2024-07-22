@@ -109,7 +109,14 @@ public class PlayerCharacterSpawner : MonoBehaviour
             2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4]?.gameObject.activeSelf == true ? 4 : 5,
             _ => -1
         };
-
+        
+        //이미 배치된 캐릭터 이거나 각 해당하는 열에 2개 이상 존재할 경우 배치 불가
+        if (activePlayerCharacters[positionIndex] != null)
+        {
+            Logger.LogError("해당 위치에 이미 캐릭터가 배치되어 있습니다.");
+            return;
+        }
+        
         if (positionIndex == -1 || positionIndex >= spawnPositions.Length)
         {
             Logger.LogError("해당 위치에 캐릭터를 배치할 수 없습니다.");
