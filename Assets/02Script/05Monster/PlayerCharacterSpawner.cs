@@ -31,11 +31,11 @@ public class PlayerCharacterSpawner : MonoBehaviour
             return;
         }
 
-        for (var i = 0; i < Defines.LoadTable.characterIds.Length; i++)
+        for (var i = 0; i < Variables.LoadTable.characterIds.Length; i++)
         {
-            if (Defines.LoadTable.characterIds[i] != 0)
+            if (Variables.LoadTable.characterIds[i] != 0)
             {
-                playerCharacters[i] = playerCharacterTable.Get(Defines.LoadTable.characterIds[i]);
+                playerCharacters[i] = playerCharacterTable.Get(Variables.LoadTable.characterIds[i]);
             }
         }
     }

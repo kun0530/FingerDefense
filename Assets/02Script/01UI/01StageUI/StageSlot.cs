@@ -104,7 +104,7 @@ public class StageSlot : MonoBehaviour
     public void OnClick()
     {
         deckUI.SetActive(true);
-        Defines.LoadTable.stageId = StageId;
+        Variables.LoadTable.stageId = StageId;
         Logger.Log($"스테이지 {StageId} 선택");
     }
 }

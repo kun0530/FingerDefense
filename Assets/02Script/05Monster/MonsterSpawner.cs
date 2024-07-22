@@ -16,7 +16,7 @@ public class MonsterSpawner : MonoBehaviour
 
     public Transform moveTarget;
 
-    private int stageId = Defines.LoadTable.stageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
+    private int stageId = Variables.LoadTable.stageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
     private int waveId = 1;
     public int MonsterCount { get; private set; }
 
