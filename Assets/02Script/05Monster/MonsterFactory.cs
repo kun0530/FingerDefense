@@ -34,6 +34,7 @@ public class MonsterFactory
     private MonsterController CreatedPooledMonster()
     {
         // var monster = Instantiate(monsterPrefab.Asset as MonsterController);
+        //AssetList의 Monster의 번호를 기준으로 해당 이름을 찾아서 생성
         var monster = Object.Instantiate(monsterPrefab);
         if (poolTransform != null)
             monster.transform.SetParent(poolTransform);

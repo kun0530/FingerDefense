@@ -265,7 +265,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             return;
         }
 
-        double hpPercent = currentHp / (currentHp-damage);
+        double hpPercent = (currentHp-damage)/currentHp;
         hpBar.fillAmount =(float)hpPercent;
     }
     
