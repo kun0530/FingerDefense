@@ -9,6 +9,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     public PlayerCharacterSpawner spawner { get; set; }
 
     public CharacterStatus Status { get; set; }
+    public BuffHandler buffHandler { get; set; }
     public bool IsDead { get; set; } = true;
 
     private MonsterController atkTarget;
@@ -47,6 +48,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     {
         atkTimer = 0f;
 
+        buffHandler = new(Status);
+
         anim = GetComponent<CharacterSpineAni>();
     }
 
@@ -58,6 +61,13 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
         Status?.Init();
         UpdateHpBar();
+
+        buffHandler.OnDotDamage += TakeDamage;
+    }
+
+    private void OnDisable()
+    {
+        buffHandler.OnDotDamage -= TakeDamage;
     }
 
     public void ResetPlayerData()
@@ -105,13 +115,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         //     skill.UseSkill();
         //     skillTimer = 0f;
         // }
-
-        Status.buffHandler.TimerUpdate();
-
+        
         if (IsDead)
         {
             gameObject.SetActive(false);
         }
+        buffHandler.TimerUpdate();
     }
 
     public bool TryAddMonster(MonsterController monster)
@@ -178,7 +187,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     public void TakeDamage(float damage)
     {
-        if (damage < 0)
+        if (damage < 0f)
             return;
 
         Status.currentHp -= damage;
@@ -203,7 +212,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     public void TakeBuff(BuffData buffData)
     {
-        Status.buffHandler.AddBuff(buffData);
+        buffHandler.AddBuff(buffData);
+    }
+
+    public void TakeBuff(Buff buff)
+    {
+        buffHandler.AddBuff(buff);
     }
 
     private void UpdateHpBar()

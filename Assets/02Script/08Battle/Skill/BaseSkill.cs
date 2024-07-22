@@ -2,22 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SkillRangeTypes
-{
-    SingleTarget, MultipleTarget, AreaTarget
-}
-
 public abstract class BaseSkill
 {
-    public List<ISkillAction> skillActions = new List<ISkillAction>();
+    protected SkillType baseSkill;
+    protected IFindable targetingMethod;
+
+    public BaseSkill(SkillType baseSkill, IFindable targetingMethod)
+    {
+        this.baseSkill = baseSkill;
+        this.targetingMethod = targetingMethod;
+    }
 
     public abstract void UseSkill();
-
-    protected void ApplySkillActions(IDamageable damageable)
-    {
-        foreach (var skillAction in skillActions)
-        {
-            skillAction.ApplySkillAction(damageable);
-        }
-    }
+    // protected List<GameObject> FindTargets => targetingMethod.FindTargets();
 }

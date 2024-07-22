@@ -2,18 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingleTargetSkill : BaseSkill
+public class SingleTargetSkill : SkillType
 {
-    IFindable findBehavior;
-
-    public SingleTargetSkill(IFindable findBehavior)
+    public override void UseSkill(GameObject target)
     {
-        this.findBehavior = findBehavior;
-    }
-
-    public override void UseSkill()
-    {
-        var target = findBehavior.FindTarget();
         if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
         {
             ApplySkillActions(damageable);

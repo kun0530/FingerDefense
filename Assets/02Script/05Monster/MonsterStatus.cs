@@ -17,7 +17,6 @@ public class MonsterStatus : IStatus
     public MonsterStatus(MonsterData data)
     {
         this.data = data;
-        buffHandler = new(this);
         Init();
     }
 
@@ -38,9 +37,9 @@ public class MonsterStatus : IStatus
         currentMoveSpeed = data.MoveSpeed;
         currentAtkSpeed = data.AtkSpeed;
 
-        foreach (var buff in buffHandler.activeBuffs)
+        foreach (var buff in buffHandler.buffs)
         {
-            foreach (var buffAction in buff.BuffActions)
+            foreach (var buffAction in buff.buffData.BuffActions)
             {
                 switch ((BuffType)buffAction.type)
                 {

@@ -14,7 +14,6 @@ public class CharacterStatus : IStatus
     public CharacterStatus(PlayerCharacterData data)
     {
         this.data = data;
-        buffHandler = new(this);
         Init();
     }
 
@@ -33,9 +32,9 @@ public class CharacterStatus : IStatus
         currentAtkDmg = data.AtkDmg;
         currentAtkSpeed = data.AtkSpeed;
 
-        foreach (var buff in buffHandler.activeBuffs)
+        foreach (var buff in buffHandler.buffs)
         {
-            foreach (var buffAction in buff.BuffActions)
+            foreach (var buffAction in buff.buffData.BuffActions)
             {
                 switch ((BuffType)buffAction.type)
                 {
