@@ -21,11 +21,23 @@ public class PlayerCharacterSpawner : MonoBehaviour
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
 
-        for (var i = 0; i < Defines.LoadTable.characterIds.Length; i++)
+        
+        if (playerCharacterTable == null)
         {
-            if (Defines.LoadTable.characterIds[i] != 0)
+            Logger.LogError("PlayerCharacterTable is not initialized.");
+            return;
+        }
+        if (assetListTable == null)
+        {
+            Logger.LogError("AssetListTable is not initialized.");
+            return;
+        }
+
+        for (var i = 0; i < Variables.LoadTable.characterIds.Length; i++)
+        {
+            if (Variables.LoadTable.characterIds[i] != 0)
             {
-                var data = playerCharacterTable.Get(Defines.LoadTable.characterIds[i]);
+                var data = playerCharacterTable.Get(Variables.LoadTable.characterIds[i]);
                 playerCharacters[i] = CreatePlayerCharacter(data);
             }
         }

@@ -34,7 +34,7 @@ public class DeckSlotController : MonoBehaviour
         closeButton.onClick.AddListener(() =>
         {
             //할당 되어있는 값을 초기화 시킨다.
-            Defines.LoadTable.stageId = 0;
+            Variables.LoadTable.StageId = 0;
             Logger.Log("스테이지 선택 화면으로 이동합니다.");
         });
     }
@@ -128,11 +128,11 @@ public class DeckSlotController : MonoBehaviour
         {
             if (characterSlots[i].characterData != null)
             {
-                Defines.LoadTable.characterIds[i] = characterSlots[i].characterData.Id;
+                Variables.LoadTable.characterIds[i] = characterSlots[i].characterData.Id;
             }
             else
             {
-                Defines.LoadTable.characterIds[i] = 0; // 빈 슬롯 처리
+                Variables.LoadTable.characterIds[i] = 0; // 빈 슬롯 처리
             }
         }
     }

@@ -42,7 +42,7 @@ public class StageSlot : MonoBehaviour
         if (stageData.Monster3Id != 0) AddMonsterSlot(stageData.Monster3Id);
 
         if (stageData.Reward1Id != 0 && stageData.Reward1Value != 0) AddRewardSlot(stageData.Reward1Id, stageData.Reward1Value);
-        if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0) AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
+        //if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0) AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
     }
 
     private void AddMonsterSlot(int monsterId)
@@ -104,7 +104,7 @@ public class StageSlot : MonoBehaviour
     public void OnClick()
     {
         deckUI.SetActive(true);
-        Defines.LoadTable.stageId = StageId;
+        Variables.LoadTable.StageId = StageId;
         Logger.Log($"스테이지 {StageId} 선택");
     }
 }
