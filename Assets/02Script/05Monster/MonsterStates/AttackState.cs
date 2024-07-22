@@ -16,7 +16,7 @@ public class AttackState : IState
 
     public void Enter()
     {
-        attackCoolDown = 1f / monster.Status.data.AtkSpeed;
+        attackCoolDown = 1f / monster.Status.Data.AtkSpeed;
         attackTimer = attackCoolDown;
 
         monster.SetFlip(false);
@@ -39,7 +39,7 @@ public class AttackState : IState
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackCoolDown)
         {
-            monster.attackTarget.TakeDamage(monster.Status.currentAtk);
+            monster.attackTarget.TakeDamage(monster.Status.currentAtkDmg);
             attackTimer = 0f;
 
             return;

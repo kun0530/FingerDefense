@@ -4,39 +4,40 @@ using UnityEngine;
 
 // 1. 필요할 때마다 프로퍼티에서 계산한다.
 // 2. 변경이 발생할 때마다 필드를 업데이트한다.
-public class MonsterStatus : IStatus
+public class MonsterStatus : BaseStatus
 {
-    public MonsterData data;
-    public BuffHandler buffHandler;
-
-    public float currentHp=0;
-    public float currentAtk;
-    public float currentMoveSpeed;
-    public float currentAtkSpeed;
-
-    public MonsterStatus(MonsterData data)
+    private MonsterData data;
+    public MonsterData Data
     {
-        this.data = data;
-        Init();
+        get => data;
+        set
+        {
+            data = value;
+            Init();
+        }
     }
 
-    public void Init()
+    public float currentMoveSpeed;
+
+    public MonsterStatus(BuffHandler buffHandler) : base(buffHandler) { }
+
+    protected override void Init()
     {
-        if (data == null)
+        if (Data == null)
             return;
 
-        currentHp = data.Hp;
-        currentAtk = data.AtkDmg;
-        currentMoveSpeed = data.MoveSpeed;
-        currentAtkSpeed = data.AtkSpeed;
+        currentHp = Data.Hp;
+        currentAtkDmg = Data.AtkDmg;
+        currentMoveSpeed = Data.MoveSpeed;
+        currentAtkSpeed = Data.AtkSpeed;
     }
 
-    public void UpdateCurrentState()
+    public override void UpdateCurrentState()
     {
-        currentHp = data.Hp;
-        currentAtk = data.AtkDmg;
-        currentMoveSpeed = data.MoveSpeed;
-        currentAtkSpeed = data.AtkSpeed;
+        currentHp = Data.Hp;
+        currentAtkDmg = Data.AtkDmg;
+        currentMoveSpeed = Data.MoveSpeed;
+        currentAtkSpeed = Data.AtkSpeed;
 
         foreach (var buff in buffHandler.buffs)
         {
@@ -53,13 +54,13 @@ public class MonsterStatus : IStatus
                     case BuffType.HP:
                         break;
                     case BuffType.ATK:
-                        currentAtk += buffAction.value;
+                        currentAtkDmg += buffAction.value;
                         break;
                 }
             }
         }
 
-        currentAtk = currentAtk < 0f ? 0f : currentAtk;
+        currentAtkDmg = currentAtkDmg < 0f ? 0f : currentAtkDmg;
         currentMoveSpeed = currentMoveSpeed < 0f ? 0f : currentMoveSpeed;
         currentAtkSpeed = currentAtkSpeed < 0f ? 0f : currentAtkSpeed;
     }

@@ -6,22 +6,10 @@ using UnityEngine.UI;
 
 public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageable, ITargetable
 {
-    public PlayerCharacterSpawner spawner { get; set; }
+    public PlayerCharacterSpawner spawner;
 
-
-    public BuffHandler buffHandler { get; set; }
-
-    private CharacterStatus status=new CharacterStatus(null);
-    public CharacterStatus Status
-    {
-        get => status;
-        set
-        {
-            status = value;
-            status?.Init();
-            //UpdateHpBar();
-        }    
-    }
+    public CharacterStatus Status { get; private set; }
+    public BuffHandler buffHandler;
     
     public bool IsDead { get; set; } = true;
 
@@ -58,6 +46,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     {
         atkTimer = 0f;
 
+        Status = new(buffHandler);
         buffHandler = new(Status);
 
         anim = GetComponent<CharacterSpineAni>();
@@ -75,14 +64,13 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         monsterUp = null;
         monsterDown = null;
 
-        Status?.Init();
-        UpdateHpBar();
-
+        Status.OnHpBarUpdate += UpdateHpBar;
         buffHandler.OnDotDamage += TakeDamage;
     }
 
     private void OnDisable()
     {
+        Status.OnHpBarUpdate -= UpdateHpBar;
         buffHandler.OnDotDamage -= TakeDamage;
     }
 
@@ -91,7 +79,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         IsDead = false;
         if (Status != null)
         {
-            Status.currentHp = Status.data.Hp;
+            Status.CurrentHp = Status.Data.Hp;
         }
         else
         {
@@ -101,7 +89,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void FixedUpdate()
     {
-        var findBehavior = new FindingTargetInCircle(transform, Status.data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
+        var findBehavior = new FindingTargetInCircle(transform, Status.Data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
         var nearCollider = findBehavior.FindTarget();
         if (!nearCollider)
         {
@@ -115,7 +103,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void Update()
     {
-        var atkCoolDown = 1f / Status.data.AtkSpeed;
+        var atkCoolDown = 1f / Status.Data.AtkSpeed;
         atkTimer += Time.deltaTime;
         if (atkTarget && atkTimer >= atkCoolDown && !IsDead)
         {
@@ -214,14 +202,14 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         if (damage < 0)
             return;
 
-        Status.currentHp -= damage;
+        Status.CurrentHp -= damage;
         UpdateHpBar();
 
-        if (Status.currentHp <= 0f)
+        if (Status.CurrentHp <= 0f)
         {
             TryRemoveMonster(monsterUp);
             TryRemoveMonster(monsterDown);
-            Status.currentHp = 0f;
+            Status.CurrentHp = 0f;
             IsDead = true;
             
             // PASSOUT 상태로 변경 : 방민호
@@ -258,7 +246,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             return;
         }
 
-        var hpPercent = Status.currentHp / Status.data.Hp;
+        var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;
     }
 }

@@ -7,19 +7,16 @@ public class BuffHandler
 {
     public List<Buff> buffs = new();
 
-    public IStatus status;
+    public BaseStatus status;
     public event Action<float> OnDotDamage;
 
-    public BuffHandler(IStatus status)
+    public BuffHandler(BaseStatus status)
     {
         this.status = status;
     }
 
     private void ResetBuff()
     {
-        // activeBuffs.Clear();
-        // timers.Clear();
-
         buffs.Clear();
     }
 

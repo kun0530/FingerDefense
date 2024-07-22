@@ -30,8 +30,8 @@ public class FallState : IState
         {
             monster.transform.position = new Vector3(monster.transform.position.x, monster.targetFallY, 0f);
 
-            if (monster.Status.data.Height <= startY - monster.targetFallY)
-                monster.TakeDamage(monster.Status.currentHp);
+            if (monster.Status.Data.Height <= startY - monster.targetFallY)
+                monster.TakeDamage(monster.Status.CurrentHp);
             else
                 monster.TryTransitionState<PatrolState>();
         }

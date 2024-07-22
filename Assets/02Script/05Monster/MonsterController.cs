@@ -12,20 +12,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private StateMachine<MonsterController> stateMachine;
     [HideInInspector] public BuffHandler buffHandler;
-    private MonsterStatus status=new MonsterStatus(null);
-    public MonsterStatus Status
-    {
-        get => status;
-        set
-        {
-            status = value;
-            if (status != null)
-            {
-                status.Init();
-                UpdateHpBar();
-            }
-        }    
-    }
+    public MonsterStatus Status { get; private set; }
 
     public Image hpBar;
     private bool isDead = false;
@@ -46,7 +33,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
             if (stateMachine.CurrentState.GetType() == typeof(FallState))
                 return false;
 
-            switch (Status.data.DragType)
+            switch (Status.Data.DragType)
             {
                 case (int)MonsterData.DragTypes.BOSS:
                     return false;
@@ -99,15 +86,18 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         stateMachine.Initialize<MoveState>();
 
         buffHandler = new(Status);
+        Status = new(buffHandler);
     }
 
     private void OnEnable()
     {
+        Status.OnHpBarUpdate += UpdateHpBar;
         buffHandler.OnDotDamage += TakeDamage;
     }
 
     private void OnDisable()
     {
+        Status.OnHpBarUpdate -= UpdateHpBar;
         buffHandler.OnDotDamage -= TakeDamage;
     }
 
@@ -121,8 +111,6 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         isDead = false;
 
         stateMachine.TransitionTo<MoveState>();
-        Status.Init();
-        UpdateHpBar();
 
         CanPatrol = false;
     }
@@ -159,12 +147,12 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
             Logger.LogError("상태가 초기화되지 않았습니다.");
             return;
         }
-        Status.currentHp -= damage;
+        Status.CurrentHp -= damage;
         UpdateHpBar();
 
-        if (Status.currentHp <= 0f)
+        if (Status.CurrentHp <= 0f)
         {
-            Status.currentHp = 0f;
+            Status.CurrentHp = 0f;
             Die();
         }
     }
@@ -199,7 +187,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         if (stageManager) // Null 검사 추가
         {
             stageManager.MonsterCount--;
-            stageManager.EarnedGold += Status.data.DropGold;
+            stageManager.EarnedGold += Status.Data.DropGold;
         }
         else
         {
@@ -221,7 +209,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         if (!hpBar || Status == null)
             return;
 
-        var hpPercent = Status.currentHp / Status.data.Hp;
+        var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;
     }
 

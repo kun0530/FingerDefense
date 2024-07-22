@@ -1,46 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterStatus : IStatus
+public class CharacterStatus : BaseStatus
 {
-    public PlayerCharacterData data;
-    public BuffHandler buffHandler;
-
-    public float currentHp;
-    public float currentAtkDmg;
-    public float currentAtkSpeed;
-
-    public CharacterStatus(PlayerCharacterData data)
+    private PlayerCharacterData data;
+    public PlayerCharacterData Data
     {
-        this.data = data;
-        buffHandler = new(this);
-        Init();
+        get => data;
+        set
+        {
+            data = value;
+            Init();
+        }
     }
 
-    public void Init()
+    public CharacterStatus(BuffHandler buffHandler) : base(buffHandler) { }
+
+    protected override void Init()
     {
-        if (data == null)
+        if (Data == null)
             return;
 
-        currentHp = data.Hp;
-        currentAtkDmg = data.AtkDmg;
-        currentAtkSpeed = data.AtkSpeed;
+        CurrentHp = Data.Hp;
+        currentAtkDmg = Data.AtkDmg;
+        currentAtkSpeed = Data.AtkSpeed;
     }
 
-    public void UpdateCurrentState()
+    public override void UpdateCurrentState()
     {
-        if(data == null)
+        if(Data == null)
         {
             return;
         }
         
-        currentAtkDmg = data.AtkDmg;
-        currentAtkSpeed = data.AtkSpeed;
+        currentAtkDmg = Data.AtkDmg;
+        currentAtkSpeed = Data.AtkSpeed;
 
         foreach (var buff in buffHandler.buffs)
         {
-            foreach (var buffAction in buff.BuffActions)
+            foreach (var buffAction in buff.buffData.BuffActions)
             {
                 switch ((BuffType)buffAction.type)
                 {
@@ -57,6 +57,6 @@ public class CharacterStatus : IStatus
         currentAtkDmg = currentAtkDmg < 0f ? 0f : currentAtkDmg;
         currentAtkSpeed = currentAtkSpeed < 0f ? 0f : currentAtkSpeed;
 
-        Logger.Log($"기본 공격력: {data.AtkDmg} / 현재 공격력: {currentAtkDmg}");
+        Logger.Log($"기본 공격력: {Data.AtkDmg} / 현재 공격력: {currentAtkDmg}");
     }
 }

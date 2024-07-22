@@ -68,10 +68,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
             Logger.LogError($"PlayerCharacterController not found on prefab {assetName}");
             return null;
         }
-        playerCharacter.Status = new CharacterStatus(data)
-        {
-            buffHandler = playerCharacter.buffHandler
-        };
+        playerCharacter.Status.Data = data;
         // 에러로 인해 비활성화 : 방민호
         // var skillData = skillTable.Get(data.Skill);
         // playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
@@ -98,7 +95,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         if (playerCharacter == null) // To-Do: 리스폰 쿨타임 조건 추가
             return;
 
-        var spawnClass = playerCharacter.Status.data.Class;
+        var spawnClass = playerCharacter.Status.Data.Class;
         Logger.Log($"Spawning character with Class {spawnClass}");
 
         var positionIndex = spawnClass switch
