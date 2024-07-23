@@ -16,7 +16,7 @@ public class MonsterSpawner : MonoBehaviour
 
     public Transform moveTarget;
 
-    private int stageId = Defines.LoadTable.stageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
+    private int stageId = Variables.LoadTable.stageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
     private int waveId = 1;
     public int MonsterCount { get; private set; }
 
@@ -56,7 +56,8 @@ public class MonsterSpawner : MonoBehaviour
         currentWaveData = waveTable.Get(stageId, waveId);
         if (currentWaveData != null)
         {
-            spawnWaveTimer = currentWaveData.Term;
+            //TO-DO : 변경 완료 Term=>WaveTerm
+            spawnWaveTimer = currentWaveData.WaveTerm;
             isNextWave = true;
         }
     }
@@ -76,7 +77,8 @@ public class MonsterSpawner : MonoBehaviour
         if (MonsterCount <= 0 || !isNextWave || isWaveEnd)
             return;
         
-        if (spawnWaveTimer >= currentWaveData.Term)
+        //TO-DO : 변경 완료 Term => WaveTerm
+        if (spawnWaveTimer >= currentWaveData.WaveTerm)
         {
             spawnWaveTimer = 0f;
             isNextWave = false;

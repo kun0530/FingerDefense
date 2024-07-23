@@ -85,8 +85,8 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
         stateMachine.Initialize<MoveState>();
 
-        buffHandler = new(Status);
-        Status = new(buffHandler);
+        buffHandler = new BuffHandler(Status);
+        Status = new MonsterStatus(buffHandler);
     }
 
     private void OnEnable()
