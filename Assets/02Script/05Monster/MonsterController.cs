@@ -103,7 +103,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private void Start()
     {
-        stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+        var stageManagerGo = GameObject.FindWithTag("StageManager");
+        stageManager = stageManagerGo?.GetComponent<StageManager>();
+
+        var castleGo = GameObject.FindWithTag(Defines.Tags.CASTLE_TAG);
+        moveTarget = castleGo.transform;
     }
 
     public void ResetMonsterData()
@@ -133,7 +137,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
             // if (!IsTargetable)
             //     return;
             
-            stageManager.DamageCastle(10f);
+            stageManager?.DamageCastle(10f);
             Die();
         }
     }
@@ -153,7 +157,8 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         if (Status.CurrentHp <= 0f)
         {
             Status.CurrentHp = 0f;
-            stageManager.EarnedGold += Status.Data.DropGold;
+            if (stageManager)
+                stageManager.EarnedGold += Status.Data.DropGold;
             Die();
         }
     }
@@ -180,10 +185,6 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         {
             attackTarget.TryRemoveMonster(this);
         }
-        else
-        {
-            Logger.LogError("공격 대상이 할당되지 않았습니다.");
-        }
 
         if (stageManager) // Null 검사 추가
         {
@@ -200,6 +201,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         }
         else
         {
+            Destroy(gameObject);
             Logger.LogError("풀이 할당되지 않았습니다.");
         }
     }

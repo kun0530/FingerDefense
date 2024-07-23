@@ -5,8 +5,12 @@ using UnityEngine;
 
 public static class SkillFactory
 {
-    public static BaseSkill CreateSkill(SkillData data, Transform center)
+    public static BaseSkill CreateSkill(SkillData data, GameObject gameObject)
     {
+        if (data == null || gameObject == null)
+            return null;
+
+        // Target
         LayerMask layerMask = Layers.DEFAULT_LAYER;
         switch (data.Target)
         {
@@ -18,9 +22,10 @@ public static class SkillFactory
                 break;
         }
 
-        IFindable findable = new FindingTargetInCircle(center, data.RangeValue, layerMask);
+        // 1차 타겟팅
+        IFindable findable = new FindingTargetInCircle(gameObject.transform, data.Range, layerMask);
         SkillType skill = null;
-        switch ((SkillRangeTypes)data.RangeType)
+        switch ((SkillRangeTypes)data.Type)
         {
             case SkillRangeTypes.SingleTarget:
                 skill = new SingleTargetSkill();

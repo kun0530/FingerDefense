@@ -17,9 +17,9 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     private float atkTimer;
     public Image hpBar;
 
-    public BaseSkill skill;
-    public SkillData skillData;
-    private float skillTimer;
+    // public BaseSkill skill;
+    // public SkillData skillData;
+    // private float skillTimer;
 
     public Transform[] mosnterPosition;
 
@@ -86,29 +86,32 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void Update()
     {
-        var atkCoolDown = 1f / Status.Data.AtkSpeed;
-        atkTimer += Time.deltaTime;
-        if (atkTarget && atkTimer >= atkCoolDown && !IsDead)
-        {
-            anim.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 0.1f);
-            atkTarget?.TakeDamage(Status.currentAtkDmg);
-            atkTimer = 0f;
+        // var atkCoolDown = 1f / Status.Data.AtkSpeed;
+        // atkTimer += Time.deltaTime;
+        // if (atkTarget && atkTimer >= atkCoolDown && !IsDead)
+        // {
+        //     anim.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 0.1f);
+        //     atkTarget?.TakeDamage(Status.currentAtkDmg);
+        //     atkTimer = 0f;
 
-            // 스킬이 준비되면, 일반 스킬은 일시 중지
-            // 스킬 캐스팅
-        }
-        // 테스트용 코드 : 공격중이 아니면 Idle 상태 유지 (방민호)
-        else
-        {
-            anim.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 0.1f);
-        }
+        //     // 스킬이 준비되면, 일반 스킬은 일시 중지
+        //     // 스킬 캐스팅
+        // }
+        // // 테스트용 코드 : 공격중이 아니면 Idle 상태 유지 (방민호)
+        // else
+        // {
+        //     anim.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 0.1f);
+        // }
         
         // 에러로 인해 비활성화 : 방민호
-        //skillTimer += Time.deltaTime;
-        // if (skillTimer >= skillData.CoolTime)
+        // if (skill != null && skillData != null)
         // {
-        //     skill.UseSkill();
-        //     skillTimer = 0f;
+        //     skillTimer += Time.deltaTime;
+        //     if (skillTimer >= skillData.CoolTime)
+        //     {
+        //         skill.UseSkill();
+        //         skillTimer = 0f;
+        //     }
         // }
         
         if (IsDead)
@@ -197,7 +200,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             
             // PASSOUT 상태로 변경 : 방민호
             anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 0.01f);
-            spawner.RemoveActiveCharacter(this);
+            spawner?.RemoveActiveCharacter(this);
             
             //현재 비활성화 하는 부분 주석처리하고 , PASSOUT 상태가 끝나면 이벤트를 통해 IsDead를 True로 변경해서 반응하도록 수정'
             //위에 Update에서 확인가능 : 방민호
