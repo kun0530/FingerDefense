@@ -6,57 +6,61 @@ using UnityEngine.AddressableAssets;
 using System;
 using Object = UnityEngine.Object;
 
-// [Serializable]
-// public class AssetReferenceMonster : AssetReferenceT<MonsterController>
-// {
-//     public AssetReferenceMonster(string guid) : base(guid) {}
-// }
 
 public class MonsterFactory
 {
-    // public AssetReferenceMonster monsterPrefab;
-    //public MonsterController monsterPrefab; // To-Do: 추후 삭제
-    private IObjectPool<MonsterController> poolMonster;
-
     public Transform poolTransform;
     private AssetListTable assetList;
     
     private Dictionary<int,IObjectPool<MonsterController>> monsterPool =
         new Dictionary<int, IObjectPool<MonsterController>>();
     
-    public void Init()
+    public void Init(HashSet<int> ids)
     {
-        poolMonster = new ObjectPool<MonsterController>(
-            CreatedPooledMonster,
-            OnTakeFromPool,
-            OnReturnToPool,
-            OnDestroyPoolObject,
-            true, 10, 1000
-        );
         assetList = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
+        foreach (var id in ids)
+        {
+            monsterPool[id] = new ObjectPool<MonsterController>(
+                () => CreatedPooledMonster(id),
+                OnTakeFromPool,
+                OnReturnToPool,
+                OnDestroyPoolObject,
+                true, 10, 1000
+            );
+        }
     }
-    
-    public void TestInit(HashSet<int> ids)
+    private MonsterController CreatedPooledMonster(int id)
     {
-        poolMonster = new ObjectPool<MonsterController>(
-            () => CreatedPooledMonster(ids),
-            OnTakeFromPool,
-            OnReturnToPool,
-            OnDestroyPoolObject,
-            true, 10, 1000
-        );
-    }
-    private MonsterController CreatedPooledMonster()
-    {
-        // var monster = Instantiate(monsterPrefab.Asset as MonsterController);
-        //AssetList의 Monster의 번호를 기준으로 해당 이름을 찾아서 생성
+        if (assetList == null)
+        {
+            throw new InvalidOperationException("AssetList가 초기화되지 않았습니다..");
+        }
 
-        return null;
-    }
-    private MonsterController CreatedPooledMonster(HashSet<int> ids)
-    {
-        //받아온 id들을 기준으로 AssetListTable에 있는 이름을 바탕으로 Monster를 생성
-        return null;
+        var assetFileName = assetList.Get(id);
+        if (string.IsNullOrEmpty(assetFileName))
+        {
+            throw new InvalidOperationException($"ID :{id}에 대한 자산 경로를 찾을 수 없습니다.");
+        }
+        
+        var assetPath = $"Prefab/03MonsterGame/{assetFileName}";
+
+        // Log the asset path to debug the issue
+        Logger.Log($"경로에서 MonsterController 로드하기: {assetPath}");
+        
+        //TO-DO: Addressable로 변경 예정
+        //var monster=Addressables.LoadAssetAsync<MonsterController>(assetPath).WaitForCompletion();
+        var monster = Resources.Load<MonsterController>(assetPath);
+        if (monster == null)
+        {
+            throw new InvalidOperationException($"경로에서 MonsterController를 로드하지 못했습니다.: {assetPath}");
+        }
+
+        var instantiatedMonster = Object.Instantiate(monster);
+        if (poolTransform != null)
+            instantiatedMonster.transform.SetParent(poolTransform);
+
+        instantiatedMonster.pool = monsterPool[id];
+        return instantiatedMonster;
     }
     private void OnTakeFromPool(MonsterController monster)
     {
@@ -75,29 +79,16 @@ public class MonsterFactory
 
     public MonsterController GetMonster(MonsterData data)
     {
-        // To-Do: 몬스터 데이터 처리
-        var monster =  poolMonster.Get();
-        
+        var id = data.Id; 
+        if (!monsterPool.ContainsKey(id))
+        {
+            throw new InvalidOperationException($"몬스터 ID에 대한 풀을 찾을 수 없습니다. {id}");
+        }
+
+        var monster = monsterPool[id].Get();
         monster.Status.Data = data;
-        
-        //모호한 Reference로 인한 주석처리
-        //monster.Status = monsterStatus;
         monster.ResetMonsterData();
-        
-        return monster;
-    }
-    
-    public MonsterController GetMonster(int id)
-    {
-        // To-Do: 몬스터 데이터 처리
-        var monster =  poolMonster.Get();
-        
-        monster.Status.Data = DataTableManager.Get<MonsterTable>(DataTableIds.Monster).Get(id);
-        
-        //모호한 Reference로 인한 주석처리
-        //monster.Status = monsterStatus;
-        monster.ResetMonsterData();
-        
+
         return monster;
     }
 }

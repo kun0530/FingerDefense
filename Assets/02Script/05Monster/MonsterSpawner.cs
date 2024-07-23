@@ -58,7 +58,7 @@ public class MonsterSpawner : MonoBehaviour
         }
         Logger.Log($"{stageId}스테이지의 몬스터 수: {MonsterCount}");
 
-        // factory.Init(monsters);
+        factory.Init(monsters);
 
         currentWaveData = waveTable.Get(stageId, waveId);
         if (currentWaveData != null)

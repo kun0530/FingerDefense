@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 1924679181847637785}
   - component: {fileID: 1688653874363753888}
   m_Layer: 7
-  m_Name: Goblin_Thrower
+  m_Name: 2Goblin_Thrower
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,8 +300,8 @@ Transform:
   m_GameObject: {fileID: 8446113902599670092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.68, y: 4.14, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7954274307682770655}
@@ -350,14 +350,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8446113902599670092}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e0eb816f90e52b4798288f419bbbc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testMonsterDragData: 
   hpBar: {fileID: 4946989875023031771}
   findRange: 3
+  isDirectedRight: 1
 --- !u!114 &1688653874363753888
 MonoBehaviour:
   m_ObjectHideFlags: 0
