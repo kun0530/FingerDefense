@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerCharacterSpawner : MonoBehaviour
-{
-    public PlayerCharacterController[] characterPrefabs; // To-Do: 추후 AssetReference로 변경
+{ 
     public Transform poolTransform;
     public Transform[] spawnPositions; // 6개 (전열: 0, 1 / 중열: 2, 3 / 후열: 4, 5)
 

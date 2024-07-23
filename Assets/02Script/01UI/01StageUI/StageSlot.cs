@@ -17,8 +17,14 @@ public class StageSlot : MonoBehaviour
 
     private int StageId;
     private AssetListTable assetListTable;
+
     
     [SerializeField]private GameObject deckUI;
+
+    public void Awake()
+    {
+
+    }
 
     public void Start()
     { 
@@ -31,11 +37,14 @@ public class StageSlot : MonoBehaviour
     public void SetAssetListTable(AssetListTable assetListTable)
     {
         this.assetListTable = assetListTable;
-        Logger.Log("SetAssetListTable");
     }
+    
     public void Configure(StageData stageData)
     {
-        stageNameText.text = stageData.StageNameId.ToString();
+        //해당 슬롯에 스테이지 이름 설정 =>stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 
+        stageNameText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(stageData.StageNameId);
+        
+        
         StageId = stageData.StageId;
         if (stageData.Monster1Id != 0) AddMonsterSlot(stageData.Monster1Id);
         if (stageData.Monster2Id != 0) AddMonsterSlot(stageData.Monster2Id);

@@ -11,6 +11,7 @@ public static class DataTableIds
     public static readonly string Buff = "BuffDebuffTable";
     public static readonly string Stage = "StageTable";
     public static readonly string Asset = "AssetListTable";
+    public static readonly string String = "StringTable";
 
 }
 
@@ -47,6 +48,10 @@ public static class DataTableManager
         AssetListTable assetList = new AssetListTable();
         assetList.Load(DataTableIds.Asset);
         tables.Add(DataTableIds.Asset, assetList);
+        
+        StringTable stringTable = new StringTable();
+        stringTable.Load(DataTableIds.String);
+        tables.Add(DataTableIds.String, stringTable);
     }
 
     // public static StringTable GetStringTable()

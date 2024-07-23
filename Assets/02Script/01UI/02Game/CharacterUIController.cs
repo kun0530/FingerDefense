@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterUIController : MonoBehaviour
@@ -26,12 +24,16 @@ public class CharacterUIController : MonoBehaviour
             var assetName = assetListTable.Get(Variables.LoadTable.characterIds[i]);
             if (!string.IsNullOrEmpty(assetName))
             {
+                //var prefab = Addressables.LoadAssetAsync<GameObject>($"Prefab/00CharacterUI/{assetName}");
                 GameObject prefab = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetName}");
+
                 if (prefab != null)
                 {
                     var characterUISlotInstance = Instantiate(characterUISlotPrefab, characterUIParent);
                     var prefabInstance = Instantiate(prefab, characterUISlotInstance.transform);
                 }
+                    //var prefabInstance = Addressables.DownloadDependenciesAsync(prefab, characterUISlotInstance.transform);
+                
             }
             else
             {

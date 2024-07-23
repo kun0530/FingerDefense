@@ -8,11 +8,13 @@ public class StageSlotCreate : MonoBehaviour
     public RectTransform[] slotParents;
     public GameObject deckUI;
     private AssetListTable assetListTable;
+    private StringTable stringTable;
     
     private void Start()
     {
         stageTable ??= DataTableManager.Get<StageTable>(DataTableIds.Stage);
         assetListTable ??= DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
+        stringTable ??= DataTableManager.Get<StringTable>(DataTableIds.String);
         
         CreateStageSlots();
     }
