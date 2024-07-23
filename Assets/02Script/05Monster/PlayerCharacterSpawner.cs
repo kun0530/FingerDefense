@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCharacterSpawner : MonoBehaviour
 {
@@ -11,10 +12,13 @@ public class PlayerCharacterSpawner : MonoBehaviour
     private PlayerCharacterTable playerCharacterTable;
     private SkillTable skillTable;
     private AssetListTable assetListTable;
-    // private PlayerCharacterData[] playerCharacters = new PlayerCharacterData[8]; // 사용할 캐릭터 데이터들
+    
     private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8];
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
-
+    
+    public GameObject playerUICharacterPrefab;
+    public RectTransform playerUICharacterParent;
+    
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
@@ -27,7 +31,45 @@ public class PlayerCharacterSpawner : MonoBehaviour
             {
                 var data = playerCharacterTable.Get(Variables.LoadTable.characterIds[i]);
                 playerCharacters[i] = CreatePlayerCharacter(data);
+                CreateUICharacter(data,i);
             }
+            else
+            {
+                CreateUICharacter(null,i);
+            }
+        }
+    }
+
+    private void CreateUICharacter(PlayerCharacterData data,int index)
+    {
+        var uiCharacter = Instantiate(playerUICharacterPrefab, playerUICharacterParent);
+        if (data != null)
+        {
+            var assetName = assetListTable.Get(data.AssetNo);
+            if (string.IsNullOrEmpty(assetName))
+            {
+                Logger.LogError($"Asset name not found for AssetNo {data.AssetNo}");
+                return;
+            }
+
+            var uiAsset = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetName}");
+            if (uiAsset == null)
+            {
+                Logger.LogError($"UI Prefab not found for asset name {assetName}");
+                return;
+            }
+
+            Instantiate(uiAsset, uiCharacter.transform);
+        }
+        else
+        {
+            Logger.LogWarning("Character data is null.");
+        }
+
+        var button = uiCharacter.GetComponent<Button>();
+        if (button != null)
+        {
+            button.onClick.AddListener(() => SpawnPlayerCharacter(index));
         }
     }
 
@@ -117,9 +159,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.Status.Init();
         playerCharacter.gameObject.SetActive(true);
-        // To-Do: 초기화
-
-        // playerCharacterSpawner.SpawnPlayerCharacter(index);
+        
     }
 
     public void RemoveActiveCharacter(PlayerCharacterController character)

@@ -6,8 +6,6 @@ using Cysharp.Threading.Tasks;
 public class MonsterSpawner : MonoBehaviour
 {
     private MonsterFactory factory;
-
-    //public MonsterController monsterPrefab; // 추후 AssetReferenceMonster로 교체
     public Transform poolTransform;
     public Transform spawnTransform;
     private Vector2 spawnPosition;
@@ -28,7 +26,8 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] private float waveTerm = 3f;
 
     private bool isWaveEnd;
-
+    public HashSet<int> monsters { get; private set; } = new();
+    
 
     private void Awake()
     {
@@ -42,12 +41,11 @@ public class MonsterSpawner : MonoBehaviour
         // 스테이지 매니저의 내용
         // 스테이지 내 등장 몬스터 수(잘못된 id 몬스터는 나오지 않는걸로)
         // 죽거나 포털로 들어가면 카운트 다운 0
-        stageId = Variables.LoadTable.stageId; // 테스트
+        stageId = Variables.LoadTable.stageId; 
         int wave = 1;
         MonsterCount = 0;
 
-        HashSet<int> monsters = new();
-
+        
         while (waveTable.Get(stageId, wave++) is { } waveData)
         {
             MonsterCount += waveData.Repeat;
