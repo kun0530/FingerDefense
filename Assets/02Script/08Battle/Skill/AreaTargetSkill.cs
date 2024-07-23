@@ -6,8 +6,9 @@ public class AreaTargetSkill : SkillType
 {
     private SkillArea skillArea;
 
-    public AreaTargetSkill(IFindable secondaryTargeting)
-    : base(secondaryTargeting) { }
+    public AreaTargetSkill(IFindable secondaryTargeting, int assetId)
+    : base(secondaryTargeting, assetId) { }
+
 
     // public AreaTargetSkill(AreaSkill area)
     // {

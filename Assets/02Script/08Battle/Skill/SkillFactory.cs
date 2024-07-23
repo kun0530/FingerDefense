@@ -43,13 +43,13 @@ public static class SkillFactory
         switch ((SkillRangeTypes)data.Type)
         {
             case SkillRangeTypes.SingleTarget:
-                skillType = new TargetSkill(new FindingSelf(gameObject));
+                skillType = new TargetSkill(new FindingSelf(gameObject), data.AssetNo);
                 break;
             case SkillRangeTypes.MultipleTarget:
-                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Center, layerMask));
+                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Center, layerMask), data.AssetNo);
                 break;
             case SkillRangeTypes.AreaTarget:
-                skillType = new AreaTargetSkill(new FindingSelf(gameObject)); // 미구현
+                skillType = new AreaTargetSkill(new FindingSelf(gameObject), data.AssetNo); // 미구현
                 break;
         }
 

@@ -14,9 +14,12 @@ public abstract class SkillType
     public AttackSkill attackSkill;
     protected IFindable secondaryTargeting;
 
-    public SkillType(IFindable secondaryTargeting)
+    protected int assetId;
+
+    public SkillType(IFindable secondaryTargeting, int assetId)
     {
         this.secondaryTargeting = secondaryTargeting;
+        this.assetId = assetId;
     }
 
     public abstract void UseSkill(GameObject target);

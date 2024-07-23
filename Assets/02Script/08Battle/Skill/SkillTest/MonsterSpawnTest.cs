@@ -7,6 +7,8 @@ public class MonsterSpawnTest : MonoBehaviour
     public MonsterController monsterPrefab;
     private MonsterData monsterData;
     public Transform monsterPos;
+    private Vector2 monsterSpawnPos;
+    [SerializeField] private float monsterSpawnRadius = 2.5f;
 
     private void Awake()
     {
@@ -23,9 +25,15 @@ public class MonsterSpawnTest : MonoBehaviour
         };
     }
 
+    private void Start()
+    {
+        monsterSpawnPos = new Vector2(monsterPos.transform.position.x, monsterPos.transform.position.y);
+    }
+
     public void SpawnMonster()
     {
-        var monster = Instantiate(monsterPrefab, monsterPos.position, Quaternion.identity);
+        var spawnPos = monsterSpawnPos + Random.insideUnitCircle * monsterSpawnRadius;
+        var monster = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         monster.Status.Data = monsterData;
     }
 
