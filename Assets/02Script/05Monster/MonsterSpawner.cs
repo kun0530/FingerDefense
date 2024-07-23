@@ -7,7 +7,7 @@ public class MonsterSpawner : MonoBehaviour
 {
     private MonsterFactory factory;
 
-    public MonsterController monsterPrefab; // 추후 AssetReferenceMonster로 교체
+    //public MonsterController monsterPrefab; // 추후 AssetReferenceMonster로 교체
     public Transform poolTransform;
     public Transform[] spawnPositions;
 
@@ -31,8 +31,8 @@ public class MonsterSpawner : MonoBehaviour
     private void Awake()
     {
         factory = new MonsterFactory();
-        factory.monsterPrefab = monsterPrefab;
-        factory.Init();
+        //factory.monsterPrefab = monsterPrefab;
+        //factory.Init();
 
         monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
         waveTable = DataTableManager.Get<WaveTable>(DataTableIds.Wave);
@@ -42,8 +42,7 @@ public class MonsterSpawner : MonoBehaviour
         // 죽거나 포털로 들어가면 카운트 다운 0
         int wave = 1;
         MonsterCount = 0;
-        WaveData waveData;
-        while ((waveData = waveTable.Get(stageId, wave++))!= null)
+        while (waveTable.Get(stageId, wave++) is { } waveData)
         {
             var monsterList = waveData.monsters;
             foreach (var monster in monsterList)

@@ -48,7 +48,7 @@ public class MonsterData
 
 public class MonsterTable : DataTable
 {
-    private Dictionary<int, MonsterData> table = new Dictionary<int, MonsterData>();
+    public Dictionary<int, MonsterData> table = new Dictionary<int, MonsterData>();
 
     public bool IsExist(int id)
     {
