@@ -27,6 +27,6 @@ public abstract class BaseStatus
         this.buffHandler = buffHandler;
     }
 
-    protected abstract void Init();
+    public abstract void Init();
     public abstract void UpdateCurrentState();
 }

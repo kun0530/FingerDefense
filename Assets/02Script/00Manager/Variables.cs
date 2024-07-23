@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Variables
 {
     public static class LoadTable

@@ -16,7 +16,7 @@ public class WaveData
     
     //TO-DO 삭제 필요(더 이상 사용되지 않음)
     public float Term { get; set; }
-    public List<(int monsterId, int monsterCount)> monsters = new List<(int monsterId, int monsterCount)>();
+    public List<(int monsterId, float monsterWeight)> monsters = new();
 }
 
 public class WaveTable : DataTable
@@ -46,27 +46,27 @@ public class WaveTable : DataTable
         {
             csvReader.Read();
             var columnCount = csvReader.ColumnCount;
-            // TO-DO: 패턴 시작 인덱스를 6으로 고정하고, 패턴 개수를 계산해서 사용하도록 수정
             int patternStartIndex = 6;
             // int patternCount = (columnCount - patternStartIndex) / 2;
 
             while (csvReader.Read())
             {
-                var waveData = new WaveData();
-                waveData.Stage = csvReader.GetField<int>(1);
-                waveData.Wave = csvReader.GetField<int>(2);
-                waveData.WaveTerm = csvReader.GetField<int>(3);
-                waveData.RepeatTerm = csvReader.GetField<float>(4);
-                waveData.Repeat = csvReader.GetField<int>(5);
-                
+                var waveData = new WaveData()
+                {
+                    Stage = csvReader.GetField<int>(1),
+                    Wave = csvReader.GetField<int>(2),
+                    WaveTerm = csvReader.GetField<int>(3),
+                    RepeatTerm = csvReader.GetField<float>(4),
+                    Repeat = csvReader.GetField<int>(5)
+                };
 
                 for (int i = patternStartIndex; i < columnCount; i += 2)
                 {
-                    (int monsterId, int monsterCount) monster = (csvReader.GetField<int>(i), csvReader.GetField<int>(i + 1));
+                    (int monsterId, float monsterWeight) monster = (csvReader.GetField<int>(i), csvReader.GetField<float>(i + 1));
                     if (!monsterTable.IsExist(monster.monsterId))
                     {
                         if (monster.monsterId != 0)
-                            Logger.LogError($"존재하지 않는 몬스터 ID: {monster.monsterId}"); // 예외 던져야 함
+                            Logger.LogError($"존재하지 않는 몬스터 ID: {monster.monsterId}"); // To-Do: 예외 던져야 함
                         continue;
                     }
                     waveData.monsters.Add(monster);

@@ -21,7 +21,7 @@ public class MonsterStatus : BaseStatus
 
     public MonsterStatus(BuffHandler buffHandler) : base(buffHandler) { }
 
-    protected override void Init()
+    public override void Init()
     {
         if (Data == null)
             return;
