@@ -12,6 +12,12 @@ public abstract class SkillType
     // public List<ISkillAction> skillActions = new List<ISkillAction>();
     public BuffSkill buffSkill;
     public AttackSkill attackSkill;
+    protected IFindable secondaryTargeting;
+
+    public SkillType(IFindable secondaryTargeting)
+    {
+        this.secondaryTargeting = secondaryTargeting;
+    }
 
     public abstract void UseSkill(GameObject target);
 

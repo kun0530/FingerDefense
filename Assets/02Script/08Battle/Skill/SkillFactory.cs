@@ -10,7 +10,7 @@ public static class SkillFactory
         if (data == null || gameObject == null)
             return null;
 
-        // Target
+        // Target: 타겟 레이어
         LayerMask layerMask = Layers.DEFAULT_LAYER;
         switch (data.Target)
         {
@@ -22,36 +22,53 @@ public static class SkillFactory
                 break;
         }
 
-        // 1차 타겟팅
-        IFindable findable = new FindingTargetInCircle(gameObject.transform, data.Range, layerMask);
-        SkillType skill = null;
+        // 1차 타겟팅: 0인 경우, 본인 타겟팅(Target 의미 없음) / 그 외는 지정된 타겟팅
+        // 1차 타겟팅은 단일 타겟팅
+        IFindable primaryTargeting;
+        if (data.Center == 0f)
+        {
+            primaryTargeting = new FindingSelf(gameObject);
+        }
+        else
+        {
+            primaryTargeting = new FindingTargetInCircle(gameObject.transform, data.Center, layerMask);
+        }
+
+        // 스킬 타입: 0: 단일 / 1: 범위 / 2: 장판
+        // To-Do: 스킬 타입이 범위와 장판인 경우, Range를 통해 2차 타겟팅
+        // 단일: 2차 타겟팅은 FindingSelf
+        // 범위: 2차 타겟팅은 FindingTargetInCircle.FindTargets
+        // 장판: Range만큼의 장판 생성!!
+        SkillType skillType = null;
         switch ((SkillRangeTypes)data.Type)
         {
             case SkillRangeTypes.SingleTarget:
-                skill = new SingleTargetSkill();
+                skillType = new TargetSkill(new FindingSelf(gameObject));
                 break;
             case SkillRangeTypes.MultipleTarget:
-                skill = new MultipleTargetSkill();
+                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Center, layerMask));
                 break;
             case SkillRangeTypes.AreaTarget:
-                skill = new SingleTargetSkill();
+                skillType = new AreaTargetSkill(new FindingSelf(gameObject)); // 미구현
                 break;
         }
 
+        // Damage: 공격 스킬 / BuffId: 버프 스킬
         if (data.Damage != 0f)
         {
             // skill.skillActions.Add(new AttackSkill(data.Damage));
-            skill.attackSkill = new AttackSkill(data.Damage);
+            skillType.attackSkill = new AttackSkill(data.Damage);
         }
         if (data.BuffId != 0)
         {
             var buffTable = DataTableManager.Get<BuffTable>(DataTableIds.Buff);
             var buffData = buffTable.Get(data.BuffId);
             // skill.skillActions.Add(new BuffSkill(buffData));
-            skill.buffSkill = new BuffSkill(buffData);
+            skillType.buffSkill = new BuffSkill(buffData);
         }
 
-        BaseSkill baseSkill = new InstantSkill(skill, findable); // To-Do: Instant Skill과 Projectile Skill 분기
+        // To-Do: Instant Skill과 Projectile Skill 분기
+        BaseSkill baseSkill = new InstantSkill(data, skillType, primaryTargeting);
 
         return baseSkill;
     }

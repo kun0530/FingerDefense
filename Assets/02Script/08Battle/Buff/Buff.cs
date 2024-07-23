@@ -51,7 +51,7 @@ public class Buff
         var dotDamage = 0f;
         foreach (var action in buffActions)
         {
-            if (action.type == (int)BuffType.HP)
+            if (action.type == (int)BuffType.DOT_HP)
                 dotDamage += action.value;
         }
 

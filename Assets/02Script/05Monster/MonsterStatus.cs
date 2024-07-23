@@ -51,7 +51,7 @@ public class MonsterStatus : BaseStatus
                     case BuffType.MOVE_SPEED:
                         currentMoveSpeed += buffAction.value;
                         break;
-                    case BuffType.HP:
+                    case BuffType.DOT_HP:
                         break;
                     case BuffType.ATK:
                         currentAtkDmg += buffAction.value;

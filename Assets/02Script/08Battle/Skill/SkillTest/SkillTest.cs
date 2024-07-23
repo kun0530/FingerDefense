@@ -1,75 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SkillTest : MonoBehaviour
 {
-    public PlayerCharacterController playerCharacterPrefab;
-    private PlayerCharacterData playerCharacterData;
-    public Transform characterPos;
-    private PlayerCharacterController currentPlayerCharacter;
+    public TMP_InputField skillId;
+    public SkillTable skillTable;
 
-    public MonsterController monsterPrefab;
-    private MonsterData monsterData;
-    public Transform monsterPos;
+    public PlayerAttackBehavior playerAttackBehavior;
 
     private void Awake()
     {
-        playerCharacterData = new()
-        {
-            Hp = 100f,
-            Element = 0,
-            Skill1 = 0,
-            Skill2 = 0,
-            // 사용하지 않음
-            AtkDmg = 0f,
-            AtkSpeed = 1f,
-            AtkRange = 3f
-        };
-
-        monsterData = new()
-        {
-            Hp = 100f,
-            DragType = 0,
-            Element = 0,
-            MoveSpeed = 5f,
-            AtkDmg = 0f,
-            AtkSpeed = 1f,
-            Height = 3f,
-            Skill = 0
-        };
+        skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
     }
 
-    public void CreatePlayerCharacter()
+    public void CreateSkill()
     {
-        if (currentPlayerCharacter)
+        if (int.TryParse(skillId.text, out var id))
+        {
+            var skillData = skillTable.Get(id);
+            if (skillData == null)
+            {
+                Logger.Log("유효하지 않는 스킬 아이디입니다.");
+                return;
+            }
+            var skill = SkillFactory.CreateSkill(skillData, playerAttackBehavior.gameObject);
+            playerAttackBehavior.baseSkill = skill;
+        }
+        else
+        {
+            Logger.Log("int값이 아닙니다.");
             return;
-
-        var playerCharacter = Instantiate(playerCharacterPrefab, characterPos.position, Quaternion.identity);
-        playerCharacter.Status.Data = playerCharacterData;
-        currentPlayerCharacter = playerCharacter;
-    }
-
-    public void RemovePlayerCharacter()
-    {
-        if (!currentPlayerCharacter)
-            return;
-        
-        Destroy(currentPlayerCharacter.gameObject);
-    }
-
-    public void SpawnMonster()
-    {
-        var monster = Instantiate(monsterPrefab, monsterPos.position, Quaternion.identity);
-        monster.Status.Data = monsterData;
-    }
-
-    public void RemoveAllMonster()
-    {
-        var monsters = GameObject.FindGameObjectsWithTag(Defines.Tags.MONSTER_TAG);
-        foreach (var monster in monsters)
-        {
-            Destroy(monster);
         }
     }
 }
