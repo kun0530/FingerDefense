@@ -7,7 +7,8 @@ using UnityEngine.AddressableAssets;
 public class StageSlot : MonoBehaviour
 {
     public TextMeshProUGUI stageNameText;
-
+    public TextMeshProUGUI monsterText;
+    public TextMeshProUGUI rewardText;
     public RectTransform monsterSlotParent;
     public RectTransform rewardSlotParent;
 
@@ -43,7 +44,8 @@ public class StageSlot : MonoBehaviour
     {
         //해당 슬롯에 스테이지 이름 설정 =>stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 
         stageNameText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(stageData.StageNameId);
-        
+        monsterText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(98902);
+        rewardText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(98903);
         
         StageId = stageData.StageId;
         if (stageData.Monster1Id != 0) AddMonsterSlot(stageData.Monster1Id);
