@@ -19,7 +19,8 @@ public class MonsterFactory
     private IObjectPool<MonsterController> poolMonster;
 
     public Transform poolTransform;
-
+    private AssetListTable assetListTable;
+    
     public void Init()
     {
         poolMonster = new ObjectPool<MonsterController>(
@@ -35,6 +36,7 @@ public class MonsterFactory
     {
         // var monster = Instantiate(monsterPrefab.Asset as MonsterController);
         //AssetList의 Monster의 번호를 기준으로 해당 이름을 찾아서 생성
+
         var monster = Object.Instantiate(monsterPrefab);
         if (poolTransform != null)
             monster.transform.SetParent(poolTransform);
