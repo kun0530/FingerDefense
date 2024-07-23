@@ -56,7 +56,8 @@ public class MonsterSpawner : MonoBehaviour
         currentWaveData = waveTable.Get(stageId, waveId);
         if (currentWaveData != null)
         {
-            spawnWaveTimer = currentWaveData.Term;
+            //TO-DO : 변경 완료 Term=>WaveTerm
+            spawnWaveTimer = currentWaveData.WaveTerm;
             isNextWave = true;
         }
     }
@@ -76,7 +77,8 @@ public class MonsterSpawner : MonoBehaviour
         if (MonsterCount <= 0 || !isNextWave || isWaveEnd)
             return;
         
-        if (spawnWaveTimer >= currentWaveData.Term)
+        //TO-DO : 변경 완료 Term => WaveTerm
+        if (spawnWaveTimer >= currentWaveData.WaveTerm)
         {
             spawnWaveTimer = 0f;
             isNextWave = false;
