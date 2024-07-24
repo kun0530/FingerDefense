@@ -2,38 +2,40 @@ using UnityEngine;
 
 public class FallState : IState
 {
-    MonsterController monster;
+    MonsterController controller;
     private Collider2D collider;
     private float startY;
     
     private float velocity;
     private float gravity = -9.8f;
 
-    public FallState(MonsterController monster)
+    public FallState(MonsterController controller)
     {
-        this.monster = monster;
-        collider = monster.GetComponent<Collider2D>();
+        this.controller = controller;
+        collider = controller.GetComponent<Collider2D>();
     }
 
     public void Enter()
     {
-        startY = monster.transform.position.y;
+        startY = controller.transform.position.y;
         velocity = 0f;
+
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
     }
 
     public void Update()
     {
         velocity += gravity * Time.deltaTime;
-        monster.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
+        controller.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
 
-        if (monster.transform.position.y <= monster.targetFallY)
+        if (controller.transform.position.y <= controller.targetFallY)
         {
-            monster.transform.position = new Vector3(monster.transform.position.x, monster.targetFallY, 0f);
+            controller.transform.position = new Vector3(controller.transform.position.x, controller.targetFallY, 0f);
 
-            if (monster.Status.Data.Height <= startY - monster.targetFallY)
-                monster.TakeDamage(monster.Status.CurrentHp);
+            if (controller.Status.Data.Height <= startY - controller.targetFallY)
+                controller.TakeDamage(controller.Status.CurrentHp);
             else
-                monster.TryTransitionState<PatrolState>();
+                controller.TryTransitionState<PatrolState>();
         }
     }
 

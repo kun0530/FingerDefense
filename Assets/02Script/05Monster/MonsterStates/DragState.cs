@@ -4,31 +4,33 @@ using UnityEngine;
 
 public class DragState : IState
 {
-    private MonsterController monster;
+    private MonsterController controller;
     private MeshRenderer renderer;
     private Collider2D collider;
 
     private DragAndDrop dragAndDrop;
 
-    public DragState(MonsterController monster)
+    public DragState(MonsterController controller)
     {
-        this.monster = monster;
+        this.controller = controller;
 
-        renderer = monster.GetComponentInChildren<MeshRenderer>();
-        collider = monster.GetComponent<Collider2D>();
+        renderer = controller.GetComponentInChildren<MeshRenderer>();
+        collider = controller.GetComponent<Collider2D>();
     }
 
     public void Enter()
     {
-        monster.targetFallY = monster.transform.position.y;
+        controller.targetFallY = controller.transform.position.y;
 
-        if (monster.attackTarget)
-            monster.attackTarget.TryRemoveMonster(monster);
+        if (controller.attackTarget)
+            controller.attackTarget.TryRemoveMonster(controller);
 
         dragAndDrop = GameObject.FindGameObjectWithTag("InputManager").GetComponent<DragAndDrop>();
 
         collider.enabled = false;
         renderer.sortingOrder = 1;
+
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
     }
 
     public void Update()
@@ -37,11 +39,11 @@ public class DragState : IState
         {
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
             pos.z = 0f;
-            monster.transform.position = pos;
+            controller.transform.position = pos;
         }
         else
         {
-            monster.TryTransitionState<FallState>();
+            controller.TryTransitionState<FallState>();
         }
     }
 

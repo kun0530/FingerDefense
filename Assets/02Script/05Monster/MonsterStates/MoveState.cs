@@ -26,6 +26,8 @@ public class MoveState : IState
             > controller.transform.position.x ? 1f : -1f;
         }
         controller.SetFlip(direction.x > 0);
+
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.currentMoveSpeed);
     }
     
     public void Update()
@@ -38,5 +40,6 @@ public class MoveState : IState
 
     public void Exit()
     {
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.IDLE, true, 1f);
     }
 }

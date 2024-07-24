@@ -4,40 +4,42 @@ using UnityEngine;
 
 public class PatrolState : IState
 {
-    private MonsterController monster;
+    private MonsterController controller;
 
     private float patrolTimer = 0f;
     private float patrolInterval = 0.25f;
 
     private IFindable findBehavior;
 
-    public PatrolState(MonsterController monster, IFindable findBehavior)
+    public PatrolState(MonsterController controller, IFindable findBehavior)
     {
-        this.monster = monster;
+        this.controller = controller;
         this.findBehavior = findBehavior;
     }
 
     public void Enter()
     {
         patrolTimer = 0f;
+
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.currentMoveSpeed);
     }
 
     public void Update()
     {
-        if (monster.moveTarget == null)
+        if (controller.moveTarget == null)
         {
-            monster.TryTransitionState<IdleState<MonsterController>>();
+            controller.TryTransitionState<IdleState<MonsterController>>();
             return;
         }
 
         // 성 포탈까지 이동
-        var direction = (monster.moveTarget.transform.position - monster.transform.position).normalized;
-        monster.transform.position += direction * monster.Status.currentMoveSpeed * Time.deltaTime;
-        monster.SetFlip(direction.x > 0);
-        if (Vector2.Distance(monster.transform.position, monster.moveTarget.transform.position) < 0.1)
+        var direction = (controller.moveTarget.transform.position - controller.transform.position).normalized;
+        controller.transform.position += direction * controller.Status.currentMoveSpeed * Time.deltaTime;
+        controller.SetFlip(direction.x > 0);
+        if (Vector2.Distance(controller.transform.position, controller.moveTarget.transform.position) < 0.1)
         {
-            monster.transform.position = monster.moveTarget.transform.position;
-            monster.TryTransitionState<IdleState<MonsterController>>();
+            controller.transform.position = controller.moveTarget.transform.position;
+            controller.TryTransitionState<IdleState<MonsterController>>();
             return;
         }
 
@@ -49,16 +51,15 @@ public class PatrolState : IState
             FindTarget();
         }
 
-        if (monster.attackTarget != null)
+        if (controller.attackTarget != null)
         {
-            monster.TryTransitionState<ChaseState>();
+            controller.TryTransitionState<ChaseState>();
             return;
         }
     }
 
     public void Exit()
     {
-        
     }
 
     private void FindTarget()
@@ -68,10 +69,10 @@ public class PatrolState : IState
             return;
         
         if (nearCollider.TryGetComponent<PlayerCharacterController>(out var target)
-        && target != monster.attackTarget)
+        && target != controller.attackTarget)
         {
-            monster.attackTarget?.TryRemoveMonster(monster);
-            target.TryAddMonster(monster);
+            controller.attackTarget?.TryRemoveMonster(controller);
+            target.TryAddMonster(controller);
         }
     }
 }
