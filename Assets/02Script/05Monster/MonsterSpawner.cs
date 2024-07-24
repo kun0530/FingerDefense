@@ -16,7 +16,7 @@ public class MonsterSpawner : MonoBehaviour
 
     public Transform moveTarget;
 
-    private int stageId = Variables.LoadTable.stageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
+    private int stageId = Variables.LoadTable.StageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
     private int waveId = 1;
     public int MonsterCount { get; private set; }
 
@@ -41,7 +41,7 @@ public class MonsterSpawner : MonoBehaviour
         // 스테이지 매니저의 내용
         // 스테이지 내 등장 몬스터 수(잘못된 id 몬스터는 나오지 않는걸로)
         // 죽거나 포털로 들어가면 카운트 다운 0
-        stageId = Variables.LoadTable.stageId; 
+        stageId = Variables.LoadTable.StageId; 
         int wave = 1;
         MonsterCount = 0;
 

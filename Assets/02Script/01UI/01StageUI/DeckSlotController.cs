@@ -34,7 +34,7 @@ public class DeckSlotController : MonoBehaviour
         closeButton.onClick.AddListener(() =>
         {
             //할당 되어있는 값을 초기화 시킨다.
-            Variables.LoadTable.stageId = 0;
+            Variables.LoadTable.StageId = 0;
             Logger.Log("스테이지 선택 화면으로 이동합니다.");
         });
     }

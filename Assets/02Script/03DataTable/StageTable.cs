@@ -17,8 +17,8 @@ public class StageData
     public int AssetNo { get; set; }
     public int Reward1Id { get; set; }
     public int Reward1Value { get; set; }
-    public int Reward2Id { get; set; }
-    public int Reward2Value { get; set; }
+    // public int Reward2Id { get; set; }
+    // public int Reward2Value { get; set; }
     
 
 }
