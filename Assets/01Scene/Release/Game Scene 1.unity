@@ -2563,6 +2563,83 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_SortAtRoot: 0
+--- !u!1 &1479793480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1479793481}
+  - component: {fileID: 1479793482}
+  m_Layer: 0
+  m_Name: Game Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1479793481
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479793480}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1479793482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479793480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f3e5b06b94b77f46bf5d47ed85d61de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modalPrefab: {fileID: 2771855640804242018, guid: 0929d0d1878c0b249bdfbdcbd7e8a104, type: 3}
+  canvas: {fileID: 8368489873885783379}
+  tutorialSteps:
+  - title: "\uC804\uD22C"
+    description: "1. \uBAAC\uC2A4\uD130\uB97C \uB4DC\uB798\uADF8\uD574\uC11C \uD2B9\uC815
+      \uB192\uC774 \uC774\uC0C1\uC5D0\uC11C \uB5A8\uC5B4\uB728\uB9AC\uBA74 \uCC98\uCE58
+      \uAC00\uB2A5"
+    buttonText: "\uB2E4\uC74C"
+  - title: "\uC804\uD22C"
+    description: "2. \uD2B9\uC218 \uBAAC\uC2A4\uD130\uB4E4\uC740 \uB4DC\uB798\uADF8\uB97C
+      \uD1B5\uD574\uC11C \uCC98\uCE58\uD558\uBA74 \uBAAC\uC2A4\uD130\uC5D0\uAC8C
+      \uD53C\uD574\uB97C \uC8FC\uB294 \uC2A4\uD0AC\uC744 \uBC1C\uB3D9"
+    buttonText: "\uB2E4\uC74C"
+  - title: "\uC804\uD22C"
+    description: "3. \uC88C\uC0C1\uB2E8\uC758 \uBC14\uB294 \uC720\uC800 \uCCB4\uB825,
+      \uBAAC\uC2A4\uD130\uAC00 \uC88C\uCE21\uC758 \uD3EC\uD0C8\uB85C \uB4E4\uC5B4\uAC08
+      \uB54C\uB9C8\uB2E4 \uAC10\uC18C"
+    buttonText: "\uB2E4\uC74C"
+  - title: "\uC804\uD22C"
+    description: "4. \uC720\uC800\uC758 \uCCB4\uB825\uC774 0\uBCF4\uB2E4 \uD074 \uB54C,
+      \uC6B0\uC0C1\uB2E8\uC758 \uB0A8\uC740 \uBAAC\uC2A4\uD130 \uC218\uAC00 0\uC774
+      \uB418\uBA74 \uAC8C\uC784 \uD074\uB9AC\uC5B4"
+    buttonText: "\uB2E4\uC74C"
+  - title: "\uC804\uD22C"
+    description: "5. \uC6B0\uD558\uB2E8\uC758 \uCE90\uB9AD\uD130 \uBC84\uD2BC\uC744
+      \uD130\uCE58\uD558\uBA74 \uCE90\uB9AD\uD130\uAC00 \uD574\uB2F9 \uC704\uCE58\uB85C
+      \uC18C\uD658"
+    buttonText: "\uB2E4\uC74C"
+  - title: "\uC804\uD22C"
+    description: "6. \uCE90\uB9AD\uD130\uB294 \uD55C \uCCB4\uAC00 \uBAAC\uC2A4\uD130\uB97C
+      2\uCCB4\uAE4C\uC9C0 \uB9C9\uC744 \uC218 \uC788\uC74C"
+    buttonText: "\uC644\uB8CC"
+  currentStep: 0
 --- !u!1 &1495458296
 GameObject:
   m_ObjectHideFlags: 0
@@ -3479,7 +3556,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -189.47}
+  m_AnchoredPosition: {x: 400, y: -189.46997}
   m_SizeDelta: {x: 242.7956, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &930514195806679466
@@ -9426,3 +9503,4 @@ SceneRoots:
   - {fileID: 1002259786}
   - {fileID: 8903206105138493901}
   - {fileID: 527422274}
+  - {fileID: 1479793481}

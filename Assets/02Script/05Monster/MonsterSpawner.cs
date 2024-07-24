@@ -88,14 +88,16 @@ public class MonsterSpawner : MonoBehaviour
             spawnWaveTimer = 0f;
             isWaveTerm = false;
 
-            SpawnRandomMonster().Forget();
+            if (Time.timeScale != 0)
+            {
+                SpawnRandomMonster().Forget();    
+            }
         }
     }
 
     private async UniTask SpawnRandomMonster()
     {
         Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
-
         var repeatCount = 0;
         var monsters = currentWaveData.monsters;
         while (repeatCount++ < currentWaveData.Repeat)
