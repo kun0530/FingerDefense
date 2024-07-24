@@ -10,6 +10,7 @@ public abstract class BaseSkill
 
     private float skillTimer = 0f;
     public bool IsSkillReady { get; protected set; } = false;
+    public bool IsSkillCompleted { get; set; } = true;
 
     public BaseSkill(SkillData skillData, SkillType skillType, IFindable targetingMethod)
     {

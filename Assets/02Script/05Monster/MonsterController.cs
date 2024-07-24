@@ -34,7 +34,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     {
         get
         {
-            if (stateMachine.CurrentState.GetType() == typeof(FallState))
+            if (isDead)
+                return false;
+
+            var currentState = stateMachine.CurrentState.GetType();
+            if (currentState == typeof(FallState) || currentState == typeof(DragState))
                 return false;
 
             switch (Status.Data.DragType)
@@ -162,12 +166,17 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
         if (Status.CurrentHp <= 0f)
         {
+            isDead = true;
             Status.CurrentHp = 0f;
             if (stageManager)
                 stageManager.EarnedGold += Status.Data.DropGold;
                 
             deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
-            deathTrackEntry.Complete += Die;
+            stateMachine.TransitionTo<IdleState<MonsterController>>();
+            if (deathTrackEntry != null)
+            {
+                deathTrackEntry.Complete += Die;
+            }
         }
     }
 
@@ -183,13 +192,13 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private void Die(TrackEntry entry)
     {
+        if (deathTrackEntry != null)
+            deathTrackEntry.Complete -= Die;
         Die();
-        deathTrackEntry.Complete -= Die;
     }
 
     private void Die()
     {
-        isDead = true;
         // attackTarget.TryRemoveMonster(this);
         // stageManager.MonsterCount--;
         // stageManager.EarnedGold += Status.data.DropGold;
@@ -206,7 +215,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         }
         else
         {
-            Logger.LogError("스테이지 매니저가 할당되지 않았습니다.");
+            // Logger.LogError("스테이지 매니저가 할당되지 않았습니다.");
         }
 
         if (pool != null) // Null 검사 추가
@@ -216,7 +225,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         else
         {
             Destroy(gameObject);
-            Logger.LogError("풀이 할당되지 않았습니다.");
+            // Logger.LogError("풀이 할당되지 않았습니다.");
         }
     }
 

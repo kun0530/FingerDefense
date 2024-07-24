@@ -10,6 +10,10 @@ public class MonsterSpawnTest : MonoBehaviour
     private Vector2 monsterSpawnPos;
     [SerializeField] private float monsterSpawnRadius = 2.5f;
 
+    [SerializeField] private bool isAutoSpawn = false;
+    [SerializeField] private float spawnInterval = 0.25f;
+    private float spawnTimer = 0f;
+
     private void Awake()
     {
         monsterData = new()
@@ -30,6 +34,19 @@ public class MonsterSpawnTest : MonoBehaviour
         monsterSpawnPos = new Vector2(monsterPos.transform.position.x, monsterPos.transform.position.y);
     }
 
+    private void Update()
+    {
+        if (!isAutoSpawn)
+            return;
+
+        spawnTimer += Time.deltaTime;
+        if (spawnTimer > spawnInterval)
+        {
+            SpawnMonster();
+            spawnTimer = 0f;
+        }
+    }
+
     public void SpawnMonster()
     {
         var spawnPos = monsterSpawnPos + Random.insideUnitCircle * monsterSpawnRadius;
@@ -40,7 +57,7 @@ public class MonsterSpawnTest : MonoBehaviour
         if (skill == null)
             return;
         var attack = monster.gameObject.AddComponent<PlayerAttackBehavior>();
-        attack.baseSkill = skill;
+        attack.skillAttack = skill;
     }
 
     public void RemoveAllMonster()

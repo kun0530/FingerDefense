@@ -4,18 +4,42 @@ using UnityEngine;
 
 public class PlayerAttackBehavior : MonoBehaviour
 {
-    public BaseSkill baseSkill;
+    public BaseSkill normalAttack;
+    public BaseSkill skillAttack;
+
+    private Queue<BaseSkill> readySkills = new();
+    private BaseSkill currentAttack;
 
     private void Update()
     {
-        if (baseSkill == null)
+        UpdateSkill(normalAttack);
+        UpdateSkill(skillAttack);
+
+        UseReadySkill();
+    }
+
+    private void UpdateSkill(BaseSkill skill)
+    {
+        if (skill == null || skill.IsSkillReady)
             return;
 
-        baseSkill.TimerUpdate();
+        skill.TimerUpdate();
 
-        if (baseSkill.IsSkillReady)
+        if (skill.IsSkillReady)
         {
-            baseSkill.UseSkill();
+            readySkills.Enqueue(skill);
+        }
+    }
+
+    private void UseReadySkill()
+    {
+        if (currentAttack != null && !currentAttack.IsSkillCompleted)
+            return;
+
+        if (readySkills.Count != 0)
+        {
+            currentAttack = readySkills.Dequeue();
+            currentAttack.UseSkill();
         }
     }
 }
