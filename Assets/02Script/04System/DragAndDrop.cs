@@ -140,7 +140,7 @@ public class DragAndDrop : MonoBehaviour
     private void DropObject()
     {
         IsDragging = false;
-        FallObject(draggingObject, targetOriginY).Forget();
+        // FallObject(draggingObject, targetOriginY).Forget();
         targetOriginY = 0f;
         draggingObject = null;
     }
