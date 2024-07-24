@@ -59,10 +59,7 @@ public class StageManager : MonoBehaviour
 
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
-            if (currentState == StageState.GameClear || currentState == StageState.GameOver)
-                Time.timeScale = 0f;
-            else
-                Time.timeScale = 1f;
+            Time.timeScale = currentState is StageState.GameClear or StageState.GameOver  ? 0f : 1f;
         }
     }
 

@@ -14,30 +14,26 @@ public class DragAndDrop : MonoBehaviour
     private const float autoDropTime = 2.0f; // 드래그 시작 후 2초 뒤에 자동으로 놓기
 
     private static readonly RaycastHit2D[] hits = new RaycastHit2D[10];
-
+    private InputManager inputManager;
+    
     private void Awake()
     {
         mainCamera = Camera.main;
+        inputManager=GetComponent<InputManager>();
     }
 
     private void OnEnable()
     {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.OnClick += OnPointerDown;
-            InputManager.Instance.OnRelease += OnPointerUp;
-            InputManager.Instance.OnDrag += OnPointerDrag;
-        }
+        inputManager.OnClick += OnPointerDown;
+        inputManager.OnRelease += OnPointerUp;
+        inputManager.OnDrag += OnPointerDrag;
     }
 
     private void OnDisable()
     {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.OnClick -= OnPointerDown;
-            InputManager.Instance.OnRelease -= OnPointerUp;
-            InputManager.Instance.OnDrag -= OnPointerDrag;
-        }
+        inputManager.OnClick -= OnPointerDown;
+        inputManager.OnRelease -= OnPointerUp;
+        inputManager.OnDrag -= OnPointerDrag;
     }
 
     private void OnPointerDown(InputAction.CallbackContext context)

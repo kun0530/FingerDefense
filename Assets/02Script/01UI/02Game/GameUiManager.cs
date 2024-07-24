@@ -12,6 +12,7 @@ public class GameUiManager : MonoBehaviour
     public GameObject gameUi;
     public GameObject gameOverUi;
     public GameObject gameClearUi;
+    public GameObject pauseUi; // To-Do: Pause UI 추가(일단은 종료UI창이랑 같이 쓸거임)
 
     public TextMeshProUGUI eranedGoldText;
     public TextMeshProUGUI monsterCountText;
@@ -31,10 +32,7 @@ public class GameUiManager : MonoBehaviour
     {
         foreach (var stageStateUi in stageStatesUi)
         {
-            if (state == stageStateUi.Key)
-                stageStateUi.Value.SetActive(true);
-            else
-                stageStateUi.Value.SetActive(false);
+            stageStateUi.Value.SetActive(state == stageStateUi.Key);
         }
     }
 
