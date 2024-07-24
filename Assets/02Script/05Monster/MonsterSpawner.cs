@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Random = UnityEngine.Random;
 
 public class MonsterSpawner : MonoBehaviour
 {
@@ -107,6 +109,8 @@ public class MonsterSpawner : MonoBehaviour
             monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
             monsterGo.moveTarget = moveTarget;
             await UniTask.WaitForSeconds(currentWaveData.RepeatTerm);
+            //To-Do: 윗 줄 코드는 Time.timeScale을 무시해서 밑으로 변경해야합니다.
+            //await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm), ignoreTimeScale: true);
         }
 
         isWaveTerm = true;
