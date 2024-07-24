@@ -89,5 +89,11 @@ public class StageManager : MonoBehaviour
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
+    }
+    
+    public void LobbyScene()
+    {
+        SceneManager.LoadScene(1);
     }
 }

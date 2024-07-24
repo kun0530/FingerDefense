@@ -17,7 +17,7 @@ public class GameUiManager : MonoBehaviour
     public TextMeshProUGUI eranedGoldText;
     public TextMeshProUGUI monsterCountText;
 
-    public Image castleHpBar;
+    public Slider castleHpBar;
 
     private void Start()
     {
@@ -34,20 +34,22 @@ public class GameUiManager : MonoBehaviour
         {
             stageStateUi.Value.SetActive(state == stageStateUi.Key);
         }
+
+        
     }
 
     public void UpdateHpBar(float currentHp, float maxHp)
     {
-        castleHpBar.fillAmount = currentHp / maxHp;
+        castleHpBar.value = currentHp / maxHp;
     }
 
     public void UpdateMonsterCount(int monsterCount)
     {
-        monsterCountText.text = $"Monster: {monsterCount}";
+        monsterCountText.text = $"{monsterCount}";
     }
 
     public void UpdateEarnedGold(int gold)
     {
-        eranedGoldText.text = $"Gold: {gold}";
+        eranedGoldText.text = $"{gold}";
     }
 }
