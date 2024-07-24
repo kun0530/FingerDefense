@@ -33,7 +33,10 @@ public class FallState : IState
             controller.transform.position = new Vector3(controller.transform.position.x, controller.targetFallY, 0f);
 
             if (controller.Status.Data.Height <= startY - controller.targetFallY)
+            {
+                controller.dragSkill?.UseSkill();
                 controller.TakeDamage(controller.Status.CurrentHp);
+            }
             else
                 controller.TryTransitionState<PatrolState>();
         }

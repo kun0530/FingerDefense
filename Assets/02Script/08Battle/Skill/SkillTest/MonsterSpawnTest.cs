@@ -56,8 +56,7 @@ public class MonsterSpawnTest : MonoBehaviour
         var skill = SkillFactory.CreateSkill(monsterData.Skill, monster.gameObject);
         if (skill == null)
             return;
-        var attack = monster.gameObject.AddComponent<PlayerAttackBehavior>();
-        attack.skillAttack = skill;
+        monster.dragSkill = skill;
     }
 
     public void RemoveAllMonster()
