@@ -21,7 +21,7 @@ public class MonsterSpawnTest : MonoBehaviour
             Hp = 100f,
             DragType = 1,
             Element = 0,
-            MoveSpeed = 5f,
+            MoveSpeed = 2f,
             AtkDmg = 0f,
             AtkSpeed = 1f,
             Height = 3f,
