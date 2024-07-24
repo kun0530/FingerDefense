@@ -21,7 +21,7 @@ public class SkillData
     public float CastingTime { get; set; } // 캐스팅 도중 맞으면 스킬 증발 -> 프로토타입 이후에 고려
     // public int IsDot { get; set; } // 도트 스킬
     public int BuffId { get; set; }
-    public int AssetNo { get; set; }
+    public string AssetNo { get; set; }
 
     public override string ToString()
     {

@@ -14,9 +14,9 @@ public abstract class SkillType
     public AttackSkill attackSkill;
     protected IFindable secondaryTargeting;
 
-    protected int assetId;
+    protected string assetId;
 
-    public SkillType(IFindable secondaryTargeting, int assetId)
+    public SkillType(IFindable secondaryTargeting, string assetId)
     {
         this.secondaryTargeting = secondaryTargeting;
         this.assetId = assetId;

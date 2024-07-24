@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TargetSkill : SkillType
 {
-    public TargetSkill(IFindable secondaryTargeting, int assetId)
+    public TargetSkill(IFindable secondaryTargeting, string assetId)
     : base(secondaryTargeting, assetId) { }
 
     public override void UseSkill(GameObject primaryTarget)
