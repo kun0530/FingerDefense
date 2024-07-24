@@ -9,13 +9,28 @@ public class SkillTest : MonoBehaviour
     public SkillTable skillTable;
 
     public PlayerAttackBehavior playerAttackBehavior;
+    public MonsterSpawnTest monsterSpawnTest;
 
     private void Awake()
     {
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
     }
 
-    public void CreateSkill()
+    public void ApplySkillDataToPlayer()
+    {
+        var skill = CreateSkill();
+        playerAttackBehavior.baseSkill = skill;
+    }
+
+    public void ApplySkillDataToMonster()
+    {
+        if (int.TryParse(skillId.text, out var id))
+        {
+            monsterSpawnTest.monsterData.Skill = id;
+        }
+    }
+
+    public BaseSkill CreateSkill()
     {
         if (int.TryParse(skillId.text, out var id))
         {
@@ -23,15 +38,15 @@ public class SkillTest : MonoBehaviour
             if (skillData == null)
             {
                 Logger.Log("유효하지 않는 스킬 아이디입니다.");
-                return;
+                return null;
             }
             var skill = SkillFactory.CreateSkill(skillData, playerAttackBehavior.gameObject);
-            playerAttackBehavior.baseSkill = skill;
+            return skill;
         }
         else
         {
             Logger.Log("int값이 아닙니다.");
-            return;
+            return null;
         }
     }
 }

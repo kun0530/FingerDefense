@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterSpawnTest : MonoBehaviour
 {
     public MonsterController monsterPrefab;
-    private MonsterData monsterData;
+    public MonsterData monsterData { get; private set; }
     public Transform monsterPos;
     private Vector2 monsterSpawnPos;
     [SerializeField] private float monsterSpawnRadius = 2.5f;
@@ -15,7 +15,7 @@ public class MonsterSpawnTest : MonoBehaviour
         monsterData = new()
         {
             Hp = 100f,
-            DragType = 0,
+            DragType = 1,
             Element = 0,
             MoveSpeed = 5f,
             AtkDmg = 0f,
@@ -35,6 +35,12 @@ public class MonsterSpawnTest : MonoBehaviour
         var spawnPos = monsterSpawnPos + Random.insideUnitCircle * monsterSpawnRadius;
         var monster = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         monster.Status.Data = monsterData;
+
+        var skill = SkillFactory.CreateSkill(monsterData.Skill, monster.gameObject);
+        if (skill == null)
+            return;
+        var attack = monster.gameObject.AddComponent<PlayerAttackBehavior>();
+        attack.baseSkill = skill;
     }
 
     public void RemoveAllMonster()

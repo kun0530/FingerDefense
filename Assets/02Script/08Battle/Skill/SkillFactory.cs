@@ -72,4 +72,19 @@ public static class SkillFactory
 
         return baseSkill;
     }
+
+    public static BaseSkill CreateSkill(int skillId, GameObject gameObject)
+    {
+        var skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
+        var skillData = skillTable.Get(skillId);
+        if (skillData == null)
+        {
+            Logger.Log("유효하지 않는 스킬 아이디입니다.");
+            return null;
+        }
+        else
+        {
+            return CreateSkill(skillData, gameObject);
+        }
+    }
 }
