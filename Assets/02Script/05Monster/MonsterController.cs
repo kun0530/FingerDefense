@@ -240,8 +240,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private void UpdateHpBar()
     {
-        if (!hpBar || Status == null)
+        if (!hpBar)
+        {
+            Logger.LogError($"HP Bar가 할당되었는지 확인해주세요: {gameObject.name}");
             return;
+        }
 
         var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;

@@ -223,6 +223,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void UpdateHpBar()
     {
+        if (!hpBar)
+        {
+            Logger.LogError($"HP Bar가 할당되었는지 확인해주세요: {gameObject.name}");
+            return;
+        }
+
         var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;
     }
