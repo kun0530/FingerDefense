@@ -85,11 +85,22 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
             {
                 rect.DOScale(new Vector3(scale, scale, 1), animationDuration).SetEase(Ease.InOutQuad);
             }
+            bool isInteractable = (distanceFromCenter < 1.0f);
+            SetButtonsInteractable(rect, isInteractable);
             
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0); 
+        }
+
+        void SetButtonsInteractable(Transform slot, bool isInteractable)
+        {
+            Button[] buttons = slot.GetComponentsInChildren<Button>();
+            foreach (var button in buttons)
+            {
+                button.interactable = isInteractable;
+            }
         }
     }
 }

@@ -145,11 +145,11 @@ public class PlayerCharacterSpawner : MonoBehaviour
         var positionIndex = spawnClass switch
         {
             // 전열
-            0 => activePlayerCharacters[0] == null || !activePlayerCharacters[0].gameObject.activeSelf == true ? 0 : 1,
+            0 => activePlayerCharacters[0] == null || !activePlayerCharacters[0].gameObject.activeSelf ? 0 : 1,
             // 중열
-            1 => activePlayerCharacters[2] == null || !activePlayerCharacters[2].gameObject.activeSelf == true ? 2 : 3,
+            1 => activePlayerCharacters[2] == null || !activePlayerCharacters[2].gameObject.activeSelf ? 2 : 3,
             // 후열
-            2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4].gameObject.activeSelf == true ? 4 : 5,
+            2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4].gameObject.activeSelf ? 4 : 5,
             _ => -1
         };
         

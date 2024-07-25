@@ -19,6 +19,7 @@ public class GameTutorialManager : MonoBehaviour
     private GameManager gameManager;
     private ModalWindow currentModal;
     private Action onComplete;
+
     
     public static event Action OnTutorialComplete;
     

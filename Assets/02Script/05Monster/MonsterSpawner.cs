@@ -31,7 +31,7 @@ public class MonsterSpawner : MonoBehaviour
     public HashSet<int> monsters { get; private set; } = new();
     
     //TO-DO:Prototype 이후 바로 삭제 예정
-    private bool isTutorialCompleted = false; 
+    public bool isTutorialCompleted = false; 
     
     private void Awake()
     {
