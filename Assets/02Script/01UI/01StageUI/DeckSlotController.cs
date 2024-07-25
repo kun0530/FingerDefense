@@ -27,13 +27,17 @@ public class DeckSlotController : MonoBehaviour
         CreateCharacterSlots();
         CreateFilteringSlots();
         
+        LoadCharacterSelection(); 
+        
         startButton.onClick.AddListener(() =>
         {
+            SaveCharacterSelection(); // 캐릭터 선택 상태 저장
             SceneManager.LoadScene(2);
         });
+        
         closeButton.onClick.AddListener(() =>
         {
-            //할당 되어있는 값을 초기화 시킨다.
+            // 할당 되어있는 값을 초기화 시킨다.
             Variables.LoadTable.StageId = 0;
             Logger.Log("스테이지 선택 화면으로 이동합니다.");
         });
@@ -77,7 +81,7 @@ public class DeckSlotController : MonoBehaviour
                 return;
             }
             
-            if(addedCharacters.Count >= 8)
+            if (addedCharacters.Count >= 8)
             {
                 Logger.Log("최대 8개까지만 추가 가능합니다.");
                 return;
@@ -186,5 +190,42 @@ public class DeckSlotController : MonoBehaviour
         {
             slot.ChoicePanel.SetActive(true);
         }
+    }
+
+    private void SaveCharacterSelection()
+    {
+        for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
+        {
+            PlayerPrefs.SetInt($"CharacterId_{i}", Variables.LoadTable.characterIds[i]);
+        }
+        PlayerPrefs.Save();
+    }
+
+    private void LoadCharacterSelection()
+    {
+        for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
+        {
+            Variables.LoadTable.characterIds[i] = PlayerPrefs.GetInt($"CharacterId_{i}", 0);
+        }
+
+        // 불러온 캐릭터 ID를 슬롯에 설정
+        for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
+        {
+            int characterId = Variables.LoadTable.characterIds[i];
+            if (characterId != 0)
+            {
+                var characterData = playerCharacterTable.Get(characterId);
+                var slot = characterSlots[i];
+                slot.SetCharacterSlot(characterData);
+                slot.ChoicePanel.SetActive(false);
+                addedCharacters.Add(characterId);
+                var originalSlot = filterSlots.First(s => s.characterData.Id == characterId);
+                originalSlot.ChoiceButton.interactable = false;
+                activeChoicePanelSlots.Add(originalSlot);
+            }
+        }
+        
+        UpdateChoicePanels();
+        SortCharacterSlots();
     }
 }
