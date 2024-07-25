@@ -76,127 +76,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &1696730861203365286
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 973525866149312694}
-  - component: {fileID: 5712149600112283823}
-  - component: {fileID: 1318304802893822860}
-  - component: {fileID: 2883685590114927875}
-  m_Layer: 0
-  m_Name: Spine GameObject (angelknight_character_003_archer)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &973525866149312694
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696730861203365286}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3517628997838215799}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5712149600112283823
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696730861203365286}
-  m_Mesh: {fileID: 0}
---- !u!23 &1318304802893822860
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696730861203365286}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b8fbf48af8ad4264ab77b238da4ef2e2, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2883685590114927875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696730861203365286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: 40f3f605dffee8b43b60ff17107acc0c, type: 2}
-  initialSkinName: weapon_015
-  initialFlipX: 0
-  initialFlipY: 0
-  updateWhenInvisible: 3
-  separatorSlotNames: []
-  zSpacing: 0
-  useClipping: 1
-  immutableTriangles: 0
-  pmaVertexColors: 1
-  clearStateOnDisable: 0
-  tintBlack: 0
-  singleSubmesh: 0
-  fixDrawOrder: 0
-  addNormals: 0
-  calculateTangents: 0
-  maskInteraction: 0
-  maskMaterials:
-    materialsMaskDisabled: []
-    materialsInsideMask: []
-    materialsOutsideMask: []
-  disableRenderingOnOverride: 1
-  _animationName: idle
-  loop: 0
-  timeScale: 0.2
 --- !u!1 &4560492578800993968
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +109,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9208557488634747550}
-  - {fileID: 973525866149312694}
   - {fileID: 7662757705906887516}
   - {fileID: 35371930716996488}
   m_Father: {fileID: 0}
@@ -247,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a6e9bbba294ce4299e557351713914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawner: {fileID: 0}
   hpBar: {fileID: 3005572709550691465}
   mosnterPosition:
   - {fileID: 6542777269241401512}
@@ -299,9 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c63dbb601ac47b49a968b9afbf64aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonAnimation:
-  - {fileID: 5677024000604271162}
-  - {fileID: 2883685590114927875}
+  skinNames:
+  - body_036
+  - weapon_015
   characterAnimClip:
   - {fileID: 11400000, guid: 27d765f4c0651774092a62b9e7c4432a, type: 2}
   - {fileID: 11400000, guid: 4377f68987d524c4e82be183ffb7edf6, type: 2}
@@ -606,7 +485,7 @@ MonoBehaviour:
   disableRenderingOnOverride: 1
   _animationName: idle
   loop: 0
-  timeScale: 0.2
+  timeScale: 1
 --- !u!1001 &5036096136128055851
 PrefabInstance:
   m_ObjectHideFlags: 0

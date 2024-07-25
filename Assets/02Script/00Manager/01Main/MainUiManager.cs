@@ -16,10 +16,15 @@ public class MainUiManager : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
         stageUITutorialManager = GameObject.FindGameObjectWithTag("Tutorial")?.GetComponentInChildren<StageUITutorialManager>();
         
-        MainUI.SetActive(true);
-        StageUI.SetActive(false);
+        MainUI.SetActive(false);
+        StageUI.SetActive(true);
         DeckUI.SetActive(false);
         QuitUI.gameObject.SetActive(false);
+        
+        if(gameManager != null && gameManager.StageChoiceTutorialCheck)
+        {
+            if (stageUITutorialManager != null) stageUITutorialManager.StartTutorial(() => { });
+        }
     }
     
     
