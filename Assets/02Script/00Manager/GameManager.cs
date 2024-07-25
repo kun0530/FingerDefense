@@ -2,12 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//TO-DO Prototype 이후 삭제 예정
 public class GameManager : MonoBehaviour
 {
     //public GameUiManager GameUiManager { get; private set; }
     //public MainUiManager MainUiManager { get; private set; }
 
     public GameTutorialManager GameTutorial; 
+    public MonsterSpawner monsterSpawner;
+    
     
     //To-Do : 프로토타입 용 계속 뜨는거 방지용 변수, 뒤에 Json으로 옮기고 삭제 예정
     public bool StageChoiceTutorialCheck
@@ -35,12 +38,26 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
-        if(!GameTutorialCheck)
+        if (GameTutorial == null)
+        {
+            Logger.Log("GameTutorialManager is null, 삭제 예정");
+        }
+        if (monsterSpawner == null)
+        {
+            Logger.Log("MonsterSpawner is null, 삭제 예정");
+        }
+        
+        if(GameTutorial && !GameTutorialCheck)
         {
             GameTutorial.StartTutorial(() =>
             {
                 Logger.Log("게임 튜토리얼 시작");
             });
+        }
+
+        if (GameTutorial && GameTutorialCheck)
+        {
+            monsterSpawner.isTutorialCompleted = true;    
         }
     }
 

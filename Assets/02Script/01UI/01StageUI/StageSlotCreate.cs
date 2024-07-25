@@ -1,6 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum PanelState
+{
+    Active,
+    Inactive
+}
 
 public class StageSlotCreate : MonoBehaviour
 {
@@ -69,4 +76,5 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetManagers(gameManager, tutorialManager);
         }
     }
+    
 }
