@@ -16,6 +16,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
     public GameObject playerUICharacterPrefab;
     public RectTransform playerUICharacterParent;
     
+    private Button[] characterButtons = new Button[8];
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
@@ -67,6 +68,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         if (button != null)
         {
             button.onClick.AddListener(() => SpawnPlayerCharacter(index));
+            characterButtons[index] = button;
         }
     }
 
@@ -119,9 +121,12 @@ public class PlayerCharacterSpawner : MonoBehaviour
             Logger.LogError("해당 캐릭터 데이터가 없습니다.");
             return;
         }
-
-        if (playerCharacter == null) // To-Do: 리스폰 쿨타임 조건 추가
+        if (playerCharacter.gameObject.activeSelf)
+        {
+            Logger.LogError("캐릭터가 이미 소환되었습니다.");
             return;
+        }
+       
 
         var spawnClass = playerCharacter.Status.Data.Class;
         Logger.Log($"Spawning character with Class {spawnClass}");
@@ -129,24 +134,17 @@ public class PlayerCharacterSpawner : MonoBehaviour
         var positionIndex = spawnClass switch
         {
             // 전열
-            0 => activePlayerCharacters[0] == null || !activePlayerCharacters[0]?.gameObject.activeSelf == true ? 0 : 1,
+            0 => activePlayerCharacters[0] == null || !activePlayerCharacters[0].gameObject.activeSelf == true ? 0 : 1,
             // 중열
-            1 => activePlayerCharacters[2] == null || !activePlayerCharacters[2]?.gameObject.activeSelf == true ? 2 : 3,
+            1 => activePlayerCharacters[2] == null || !activePlayerCharacters[2].gameObject.activeSelf == true ? 2 : 3,
             // 후열
-            2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4]?.gameObject.activeSelf == true ? 4 : 5,
+            2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4].gameObject.activeSelf == true ? 4 : 5,
             _ => -1
         };
         
-        //이미 배치된 캐릭터 이거나 각 해당하는 열에 2개 이상 존재할 경우 배치 불가
-        if (activePlayerCharacters[positionIndex] != null)
+        if (positionIndex == -1 || activePlayerCharacters[positionIndex] != null)
         {
             Logger.LogError("해당 위치에 이미 캐릭터가 배치되어 있습니다.");
-            return;
-        }
-        
-        if (positionIndex == -1 || positionIndex >= spawnPositions.Length)
-        {
-            Logger.LogError("해당 위치에 캐릭터를 배치할 수 없습니다.");
             return;
         }
 
@@ -157,6 +155,10 @@ public class PlayerCharacterSpawner : MonoBehaviour
         playerCharacter.Status.Init();
         playerCharacter.gameObject.SetActive(true);
         
+        if (characterButtons[index] != null)
+        {
+            characterButtons[index].interactable = false;
+        }
     }
 
     public void RemoveActiveCharacter(PlayerCharacterController character)
@@ -167,6 +169,14 @@ public class PlayerCharacterSpawner : MonoBehaviour
             {
                 activePlayerCharacters[i].gameObject.SetActive(false);
                 activePlayerCharacters[i] = null;
+            }
+            
+            for (var j = 0; j < playerCharacters.Length; j++)
+            {
+                if (playerCharacters[j] == character && characterButtons[j])
+                {
+                    characterButtons[j].interactable = true;
+                }
             }
         }
     }
