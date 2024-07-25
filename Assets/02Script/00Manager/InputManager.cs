@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-1)]
 public class InputManager : MonoBehaviour

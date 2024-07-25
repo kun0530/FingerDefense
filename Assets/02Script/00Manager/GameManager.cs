@@ -4,8 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; set; }
-
     //public GameUiManager GameUiManager { get; private set; }
     //public MainUiManager MainUiManager { get; private set; }
 
@@ -30,15 +28,6 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
         
     }
 

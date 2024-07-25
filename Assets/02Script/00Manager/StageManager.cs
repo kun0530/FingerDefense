@@ -97,5 +97,6 @@ public class StageManager : MonoBehaviour
     public void LobbyScene()
     {
         SceneManager.LoadScene(1);
+        Time.timeScale = 1f;
     }
 }

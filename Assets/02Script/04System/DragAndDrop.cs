@@ -1,8 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Spine.Unity;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DragAndDrop : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class DragAndDrop : MonoBehaviour
 
     private static readonly RaycastHit2D[] hits = new RaycastHit2D[10];
     private InputManager inputManager;
+
     
     private void Awake()
     {
@@ -40,12 +42,19 @@ public class DragAndDrop : MonoBehaviour
     {
         if (context.control.device is Mouse or Touchscreen)
         {
+            
             if (!IsDragging)
             {
                 var mouseScreenPos = GetPointerPosition();
                 var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
                 LayerMask mask = LayerMask.GetMask("Monster");
-
+                
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    Logger.Log("UI is clicked!");
+                    return;
+                }
+                    
                 var hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
 
                 GameObject highestSortingOrderObject = null;
@@ -136,36 +145,10 @@ public class DragAndDrop : MonoBehaviour
     private void DropObject()
     {
         IsDragging = false;
-        // FallObject(draggingObject, targetOriginY).Forget();
         targetOriginY = 0f;
         draggingObject = null;
     }
-
-    private async UniTask FallObject(GameObject target, float targetHeight)
-    {
-        const float gravity = -9.8f;
-        var velocity = 0f;
-
-        while (target != null)
-        {
-            if (target.transform.position.y <= targetHeight)
-            {
-                var position = target.transform.position;
-                position = new Vector3(position.x, targetHeight, position.z);
-                target.transform.position = position;
-                if (target.TryGetComponent<MonsterController>(out var controller))
-                {
-                    controller.TryTransitionState<FallState>();
-                }
-                break;
-            }
-
-            velocity += gravity * Time.deltaTime;
-            target.transform.position += new Vector3(0, velocity * Time.deltaTime, 0);
-            await UniTask.Yield();
-        }
-    }
-
+    
     private async UniTask AutoDropAfterTime(float delay)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(delay));
@@ -175,4 +158,6 @@ public class DragAndDrop : MonoBehaviour
             DropObject();
         }
     }
+    
+    
 }

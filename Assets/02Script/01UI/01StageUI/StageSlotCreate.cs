@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,11 +17,21 @@ public class StageSlotCreate : MonoBehaviour
     
     private void Start()
     {
-        stageTable ??= DataTableManager.Get<StageTable>(DataTableIds.Stage);
-        assetListTable ??= DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
-        stringTable ??= DataTableManager.Get<StringTable>(DataTableIds.String);
+        
+    }
+
+    private void OnEnable()
+    {
+        if (stageTable == null)
+        {
+            stageTable = DataTableManager.Get<StageTable>(DataTableIds.Stage);
+            assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
+            stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
+        }
+
         gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
         tutorialManager = GameObject.FindGameObjectWithTag("Tutorial")?.GetComponentInChildren<DeckUITutorialManager>();
+
         CreateStageSlots();
     }
 
