@@ -8,7 +8,6 @@ public class PlayerAttackBehavior : MonoBehaviour
     public BaseSkill normalAttack;
     public BaseSkill skillAttack;
 
-    private Queue<BaseSkill> readySkills = new();
     private BaseSkill currentAttack;
 
     private CharacterSpineAni characterAni;
@@ -19,45 +18,35 @@ public class PlayerAttackBehavior : MonoBehaviour
     private void Awake()
     {
         characterAni = GetComponent<CharacterSpineAni>();
+        characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         UpdateSkill(normalAttack);
         UpdateSkill(skillAttack);
-
-        UseReadySkill();
     }
 
     private void UpdateSkill(BaseSkill skill)
     {
-        if (skill == null || skill.IsSkillReady)
+        if (skill == null)
             return;
 
         skill.TimerUpdate();
 
-        if (skill.IsSkillReady)
-        {
-            readySkills.Enqueue(skill);
-        }
-    }
-
-    private void UseReadySkill()
-    {
         if (!isAnimationEnded)
             return;
 
-        if (currentAttack != null && !currentAttack.IsSkillCompleted)
-            return;
-
-        if (readySkills.Count != 0)
+        if (skill.IsSkillReady)
         {
-            currentAttack = readySkills.Dequeue();
-            currentAttack.UseSkill();
-            attactTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
-            if (attactTrackEntry != null)
-                attactTrackEntry.Complete += AttackEnd;
-            isAnimationEnded = false;
+            if (skill.UseSkill())
+            {
+                attactTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
+                if (attactTrackEntry != null)
+                    attactTrackEntry.Complete += AttackEnd;
+                currentAttack = skill;
+                isAnimationEnded = false;
+            }
         }
     }
 
