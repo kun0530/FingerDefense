@@ -41,19 +41,24 @@ public class PlayerAttackBehavior : MonoBehaviour
         {
             if (skill.UseSkill())
             {
-                attactTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
-                if (attactTrackEntry != null)
-                    attactTrackEntry.Complete += AttackEnd;
                 currentAttack = skill;
-                isAnimationEnded = false;
+                SkillStart();
             }
         }
     }
 
-    private void AttackEnd(TrackEntry entry)
+    private void SkillStart()
+    {
+        attactTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
+        if (attactTrackEntry != null)
+            attactTrackEntry.Complete += SkillEnd;
+        isAnimationEnded = false;
+    }
+
+    private void SkillEnd(TrackEntry entry)
     {
         if (attactTrackEntry != null)
-            attactTrackEntry.Complete -= AttackEnd;
+            attactTrackEntry.Complete -= SkillEnd;
         characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
 
         isAnimationEnded = true;
