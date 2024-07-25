@@ -85,6 +85,18 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         Status = new MonsterStatus(buffHandler);
 
         defaultRightScale = isDirectedRight ? transform.localScale.x : -transform.localScale.x;
+
+        stateMachine = new StateMachine<MonsterController>(this);
+
+        var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
+        
+        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게(Death) 변경
+        stateMachine.AddState(new DragState(this));
+        stateMachine.AddState(new FallState(this));
+        stateMachine.AddState(new MoveState(this));
+        stateMachine.AddState(new PatrolState(this, findBehavior));
+        stateMachine.AddState(new ChaseState(this));
+        stateMachine.AddState(new AttackState(this));
     }
 
     private void OnEnable()
@@ -107,26 +119,13 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         var castleGo = GameObject.FindWithTag(Defines.Tags.CASTLE_TAG);
         moveTarget = castleGo.transform;
 
-        stateMachine = new StateMachine<MonsterController>(this);
-
-        // var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
-        var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
-        
-        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게(Death) 변경
-        stateMachine.AddState(new DragState(this));
-        stateMachine.AddState(new FallState(this));
-        stateMachine.AddState(new MoveState(this));
-        stateMachine.AddState(new PatrolState(this, findBehavior));
-        stateMachine.AddState(new ChaseState(this));
-        stateMachine.AddState(new AttackState(this));
-
         stateMachine.Initialize<MoveState>();
     }
 
     public void ResetMonsterData()
     {
         isDead = false;
-
+        
         stateMachine.TransitionTo<MoveState>();
 
         CanPatrol = false;
