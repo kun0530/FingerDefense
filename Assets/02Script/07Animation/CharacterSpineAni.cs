@@ -1,27 +1,23 @@
 using UnityEngine;
 using Spine.Unity;
 using Spine;
+using System;
+using System.Collections.Generic;
 
-[RequireComponent(typeof(PlayerCharacterController))]
 public class CharacterSpineAni : MonoBehaviour
-
 {
-    public SkeletonAnimation[] skeletonAnimation;
+    // public SkeletonAnimation[] skeletonAnimations;
+    private SkeletonAnimation skeletonAnimation;
+    public string[] skinNames;
     public AnimationReferenceAsset[] characterAnimClip;
 
     private Spine.AnimationState spineAnimationState;
-    private PlayerCharacterController characterController;
 
     private CharacterState characterState;
     private string currentAnimation;
 
     [Tooltip("케이 캐릭터의 방패에 대한 레이어를 담아두는 변수")]
     private int originalSortingOrder;
-    
-    //delegate로 데미지를 주는 이벤트를 받아서 처리할 수 있도록 함
-    public delegate void OnTakeDamageDelegate();
-    public event OnTakeDamageDelegate OnTakeDamage;
-    
     
     public enum CharacterState
     {
@@ -35,139 +31,148 @@ public class CharacterSpineAni : MonoBehaviour
 
     private void Awake()
     {
-        skeletonAnimation = GetComponentsInChildren<SkeletonAnimation>();
-        if (skeletonAnimation.Length > 2)
-        {
-            originalSortingOrder = skeletonAnimation[2].GetComponent<MeshRenderer>().sortingOrder;
-        }
-        else
-        {
-            Logger.LogWarning("해당 캐릭터는 방패가 없습니다.");
-        }
-        
-        
+        skeletonAnimation = GetComponentInChildren<SkeletonAnimation>();
+        CombineSkins();
+        spineAnimationState = skeletonAnimation.AnimationState;
     }
 
-    private void Start()
-    {
-        characterController = TryGetComponent(out PlayerCharacterController controller) ? controller : null;
-        
-        if (skeletonAnimation.Length > 2)
-        {
-            skeletonAnimation[2].AnimationState.Event += HandleSpineEvent;
-            skeletonAnimation[2].AnimationState.Complete += HandleCompleteAnimation;
-        }
-        else
-        {
-            Logger.LogWarning("해당 캐릭터는 방패가 없습니다.");
-        }
-        
-        
-        
-        OnTakeDamage += HandleTakeDamage;
-    }
+    // private void HandleSpineEvent(TrackEntry trackEntry, Spine.Event e)
+    // {
+    //     switch (currentAnimation)
+    //     {
+    //         case "ATTACK":
+    //             {
+    //                 if (e.Data.Name == "End")
+    //                 {
+    //                     SetAnimation(CharacterState.IDLE, true, 0.5f);
+                        
+    //                     if (skeletonAnimations.Length > 2)
+    //                     {
+    //                         skeletonAnimations[2].TryGetComponent(out MeshRenderer renderer);
+    //                         renderer.sortingOrder = originalSortingOrder;
+    //                     }
+    //                 }
+    //             }
+    //             break;
 
-    private void HandleSpineEvent(TrackEntry trackEntry, Spine.Event e)
-    {
-        switch (currentAnimation)
-        {
-            case "HIT":
-            case "ATTACK":
-            {
-                if (e.Data.Name == "End")
-                {
-                    SetAnimation(CharacterState.IDLE, true, 0.5f);
-                    
-                    if (skeletonAnimation.Length > 2)
-                    {
-                        skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
-                        renderer.sortingOrder = originalSortingOrder;
-                    }
-                    
-                }
-            }
-                break;
+    //         case "HIT":
+    //             {
+    //                 if (e.Data.Name == "End")
+    //                 {
+    //                     SetAnimation(CharacterState.IDLE, true, 0.5f);
+                        
+    //                     if (skeletonAnimations.Length > 2)
+    //                     {
+    //                         skeletonAnimations[2].TryGetComponent(out MeshRenderer renderer);
+    //                         renderer.sortingOrder = originalSortingOrder;
+    //                     }
+    //                 }
+    //             }
+    //             break;
             
-            case "PASSOUT":
-            {
-                if (e.Data.Name == "End")
-                {
-                    characterController.IsDead = true;
-                }
-            }
-                break;
-        }
-    }
-    private void HandleCompleteAnimation(TrackEntry trackEntry)
+    //         case "PASSOUT":
+    //             {
+    //                 if (e.Data.Name == "End")
+    //                 {
+    //                     // characterController.IsDead = true;
+    //                 }
+    //             }
+    //             break;
+    //     }
+    // }
+
+    public void CombineSkins()
     {
-        if (currentAnimation == "ATTACK")
+        Skin combinedSkin = new Skin("Combined_Skin");
+
+        foreach (var skinName in skinNames)
         {
-            OnTakeDamage?.Invoke();
+            var skin = skeletonAnimation.Skeleton.Data.FindSkin(skinName);
+            if (skin != null)
+                combinedSkin.AddSkin(skin);
+            else
+                Logger.LogError($"Skin is not found: {skinName}");
         }
-    }
-    private void HandleTakeDamage()
-    {
-        Logger.Log("Take Damage");
-        characterController.TakeDamage(10f);
+
+        // 결합된 스킨 적용
+        // skeletonAnimations.Skeleton.SetSkin(combinedSkin);
+        // skeletonAnimations.Skeleton.SetSlotsToSetupPose();
+
+        // skeletonAnimation.Skeleton.SetSkin((Skin)null);
+        // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+
+        skeletonAnimation.Skeleton.SetSkin(combinedSkin);
+        skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+
+        // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
     }
 
-    private void Update()
-    {
-        // if (!characterController)
-        //     return;
-    }
+    // public void SetAnimation(CharacterState state, bool loop, float timeScale)
+    // {
+    //     var clip = characterAnimClip[(int)state];
+    //     if (clip.name.Equals(currentAnimation))
+    //         return;
 
-    public void SetAnimation(CharacterState state, bool loop, float timeScale)
-    {
-        var clip = characterAnimClip[(int)state];
-        if (clip.name.Equals(currentAnimation))
-            return;
+    //     foreach (var skeleton in skeletonAnimations)
+    //     {
+    //         skeleton.AnimationState.SetAnimation(0, clip, loop);
+    //         skeleton.timeScale = timeScale;
+    //     }
 
-        foreach (var skeleton in skeletonAnimation)
+    //     currentAnimation = clip.name;
+    //     // SetCharacterState(state);
+    // }
+
+    public TrackEntry SetAnimation(CharacterState state, bool loop, float timeScale)
+    {
+        if (characterAnimClip.Length <= (int)state)
         {
-            skeleton.AnimationState.SetAnimation(0, clip, loop);
-            skeleton.timeScale = timeScale;
+            Logger.LogError("해당 애니메이션 클립이 없습니다.");
+            return null;
         }
+        
+        if (currentAnimation == state.ToString())
+            return null;
+        
+        currentAnimation = state.ToString();
+        var trackEntry = spineAnimationState.SetAnimation(0, characterAnimClip[(int)state], loop);
+        trackEntry.TimeScale = timeScale;
 
-        currentAnimation = clip.name;
-        SetCharacterState(state);
+        return trackEntry;
     }
 
-    private void SetCharacterState(CharacterState state)
-    {
-        switch (state)
-        {
-            case CharacterState.HIT:
-            {
-                if (skeletonAnimation.Length > 2)
-                {
-                    skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
-                    renderer.sortingOrder = 1;
-                }
-            }
-                break;
-            case CharacterState.ATTACK:
-            {
-                if (skeletonAnimation.Length > 2)
-                {
-                    skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
-                    renderer.sortingOrder = -1;
-                }
+    // private void SetCharacterState(CharacterState state)
+    // {
+    //     switch (state)
+    //     {
+    //         case CharacterState.HIT:
+    //         {
+    //             if (skeletonAnimations.Length > 2)
+    //             {
+    //                 skeletonAnimations[2].TryGetComponent(out MeshRenderer renderer);
+    //                 renderer.sortingOrder = 1;
+    //             }
+    //         }
+    //             break;
+    //         case CharacterState.ATTACK:
+    //         {
+    //             if (skeletonAnimations.Length > 2)
+    //             {
+    //                 skeletonAnimations[2].TryGetComponent(out MeshRenderer renderer);
+    //                 renderer.sortingOrder = -1;
+    //             }
 
-            }
-                break;
-            case CharacterState.PASSOUT:
-            {
-                if (skeletonAnimation.Length > 2)
-                {
-                    skeletonAnimation[2].TryGetComponent(out MeshRenderer renderer);
-                    renderer.sortingOrder = -1;
-                }
-            }
-                break;
-            }
-        }
-    }
-
-    
-
+    //         }
+    //             break;
+    //         case CharacterState.PASSOUT:
+    //         {
+    //             if (skeletonAnimations.Length > 2)
+    //             {
+    //                 skeletonAnimations[2].TryGetComponent(out MeshRenderer renderer);
+    //                 renderer.sortingOrder = -1;
+    //             }
+    //         }
+    //             break;
+    //     }
+    // }
+}

@@ -4,39 +4,38 @@ using UnityEngine;
 
 public class ChaseState : IState
 {
-    private MonsterController monster;
+    private MonsterController controller;
 
-    public ChaseState(MonsterController monster)
+    public ChaseState(MonsterController controller)
     {
-        this.monster = monster;
+        this.controller = controller;
     }
 
     public void Enter()
     {
-        
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.currentMoveSpeed);
     }
 
     public void Update()
     {
-        if (monster.attackTarget == null)
+        if (controller.attackTarget == null)
         {
-            monster.TryTransitionState<PatrolState>();
+            controller.TryTransitionState<PatrolState>();
             return;
         }
 
-        var direction = (monster.attackMoveTarget.position - monster.transform.position).normalized;
-        monster.transform.position += direction * monster.Status.currentMoveSpeed * Time.deltaTime;
-        monster.SetFlip(direction.x > 0);
-        if (Vector2.Distance(monster.transform.position, monster.attackMoveTarget.position) < 0.1)
+        var direction = (controller.attackMoveTarget.position - controller.transform.position).normalized;
+        controller.transform.position += direction * controller.Status.currentMoveSpeed * Time.deltaTime;
+        controller.SetFlip(direction.x > 0);
+        if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) < 0.1)
         {
-            monster.transform.position = monster.attackMoveTarget.position;
-            monster.TryTransitionState<AttackState>();
+            controller.transform.position = controller.attackMoveTarget.position;
+            controller.TryTransitionState<AttackState>();
             return;
         }
     }
 
     public void Exit()
     {
-        
     }
 }

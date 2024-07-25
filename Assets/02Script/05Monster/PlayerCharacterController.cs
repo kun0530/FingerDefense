@@ -72,6 +72,9 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void FixedUpdate()
     {
+        if (Status.Data == null)
+            return;
+            
         var findBehavior = new FindingTargetInCircle(transform, Status.Data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
         var nearCollider = findBehavior.FindTarget();
         if (!nearCollider)

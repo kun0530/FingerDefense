@@ -1,6 +1,7 @@
 using Spine;
 using UnityEngine;
 using Spine.Unity;
+using System;
 
 
 [RequireComponent(typeof(MonsterController))]
@@ -15,7 +16,9 @@ public class MonsterSpineAni : MonoBehaviour
     
     private MonsterState monsterState;
     private string currentAnimation;
-    
+
+    public event Action monsterDeathEvent;
+
     public enum MonsterState
     {
         ATTACK,
@@ -29,68 +32,31 @@ public class MonsterSpineAni : MonoBehaviour
     private void Awake()
     {
         skeletonAnimation = GetComponentInChildren(typeof(SkeletonAnimation)) as SkeletonAnimation;
+
+        monsterController = TryGetComponent(out MonsterController controller) ? controller : null;
+        spineAnimationState = skeletonAnimation.AnimationState;
     }
 
     private void Start()
     {
-        monsterController = TryGetComponent(out MonsterController controller) ? controller : null;
-        spineAnimationState = skeletonAnimation.AnimationState;
-
-        SetAnimation(MonsterState.IDLE, true, 0.3f);
-        
+        // SetAnimation(MonsterState.IDLE, true, 0.3f);
     }
     
-    public void SetAnimation(MonsterState state, bool loop, float timeScale)
+    public TrackEntry SetAnimation(MonsterState state, bool loop, float timeScale)
     {
         if (monsterAnimClip.Length <= (int)state)
         {
             Logger.LogError("해당 애니메이션 클립이 없습니다.");
-            return;
+            return null;
         }
         
         if (currentAnimation == state.ToString())
-            return;
+            return null;
         
         currentAnimation = state.ToString();
-        spineAnimationState.SetAnimation(0, monsterAnimClip[(int)state], loop).TimeScale = timeScale;
+        var trackEntry = spineAnimationState.SetAnimation(0, monsterAnimClip[(int)state], loop);
+        trackEntry.TimeScale = timeScale;
+
+        return trackEntry;
     }
-
-    private void Update()
-    {
-        // if (monsterController == null)
-        //     return;
-        
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SetAnimation(MonsterState.IDLE, true, 0.3f);
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SetAnimation(MonsterState.WALK, true, 0.3f);
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SetAnimation(MonsterState.ATTACK, true, 0.3f);
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            SetAnimation(MonsterState.BESHOT, true, 0.3f);
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            SetAnimation(MonsterState.LAYDOWN_AFTER, true, 0.3f);
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            SetAnimation(MonsterState.DEAD, true, 0.3f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            
-            
-        }
-    }
-
-    
 }

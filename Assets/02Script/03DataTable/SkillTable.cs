@@ -12,7 +12,7 @@ public class SkillData
     public string Name { get; set; }
     public int Target { get; set; } // 0: 플레이어, 1: 몬스터 -> Center가 본인(0)인 경우를 제외하면 1차 타겟과 2차 타겟은 동일
     public int Projectile { get; set; } // 0: 근거리(즉발), 1: 원거리(투사체)
-    public int Center { get; set; } // 0: 본인, 0 >: 타겟 -> 1차 타겟팅
+    public float Center { get; set; } // 0: 본인, 0 >: 타겟 -> 1차 타겟팅
     public int Type { get; set; } // 0: 단일, 1: 범위, 2: 장판
     public float Range { get; set; } // 스킬 범위 - 2차 타겟팅(범위, 장판)
     public float Damage { get; set; }
@@ -21,7 +21,7 @@ public class SkillData
     public float CastingTime { get; set; } // 캐스팅 도중 맞으면 스킬 증발 -> 프로토타입 이후에 고려
     // public int IsDot { get; set; } // 도트 스킬
     public int BuffId { get; set; }
-    public int AssetNo { get; set; }
+    public string AssetNo { get; set; }
 
     public override string ToString()
     {

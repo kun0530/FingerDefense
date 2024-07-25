@@ -1,75 +1,76 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SkillTest : MonoBehaviour
 {
-    public PlayerCharacterController playerCharacterPrefab;
-    private PlayerCharacterData playerCharacterData;
-    public Transform characterPos;
-    private PlayerCharacterController currentPlayerCharacter;
+    public TMP_InputField skillId;
+    public TMP_InputField normalAttackId;
+    public SkillTable skillTable;
 
-    public MonsterController monsterPrefab;
-    private MonsterData monsterData;
-    public Transform monsterPos;
+    public PlayerAttackBehavior playerAttackBehavior;
+    public MonsterSpawnTest monsterSpawnTest;
 
     private void Awake()
     {
-        playerCharacterData = new()
+        skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
+    }
+
+    public void ApplySkillDataToPlayer()
+    {
+        var skill = CreateSkill();
+        var normalAttack = CreateNoramalAttack();
+
+        playerAttackBehavior.skillAttack = skill;
+        playerAttackBehavior.normalAttack = normalAttack;
+    }
+
+    public void ApplySkillDataToMonster()
+    {
+        if (int.TryParse(skillId.text, out var id))
         {
-            Hp = 100f,
-            Element = 0,
-            Skill1 = 0,
-            Skill2 = 0,
-            // 사용하지 않음
-            AtkDmg = 0f,
-            AtkSpeed = 1f,
-            AtkRange = 3f
-        };
+            monsterSpawnTest.monsterData.Skill = id;
+        }
+    }
 
-        monsterData = new()
+    public BaseSkill CreateSkill()
+    {
+        if (int.TryParse(skillId.text, out var id))
         {
-            Hp = 100f,
-            DragType = 0,
-            Element = 0,
-            MoveSpeed = 5f,
-            AtkDmg = 0f,
-            AtkSpeed = 1f,
-            Height = 3f,
-            Skill = 0
-        };
-    }
-
-    public void CreatePlayerCharacter()
-    {
-        if (currentPlayerCharacter)
-            return;
-
-        var playerCharacter = Instantiate(playerCharacterPrefab, characterPos.position, Quaternion.identity);
-        playerCharacter.Status.Data = playerCharacterData;
-        currentPlayerCharacter = playerCharacter;
-    }
-
-    public void RemovePlayerCharacter()
-    {
-        if (!currentPlayerCharacter)
-            return;
-        
-        Destroy(currentPlayerCharacter.gameObject);
-    }
-
-    public void SpawnMonster()
-    {
-        var monster = Instantiate(monsterPrefab, monsterPos.position, Quaternion.identity);
-        monster.Status.Data = monsterData;
-    }
-
-    public void RemoveAllMonster()
-    {
-        var monsters = GameObject.FindGameObjectsWithTag(Defines.Tags.MONSTER_TAG);
-        foreach (var monster in monsters)
+            var skillData = skillTable.Get(id);
+            if (skillData == null)
+            {
+                Logger.Log("유효하지 않는 스킬 아이디입니다.");
+                return null;
+            }
+            var skill = SkillFactory.CreateSkill(skillData, playerAttackBehavior.gameObject);
+            return skill;
+        }
+        else
         {
-            Destroy(monster);
+            Logger.Log("int값이 아닙니다.");
+            return null;
+        }
+    }
+
+    public BaseSkill CreateNoramalAttack()
+    {
+        if (int.TryParse(normalAttackId.text, out var id))
+        {
+            var skillData = skillTable.Get(id);
+            if (skillData == null)
+            {
+                Logger.Log("유효하지 않는 스킬 아이디입니다.");
+                return null;
+            }
+            var skill = SkillFactory.CreateSkill(skillData, playerAttackBehavior.gameObject);
+            return skill;
+        }
+        else
+        {
+            Logger.Log("int값이 아닙니다.");
+            return null;
         }
     }
 }

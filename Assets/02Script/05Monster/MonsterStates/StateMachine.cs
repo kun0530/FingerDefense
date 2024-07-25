@@ -24,9 +24,9 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
             states.Add(newState.GetType(), newState);
     }
 
-    public void Initialize<TU>() where TU : IState
+    public void Initialize<U>() where U : IState
     {
-        var type = typeof(TU);
+        var type = typeof(U);
 
         if (states.TryGetValue(type, out var state))
         {
@@ -37,9 +37,9 @@ public class StateMachine<T> where T : MonoBehaviour, IControllable
         }
     }
 
-    public bool TransitionTo<TU>() where TU : IState
+    public bool TransitionTo<U>() where U : IState
     {
-        var type = typeof(TU);
+        var type = typeof(U);
         if (states.TryGetValue(type, out var nextState))
         {
             if (CurrentState == nextState)

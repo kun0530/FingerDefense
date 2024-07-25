@@ -10,8 +10,9 @@ public enum BuffType
 {
     ATK_SPEED,
     MOVE_SPEED,
-    HP,
-    ATK
+    DOT_HP, // 도트 딜
+    ATK,
+    MAX_HP // 최대 체력 -> 
 }
 
 public class BuffData

@@ -4,42 +4,44 @@ using UnityEngine;
 
 public class AttackState : IState
 {
-    private MonsterController monster;
+    private MonsterController controller;
 
     private float attackTimer;
     private float attackCoolDown;
 
-    public AttackState(MonsterController monster)
+    public AttackState(MonsterController controller)
     {
-        this.monster = monster;
+        this.controller = controller;
     }
 
     public void Enter()
     {
-        attackCoolDown = 1f / monster.Status.Data.AtkSpeed;
+        attackCoolDown = 1f / controller.Status.Data.AtkSpeed;
         attackTimer = attackCoolDown;
 
-        monster.SetFlip(false);
+        controller.SetFlip(false);
+
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.currentAtkSpeed);
     }
 
     public void Update()
     {
-        if (!monster.attackTarget) // 그 외 추가 조건(공격 중단) 확인바람
+        if (!controller.attackTarget) // 그 외 추가 조건(공격 중단) 확인바람
         {
-            monster.TryTransitionState<PatrolState>();
+            controller.TryTransitionState<PatrolState>();
             return;
         }
 
-        if (Vector2.Distance(monster.transform.position, monster.attackMoveTarget.position) > 0.1) // Attack Move Target의 위치 변경
+        if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) > 0.1) // Attack Move Target의 위치 변경
         {
-            monster.TryTransitionState<ChaseState>();
+            controller.TryTransitionState<ChaseState>();
             return;
         }
 
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackCoolDown)
         {
-            monster.attackTarget.TakeDamage(monster.Status.currentAtkDmg);
+            controller.attackTarget.TakeDamage(controller.Status.currentAtkDmg);
             attackTimer = 0f;
 
             return;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FindingTargetInCircle : IFindable
 {
-    public Transform center;
+    private Transform center;
     public float radius;
     public LayerMask targetLayer;
 
@@ -14,6 +14,11 @@ public class FindingTargetInCircle : IFindable
         this.radius = radius;
         
         this.targetLayer = targetLayer;
+    }
+
+    public void ChangeCenter(GameObject gameObject)
+    {
+        center = gameObject.transform;
     }
 
     public GameObject FindTarget()

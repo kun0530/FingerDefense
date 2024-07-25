@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -25,12 +26,21 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
+
+    [HideInInspector] public MonsterSpineAni monsterAni;
+    [HideInInspector] public TrackEntry deathTrackEntry;
+
+    public BaseSkill dragSkill;
     
     public bool IsDraggable
     {
         get
         {
-            if (stateMachine.CurrentState.GetType() == typeof(FallState))
+            if (isDead)
+                return false;
+
+            var currentState = stateMachine.CurrentState.GetType();
+            if (currentState == typeof(FallState) || currentState == typeof(DragState))
                 return false;
 
             switch (Status.Data.DragType)
@@ -68,25 +78,12 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     private void Awake()
     {
-        defaultRightScale = isDirectedRight ? transform.localScale.x : -transform.localScale.x;
-
-        stateMachine = new StateMachine<MonsterController>(this);
-
-        // var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
-        var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
-        
-        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게(Death) 변경
-        stateMachine.AddState(new DragState(this));
-        stateMachine.AddState(new FallState(this));
-        stateMachine.AddState(new MoveState(this));
-        stateMachine.AddState(new PatrolState(this, findBehavior));
-        stateMachine.AddState(new ChaseState(this));
-        stateMachine.AddState(new AttackState(this));
-
-        stateMachine.Initialize<MoveState>();
+        monsterAni = GetComponent<MonsterSpineAni>();
 
         buffHandler = new BuffHandler(Status);
         Status = new MonsterStatus(buffHandler);
+
+        defaultRightScale = isDirectedRight ? transform.localScale.x : -transform.localScale.x;
     }
 
     private void OnEnable()
@@ -108,6 +105,21 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
         var castleGo = GameObject.FindWithTag(Defines.Tags.CASTLE_TAG);
         moveTarget = castleGo.transform;
+
+        stateMachine = new StateMachine<MonsterController>(this);
+
+        // var dragBehavior = TestDragFactory.GenerateDragBehavior(testMonsterDragData, gameObject);
+        var findBehavior = new FindingTargetInCircle(transform, findRange, 1 << LayerMask.NameToLayer("Player"));
+        
+        stateMachine.AddState(new IdleState<MonsterController>(this)); // To-Do: 추후 적절하게(Death) 변경
+        stateMachine.AddState(new DragState(this));
+        stateMachine.AddState(new FallState(this));
+        stateMachine.AddState(new MoveState(this));
+        stateMachine.AddState(new PatrolState(this, findBehavior));
+        stateMachine.AddState(new ChaseState(this));
+        stateMachine.AddState(new AttackState(this));
+
+        stateMachine.Initialize<MoveState>();
     }
 
     public void ResetMonsterData()
@@ -156,10 +168,17 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
         if (Status.CurrentHp <= 0f)
         {
+            isDead = true;
             Status.CurrentHp = 0f;
             if (stageManager)
                 stageManager.EarnedGold += Status.Data.DropGold;
-            Die();
+                
+            deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
+            stateMachine.TransitionTo<IdleState<MonsterController>>();
+            if (deathTrackEntry != null)
+            {
+                deathTrackEntry.Complete += Die;
+            }
         }
     }
 
@@ -171,6 +190,13 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public void TakeBuff(Buff buff)
     {
         buffHandler.AddBuff(buff);
+    }
+
+    private void Die(TrackEntry entry)
+    {
+        if (deathTrackEntry != null)
+            deathTrackEntry.Complete -= Die;
+        Die();
     }
 
     private void Die()
@@ -192,7 +218,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         }
         else
         {
-            Logger.LogError("스테이지 매니저가 할당되지 않았습니다.");
+            // Logger.LogError("스테이지 매니저가 할당되지 않았습니다.");
         }
 
         if (pool != null) // Null 검사 추가
@@ -202,7 +228,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         else
         {
             Destroy(gameObject);
-            Logger.LogError("풀이 할당되지 않았습니다.");
+            // Logger.LogError("풀이 할당되지 않았습니다.");
         }
     }
 
