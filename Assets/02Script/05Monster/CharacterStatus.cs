@@ -24,8 +24,8 @@ public class CharacterStatus : BaseStatus
             return;
 
         CurrentHp = Data.Hp;
-        currentAtkDmg = Data.AtkDmg;
-        currentAtkSpeed = Data.AtkSpeed;
+        // currentAtkDmg = Data.AtkDmg;
+        // currentAtkSpeed = Data.AtkSpeed;
     }
 
     public override void UpdateCurrentState()
@@ -35,8 +35,8 @@ public class CharacterStatus : BaseStatus
             return;
         }
         
-        currentAtkDmg = Data.AtkDmg;
-        currentAtkSpeed = Data.AtkSpeed;
+        // currentAtkDmg = Data.AtkDmg;
+        // currentAtkSpeed = Data.AtkSpeed;
 
         foreach (var buff in buffHandler.buffs)
         {
@@ -57,6 +57,6 @@ public class CharacterStatus : BaseStatus
         currentAtkDmg = currentAtkDmg < 0f ? 0f : currentAtkDmg;
         currentAtkSpeed = currentAtkSpeed < 0f ? 0f : currentAtkSpeed;
 
-        Logger.Log($"기본 공격력: {Data.AtkDmg} / 현재 공격력: {currentAtkDmg}");
+        // Logger.Log($"기본 공격력: {Data.AtkDmg} / 현재 공격력: {currentAtkDmg}");
     }
 }

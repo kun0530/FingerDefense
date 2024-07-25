@@ -48,8 +48,8 @@ public static class SkillFactory
             case SkillRangeTypes.MultipleTarget:
                 skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data.AssetNo);
                 break;
-            case SkillRangeTypes.AreaTarget:
-                skillType = new AreaTargetSkill(new FindingSelf(gameObject), data.AssetNo); // 미구현
+            case SkillRangeTypes.AreaTarget: // 미구현
+                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data.AssetNo);
                 break;
         }
 

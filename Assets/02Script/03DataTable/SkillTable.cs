@@ -19,7 +19,7 @@ public class SkillData
     public float CoolTime { get; set; }
     public float Duration { get; set; } // 설치 공격 지속 시간
     public float CastingTime { get; set; } // 캐스팅 도중 맞으면 스킬 증발 -> 프로토타입 이후에 고려
-    // public int IsDot { get; set; } // 도트 스킬
+    public int IsDot { get; set; } // 도트 스킬
     public int BuffId { get; set; }
     public string AssetNo { get; set; }
 

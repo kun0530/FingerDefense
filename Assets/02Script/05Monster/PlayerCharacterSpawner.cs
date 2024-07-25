@@ -155,7 +155,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         
         if (positionIndex == -1 || activePlayerCharacters[positionIndex] != null)
         {
-            Logger.LogError("해당 위치에 이미 캐릭터가 배치되어 있습니다.");
+            Logger.Log("해당 위치에 이미 캐릭터가 배치되어 있습니다.");
             return;
         }
 

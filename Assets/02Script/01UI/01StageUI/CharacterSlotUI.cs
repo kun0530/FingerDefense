@@ -84,8 +84,8 @@ public class CharacterSlotUI : MonoBehaviour
         var skillImage = skillParent.GetComponent<Image>();
         if (skillImage != null)
         {
-            int skillIndex = GetSkillIndex(characterData.Skill);
-            Logger.Log("Character Skill: " + characterData.Skill + ", Mapped Index: " + skillIndex);
+            int skillIndex = GetSkillIndex(characterData.SkillIcon);
+            Logger.Log("Character Skill: " + characterData.SkillIcon + ", Mapped Index: " + skillIndex);
             if (skillIndex >= 0 && skillIndex < skillImages.Length)
             {
                 skillImage.sprite = skillImages[skillIndex];
