@@ -34,15 +34,12 @@ public class FallState : IState
 
             if (controller.Status.Data.Height <= startY - controller.targetFallY)
             {
-                if (controller.dragDeathSkill == null)
+                if (controller.dragDeathSkill != null)
                 {
-                    Logger.Log("스킬이 존재하지 않습니다.");
+                    controller.dragDeathSkill.UseSkill();
+                    var dragDeathEffect = EffectFactoryTest.CreateEffect(controller.dragDeathSkill.skillData.AssetNo, controller.gameObject);
+                    // dragDeathEffect.gameObject.transform.localScale *= 10f;
                 }
-                else
-                {
-                    Logger.Log($"Drag Skill: {controller.dragDeathSkill.skillData.Id}");
-                }
-                controller.dragDeathSkill?.UseSkill();
                 controller.PlayDeathAnimation();
             }
             else
