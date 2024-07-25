@@ -30,7 +30,8 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
 
-    public BaseSkill dragSkill;
+    public BaseSkill deathSkill;
+    public BaseSkill dragDeathSkill;
     
     public bool IsDraggable
     {

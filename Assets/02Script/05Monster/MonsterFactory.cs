@@ -63,8 +63,11 @@ public class MonsterFactory
 
         var monsterData = monsterTable.Get(id);
         instantiatedMonster.Status.Data = monsterData;
-        var skill = SkillFactory.CreateSkill(monsterData.Skill, instantiatedMonster.gameObject);
-        instantiatedMonster.dragSkill = skill;
+
+        var deathSkill = SkillFactory.CreateSkill(monsterData.Skill, instantiatedMonster.gameObject);
+        instantiatedMonster.deathSkill = deathSkill;
+        var dragDeathSkill = SkillFactory.CreateSkill(monsterData.DragSkill, instantiatedMonster.gameObject);
+        instantiatedMonster.dragDeathSkill = dragDeathSkill;
 
         instantiatedMonster.pool = monsterPool[id];
         return instantiatedMonster;

@@ -56,7 +56,7 @@ public class MonsterSpawnTest : MonoBehaviour
         var skill = SkillFactory.CreateSkill(monsterData.Skill, monster.gameObject);
         if (skill == null)
             return;
-        monster.dragSkill = skill;
+        monster.dragDeathSkill = skill;
     }
 
     public void RemoveAllMonster()

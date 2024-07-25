@@ -37,6 +37,7 @@ public class MonsterData
     // public float AtkRange { get; set; } // 원거리 몬스터 공격 거리
     public float Height { get; set; } // 즉사 높이
     public int Skill { get; set; }
+    public int DragSkill { get; set; }
     public int DropGold { get; set; }
     public int AssetNo { get; set; }
 

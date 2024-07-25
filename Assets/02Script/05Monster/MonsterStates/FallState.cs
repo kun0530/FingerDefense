@@ -34,7 +34,7 @@ public class FallState : IState
 
             if (controller.Status.Data.Height <= startY - controller.targetFallY)
             {
-                controller.dragSkill?.UseSkill();
+                controller.dragDeathSkill?.UseSkill();
                 controller.TakeDamage(controller.Status.CurrentHp);
             }
             else
