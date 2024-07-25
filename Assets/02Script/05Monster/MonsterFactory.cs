@@ -11,6 +11,7 @@ public class MonsterFactory
 {
     public Transform poolTransform;
     private AssetListTable assetList;
+    private MonsterTable monsterTable;
     
     private Dictionary<int,IObjectPool<MonsterController>> monsterPool =
         new Dictionary<int, IObjectPool<MonsterController>>();
@@ -18,6 +19,7 @@ public class MonsterFactory
     public void Init(HashSet<int> ids)
     {
         assetList = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
+        monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
         foreach (var id in ids)
         {
             monsterPool[id] = new ObjectPool<MonsterController>(
@@ -58,6 +60,11 @@ public class MonsterFactory
         var instantiatedMonster = Object.Instantiate(monster);
         if (poolTransform != null)
             instantiatedMonster.transform.SetParent(poolTransform);
+
+        var monsterData = monsterTable.Get(id);
+        instantiatedMonster.Status.Data = monsterData;
+        var skill = SkillFactory.CreateSkill(monsterData.Skill, instantiatedMonster.gameObject);
+        instantiatedMonster.dragSkill = skill;
 
         instantiatedMonster.pool = monsterPool[id];
         return instantiatedMonster;
