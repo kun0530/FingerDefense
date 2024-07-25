@@ -30,7 +30,9 @@ public class MonsterSpawner : MonoBehaviour
     private bool isWaveEnd;
     public HashSet<int> monsters { get; private set; } = new();
     
-
+    //TO-DO:Prototype 이후 바로 삭제 예정
+    private bool isTutorialCompleted = false; 
+    
     private void Awake()
     {
         factory = new MonsterFactory();
@@ -66,8 +68,22 @@ public class MonsterSpawner : MonoBehaviour
             spawnWaveTimer = 0f;
             isWaveTerm = true;
         }
+        
+        //To-Do:Prototype 이후 삭제
+        GameTutorialManager.OnTutorialComplete += OnTutorialComplete;
     }
 
+    #region Prototype 이후 삭제
+    private void OnDestroy()
+    {
+        GameTutorialManager.OnTutorialComplete -= OnTutorialComplete;
+    }
+    private void OnTutorialComplete()
+    {
+        isTutorialCompleted = true;
+    }
+    #endregion
+    
     private void OnEnable()
     {
         isWaveEnd = false;
@@ -81,7 +97,8 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (MonsterCount <= 0 || !isWaveTerm || isWaveEnd)
+        //To-Do:Prototype 이후 !isTutorialCompleted 삭제
+        if (!isTutorialCompleted || MonsterCount <= 0 || !isWaveTerm || isWaveEnd)
             return;
 
         spawnWaveTimer += Time.deltaTime;
@@ -102,6 +119,7 @@ public class MonsterSpawner : MonoBehaviour
         Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
         var repeatCount = 0;
         var monsters = currentWaveData.monsters;
+        
         while (repeatCount++ < currentWaveData.Repeat)
         {
             var spwanMonsterId = Utils.WeightedRandomPick<int>(monsters);
@@ -110,7 +128,12 @@ public class MonsterSpawner : MonoBehaviour
             monsterGo.moveTarget = moveTarget;
             //await UniTask.WaitForSeconds(currentWaveData.RepeatTerm);
             //To-Do: 윗 줄 코드는 Time.timeScale을 무시해서 밑으로 변경해야합니다.
-            await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm), ignoreTimeScale: true);
+            while (Time.timeScale == 0)
+            {
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm));
         }
 
         isWaveTerm = true;

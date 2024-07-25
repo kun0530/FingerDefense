@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class TutorialStep
+public class TutorialDeckStep
 {
     public string title;
     public string description;
@@ -13,7 +13,7 @@ public class DeckUITutorialManager : MonoBehaviour
 {
     public GameObject modalPrefab;
     public GameObject canvas;
-    public TutorialStep[] tutorialSteps;
+    public TutorialDeckStep[] tutorialSteps;
 
     public int currentStep;
     private GameManager gameManager;
@@ -47,7 +47,7 @@ public class DeckUITutorialManager : MonoBehaviour
             return;
         }
 
-        TutorialStep step = tutorialSteps[currentStep];
+        TutorialDeckStep step = tutorialSteps[currentStep];
 
         currentModal = ModalWindow.Create(modalPrefab, canvas);
         currentModal.SetHeader(step.title);

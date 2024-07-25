@@ -1,11 +1,18 @@
 using System;
 using UnityEngine;
 
+[Serializable]
+public class TutorialStageStep
+{
+    public string title;
+    public string description;
+    public string buttonText;
+}
 public class StageUITutorialManager : MonoBehaviour
 {
     public GameObject modalPrefab;
     public GameObject canvas;
-    public TutorialStep[] tutorialSteps;
+    public TutorialStageStep[] tutorialSteps;
     
     public int currentStep;
     private GameManager gameManager;
@@ -39,7 +46,7 @@ public class StageUITutorialManager : MonoBehaviour
             return;
         }
         
-        TutorialStep step = tutorialSteps[currentStep];
+        TutorialStageStep step = tutorialSteps[currentStep];
         
         currentModal = ModalWindow.Create(modalPrefab, canvas);
         currentModal.SetHeader(step.title);

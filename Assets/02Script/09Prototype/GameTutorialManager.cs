@@ -1,16 +1,26 @@
 using System;
 using UnityEngine;
 
+
+[Serializable]
+public class TutorialGameStep
+{
+    public string title;
+    public string description;
+    public string buttonText;
+}
 public class GameTutorialManager : MonoBehaviour
 {
     public GameObject modalPrefab;
     public GameObject canvas;
-    public TutorialStep[] tutorialSteps;
+    public TutorialGameStep[] tutorialSteps;
     
     public int currentStep = 0;
     private GameManager gameManager;
     private ModalWindow currentModal;
     private Action onComplete;
+    
+    public static event Action OnTutorialComplete;
     
     void Awake()
     {
@@ -19,12 +29,8 @@ public class GameTutorialManager : MonoBehaviour
     
     void Start()
     {
-        if (gameManager !=null || !gameManager.GameTutorialCheck)
-        {
-            StartTutorial(() => { Time.timeScale = 0f; });
-        }
     }
-    private void StartTutorial(Action onCompleteAction)
+    public void StartTutorial(Action onCompleteAction)
     {
         onComplete = onCompleteAction;
         currentStep = 0;
@@ -44,7 +50,7 @@ public class GameTutorialManager : MonoBehaviour
             return;
         }
         
-        TutorialStep step = tutorialSteps[currentStep];
+        TutorialGameStep step = tutorialSteps[currentStep];
         
         currentModal = ModalWindow.Create(modalPrefab, canvas);
         currentModal.SetHeader(step.title);
@@ -62,8 +68,9 @@ public class GameTutorialManager : MonoBehaviour
     private void EndTutorial()
     {
         onComplete?.Invoke();
-        Destroy(gameObject);
+        OnTutorialComplete?.Invoke();
         gameManager.GameTutorialCheck = true;
+        Destroy(gameObject);
         Time.timeScale = 1f;
     }
 }

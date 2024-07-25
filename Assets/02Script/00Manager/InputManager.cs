@@ -60,6 +60,7 @@ public class InputManager : MonoBehaviour
     {
         OnBack?.Invoke(context);
         QuitPanel.SetActive(!QuitPanel.activeSelf);
+        QuitPanel.transform.SetAsLastSibling();
         Time.timeScale = QuitPanel.activeSelf ? 0 : 1;
     }
     
