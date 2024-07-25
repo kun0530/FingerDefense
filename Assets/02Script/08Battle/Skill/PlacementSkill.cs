@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaTargetSkill : SkillType
+public class PlacementSkill : SkillType
 {
     private SkillArea skillArea;
 
-    public AreaTargetSkill(IFindable secondaryTargeting, string assetId)
+    public PlacementSkill(IFindable secondaryTargeting, string assetId)
     : base(secondaryTargeting, assetId) { }
 
 

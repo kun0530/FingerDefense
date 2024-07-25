@@ -7,27 +7,38 @@ using UnityEngine;
 
 public class SkillArea : MonoBehaviour
 {
-    private SkillData skillData;
-    private AreaTargetSkill areaTargetSkill;
-    private float timer;
+    public PlacementSkill placementSkill;
+    public float areaDuration;
+    private float timer = 0f;
+    private string targetTag;
 
     public Dictionary<IDamageable, Buff> Buffs { get; private set; } = new();
 
-    private void OnEnable()
+    public void Init(PlacementSkill skill, SkillData data)
     {
-        timer = 0f;
-    }
+        if (skill == null || data == null)
+            return;
 
-    private void Start()
-    {
-        var skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
-        skillData = skillTable.Get(1001);
+        switch (data.Target)
+        {
+            case 0:
+                targetTag = Defines.Tags.PLAYER_TAG;
+                break;
+            case 1:
+                targetTag = Defines.Tags.MONSTER_TAG;
+                break;
+            default:
+                return;
+        }
+
+        placementSkill = skill;
+        areaDuration = data.Duration;
     }
 
     private void Update()
     {
         timer += Time.deltaTime;
-        if (timer >= skillData.Duration)
+        if (timer >= areaDuration)
         {
             Destroy(gameObject);
         }
@@ -37,7 +48,7 @@ public class SkillArea : MonoBehaviour
     {
         if (TryGetTarget(other, out var damageable))
         {
-            areaTargetSkill.EnterArea(damageable, this);
+            placementSkill.EnterArea(damageable, this);
         }
     }
 
@@ -45,26 +56,16 @@ public class SkillArea : MonoBehaviour
     {
         if (TryGetTarget(other, out var damageable))
         {
-            areaTargetSkill.ExitArea(damageable, this);
+            placementSkill.ExitArea(damageable, this);
         }
     }
 
     private bool TryGetTarget(Collider other, out IDamageable damageable)
     {
         damageable = null;
-        switch (skillData.Target)
-        {
-            case 0:
-                if (!other.CompareTag(Defines.Tags.PLAYER_TAG))
-                    return false;
-                break;
-            case 1:
-                if (!other.CompareTag(Defines.Tags.MONSTER_TAG))
-                    return false;
-                break;
-            default:
-                return false;
-        }
+        if (!other.CompareTag(targetTag))
+            return false;
+        
         return other.TryGetComponent(out damageable);
     }
 }

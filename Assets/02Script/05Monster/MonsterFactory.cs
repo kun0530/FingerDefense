@@ -38,10 +38,11 @@ public class MonsterFactory
             throw new InvalidOperationException("AssetList가 초기화되지 않았습니다..");
         }
 
-        var assetFileName = assetList.Get(id);
+        var assetId = monsterTable.Get(id).AssetNo;
+        var assetFileName = assetList.Get(assetId);
         if (string.IsNullOrEmpty(assetFileName))
         {
-            throw new InvalidOperationException($"ID :{id}에 대한 자산 경로를 찾을 수 없습니다.");
+            throw new InvalidOperationException($"ID :{assetId}에 대한 자산 경로를 찾을 수 없습니다.");
         }
         
         var assetPath = $"Prefab/03MonsterGame/{assetFileName}";

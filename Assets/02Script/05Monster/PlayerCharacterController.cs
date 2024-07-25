@@ -13,8 +13,8 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     
     public bool IsDead { get; set; } = true;
 
-    private MonsterController atkTarget;
-    private float atkTimer;
+    // private MonsterController atkTarget;
+    // private float atkTimer = 0f;
     public Image hpBar;
 
     // public BaseSkill skill;
@@ -44,8 +44,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void Awake()
     {
-        atkTimer = 0f;
-
         Status = new(buffHandler);
         buffHandler = new(Status);
 
@@ -54,7 +52,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void OnEnable()
     {
-        atkTarget = null;
+        // atkTarget = null;
         monsterUp = null;
         monsterDown = null;
 
@@ -75,16 +73,16 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         if (Status.Data == null)
             return;
             
-        var findBehavior = new FindingTargetInCircle(transform, Status.Data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
-        var nearCollider = findBehavior.FindTarget();
-        if (!nearCollider)
-        {
-            atkTarget = null;
-            return;
-        }
+        // var findBehavior = new FindingTargetInCircle(transform, Status.Data.AtkRange, 1 << LayerMask.NameToLayer("Monster"));
+        // var nearCollider = findBehavior.FindTarget();
+        // if (!nearCollider)
+        // {
+        //     atkTarget = null;
+        //     return;
+        // }
         
-        // 코드 ?: 연산자로 변경 : 방민호
-        atkTarget = nearCollider.TryGetComponent<MonsterController>(out var target) ? target : null;
+        // // 코드 ?: 연산자로 변경 : 방민호
+        // atkTarget = nearCollider.TryGetComponent<MonsterController>(out var target) ? target : null;
     }
 
     private void Update()
@@ -223,6 +221,12 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     private void UpdateHpBar()
     {
+        if (!hpBar)
+        {
+            Logger.LogError($"HP Bar가 할당되었는지 확인해주세요: {gameObject.name}");
+            return;
+        }
+
         var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;
     }

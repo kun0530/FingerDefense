@@ -45,16 +45,16 @@ public class BuffTable : DataTable
         {
             csvReader.Read();
             var columnCount = csvReader.ColumnCount;
-            int patternStartIndex = 4;
+            int patternStartIndex = 5;
 
             while (csvReader.Read())
             {
                 var buffData = new BuffData()
                 {
                     Id = csvReader.GetField<int>(0),
-                    LastingTime = csvReader.GetField<int>(1),
-                    DmgTerm = csvReader.GetField<float>(2),
-                    EffectNo = csvReader.GetField<int>(3)
+                    LastingTime = csvReader.GetField<float>(2),
+                    DmgTerm = csvReader.GetField<float>(3),
+                    EffectNo = csvReader.GetField<int>(4)
                 };
 
                 for (int i = patternStartIndex; i < columnCount; i += 2)
