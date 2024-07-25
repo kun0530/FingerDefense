@@ -19,6 +19,13 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        
+        if(mainCamera == null)
+        {
+            Debug.LogError("Main Camera is not found");
+            return;
+        }
+        
         letterBoxCanvasRect = letterBoxGameObject.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
         letterBoxes = letterBoxGameObject.GetComponentsInChildren<Image>();
 
