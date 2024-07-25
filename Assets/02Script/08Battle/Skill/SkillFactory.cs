@@ -25,7 +25,7 @@ public static class SkillFactory
         // 1차 타겟팅: 0인 경우, 본인 타겟팅(Target 의미 없음) / 그 외는 지정된 타겟팅
         // 1차 타겟팅은 단일 타겟팅
         IFindable primaryTargeting;
-        if (data.Center == 0f)
+        if (data.Center <= 0f)
         {
             primaryTargeting = new FindingSelf(gameObject);
         }
@@ -46,7 +46,7 @@ public static class SkillFactory
                 skillType = new TargetSkill(new FindingSelf(gameObject), data.AssetNo);
                 break;
             case SkillRangeTypes.MultipleTarget:
-                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Center, layerMask), data.AssetNo);
+                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data.AssetNo);
                 break;
             case SkillRangeTypes.AreaTarget:
                 skillType = new AreaTargetSkill(new FindingSelf(gameObject), data.AssetNo); // 미구현

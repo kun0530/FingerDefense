@@ -20,8 +20,7 @@ public class FindingSelf : IFindable
     {
         if (gameObject.TryGetComponent<ITargetable>(out var findable))
         {
-            if (findable.IsTargetable)
-                return gameObject;
+            return gameObject;
         }
         
         return null;
@@ -32,8 +31,7 @@ public class FindingSelf : IFindable
         List<GameObject> gameObjects = new();
         if (gameObject.TryGetComponent<ITargetable>(out var findable))
         {
-            if (findable.IsTargetable)
-                gameObjects.Add(gameObject);
+            gameObjects.Add(gameObject);
         }
 
         return gameObjects;

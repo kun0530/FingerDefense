@@ -127,6 +127,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         isDead = false;
         
         stateMachine.TransitionTo<MoveState>();
+        Status.Init();
 
         CanPatrol = false;
     }
@@ -168,17 +169,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
         if (Status.CurrentHp <= 0f)
         {
-            isDead = true;
-            Status.CurrentHp = 0f;
-            if (stageManager)
-                stageManager.EarnedGold += Status.Data.DropGold;
-                
-            deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
-            stateMachine.TransitionTo<IdleState<MonsterController>>();
-            if (deathTrackEntry != null)
-            {
-                deathTrackEntry.Complete += Die;
-            }
+            PlayDeathAnimation();
         }
     }
 
@@ -190,6 +181,21 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public void TakeBuff(Buff buff)
     {
         buffHandler.AddBuff(buff);
+    }
+
+    public void PlayDeathAnimation()
+    {
+        isDead = true;
+        Status.CurrentHp = 0f;
+        if (stageManager)
+            stageManager.EarnedGold += Status.Data.DropGold;
+            
+        deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
+        stateMachine.TransitionTo<IdleState<MonsterController>>();
+        if (deathTrackEntry != null)
+        {
+            deathTrackEntry.Complete += Die;
+        }
     }
 
     private void Die(TrackEntry entry)

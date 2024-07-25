@@ -34,8 +34,16 @@ public class FallState : IState
 
             if (controller.Status.Data.Height <= startY - controller.targetFallY)
             {
+                if (controller.dragDeathSkill == null)
+                {
+                    Logger.Log("스킬이 존재하지 않습니다.");
+                }
+                else
+                {
+                    Logger.Log($"Drag Skill: {controller.dragDeathSkill.skillData.Id}");
+                }
                 controller.dragDeathSkill?.UseSkill();
-                controller.TakeDamage(controller.Status.CurrentHp);
+                controller.PlayDeathAnimation();
             }
             else
                 controller.TryTransitionState<PatrolState>();

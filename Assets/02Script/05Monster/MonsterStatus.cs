@@ -26,7 +26,7 @@ public class MonsterStatus : BaseStatus
         if (Data == null)
             return;
 
-        currentHp = Data.Hp;
+        CurrentHp = Data.Hp;
         currentAtkDmg = Data.AtkDmg;
         currentMoveSpeed = Data.MoveSpeed;
         currentAtkSpeed = Data.AtkSpeed;
@@ -34,7 +34,7 @@ public class MonsterStatus : BaseStatus
 
     public override void UpdateCurrentState()
     {
-        currentHp = Data.Hp;
+        CurrentHp = Data.Hp;
         currentAtkDmg = Data.AtkDmg;
         currentMoveSpeed = Data.MoveSpeed;
         currentAtkSpeed = Data.AtkSpeed;

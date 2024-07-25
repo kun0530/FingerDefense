@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BaseSkill
 {
-    private SkillData skillData;
+    public SkillData skillData;
     protected SkillType skillType;
     protected IFindable targetingMethod;
 

@@ -105,6 +105,17 @@ public class PlayerCharacterSpawner : MonoBehaviour
         // var skillData = skillTable.Get(data.Skill);
         // playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
         // playerCharacter.skillData = skillData;
+        if (playerCharacter.TryGetComponent<PlayerAttackBehavior>(out var attackBehavior))
+        {
+            var normalAttackData = skillTable.Get(data.Skill1);
+            var skillAttackData = skillTable.Get(data.Skill2);
+
+            var normalAttack = SkillFactory.CreateSkill(normalAttackData, playerCharacter.gameObject);
+            var skillAttack = SkillFactory.CreateSkill(skillAttackData, playerCharacter.gameObject);
+
+            attackBehavior.normalAttack = normalAttack;
+            attackBehavior.skillAttack = skillAttack;
+        }
 
         playerCharacter.spawner = this;
         playerCharacter.gameObject.SetActive(false);

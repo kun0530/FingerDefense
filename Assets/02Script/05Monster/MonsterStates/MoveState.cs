@@ -40,6 +40,5 @@ public class MoveState : IState
 
     public void Exit()
     {
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.IDLE, true, 1f);
     }
 }
