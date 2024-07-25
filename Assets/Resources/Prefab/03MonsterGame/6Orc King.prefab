@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8652544915232105214}
   - component: {fileID: 5674436120724713991}
   - component: {fileID: 334172659695216763}
+  - component: {fileID: 1449644195523495077}
   m_Layer: 7
   m_Name: 6Orc King
   m_TagString: Monster
@@ -50,6 +51,7 @@ MonoBehaviour:
   hpBar: {fileID: 1661868141030844876}
   findRange: 3
   isDirectedRight: 1
+  monsterAni: {fileID: 0}
 --- !u!114 &334172659695216763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +72,41 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bcf37b69f4533e148a6d0185dc80f76c, type: 2}
   - {fileID: 11400000, guid: bf00eb71617cbde47a454f3240b43450, type: 2}
   - {fileID: 11400000, guid: 7bf5492ae1a20da488738f74dcaebe3a, type: 2}
+--- !u!58 &1449644195523495077
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212491254020989444}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.36184716}
+  serializedVersion: 2
+  m_Radius: 0.46999335
 --- !u!1 &4748870572745921425
 GameObject:
   m_ObjectHideFlags: 0

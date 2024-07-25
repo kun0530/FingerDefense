@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameTutorialManager : MonoBehaviour
@@ -16,12 +14,12 @@ public class GameTutorialManager : MonoBehaviour
     
     void Awake()
     {
-        gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
     }
     
     void Start()
     {
-        if (!gameManager.GameTutorialCheck)
+        if (gameManager !=null || !gameManager.GameTutorialCheck)
         {
             StartTutorial(() => { Time.timeScale = 0f; });
         }
@@ -65,7 +63,7 @@ public class GameTutorialManager : MonoBehaviour
     {
         onComplete?.Invoke();
         Destroy(gameObject);
-        gameManager.StageChoiceTutorialCheck = true;
+        gameManager.GameTutorialCheck = true;
         Time.timeScale = 1f;
     }
 }

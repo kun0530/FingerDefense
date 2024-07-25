@@ -73,6 +73,8 @@ public class StageManager : MonoBehaviour
         CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
+        
+        
     }
 
     public void DamageCastle(float damage)

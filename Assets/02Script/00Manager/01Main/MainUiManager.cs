@@ -21,7 +21,7 @@ public class MainUiManager : MonoBehaviour
         DeckUI.SetActive(false);
         QuitUI.gameObject.SetActive(false);
         
-        if(gameManager != null && gameManager.StageChoiceTutorialCheck)
+        if(gameManager != null && !gameManager.StageChoiceTutorialCheck)
         {
             if (stageUITutorialManager != null) stageUITutorialManager.StartTutorial(() => { });
         }
