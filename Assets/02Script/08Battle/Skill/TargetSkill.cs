@@ -7,21 +7,25 @@ public class TargetSkill : SkillType
     public TargetSkill(IFindable secondaryTargeting, string assetId)
     : base(secondaryTargeting, assetId) { }
 
-    public override void UseSkill(GameObject primaryTarget)
+    public override bool UseSkill(GameObject primaryTarget)
     {
         if (!primaryTarget)
-            return;
+            return false;
 
         secondaryTargeting.ChangeCenter(primaryTarget);
         var targets = secondaryTargeting.FindTargets();
 
+        var targetCount = 0;
         foreach (var target in targets)
         {
             if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
             {
                 ApplySkillActions(damageable);
                 EffectFactoryTest.CreateEffect(assetId, target);
+                targetCount++;
             }
         }
+
+        return targetCount > 0;
     }
 }

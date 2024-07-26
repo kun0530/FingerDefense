@@ -15,13 +15,13 @@ public class PlacementSkill : SkillType
     //     this.area = area;
     // }
 
-    public override void UseSkill(GameObject target)
+    public override bool UseSkill(GameObject target)
     {
         // var area = GameObject.Instantiate(skillArea);
         // area.transform.position = target.transform.position;
 
         Logger.Log("미구현된 스킬입니다: 설치 스킬");
-        return;
+        return true;
     }
 
     public void EnterArea(IDamageable damageable, SkillArea area)

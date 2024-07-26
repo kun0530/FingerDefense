@@ -22,7 +22,7 @@ public abstract class SkillType
         this.assetId = assetId;
     }
 
-    public abstract void UseSkill(GameObject target);
+    public abstract bool UseSkill(GameObject target);
 
     protected void ApplySkillActions(IDamageable damageable)
     {
