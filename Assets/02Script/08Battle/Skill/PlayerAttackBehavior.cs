@@ -25,6 +25,7 @@ public class PlayerAttackBehavior : MonoBehaviour
     private void OnEnable()
     {
         characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
+        isAnimationEnded = true;
     }
 
     private void FixedUpdate()
