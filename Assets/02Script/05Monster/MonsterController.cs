@@ -189,6 +189,8 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         Status.CurrentHp = 0f;
         if (stageManager)
             stageManager.EarnedGold += Status.Data.DropGold;
+
+        deathSkill?.UseSkill();
             
         deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
         stateMachine.TransitionTo<IdleState<MonsterController>>();
