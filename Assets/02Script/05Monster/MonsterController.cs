@@ -32,7 +32,8 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
-    
+
+    private bool isTargetReset=false;
     public bool IsDraggable
     {
         get
@@ -63,7 +64,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         get
         {
             var currentState = stateMachine.CurrentState.GetType();
-            return !isDead && currentState != typeof(DragState) && currentState != typeof(FallState);
+            return !isDead && isTargetReset && currentState != typeof(DragState) && currentState != typeof(FallState);
         }
     }
 
@@ -130,6 +131,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         Status.Init();
         UpdateHpBar();
         CanPatrol = false;
+        isTargetReset=false;
     }
 
     private void Update()
@@ -152,6 +154,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
             
             stageManager?.DamageCastle(10f);
             Die();
+        }
+
+        if (other.CompareTag("ResetLine"))
+        {
+            isTargetReset = true;
         }
     }
 
