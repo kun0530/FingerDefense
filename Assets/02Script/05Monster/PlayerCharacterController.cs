@@ -42,7 +42,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             return count;
         }
     }
-    public bool IsTargetable => MonsterCount != 2;
+    public bool IsTargetable => !IsDead && MonsterCount != 2;
 
     private void Awake()
     {
@@ -62,6 +62,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
         Status.OnHpBarUpdate += UpdateHpBar;
         buffHandler.OnDotDamage += TakeDamage;
+        Status.Init();
     }
 
     private void OnDisable()
@@ -117,10 +118,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
         //     }
         // }
         
-        if (IsDead)
-        {
-            gameObject.SetActive(false);
-        }
         buffHandler.TimerUpdate();
     }
 
@@ -188,7 +185,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
     public void TakeDamage(float damage)
     {
-        if (damage < 0)
+        if (IsDead || damage < 0)
             return;
 
         Status.CurrentHp -= damage;
