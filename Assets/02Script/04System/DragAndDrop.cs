@@ -42,19 +42,16 @@ public class DragAndDrop : MonoBehaviour
     {
         if (context.control.device is Mouse or Touchscreen)
         {
-            
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
             if (!IsDragging)
             {
                 var mouseScreenPos = GetPointerPosition();
                 var mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
                 LayerMask mask = LayerMask.GetMask("Monster");
                 
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    Logger.Log("UI is clicked!");
-                    return;
-                }
-                    
                 var hitCount = Physics2D.RaycastNonAlloc(mouseWorldPos, Vector2.zero, hits);
 
                 GameObject highestSortingOrderObject = null;
