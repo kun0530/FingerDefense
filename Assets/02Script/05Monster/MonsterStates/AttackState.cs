@@ -32,6 +32,13 @@ public class AttackState : IState
             return;
         }
 
+        if (controller.attackTarget.IsDead)
+        {
+            controller.attackTarget.TryRemoveMonster(controller);
+            controller.TryTransitionState<PatrolState>();
+            return;
+        }
+
         if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) > 0.1) // Attack Move Target의 위치 변경
         {
             controller.TryTransitionState<ChaseState>();
