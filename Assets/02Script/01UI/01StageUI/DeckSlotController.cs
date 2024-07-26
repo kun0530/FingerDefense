@@ -45,7 +45,7 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateCharacterSlots()
     {
-        for (var i = 0; i < 8; i++)
+        for (var i = 0; i < 10; i++)
         {
             AddEmptyCharacterSlot();
         }

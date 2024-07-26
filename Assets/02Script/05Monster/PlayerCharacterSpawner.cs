@@ -9,14 +9,16 @@ public class PlayerCharacterSpawner : MonoBehaviour
     private PlayerCharacterTable playerCharacterTable;
     private SkillTable skillTable;
     private AssetListTable assetListTable;
-    
-    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8];
+
+    //To-Do 다시 8개로 변경 예정
+    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[10];
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
     
     public GameObject playerUICharacterPrefab;
     public RectTransform playerUICharacterParent;
     
-    private Button[] characterButtons = new Button[8];
+    //To-Do 다시 8개로 변경 예정
+    private Button[] characterButtons = new Button[10];
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
