@@ -202,7 +202,6 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             IsDead = true;
             
             // PASSOUT 상태로 변경 : 방민호
-            anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 1f);
             PlayDeathAnimation();
             
             //현재 비활성화 하는 부분 주석처리하고 , PASSOUT 상태가 끝나면 이벤트를 통해 IsDead를 True로 변경해서 반응하도록 수정'
