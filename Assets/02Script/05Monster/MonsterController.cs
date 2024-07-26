@@ -128,7 +128,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         
         stateMachine.TransitionTo<MoveState>();
         Status.Init();
-
+        UpdateHpBar();
         CanPatrol = false;
     }
 
