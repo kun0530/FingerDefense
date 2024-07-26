@@ -126,6 +126,7 @@ public class MonsterSpawner : MonoBehaviour
             var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
             monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
             monsterGo.moveTarget = moveTarget;
+            monsterGo.ResetMonsterData();
             //await UniTask.WaitForSeconds(currentWaveData.RepeatTerm);
             //To-Do: 윗 줄 코드는 Time.timeScale을 무시해서 밑으로 변경해야합니다.
             while (Time.timeScale == 0)

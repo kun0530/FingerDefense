@@ -97,8 +97,7 @@ public class MonsterFactory
         }
 
         var monster = monsterPool[id].Get();
-        monster.Status.Data = data;
-        monster.ResetMonsterData();
+        // monster.Status.Data = data;
 
         return monster;
     }
