@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class PlayerCharacterSpawner : MonoBehaviour
 { 
@@ -174,6 +176,9 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
     public void RemoveActiveCharacter(PlayerCharacterController character)
     {
+        if (character == null)
+            return;
+
         for (var i = 0; i < activePlayerCharacters.Length; i++)
         {
             if (activePlayerCharacters[i] == character)
@@ -187,8 +192,21 @@ public class PlayerCharacterSpawner : MonoBehaviour
                 if (playerCharacters[j] == character && characterButtons[j])
                 {
                     characterButtons[j].interactable = true;
+                    // UpdateRespawnTimer(characterButtons[j], character.Status.Data.RespawnCoolTime).Forget();
                 }
             }
         }
+    }
+
+    private async UniTask UpdateRespawnTimer(Button button, float respawnTime)
+    {
+        float timer = 0f;
+        while (timer <= respawnTime)
+        {
+            // image.fillAmount = timer / respawnTime;
+            await UniTask.Yield();
+        }
+        // image.fillAmount = 1f;
+        button.interactable = true;
     }
 }

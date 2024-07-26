@@ -31,6 +31,8 @@ public class DragState : IState
         renderer.sortingOrder = 1;
 
         controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
+        // TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
+        // CameraController.SetTargetWidth(25f, 0.25f);
     }
 
     public void Update()
@@ -50,5 +52,7 @@ public class DragState : IState
     public void Exit()
     {
         renderer.sortingOrder = 0;
+        // TimeScaleController.SetTimeScale(1f);
+        // CameraController.SetTargetWidth(20f, 0.5f);
     }
 }
