@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     public MonsterController monsterDown { get; set; }
 
     private CharacterSpineAni anim;
+    private TrackEntry deathTrackEntry;
 
     private int MonsterCount
     {
@@ -200,13 +202,27 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
             IsDead = true;
             
             // PASSOUT 상태로 변경 : 방민호
-            anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 0.01f);
-            spawner?.RemoveActiveCharacter(this);
+            anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 1f);
+            PlayDeathAnimation();
             
             //현재 비활성화 하는 부분 주석처리하고 , PASSOUT 상태가 끝나면 이벤트를 통해 IsDead를 True로 변경해서 반응하도록 수정'
             //위에 Update에서 확인가능 : 방민호
             // gameObject.SetActive(false);
         }
+    }
+
+    public void PlayDeathAnimation()
+    {
+        deathTrackEntry = anim.SetAnimation(CharacterSpineAni.CharacterState.PASSOUT, false, 1f);
+        if (deathTrackEntry != null)
+            deathTrackEntry.Complete += Die;
+    }
+
+    private void Die(TrackEntry trackEntry)
+    {
+        spawner?.RemoveActiveCharacter(this);
+        if (deathTrackEntry != null)
+            deathTrackEntry.Complete -= Die;
     }
 
     public void TakeBuff(BuffData buffData)

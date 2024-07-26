@@ -14,15 +14,24 @@ public class PlayerAttackBehavior : MonoBehaviour
     private bool isAnimationEnded = true;
 
     private TrackEntry attactTrackEntry;
+    private PlayerCharacterController controller;
 
     private void Awake()
     {
         characterAni = GetComponent<CharacterSpineAni>();
+        controller = GetComponent<PlayerCharacterController>();
+    }
+
+    private void OnEnable()
+    {
         characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
     }
 
     private void FixedUpdate()
     {
+        if (controller && controller.IsDead)
+            return;
+        
         UpdateSkill(normalAttack);
         UpdateSkill(skillAttack);
     }
