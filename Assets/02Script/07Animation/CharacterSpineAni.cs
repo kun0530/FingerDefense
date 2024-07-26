@@ -18,6 +18,8 @@ public class CharacterSpineAni : MonoBehaviour
 
     [Tooltip("케이 캐릭터의 방패에 대한 레이어를 담아두는 변수")]
     private int originalSortingOrder;
+
+    private TrackEntry currentTrackEntry;
     
     public enum CharacterState
     {
@@ -125,6 +127,12 @@ public class CharacterSpineAni : MonoBehaviour
 
     public TrackEntry SetAnimation(CharacterState state, bool loop, float timeScale)
     {
+        if (characterState == CharacterState.PASSOUT && !currentTrackEntry.IsComplete)
+        {
+            Logger.LogError($"DEAD 애니메이션 중 {state} 애니메이션을 호출했습니다.");
+            return null;
+        }
+
         if (characterAnimClip.Length <= (int)state)
         {
             Logger.LogError("해당 애니메이션 클립이 없습니다.");
@@ -134,11 +142,12 @@ public class CharacterSpineAni : MonoBehaviour
         if (currentAnimation == state.ToString())
             return null;
         
+        characterState = state;
         currentAnimation = state.ToString();
-        var trackEntry = spineAnimationState.SetAnimation(0, characterAnimClip[(int)state], loop);
-        trackEntry.TimeScale = timeScale;
+        currentTrackEntry = spineAnimationState.SetAnimation(0, characterAnimClip[(int)state], loop);
+        currentTrackEntry.TimeScale = timeScale;
 
-        return trackEntry;
+        return currentTrackEntry;
     }
 
     // private void SetCharacterState(CharacterState state)
