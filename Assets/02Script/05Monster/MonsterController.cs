@@ -210,6 +210,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     private void Die()
     {
         isDead = true;
+        stateMachine.TransitionTo<IdleState<MonsterController>>();
         // attackTarget.TryRemoveMonster(this);
         // stageManager.MonsterCount--;
         // stageManager.EarnedGold += Status.data.DropGold;
