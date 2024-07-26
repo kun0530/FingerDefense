@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 [Serializable]
 public class TutorialDeckStep
@@ -21,6 +22,8 @@ public class DeckUITutorialManager : MonoBehaviour
     private Action onComplete;
 
     private GameObject DeckUI;
+    public Button BackButton;
+    public Button GameButton;
     
     void Awake()
     {
@@ -32,6 +35,8 @@ public class DeckUITutorialManager : MonoBehaviour
         onComplete = onCompleteAction;
         currentStep = 0;
         ShowNextStep();
+        BackButton.interactable = false;
+        GameButton.interactable = false;
     }
 
     private void ShowNextStep()
@@ -65,9 +70,9 @@ public class DeckUITutorialManager : MonoBehaviour
     private void EndTutorial()
     {
         onComplete?.Invoke();
+        BackButton.interactable = true;
+        GameButton.interactable = true;
         Destroy(gameObject);
         gameManager.DeckUITutorialCheck = true;
     }
-    
-    
 }
