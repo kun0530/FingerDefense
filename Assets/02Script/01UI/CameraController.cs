@@ -16,6 +16,12 @@ public class CameraController : MonoBehaviour
     private RectTransform letterBoxCanvasRect;
     private Image[] letterBoxes;
 
+    // private static float startWidth;
+    // private static float endWidth;
+    // private static float changeDuration;
+    // private static float timer = 0f;
+    // private static bool isWidthChange = false;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -41,6 +47,8 @@ public class CameraController : MonoBehaviour
             AdjustCameraUsingLetterBox();
         else
             AdjustCamera();
+        // if (isWidthChange)
+        //     ChangeTargetWidth();
     }
 
     private void AdjustCamera()
@@ -118,4 +126,31 @@ public class CameraController : MonoBehaviour
         rectTransform.anchorMin = new Vector2(rect.x, rect.y);
         rectTransform.anchorMax = new Vector2(rect.x + rect.width, rect.y + rect.height);
     }
+
+    // public static void SetTargetWidth(float target, float duration)
+    // {
+    //     if (target < 0f || duration < 0f)
+    //         return;
+
+    //     startWidth = targetWidth;
+    //     endWidth = target;
+    //     changeDuration = duration;
+    //     timer = 0f;
+
+    //     isWidthChange = true;
+    // }
+
+    // private void ChangeTargetWidth()
+    // {
+    //     timer += Time.unscaledDeltaTime;
+    //     if (timer < changeDuration)
+    //     {
+    //         targetWidth = Mathf.Lerp(startWidth, endWidth, timer / changeDuration);
+    //     }
+    //     else
+    //     {
+    //         targetWidth = endWidth;
+    //         isWidthChange = false;
+    //     }
+    // }
 }
