@@ -8,11 +8,13 @@ using UnityEngine.AddressableAssets;
 
 public enum BuffType
 {
+    NONE = -1,
     ATK_SPEED,
     MOVE_SPEED,
     DOT_HP, // 도트 딜
     ATK,
-    MAX_HP // 최대 체력 -> 
+    MAX_HP, // 최대 체력 -> 
+    COUNT
 }
 
 public class BuffData

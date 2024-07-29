@@ -16,14 +16,13 @@ public class CharacterStatus : BaseStatus
         }
     }
 
-    public CharacterStatus(BuffHandler buffHandler) : base(buffHandler) { }
-
     public override void Init()
     {
         if (Data == null)
             return;
 
         CurrentHp = Data.Hp;
+        maxHp = Data.Hp;
         // currentAtkDmg = Data.AtkDmg;
         // currentAtkSpeed = Data.AtkSpeed;
     }

@@ -6,17 +6,12 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
-public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITargetable, IDraggable
+public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITargetable, IDraggable
 {
     private StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
-    [HideInInspector] public BuffHandler buffHandler;
-    public MonsterStatus Status { get; private set; }
-
-    public Image hpBar;
-    private bool isDead = false;
 
     public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; } // castle 위치
@@ -38,7 +33,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     {
         get
         {
-            if (isDead)
+            if (IsDead)
                 return false;
 
             var currentState = stateMachine.CurrentState.GetType();
@@ -64,7 +59,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         get
         {
             var currentState = stateMachine.CurrentState.GetType();
-            return !isDead && isTargetReset && currentState != typeof(DragState) && currentState != typeof(FallState);
+            return !IsDead && isTargetReset && currentState != typeof(DragState) && currentState != typeof(FallState);
         }
     }
 
@@ -78,12 +73,11 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         return stateMachine.TransitionTo<T>();
     }
 
-    private void Awake()
+    protected override void Awake()
     {
-        monsterAni = GetComponent<MonsterSpineAni>();
+        base.Awake();
 
-        buffHandler = new BuffHandler(this);
-        Status = new MonsterStatus(buffHandler);
+        monsterAni = GetComponent<MonsterSpineAni>();
 
         defaultRightScale = isDirectedRight ? transform.localScale.x : -transform.localScale.x;
 
@@ -100,16 +94,14 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         stateMachine.AddState(new AttackState(this));
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        Status.OnHpBarUpdate += UpdateHpBar;
-        buffHandler.OnDotDamage += TakeDamage;
+        base.OnEnable();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        Status.OnHpBarUpdate -= UpdateHpBar;
-        buffHandler.OnDotDamage -= TakeDamage;
+        base.OnDisable();
     }
 
     private void Start()
@@ -125,7 +117,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
 
     public void ResetMonsterData()
     {
-        isDead = false;
+        IsDead = false;
         
         stateMachine.TransitionTo<MoveState>();
         Status.Init();
@@ -134,10 +126,10 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         isTargetReset=false;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         stateMachine.Update();
-        Status.buffHandler.TimerUpdate();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -153,7 +145,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
             //     return;
             
             stageManager?.DamageCastle(10f);
-            Die();
+            OnDie();
         }
 
         if (other.CompareTag("ResetLine"))
@@ -162,38 +154,9 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         }
     }
 
-    public void TakeDamage(float damage)
+    public override void Die()
     {
-        if (damage < 0 || isDead)
-            return;
-        if (Status == null) // Null 검사 추가
-        {
-            Logger.LogError("상태가 초기화되지 않았습니다.");
-            return;
-        }
-        Status.CurrentHp -= damage;
-        UpdateHpBar();
-
-        if (Status.CurrentHp <= 0f)
-        {
-            PlayDeathAnimation();
-        }
-    }
-
-    public void TakeBuff(BuffData buffData)
-    {
-        buffHandler.AddBuff(buffData);
-    }
-
-    public void TakeBuff(Buff buff)
-    {
-        buffHandler.AddBuff(buff);
-    }
-
-    public void PlayDeathAnimation()
-    {
-        isDead = true;
-        Status.CurrentHp = 0f;
+        base.Die();
         if (stageManager)
             stageManager.EarnedGold += Status.Data.DropGold;
 
@@ -211,12 +174,12 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     {
         if (deathTrackEntry != null)
             deathTrackEntry.Complete -= Die;
-        Die();
+        OnDie();
     }
 
-    private void Die()
+    private void OnDie()
     {
-        isDead = true;
+        IsDead = true;
         stateMachine.TransitionTo<IdleState<MonsterController>>();
         // attackTarget.TryRemoveMonster(this);
         // stageManager.MonsterCount--;
@@ -248,18 +211,6 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
         }
     }
 
-    private void UpdateHpBar()
-    {
-        if (!hpBar)
-        {
-            Logger.LogError($"HP Bar가 할당되었는지 확인해주세요: {gameObject.name}");
-            return;
-        }
-
-        var hpPercent = Status.CurrentHp / Status.Data.Hp;
-        hpBar.fillAmount = hpPercent;
-    }
-
     public void SetFlip(bool isRight)
     {
         var newScaleX = isRight ? defaultRightScale : defaultRightScale * -1f;
@@ -280,10 +231,5 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public bool TryFall()
     {
         return stateMachine.TransitionTo<FallState>();
-    }
-
-    public void UpdateCurrentState()
-    {
-        Status.UpdateCurrentState();
     }
 }

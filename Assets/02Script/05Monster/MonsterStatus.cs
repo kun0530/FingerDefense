@@ -19,14 +19,13 @@ public class MonsterStatus : BaseStatus
 
     public float currentMoveSpeed;
 
-    public MonsterStatus(BuffHandler buffHandler) : base(buffHandler) { }
-
     public override void Init()
     {
         if (Data == null)
             return;
 
         CurrentHp = Data.Hp;
+        maxHp = Data.Hp;
         currentAtkDmg = Data.AtkDmg;
         currentMoveSpeed = Data.MoveSpeed;
         currentAtkSpeed = Data.AtkSpeed;

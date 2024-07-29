@@ -6,13 +6,17 @@ using UnityEngine;
 public class BuffHandler
 {
     public List<Buff> buffs = new();
-
-    public IControllable controller;
+    public Dictionary<BuffType, float> buffValues = new();
     public event Action<float> OnDotDamage;
 
-    public BuffHandler(IControllable controller)
+    public int maxBuffCount = 3;
+
+    public BuffHandler()
     {
-        this.controller = controller;
+        for (int i = 0; i < (int)BuffType.COUNT; i++)
+        {
+            buffValues.Add((BuffType)i, 0f);
+        }
     }
 
     private void ResetBuff()
@@ -57,14 +61,14 @@ public class BuffHandler
             return;
         }
 
-        if (buffs.Count >= 3)
+        if (buffs.Count >= maxBuffCount)
         {
             Logger.Log($"Buff 최대({buffs.Count}): {buff.ToString()}");
             return;
         }
 
         buffs.Add(buff);
-        controller.UpdateCurrentState();
+        UpdateBuff();
 
         Logger.Log($"Buff 추가: {buff.ToString()}");
     }
@@ -77,6 +81,22 @@ public class BuffHandler
         Logger.Log($"Buff 제거: {buffs[index].ToString()}");
 
         buffs.RemoveAt(index);
-        controller.UpdateCurrentState();
+        UpdateBuff();
+    }
+
+    public void UpdateBuff()
+    {
+        for (int i = 0; i < (int)BuffType.COUNT; i++)
+        {
+            buffValues[(BuffType)i] = 0f;
+        }
+
+        foreach (var buff in buffs)
+        {
+            foreach (var buffAction in buff.buffData.BuffActions)
+            {
+                buffValues[(BuffType)buffAction.type] += buffAction.value;
+            }
+        }
     }
 }
