@@ -18,15 +18,6 @@ public class StageSlotCreate : MonoBehaviour
     private AssetListTable assetListTable;
     private StringTable stringTable;
     
-    //포로토타입용 삭제 예정
-    private GameManager gameManager;
-    private DeckUITutorialManager tutorialManager;
-    
-    private void Start()
-    {
-        
-    }
-
     private void OnEnable()
     {
         if (stageTable == null)
@@ -35,9 +26,6 @@ public class StageSlotCreate : MonoBehaviour
             assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
             stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
         }
-
-        gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
-        tutorialManager = GameObject.FindGameObjectWithTag("Tutorial")?.GetComponentInChildren<DeckUITutorialManager>();
 
         CreateStageSlots();
     }
@@ -73,7 +61,6 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetAssetListTable(assetListTable);
             slot.Configure(stageData);
             slot.SetDeckUI(deckUI);
-            slot.SetManagers(gameManager, tutorialManager);
         }
     }
     

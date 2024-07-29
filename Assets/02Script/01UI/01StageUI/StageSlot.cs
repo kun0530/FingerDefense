@@ -20,15 +20,7 @@ public class StageSlot : MonoBehaviour
     private AssetListTable assetListTable;
     
     [SerializeField]private GameObject deckUI;
-    //포로토타입 튜토리얼 체크 
-    private GameManager gameManager;
-    private DeckUITutorialManager tutorialManager;
     
-    public void Awake()
-    {
-
-    }
-
     public void Start()
     { 
         DeckButton.onClick.AddListener(OnClick);
@@ -41,12 +33,7 @@ public class StageSlot : MonoBehaviour
     {
         this.assetListTable = assetListTable;
     }
-    //포로토타입 튜토리얼 체크 
-    public void SetManagers(GameManager gameManager, DeckUITutorialManager tutorialManager)
-    {
-        this.gameManager = gameManager;
-        this.tutorialManager = tutorialManager;
-    }
+
     public void Configure(StageData stageData)
     {
         //해당 슬롯에 스테이지 이름 설정 =>stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 
@@ -124,13 +111,5 @@ public class StageSlot : MonoBehaviour
         deckUI.SetActive(true);
         Variables.LoadTable.StageId = StageId;
         Logger.Log($"스테이지 {StageId} 선택");
-        
-        //포로토타입 튜토리얼 체크 
-        if (!gameManager.DeckUITutorialCheck)
-        {
-            tutorialManager.StartTutorial(() => { });
-        }
     }
-    
-    
 }

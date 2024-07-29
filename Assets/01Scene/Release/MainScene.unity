@@ -122,75 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &144238535
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 144238536}
-  - component: {fileID: 144238537}
-  m_Layer: 0
-  m_Name: Deck
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &144238536
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 144238535}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 625747078}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &144238537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 144238535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44aaae69b8a7e04893d5dd6480a5352, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modalPrefab: {fileID: 2771855640804242018, guid: 0929d0d1878c0b249bdfbdcbd7e8a104, type: 3}
-  canvas: {fileID: 6595080945552656857}
-  tutorialSteps:
-  - title: "\uCE90\uB9AD\uD130 \uD3B8\uC131"
-    description: "\uC624\uB978\uCABD \uCE90\uB9AD\uD130 \uB9AC\uC2A4\uD2B8\uC5D0\uC11C
-      \uC6D0\uD558\uB294 \uCE90\uB9AD\uD130\uB97C \uD130\uCE58\uD558\uC5EC \uD3B8\uC131\uD560
-      \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uB2E4\uC74C"
-  - title: "\uCE90\uB9AD\uD130 \uD3B8\uC131"
-    description: "\uC67C\uCABD \uD3B8\uC131 \uD654\uBA74\uC5D0\uC11C \uC81C\uAC70\uD558\uACE0
-      \uC2F6\uC740 \uCE90\uB9AD\uD130\uB97C \uD130\uCE58\uD558\uC5EC \uD3B8\uC131
-      \uCDE8\uC18C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uB2E4\uC74C"
-  - title: "\uCE90\uB9AD\uD130 \uD3B8\uC131"
-    description: "Game \uBC84\uD2BC\uC744 \uD130\uCE58\uD558\uC5EC \uAC8C\uC784\uC5D0
-      \uC785\uC7A5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uC644\uB8CC"
-  - title: "\uCE90\uB9AD\uD130 \uD3B8\uC131"
-    description: "\uB098\uAC00\uAE30 \uBC84\uD2BC\uC744 \uD130\uCE58\uD558\uC5EC
-      \uC2A4\uD14C\uC774\uC9C0 \uC120\uD0DD \uD654\uBA74\uC73C\uB85C \uB3CC\uC544\uAC08
-      \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uC644\uB8CC"
-  currentStep: 0
-  BackButton: {fileID: 1220779689448494614}
-  GameButton: {fileID: 8929265030053036436}
 --- !u!1 &159539060
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,8 +268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13d8ff0660541944b61ef2243c6f9bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameTutorial: {fileID: 0}
-  monsterSpawner: {fileID: 0}
 --- !u!4 &278362175
 Transform:
   m_ObjectHideFlags: 0
@@ -651,39 +580,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &625747076
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 625747078}
-  m_Layer: 0
-  m_Name: Tutorial
-  m_TagString: Tutorial
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &625747078
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625747076}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 144238536}
-  - {fileID: 1802197644}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &734382747
 GameObject:
   m_ObjectHideFlags: 0
@@ -2159,73 +2055,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QuitPanel: {fileID: 8249549542085585930}
---- !u!1 &1802197643
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1802197644}
-  - component: {fileID: 1802197645}
-  m_Layer: 0
-  m_Name: Stage
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1802197644
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802197643}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 625747078}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1802197645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802197643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: decae888eec38ed4595ca00ab9a3103e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modalPrefab: {fileID: 2771855640804242018, guid: 0929d0d1878c0b249bdfbdcbd7e8a104, type: 3}
-  canvas: {fileID: 8518743822830874664}
-  tutorialSteps:
-  - title: "\uC2A4\uD14C\uC774\uC9C0 \uC120\uD0DD"
-    description: "\uC88C\uC6B0 \uC2A4\uC640\uC774\uD504\uB97C \uD1B5\uD574\uC11C
-      \uC6D0\uD558\uB294 \uC2A4\uD14C\uC774\uC9C0\uB97C \uACE0\uB97C \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uC644\uB8CC"
-  - title: "\uC2A4\uD14C\uC774\uC9C0 \uC120\uD0DD"
-    description: "\uC785\uC7A5\uD558\uAE30 \uBC84\uD2BC\uC744 \uC774\uC6A9\uD558\uC5EC
-      \uC2A4\uD14C\uC774\uC9C0 \uC785\uC7A5 \uC804 \uD3B8\uC131\uD654\uBA74\uC73C\uB85C
-      \uC774\uB3D9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uC644\uB8CC"
-  - title: "\uC2A4\uD14C\uC774\uC9C0 \uC120\uD0DD"
-    description: "\uC2A4\uD14C\uC774\uC9C0\uC5D0 \uB4F1\uC7A5\uD558\uB294 \uD2B9\uC218
-      \uBAAC\uC2A4\uD130, \uBCF4\uC2A4 \uBAAC\uC2A4\uD130\uC758 \uC774\uBBF8\uC9C0\uB97C
-      \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uB2E4\uC74C"
-  - title: "\uC2A4\uD14C\uC774\uC9C0 \uC120\uD0DD"
-    description: "\uC2A4\uD14C\uC774\uC9C0\uB97C \uCD5C\uCD08 \uD074\uB9AC\uC5B4
-      \uC2DC \uC5BB\uC744 \uC218 \uC788\uB294 \uBCF4\uC0C1\uC5D0 \uB300\uD55C \uC815\uBCF4\uB97C
-      \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    buttonText: "\uC644\uB8CC"
-  currentStep: 0
 --- !u!1 &1884251148
 GameObject:
   m_ObjectHideFlags: 0
@@ -5922,7 +5751,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7982007178546674140}
   m_HandleRect: {fileID: 2812165432739846586}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -16423,5 +16252,4 @@ SceneRoots:
   - {fileID: 769340689}
   - {fileID: 1762314807}
   - {fileID: 278362175}
-  - {fileID: 625747078}
   - {fileID: 465397585}

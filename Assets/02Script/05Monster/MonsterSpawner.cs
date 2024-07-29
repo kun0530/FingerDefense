@@ -30,9 +30,6 @@ public class MonsterSpawner : MonoBehaviour
     private bool isWaveEnd;
     public HashSet<int> monsters { get; private set; } = new();
     
-    //TO-DO:Prototype 이후 바로 삭제 예정
-    public bool isTutorialCompleted = false; 
-    
     private void Awake()
     {
         factory = new MonsterFactory();
@@ -69,20 +66,9 @@ public class MonsterSpawner : MonoBehaviour
             isWaveTerm = true;
         }
         
-        //To-Do:Prototype 이후 삭제
-        GameTutorialManager.OnTutorialComplete += OnTutorialComplete;
-    }
 
-    #region Prototype 이후 삭제
-    private void OnDestroy()
-    {
-        GameTutorialManager.OnTutorialComplete -= OnTutorialComplete;
     }
-    private void OnTutorialComplete()
-    {
-        isTutorialCompleted = true;
-    }
-    #endregion
+    
     
     private void OnEnable()
     {
@@ -98,7 +84,7 @@ public class MonsterSpawner : MonoBehaviour
     private void Update()
     {
         //To-Do:Prototype 이후 !isTutorialCompleted 삭제
-        if (!isTutorialCompleted || MonsterCount <= 0 || !isWaveTerm || isWaveEnd)
+        if (MonsterCount <= 0 || !isWaveTerm || isWaveEnd)
             return;
 
         spawnWaveTimer += Time.deltaTime;
@@ -127,8 +113,7 @@ public class MonsterSpawner : MonoBehaviour
             monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
             monsterGo.moveTarget = moveTarget;
             monsterGo.ResetMonsterData();
-            //await UniTask.WaitForSeconds(currentWaveData.RepeatTerm);
-            //To-Do: 윗 줄 코드는 Time.timeScale을 무시해서 밑으로 변경해야합니다.
+
             while (Time.timeScale == 0)
             {
                 await UniTask.Yield(PlayerLoopTiming.Update);
