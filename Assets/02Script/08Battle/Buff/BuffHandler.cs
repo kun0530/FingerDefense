@@ -19,9 +19,10 @@ public class BuffHandler
         }
     }
 
-    private void ResetBuff()
+    public void ResetBuffs()
     {
         buffs.Clear();
+        UpdateBuff();
     }
 
     public void TimerUpdate()
@@ -62,23 +63,16 @@ public class BuffHandler
         }
 
         if (buffs.Count >= maxBuffCount)
-        {
-            Logger.Log($"Buff 최대({buffs.Count}): {buff.ToString()}");
             return;
-        }
 
         buffs.Add(buff);
         UpdateBuff();
-
-        Logger.Log($"Buff 추가: {buff.ToString()}");
     }
 
     private void RemoveBuff(int index)
     {
         if (index < 0 || index >= buffs.Count)
             return;
-
-        Logger.Log($"Buff 제거: {buffs[index].ToString()}");
 
         buffs.RemoveAt(index);
         UpdateBuff();

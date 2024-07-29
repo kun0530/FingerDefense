@@ -21,7 +21,7 @@ public class AttackState : IState
 
         controller.SetFlip(false);
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.currentAtkSpeed);
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.CurrentAtkSpeed);
     }
 
     public void Update()
@@ -48,7 +48,7 @@ public class AttackState : IState
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackCoolDown)
         {
-            controller.attackTarget.TakeDamage(controller.Status.currentAtkDmg);
+            controller.attackTarget.TakeDamage(controller.Status.CurrentAtk);
             attackTimer = 0f;
 
             return;

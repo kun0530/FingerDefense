@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 1. 필요할 때마다 프로퍼티에서 계산한다.
-// 2. 변경이 발생할 때마다 필드를 업데이트한다.
 public class MonsterStatus : BaseStatus
 {
     private MonsterData data;
@@ -17,50 +15,57 @@ public class MonsterStatus : BaseStatus
         }
     }
 
-    public float currentMoveSpeed;
+    public float CurrentAtk
+    {
+        get
+        {
+            if (Data == null)
+                return 0f;
+
+            if (buffHandler == null)
+                return Data.AtkDmg;
+            
+            var currentAtk = Data.AtkDmg + buffHandler.buffValues[BuffType.ATK];
+            return currentAtk > 0f ? currentAtk : 0f;
+        }
+    }
+
+    public float CurrentAtkSpeed
+    {
+        get
+        {
+            if (Data == null)
+                return 0f;
+
+            if (buffHandler == null)
+                return Data.AtkSpeed;
+            
+            var currentAtkSpeed = Data.AtkSpeed + buffHandler.buffValues[BuffType.ATK_SPEED];
+            return currentAtkSpeed > 0f ? currentAtkSpeed : 0f;
+        }
+    }
+
+    public float CurrentMoveSpeed
+    {
+        get
+        {
+            if (Data == null)
+                return 0f;
+
+            if (buffHandler == null)
+                return Data.MoveSpeed;
+            
+            var currentMoveSpeed = Data.MoveSpeed + buffHandler.buffValues[BuffType.MOVE_SPEED];
+            return currentMoveSpeed > 0f ? currentMoveSpeed : 0f;
+        }
+    }
 
     public override void Init()
     {
         if (Data == null)
             return;
 
-        CurrentHp = Data.Hp;
-        maxHp = Data.Hp;
-        currentAtkDmg = Data.AtkDmg;
-        currentMoveSpeed = Data.MoveSpeed;
-        currentAtkSpeed = Data.AtkSpeed;
-    }
-
-    public override void UpdateCurrentState()
-    {
-        CurrentHp = Data.Hp;
-        currentAtkDmg = Data.AtkDmg;
-        currentMoveSpeed = Data.MoveSpeed;
-        currentAtkSpeed = Data.AtkSpeed;
-
-        foreach (var buff in buffHandler.buffs)
-        {
-            foreach (var buffAction in buff.buffData.BuffActions)
-            {
-                switch ((BuffType)buffAction.type)
-                {
-                    case BuffType.ATK_SPEED:
-                        currentAtkSpeed += buffAction.value;
-                        break;
-                    case BuffType.MOVE_SPEED:
-                        currentMoveSpeed += buffAction.value;
-                        break;
-                    case BuffType.DOT_HP:
-                        break;
-                    case BuffType.ATK:
-                        currentAtkDmg += buffAction.value;
-                        break;
-                }
-            }
-        }
-
-        currentAtkDmg = currentAtkDmg < 0f ? 0f : currentAtkDmg;
-        currentMoveSpeed = currentMoveSpeed < 0f ? 0f : currentMoveSpeed;
-        currentAtkSpeed = currentAtkSpeed < 0f ? 0f : currentAtkSpeed;
+        currentMaxHp = Data.Hp;
+        CurrentHp = currentMaxHp;
     }
 }

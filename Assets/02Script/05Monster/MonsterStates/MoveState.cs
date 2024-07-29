@@ -27,12 +27,12 @@ public class MoveState : IState
         }
         controller.SetFlip(direction.x > 0);
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.currentMoveSpeed);
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.CurrentMoveSpeed);
     }
     
     public void Update()
     {
-        controller.transform.position += direction * controller.Status.currentMoveSpeed * Time.deltaTime;
+        controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
 
         if (controller.CanPatrol)
             controller.TryTransitionState<PatrolState>();

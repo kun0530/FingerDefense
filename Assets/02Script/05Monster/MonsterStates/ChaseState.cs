@@ -13,7 +13,7 @@ public class ChaseState : IState
 
     public void Enter()
     {
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.currentMoveSpeed);
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.CurrentMoveSpeed);
     }
 
     public void Update()
@@ -25,7 +25,7 @@ public class ChaseState : IState
         }
 
         var direction = (controller.attackMoveTarget.position - controller.transform.position).normalized;
-        controller.transform.position += direction * controller.Status.currentMoveSpeed * Time.deltaTime;
+        controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         controller.SetFlip(direction.x > 0);
         if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) < 0.1)
         {

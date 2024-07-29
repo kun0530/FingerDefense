@@ -21,7 +21,7 @@ public class PatrolState : IState
     {
         patrolTimer = 0f;
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.currentMoveSpeed);
+        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.CurrentMoveSpeed);
     }
 
     public void Update()
@@ -34,7 +34,7 @@ public class PatrolState : IState
 
         // 성 포탈까지 이동
         var direction = (controller.moveTarget.transform.position - controller.transform.position).normalized;
-        controller.transform.position += direction * controller.Status.currentMoveSpeed * Time.deltaTime;
+        controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         controller.SetFlip(direction.x > 0);
         if (Vector2.Distance(controller.transform.position, controller.moveTarget.transform.position) < 0.1)
         {

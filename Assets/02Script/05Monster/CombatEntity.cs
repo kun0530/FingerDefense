@@ -15,11 +15,14 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable where T : Bas
     {
         Status = new();
         buffHandler = new();
+
+        Status.buffHandler = buffHandler;
     }
 
     protected virtual void OnEnable()
     {
         IsDead = false;
+        buffHandler.ResetBuffs();
         Status.OnHpBarUpdate += UpdateHpBar;
         buffHandler.OnDotDamage += TakeDamage;
     }
@@ -76,7 +79,7 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable where T : Bas
             return;
         }
 
-        var hpPercent = Status.CurrentHp / Status.maxHp;
+        var hpPercent = Status.CurrentHp / Status.CurrentMaxHp;
         hpBar.fillAmount = hpPercent;
     }
 }
