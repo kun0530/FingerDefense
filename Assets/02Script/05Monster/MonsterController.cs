@@ -82,7 +82,7 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     {
         monsterAni = GetComponent<MonsterSpineAni>();
 
-        buffHandler = new BuffHandler(Status);
+        buffHandler = new BuffHandler(this);
         Status = new MonsterStatus(buffHandler);
 
         defaultRightScale = isDirectedRight ? transform.localScale.x : -transform.localScale.x;
@@ -280,5 +280,10 @@ public class MonsterController : MonoBehaviour, IControllable, IDamageable, ITar
     public bool TryFall()
     {
         return stateMachine.TransitionTo<FallState>();
+    }
+
+    public void UpdateCurrentState()
+    {
+        Status.UpdateCurrentState();
     }
 }

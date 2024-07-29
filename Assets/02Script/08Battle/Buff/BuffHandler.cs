@@ -7,12 +7,12 @@ public class BuffHandler
 {
     public List<Buff> buffs = new();
 
-    public BaseStatus status;
+    public IControllable controller;
     public event Action<float> OnDotDamage;
 
-    public BuffHandler(BaseStatus status)
+    public BuffHandler(IControllable controller)
     {
-        this.status = status;
+        this.controller = controller;
     }
 
     private void ResetBuff()
@@ -64,7 +64,7 @@ public class BuffHandler
         }
 
         buffs.Add(buff);
-        status.UpdateCurrentState();
+        controller.UpdateCurrentState();
 
         Logger.Log($"Buff 추가: {buff.ToString()}");
     }
@@ -77,6 +77,6 @@ public class BuffHandler
         Logger.Log($"Buff 제거: {buffs[index].ToString()}");
 
         buffs.RemoveAt(index);
-        status.UpdateCurrentState();
+        controller.UpdateCurrentState();
     }
 }

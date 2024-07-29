@@ -47,7 +47,7 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
     private void Awake()
     {
         Status = new(buffHandler);
-        buffHandler = new(Status);
+        buffHandler = new(this);
 
         anim = GetComponent<CharacterSpineAni>();
     }
@@ -241,5 +241,10 @@ public class PlayerCharacterController : MonoBehaviour, IControllable, IDamageab
 
         var hpPercent = Status.CurrentHp / Status.Data.Hp;
         hpBar.fillAmount = hpPercent;
+    }
+
+    public void UpdateCurrentState()
+    {
+        Status.UpdateCurrentState();
     }
 }
