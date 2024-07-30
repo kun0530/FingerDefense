@@ -20,7 +20,7 @@ public class TargetSkill : SkillType
         {
             if (target != null && ApplySkillActions(target))
             {
-                EffectFactoryTest.CreateEffect(assetId, target);
+                EffectFactory.CreateEffect(assetId, target);
                 targetCount++;
             }
         }

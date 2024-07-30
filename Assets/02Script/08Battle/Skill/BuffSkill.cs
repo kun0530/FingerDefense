@@ -17,7 +17,7 @@ public class BuffSkill : ISkillAction
         if (target.TryGetComponent<IDamageable>(out var damageable)
         && damageable.TakeBuff(buffData))
         {
-            EffectFactoryTest.CreateEffect(buffData.EffectNo.ToString(), target, buffData.LastingTime);
+            EffectFactory.CreateEffect(buffData.EffectNo.ToString(), target, buffData.LastingTime);
             return true;
         }
         else

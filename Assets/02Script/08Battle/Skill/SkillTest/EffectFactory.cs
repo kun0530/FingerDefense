@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class EffectFactoryTest
+public static class EffectFactory
 {
     private static string EffectFile = "Effects/{0}";
 
