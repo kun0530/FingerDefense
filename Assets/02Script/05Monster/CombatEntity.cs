@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class CombatEntity<T> : MonoBehaviour, IDamageable where T : BaseStatus, new()
+public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettable where T : BaseStatus, new()
 {
     public T Status { get; protected set; }
     protected BuffHandler buffHandler;

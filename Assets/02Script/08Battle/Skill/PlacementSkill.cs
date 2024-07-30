@@ -9,12 +9,6 @@ public class PlacementSkill : SkillType
     public PlacementSkill(IFindable secondaryTargeting, string assetId)
     : base(secondaryTargeting, assetId) { }
 
-
-    // public AreaTargetSkill(AreaSkill area)
-    // {
-    //     this.area = area;
-    // }
-
     public override bool UseSkill(GameObject target)
     {
         // var area = GameObject.Instantiate(skillArea);

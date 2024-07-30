@@ -14,8 +14,8 @@ public class BuffSkill : ISkillAction
 
     public bool ApplySkillAction(GameObject target)
     {
-        if (target.TryGetComponent<IDamageable>(out var damageable)
-        && damageable.TakeBuff(buffData))
+        if (target.TryGetComponent<IBuffGettable>(out var buffGettable)
+        && buffGettable.TakeBuff(buffData))
         {
             EffectFactory.CreateEffect(buffData.EffectNo.ToString(), target, buffData.LastingTime);
             return true;
@@ -26,11 +26,11 @@ public class BuffSkill : ISkillAction
         }
     }
 
-    public Buff ApplySkillEnterAreaAction(IDamageable damageable)
-    {
-        var buff = new Buff(buffData, true);
-        damageable.TakeBuff(buff);
+    // public Buff ApplySkillEnterAreaAction(IDamageable damageable)
+    // {
+    //     var buff = new Buff(buffData, true);
+    //     damageable.TakeBuff(buff);
 
-        return buff;
-    }
+    //     return buff;
+    // }
 }
