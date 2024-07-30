@@ -120,7 +120,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
         }
     }
 
-    public override void Die()
+    public override void Die(bool isDamageDeath = true)
     {
         base.Die();
 
