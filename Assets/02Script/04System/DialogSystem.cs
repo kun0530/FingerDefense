@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 using TMPro;
@@ -32,7 +30,8 @@ public class DialogSystem : MonoBehaviour
     private SystemDialog[] systemDialog;
     [SerializeField] 
     private DialogData[] dialogData;
-    [SerializeField] 
+
+    [SerializeField]
     private bool isAutoStart = false; //자동 시작 여부를 false로 변경
     private bool isFirstDialog = true;
     

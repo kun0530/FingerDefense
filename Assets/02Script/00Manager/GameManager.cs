@@ -35,12 +35,22 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        LoadPlayerName();
     }
-   
+
+    private void LoadPlayerName()
+    {
+        Variables.LoadName.Nickname = PlayerName;
+    }
+
     public string PlayerName
     {
         get => PlayerPrefs.GetString("PlayerName", "");
-        set => PlayerPrefs.SetString("PlayerName", value);
+        set
+        {
+            PlayerPrefs.SetString("PlayerName", value);
+            PlayerPrefs.Save();
+        }
     }
     public bool NicknameCheck
     {

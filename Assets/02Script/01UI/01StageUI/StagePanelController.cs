@@ -15,9 +15,11 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private Vector2 dragStartPosition;
     private HorizontalLayoutGroup layoutGroup;
     
+    
     void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
+        
         UpdatePadding(true); 
         UpdateStageSlots(true); 
     }

@@ -3,8 +3,7 @@ using TMPro;
 
 public class MainUI : MonoBehaviour
 {
-    [SerializeField]
-    private TextMeshProUGUI playerNameText;
+    public TextMeshProUGUI playerNameText;
     private GameManager gameManager;
     
     private void Start()
@@ -15,6 +14,11 @@ public class MainUI : MonoBehaviour
     
     public void UpdatePlayerName()
     {
-        playerNameText.text =gameManager.PlayerName;
+        if (playerNameText != null)
+        {
+            playerNameText.text = Variables.LoadName.Nickname;    
+        }
+        
+        
     }
 }

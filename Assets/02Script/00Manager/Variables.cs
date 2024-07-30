@@ -12,4 +12,9 @@ namespace Variables
         //To-Do 다시 8개로 변경 예정
         public static int[] characterIds = new int[10];
     }
+    
+    public static class LoadName
+    {
+        public static string Nickname;
+    }
 }
