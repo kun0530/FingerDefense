@@ -14,8 +14,8 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     private StateMachine<MonsterController> stateMachine;
 
     public bool CanPatrol { get; set; }
-    public Transform moveTarget { get; set; } // castle 위치
-    public Transform attackMoveTarget { get; set; } // 공격 위치
+    public Transform moveTarget { get; set; }
+    public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
 
     public float findRange = 3f;
@@ -141,14 +141,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
         if (other.CompareTag(Defines.Tags.CASTLE_TAG))
         {
-            // if (!IsTargetable)
-            //     return;
-            
-            stageManager?.DamageCastle(10f);
+            stageManager?.DamageCastle(10f); // To-Do: 몬스터의 종류에 따라 포털에 다른 데미지를 줘야합니다.
             OnDie();
         }
 
-        if (other.CompareTag("ResetLine"))
+        if (other.CompareTag("ResetLine")) // To-Do: Defines에서 정의
         {
             isTargetReset = true;
         }
@@ -181,34 +178,16 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         IsDead = true;
         stateMachine.TransitionTo<IdleState<MonsterController>>();
-        // attackTarget.TryRemoveMonster(this);
-        // stageManager.MonsterCount--;
-        // stageManager.EarnedGold += Status.data.DropGold;
-        // pool.Release(this);
-        
-        if (attackTarget) // Null 검사 추가
-        {
-            attackTarget.TryRemoveMonster(this);
-        }
 
-        if (stageManager) // Null 검사 추가
-        {
+        attackTarget?.TryRemoveMonster(this);
+
+        if (stageManager)
             stageManager.MonsterCount--;
-        }
-        else
-        {
-            // Logger.LogError("스테이지 매니저가 할당되지 않았습니다.");
-        }
 
-        if (pool != null) // Null 검사 추가
-        {
+        if (pool != null)
             pool.Release(this);
-        }
         else
-        {
             Destroy(gameObject);
-            // Logger.LogError("풀이 할당되지 않았습니다.");
-        }
     }
 
     public void SetFlip(bool isRight)

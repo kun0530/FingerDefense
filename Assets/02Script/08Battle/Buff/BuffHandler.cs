@@ -27,18 +27,24 @@ public class BuffHandler
 
     public void TimerUpdate()
     {
+        Stack<int> removeIndexes = new();
         for (int i = 0; i < buffs.Count; i++)
         {
             buffs[i].TimerUpdate();
             if (buffs[i].IsBuffExpired)
             {
-                RemoveBuff(i);
+                removeIndexes.Push(i);
             }
             if (buffs[i].isDotDamage)
             {
                 OnDotDamage?.Invoke(buffs[i].dotDamage);
                 buffs[i].isDotDamage = false;
             }
+        }
+
+        while (removeIndexes.Count != 0)
+        {
+            RemoveBuff(removeIndexes.Pop());
         }
     }
 

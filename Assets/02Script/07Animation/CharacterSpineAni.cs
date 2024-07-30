@@ -13,7 +13,7 @@ public class CharacterSpineAni : MonoBehaviour
 
     private Spine.AnimationState spineAnimationState;
 
-    private CharacterState characterState;
+    public CharacterState CurrentCharacterState { get; private set; }
     private string currentAnimation;
 
     [Tooltip("케이 캐릭터의 방패에 대한 레이어를 담아두는 변수")]
@@ -127,7 +127,7 @@ public class CharacterSpineAni : MonoBehaviour
 
     public TrackEntry SetAnimation(CharacterState state, bool loop, float timeScale)
     {
-        if (characterState == CharacterState.PASSOUT && !CurrentTrackEntry.IsComplete)
+        if (CurrentCharacterState == CharacterState.PASSOUT && !CurrentTrackEntry.IsComplete)
         {
             Logger.LogError($"DEAD 애니메이션 중 {state} 애니메이션을 호출했습니다.");
             return null;
@@ -142,7 +142,7 @@ public class CharacterSpineAni : MonoBehaviour
         if (currentAnimation == state.ToString())
             return null;
         
-        characterState = state;
+        CurrentCharacterState = state;
         currentAnimation = state.ToString();
         CurrentTrackEntry = spineAnimationState.SetAnimation(0, characterAnimClip[(int)state], loop);
         CurrentTrackEntry.TimeScale = timeScale;

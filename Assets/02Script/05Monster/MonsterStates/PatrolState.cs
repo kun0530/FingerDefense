@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using UnityEngine;
 
 public class PatrolState : IState
@@ -11,6 +12,8 @@ public class PatrolState : IState
 
     private IFindable findBehavior;
 
+    private TrackEntry moveTrackEntry;
+
     public PatrolState(MonsterController controller, IFindable findBehavior)
     {
         this.controller = controller;
@@ -21,7 +24,10 @@ public class PatrolState : IState
     {
         patrolTimer = 0f;
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.CurrentMoveSpeed);
+        if (controller.monsterAni.CurrentMonsterState != MonsterSpineAni.MonsterState.WALK)
+            moveTrackEntry = controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.CurrentMoveSpeed);
+        else
+            moveTrackEntry = controller.monsterAni.CurrentTrackEntry;
     }
 
     public void Update()
@@ -35,6 +41,8 @@ public class PatrolState : IState
         // 성 포탈까지 이동
         var direction = (controller.moveTarget.transform.position - controller.transform.position).normalized;
         controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
+        if (moveTrackEntry != null)
+            moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;
         controller.SetFlip(direction.x > 0);
         if (Vector2.Distance(controller.transform.position, controller.moveTarget.transform.position) < 0.1)
         {

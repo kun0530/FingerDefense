@@ -6,7 +6,7 @@ public static class EffectFactoryTest
 {
     private static string EffectFile = "Effects/{0}";
 
-    public static ParticleSystem CreateEffect(string effectId, GameObject gameObject)
+    public static ParticleSystem CreateEffect(string effectId, GameObject gameObject, float lifeTime = 1f)
     {
         var effectResource = Resources.Load<ParticleSystem>(string.Format(EffectFile, effectId));
         if (effectResource == null)
@@ -15,7 +15,7 @@ public static class EffectFactoryTest
         // var effect = GameObject.Instantiate(value);
         effect.transform.position = gameObject.transform.position;
         var autoDestroy = effect.gameObject.AddComponent<AutoDestroy>();
-        autoDestroy.lifeTime = 1f;
+        autoDestroy.lifeTime = lifeTime;
         var TargetFollower = effect.gameObject.AddComponent<TargetFollower>();
         TargetFollower.Target = gameObject;
         return effect;
