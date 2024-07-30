@@ -14,9 +14,11 @@ public class BuffSkill : ISkillAction
 
     public bool ApplySkillAction(GameObject target)
     {
-        if (target.TryGetComponent<IDamageable>(out var damageable))
+        if (target.TryGetComponent<IDamageable>(out var damageable)
+        && damageable.TakeBuff(buffData))
         {
-            return damageable.TakeBuff(buffData);
+            EffectFactoryTest.CreateEffect(buffData.EffectNo.ToString(), target, buffData.LastingTime);
+            return true;
         }
         else
         {
