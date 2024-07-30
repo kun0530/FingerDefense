@@ -1,10 +1,53 @@
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //To-Do : 프로토타입 용 계속 뜨는거 방지용 변수, 뒤에 Json으로 옮기고 삭제 예정
+    private static GameManager Instance;
+    
+    [NotNull]
+    public static GameManager instance
+    {
+        get
+        {
+            if (Instance == null)
+            {
+                Instance = FindObjectOfType<GameManager>();
+                if (Instance == null)
+                {
+                    GameObject go = new GameObject("GameManager");
+                    Instance = go.AddComponent<GameManager>();
+                    DontDestroyOnLoad(go);
+                }
+            }
+            return Instance;
+        }
+        private set => Instance = value;
+    }
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+   
+    public string PlayerName
+    {
+        get => PlayerPrefs.GetString("PlayerName", "");
+        set => PlayerPrefs.SetString("PlayerName", value);
+    }
+    public bool NicknameCheck
+    {
+        get => PlayerPrefs.GetInt("NicknameCheck", 0) == 1;
+        set => PlayerPrefs.SetInt("NicknameCheck", value ? 1 : 0);
+    }
+    
     public bool StageChoiceTutorialCheck
     {
         get => PlayerPrefs.GetInt("StageChoiceTutorialCheck", 0) == 1;
@@ -44,6 +87,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-
+    
     
 }

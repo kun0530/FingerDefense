@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 99390234}
   - component: {fileID: 99390235}
   m_Layer: 0
-  m_Name: 06.Tutorial Active
+  m_Name: 05.Tutorial Active
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -560,6 +560,7 @@ MonoBehaviour:
   cancelButton: {fileID: 1507349243}
   confirmNickButton: {fileID: 1632150306}
   isComplete: 0
+  mainUI: {fileID: 8881165167336116309}
 --- !u!1 &366211321
 GameObject:
   m_ObjectHideFlags: 0
@@ -2671,7 +2672,7 @@ GameObject:
   - component: {fileID: 1047950077}
   - component: {fileID: 1047950078}
   m_Layer: 0
-  m_Name: 01.TutorialFadeEffect
+  m_Name: 01.Tutorial FadeEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3112,7 +3113,7 @@ GameObject:
   - component: {fileID: 1182936913}
   - component: {fileID: 1182936912}
   m_Layer: 0
-  m_Name: 02.TutorialDialog
+  m_Name: 02.Tutorial Dialog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4305,7 +4306,7 @@ GameObject:
   - component: {fileID: 2018609298}
   - component: {fileID: 2018609297}
   m_Layer: 0
-  m_Name: 04.TutorialFadeEffect
+  m_Name: 04.Tutorial FadeEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5558,6 +5559,7 @@ GameObject:
   - component: {fileID: 8881165167336116308}
   - component: {fileID: 6299977554765588846}
   - component: {fileID: 1509920680617671403}
+  - component: {fileID: 8881165167336116309}
   m_Layer: 5
   m_Name: UI Panel
   m_TagString: Untagged
@@ -6351,10 +6353,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6ffea48d6449377469fb7bd46dd661ab, type: 2}
+  m_sharedMaterial: {fileID: 9148489980820272905, guid: 6ffea48d6449377469fb7bd46dd661ab, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6378,7 +6380,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10423,7 +10425,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 66004a6b18bfa4de59ce615c6ed7d055, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9465901b8b6c740b0932c7d75719ac50, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -16580,11 +16582,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa1755cf94254c40b1379f3aff82bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainUI: {fileID: 417414097684221634}
+  MainUI: {fileID: 8881165167336116309}
   StageUI: {fileID: 253802209246836237}
   DeckUI: {fileID: 6595080945552656857}
   NicknameUI: {fileID: 322487755}
   QuitUI: {fileID: 3891319976977421614}
+  tutorialController: {fileID: 1235857786}
 --- !u!1 &7002112912073935047
 GameObject:
   m_ObjectHideFlags: 0
@@ -17813,7 +17816,7 @@ GameObject:
   - component: {fileID: 1659765604323077961}
   - component: {fileID: 772282815320472019}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Character Name Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19621,6 +19624,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417414097684221634}
   m_CullTransparentMesh: 1
+--- !u!114 &8881165167336116309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417414097684221634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8772e3133dd472e49adb64896f60253d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNameText: {fileID: 772282815320472019}
 --- !u!114 &8902723155983048139
 MonoBehaviour:
   m_ObjectHideFlags: 0
