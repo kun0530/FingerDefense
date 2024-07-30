@@ -13,4 +13,8 @@ namespace Variables
         public static int[] characterIds = new int[10];
     }
 
+    public struct PlayerName
+    {
+        public static string playerName;
+    }
 }

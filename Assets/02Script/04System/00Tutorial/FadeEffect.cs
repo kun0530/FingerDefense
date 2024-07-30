@@ -1,0 +1,38 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
+
+public class FadeEffect : MonoBehaviour
+{
+    private Image BackgroundImage;
+    [SerializeField]
+    private float fadeTime = 2.0f;
+    [SerializeField]
+    private AnimationCurve fadeCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    
+    private void Awake()
+    {
+        BackgroundImage = GetComponent<Image>();
+    }
+    public void Initialize(float initialAlpha)
+    {
+        // 초기 알파 값 설정
+        Color color = BackgroundImage.color;
+        color.a = initialAlpha;
+        BackgroundImage.color = color;
+    }
+    public void FadeIn(Action onAfterFadeEffect)
+    {
+        //어두웠다가 밝아짐 
+        BackgroundImage.DOFade(1, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());    
+    }
+
+    public void FadeOut(Action onAfterFadeEffect)
+    {
+        BackgroundImage.DOFade(0, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());    
+    }
+}
