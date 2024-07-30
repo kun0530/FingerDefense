@@ -46,10 +46,10 @@ public class SkillArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (TryGetTarget(other, out var damageable))
-        {
-            placementSkill.EnterArea(damageable, this);
-        }
+        // if (TryGetTarget(other, out var damageable))
+        // {
+        //     placementSkill.EnterArea(damageable, this);
+        // }
     }
 
     private void OnTriggerExit(Collider other)

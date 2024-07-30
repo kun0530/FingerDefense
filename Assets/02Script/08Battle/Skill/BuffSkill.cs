@@ -12,10 +12,16 @@ public class BuffSkill : ISkillAction
         buffData = data;
     }
 
-    public void ApplySkillAction(IDamageable damageable)
+    public bool ApplySkillAction(GameObject target)
     {
-        // 버프 및 디버프 부여
-        damageable.TakeBuff(buffData);
+        if (target.TryGetComponent<IDamageable>(out var damageable))
+        {
+            return damageable.TakeBuff(buffData);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public Buff ApplySkillEnterAreaAction(IDamageable damageable)

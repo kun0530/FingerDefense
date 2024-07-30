@@ -7,7 +7,7 @@ public class BuffHandler
 {
     public List<Buff> buffs = new();
     public Dictionary<BuffType, float> buffValues = new();
-    public event Action<float> OnDotDamage;
+    public event Func<float, bool> OnDotDamage;
 
     public int maxBuffCount = 3;
 
@@ -48,31 +48,33 @@ public class BuffHandler
         }
     }
 
-    public void AddBuff(BuffData data)
+    public bool AddBuff(BuffData data)
     {
         if (data == null)
         {
             Logger.LogError("해당 버프의 정보가 없습니다.");
-            return;
+            return false;
         }
 
         var buff = new Buff(data);
-        AddBuff(buff);
+        return AddBuff(buff);
     }
 
-    public void AddBuff(Buff buff)
+    public bool AddBuff(Buff buff)
     {
         if (buff == null)
         {
             Logger.LogError("해당 버프의 정보가 없습니다.");
-            return;
+            return false;
         }
 
         if (buffs.Count >= maxBuffCount)
-            return;
+            return false;
 
         buffs.Add(buff);
         UpdateBuff();
+
+        return true;
     }
 
     private void RemoveBuff(int index)

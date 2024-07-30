@@ -18,9 +18,8 @@ public class TargetSkill : SkillType
         var targetCount = 0;
         foreach (var target in targets)
         {
-            if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
+            if (target != null && ApplySkillActions(target))
             {
-                ApplySkillActions(damageable);
                 EffectFactoryTest.CreateEffect(assetId, target);
                 targetCount++;
             }

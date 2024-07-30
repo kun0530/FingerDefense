@@ -24,18 +24,18 @@ public class PlacementSkill : SkillType
         return true;
     }
 
-    public void EnterArea(IDamageable damageable, SkillArea area)
+    public void EnterArea(GameObject target, SkillArea area)
     {
-        if (buffSkill != null)
-        {
-            var buff = buffSkill.ApplySkillEnterAreaAction(damageable);
-            area.Buffs.Add(damageable, buff);
-        }
+        // if (buffSkill != null)
+        // {
+        //     var buff = buffSkill.ApplySkillEnterAreaAction(damageable);
+        //     area.Buffs.Add(damageable, buff);
+        // }
 
-        if (attackSkill != null)
-        {
-            attackSkill.ApplySkillAction(damageable);
-        }
+        // if (attackSkill != null)
+        // {
+        //     attackSkill.ApplySkillAction(damageable);
+        // }
     }
 
     public void ExitArea(IDamageable damageable, SkillArea area)

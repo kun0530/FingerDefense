@@ -24,9 +24,11 @@ public abstract class SkillType
 
     public abstract bool UseSkill(GameObject target);
 
-    protected void ApplySkillActions(IDamageable damageable)
+    protected bool ApplySkillActions(GameObject target)
     {
-        attackSkill?.ApplySkillAction(damageable);
-        buffSkill?.ApplySkillAction(damageable);
+        var isAttacked = attackSkill != null ? attackSkill.ApplySkillAction(target) : false;
+        var isBuffed = buffSkill != null ? buffSkill.ApplySkillAction(target) : false;
+
+        return isAttacked || isBuffed;
     }
 }

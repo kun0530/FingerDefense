@@ -11,8 +11,15 @@ public class AttackSkill : ISkillAction
         this.damage = damage;
     }
 
-    public void ApplySkillAction(IDamageable damageable)
+    public bool ApplySkillAction(GameObject target)
     {
-        damageable.TakeDamage(damage);
+        if (target.TryGetComponent<IDamageable>(out var damageable))
+        {
+            return damageable.TakeDamage(damage);
+        }
+        else
+        {
+            return false;
+        }
     }
 }

@@ -38,23 +38,25 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable where T : Bas
         buffHandler.TimerUpdate();
     }
 
-    public void TakeBuff(BuffData buffData)
+    public bool TakeBuff(BuffData buffData)
     {
-        buffHandler.AddBuff(buffData);
+        return buffHandler.AddBuff(buffData);
+        // EffectFactoryTest.CreateEffect(buffData.EffectNo.ToString(), gameObject);
     }
 
-    public void TakeBuff(Buff buff)
+    public bool TakeBuff(Buff buff)
     {
-        buffHandler.AddBuff(buff);
+        return buffHandler.AddBuff(buff);
+        // EffectFactoryTest.CreateEffect(buff.buffData.EffectNo.ToString(), gameObject);
     }
 
-    public void TakeDamage(float damage)
+    public bool TakeDamage(float damage)
     {
         if (damage < 0 || IsDead)
-            return;
+            return false;
 
         if (Status == null)
-            return;
+            return false;
 
         Status.CurrentHp -= damage;
         UpdateHpBar();
@@ -63,9 +65,11 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable where T : Bas
         {
             Die();
         }
+
+        return true;
     }
 
-    public virtual void Die()
+    public virtual void Die(bool isDamageDeath = true)
     {
         IsDead = true;
         Status.CurrentHp = 0f;
