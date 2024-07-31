@@ -12,6 +12,8 @@ public class MainUiManager : MonoBehaviour
     private GameManager gameManager;
     
     public TutorialController tutorialController;
+    public TutorialController stageTutorialController;
+    
     
     private void Awake()
     {
@@ -43,6 +45,11 @@ public class MainUiManager : MonoBehaviour
         if (!StageUI.activeSelf)
         {
             StageUI.SetActive(true);
+            
+            if(!gameManager.StageChoiceTutorialCheck)
+            {
+                stageTutorialController.gameObject.SetActive(true);
+            }
         }
     }
     

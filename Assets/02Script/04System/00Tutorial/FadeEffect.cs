@@ -6,8 +6,11 @@ using DG.Tweening;
 public class FadeEffect : MonoBehaviour
 {
     private Image BackgroundImage;
+    
+    [Range(0.01f, 10f)]
     [SerializeField]
     private float fadeTime = 2.0f;
+    
     [SerializeField]
     private AnimationCurve fadeCurve = AnimationCurve.Linear(0, 0, 1, 1);
     

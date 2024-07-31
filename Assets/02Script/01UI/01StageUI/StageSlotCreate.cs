@@ -10,8 +10,15 @@ public class StageSlotCreate : MonoBehaviour
     public GameObject deckUI;
     private AssetListTable assetListTable;
     private StringTable stringTable;
-    
+    private GameManager gameManager;
     private bool slotsCreated = false;
+    public TutorialController DeckTutorialController;
+    
+    private void Awake()
+    {
+        gameManager = GameManager.instance;
+    }
+    
     
     private void OnEnable()
     {

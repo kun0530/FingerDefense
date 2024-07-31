@@ -33,7 +33,7 @@ public class StageSlot : MonoBehaviour
     {
         this.assetListTable = assetListTable;
     }
-
+    
     public void Configure(StageData stageData)
     {
         //해당 슬롯에 스테이지 이름 설정 =>stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 

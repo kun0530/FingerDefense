@@ -58,12 +58,12 @@ public class DialogSystem : MonoBehaviour
 
     public void DialogSetting()
     {
-        isDialogComplete = false; // 초기화
-        currentDialogIndex = -1; // 초기화
+        isDialogComplete = false;
+        currentDialogIndex = -1;
         for (var i = 0; i < systemDialog.Length; i++)
         {
             SetActiveObjects(systemDialog[i], false);
-            if (systemDialog[i].skeletonGraphic != null)
+            if (systemDialog[i].skeletonGraphic)
             {
                 systemDialog[i].skeletonGraphic.AnimationState.SetAnimation(0, "idle", true);
                 systemDialog[i].skeletonGraphic.canvasRenderer.SetAlpha(1);
@@ -77,9 +77,10 @@ public class DialogSystem : MonoBehaviour
 
     private void SetActiveObjects(SystemDialog dialog, bool visible)
     {
-        if(dialog.skeletonGraphic == null)
+        if(!dialog.skeletonGraphic)
         {
             Debug.LogWarning("SkeletonGraphic is null");
+            return;
         }
         else
         {
@@ -90,6 +91,11 @@ public class DialogSystem : MonoBehaviour
         dialog.nameText.gameObject.SetActive(visible);
         dialog.dialogText.gameObject.SetActive(visible);
         dialogTextPanel.gameObject.SetActive(visible);
+
+        if (!visible)
+        {
+            dialog.dialogText.text = "";
+        }
     }
 
     public bool UpdateDialog()
@@ -116,13 +122,16 @@ public class DialogSystem : MonoBehaviour
 
     private async UniTask SetNextDialogAsync()
     {
-        nextButton.interactable = false; 
-        if (currentDialogIndex >= 0)
+        nextButton.interactable = false;
+
+        // 모든 다이얼로그 텍스트 숨기기 및 초기화
+        foreach (var dialog in systemDialog)
         {
-            // 이전 텍스트 숨기기
-            systemDialog[currentSpeakerIndex].dialogText.text = "";
+            dialog.dialogText.text = "";
+            dialog.nameText.text = "";
+            SetActiveObjects(dialog, false);
         }
-        
+
         currentDialogIndex++;
 
         // 배열 범위를 벗어나는지 확인
@@ -135,13 +144,13 @@ public class DialogSystem : MonoBehaviour
         }
 
         currentSpeakerIndex = dialogData[currentDialogIndex].speakerIndex;
-        
+
         SetActiveObjects(systemDialog[currentSpeakerIndex], true);
         systemDialog[currentSpeakerIndex].nameText.text = dialogData[currentDialogIndex].name;
 
         // 타이핑 애니메이션 적용
         await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogData[currentDialogIndex].dialog);
-        
+
         nextButton.interactable = true;
     }
 
@@ -155,24 +164,4 @@ public class DialogSystem : MonoBehaviour
         }
     }
     
-    private async UniTask CloseDialogAsync()
-    {
-        // 다이얼로그 전체의 알파 값을 점점 줄이면서 페이드 아웃
-        var fadeDuration = 1.0f;
-
-        // 모든 SystemDialog 요소의 알파 값을 동시에 줄이기
-        foreach (var dialog in systemDialog)
-        {
-            if (dialog.skeletonGraphic)
-            {
-                dialog.skeletonGraphic.DOFade(0, fadeDuration);
-            }
-        }
-        await dialogCanvasGroup.DOFade(0, fadeDuration).AsyncWaitForCompletion();
-
-        await UniTask.Delay(1000); // 1초 대기
-        
-        dialogCanvasGroup.gameObject.SetActive(false);
-        
-    }
 }
