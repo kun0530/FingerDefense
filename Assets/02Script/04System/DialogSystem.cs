@@ -130,7 +130,7 @@ public class DialogSystem : MonoBehaviour
         {
             // 대화 종료
             isDialogComplete = true;
-            await CloseDialogAsync();
+            dialogCanvasGroup.gameObject.SetActive(false);
             return;
         }
 

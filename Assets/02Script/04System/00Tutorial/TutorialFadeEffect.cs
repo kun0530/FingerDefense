@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class TutorialFadeEffect : TutorialBase
 {
@@ -13,17 +10,12 @@ public class TutorialFadeEffect : TutorialBase
 
     public override void Enter()
     {
-        if(!fadeEffect.gameObject.activeSelf)
-        {
-            fadeEffect.gameObject.SetActive(true);
-        }
-        
+        fadeEffect.gameObject.SetActive(true);
         fadeEffect.Initialize(isFadeIn ? 0 : 1);
         
-        if (isFadeIn == true)
+        if (isFadeIn)
         {
             fadeEffect.FadeIn(OnAfterFadeEffect);
-            
         }
         else
         {
@@ -38,7 +30,7 @@ public class TutorialFadeEffect : TutorialBase
     
     public override void Execute(TutorialController controller)
     {
-        if (isComplete == true)
+        if (isComplete)
         {
             controller.SetNextTutorial();
         }    
@@ -46,6 +38,5 @@ public class TutorialFadeEffect : TutorialBase
 
     public override void Exit()
     {
-        fadeEffect.gameObject.SetActive(false);
     }
 }

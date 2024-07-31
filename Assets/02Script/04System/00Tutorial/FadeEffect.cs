@@ -24,14 +24,21 @@ public class FadeEffect : MonoBehaviour
     }
     public void FadeIn(Action onAfterFadeEffect)
     {
-        //어두웠다가 밝아짐 
-        BackgroundImage.DOFade(1, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+        BackgroundImage.DOFade(1, fadeTime).SetEase(fadeCurve).OnComplete(() => 
+        {
+            onAfterFadeEffect();
+            gameObject.SetActive(false);
+        });
     }
 
     public void FadeOut(Action onAfterFadeEffect)
     {
-        BackgroundImage.DOFade(0, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+        BackgroundImage.DOFade(0, fadeTime).SetEase(fadeCurve).OnComplete(() => 
+        {
+            onAfterFadeEffect();
+            gameObject.SetActive(false);
+        });
     }
 }
