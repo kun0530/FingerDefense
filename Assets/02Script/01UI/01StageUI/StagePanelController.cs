@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
-
 public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public RectTransform stagePanel;
@@ -14,7 +13,6 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private int currentIndex = 0;
     private Vector2 dragStartPosition;
     private HorizontalLayoutGroup layoutGroup;
-    
     
     void Start()
     {
@@ -73,11 +71,11 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     private void UpdateStageSlots(bool instant = false)
     {
-        for (int i = 0; i < stagePanel.childCount; i++)
+        for (var i = 0; i < stagePanel.childCount; i++)
         {
-            RectTransform rect = stagePanel.GetChild(i).GetComponent<RectTransform>();
+            var rect = stagePanel.GetChild(i).GetComponent<RectTransform>();
             float distanceFromCenter = Mathf.Abs(i - currentIndex);
-            float scale = Mathf.Lerp(1.0f, scaleFactor, distanceFromCenter);
+            var scale = Mathf.Lerp(1.0f, scaleFactor, distanceFromCenter);
 
             if (instant)
             {
@@ -87,7 +85,7 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
             {
                 rect.DOScale(new Vector3(scale, scale, 1), animationDuration).SetEase(Ease.InOutQuad);
             }
-            bool isInteractable = (distanceFromCenter < 1.0f);
+            var isInteractable = (distanceFromCenter < 1.0f);
             SetButtonsInteractable(rect, isInteractable);
             
             rect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -98,7 +96,7 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         void SetButtonsInteractable(Transform slot, bool isInteractable)
         {
-            Button[] buttons = slot.GetComponentsInChildren<Button>();
+            var buttons = slot.GetComponentsInChildren<Button>();
             foreach (var button in buttons)
             {
                 button.interactable = isInteractable;

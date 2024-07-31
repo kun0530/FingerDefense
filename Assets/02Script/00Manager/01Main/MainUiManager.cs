@@ -40,7 +40,10 @@ public class MainUiManager : MonoBehaviour
     
     public void OnClickStartButton()
     {
-        StageUI.SetActive(true);
+        if (!StageUI.activeSelf)
+        {
+            StageUI.SetActive(true);
+        }
     }
     
 }

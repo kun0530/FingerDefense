@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
 public class FadeEffect : MonoBehaviour
@@ -28,11 +25,13 @@ public class FadeEffect : MonoBehaviour
     public void FadeIn(Action onAfterFadeEffect)
     {
         //어두웠다가 밝아짐 
-        BackgroundImage.DOFade(1, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());    
+        BackgroundImage.DOFade(1, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());
+        gameObject.SetActive(false);
     }
 
     public void FadeOut(Action onAfterFadeEffect)
     {
-        BackgroundImage.DOFade(0, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());    
+        BackgroundImage.DOFade(0, fadeTime).SetEase(fadeCurve).OnComplete(() => onAfterFadeEffect());
+        gameObject.SetActive(false);
     }
 }

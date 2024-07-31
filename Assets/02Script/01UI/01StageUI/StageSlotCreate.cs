@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,8 @@ public class StageSlotCreate : MonoBehaviour
     private AssetListTable assetListTable;
     private StringTable stringTable;
     
+    private bool slotsCreated = false;
+    
     private void OnEnable()
     {
         if (stageTable == null)
@@ -26,12 +29,18 @@ public class StageSlotCreate : MonoBehaviour
             assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
             stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
         }
-
-        CreateStageSlots();
+        
+        if (!slotsCreated)
+        {
+            CreateStageSlots();
+            slotsCreated = true;
+        }
+        
     }
 
     private void CreateStageSlots()
     {
+        
         List<StageData> batch = new List<StageData>();
         int parentIndex = 0;
 
@@ -41,6 +50,7 @@ public class StageSlotCreate : MonoBehaviour
 
             if (batch.Count == 5)
             {
+                Logger.Log($"Creating batch for parent {parentIndex} with stages: {string.Join(", ", batch.Select(s => s.StageId))}");
                 CreateBatch(batch, slotParents[parentIndex]);
                 batch.Clear();
                 parentIndex = (parentIndex + 1) % slotParents.Length;
@@ -49,6 +59,7 @@ public class StageSlotCreate : MonoBehaviour
         
         if (batch.Count > 0)
         {
+            Logger.Log($"Creating final batch for parent {parentIndex} with stages: {string.Join(", ", batch.Select(s => s.StageId))}");
             CreateBatch(batch, slotParents[parentIndex]);
         }
     }

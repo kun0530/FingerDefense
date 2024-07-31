@@ -27,15 +27,18 @@ public class NickSettingUI : MonoBehaviour
     {
         gameManager = GameManager.instance;
         
-        
-        
         confirmButton.onClick.AddListener(OnClickConfirm);
         cancelButton.onClick.AddListener(OnClickCancel);
         confirmNickButton.onClick.AddListener(OnClickConfirmNick);
         
         noticeTextInitialPosition = noticeText.transform.localPosition;
+        
+        inputField.onSelect.AddListener(OnInputFieldSelected);
     }
-    
+    private void OnInputFieldSelected(string text)
+    {
+        inputField.ActivateInputField();
+    }
     private void OnClickConfirm()
     {
         userId = inputField.text;
@@ -55,7 +58,7 @@ public class NickSettingUI : MonoBehaviour
         gameManager.PlayerName = inputField.text;
         Variables.LoadName.Nickname = gameManager.PlayerName;
         nickCheckUI.SetActive(true);
-        nickNameText.text = Variables.LoadName.Nickname;
+        nickNameText.text = $"정말 <color=#FF0000>{gameManager.PlayerName}</color>으로 설정하시겠습니까?";
         
         mainUI.UpdatePlayerName();
         
@@ -72,13 +75,6 @@ public class NickSettingUI : MonoBehaviour
     private void OnClickConfirmNick()
     {
         isComplete = true;
-        
-        if(mainUI == null)
-        {
-            mainUI=GameObject.FindGameObjectWithTag("MainUI").GetComponent<MainUI>();
-            return;
-        }
-        
         mainUI.UpdatePlayerName();
         gameObject.SetActive(false);
         Logger.Log("닉네임 설정이 완료되었습니다.");
