@@ -54,7 +54,7 @@ public class DialogSystem : MonoBehaviour
     {
         DialogSetting();
 
-        nextButton.onClick.AddListener(async () => await OnNextButtonClicked());
+        nextButton.onClick.AddListener(() => OnNextButtonClickedWrapper().Forget());
     }
 
     public void DialogSetting()
@@ -69,21 +69,12 @@ public class DialogSystem : MonoBehaviour
                 systemDialog[i].skeletonGraphic.AnimationState.SetAnimation(0, "idle", true);
                 systemDialog[i].skeletonGraphic.canvasRenderer.SetAlpha(1);
             }
-            else
-            {
-                Debug.LogWarning("SkeletonGraphic is null");
-            }
         }
     }
 
     private void SetActiveObjects(SystemDialog dialog, bool visible)
     {
-        if(!dialog.skeletonGraphic)
-        {
-            Debug.LogWarning("SkeletonGraphic is null");
-            return;
-        }
-        else
+        if (dialog.skeletonGraphic)
         {
             dialog.skeletonGraphic.gameObject.SetActive(visible);   
         }
@@ -116,7 +107,11 @@ public class DialogSystem : MonoBehaviour
         // 대화가 완료되었는지 확인
         return isDialogComplete;
     }
-
+    
+    private async UniTaskVoid OnNextButtonClickedWrapper()
+    {
+        await OnNextButtonClicked();
+    }
     private async UniTask OnNextButtonClicked()
     {
         await SetNextDialogAsync();
