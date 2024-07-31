@@ -8,7 +8,8 @@ public class TutorialDialog : TutorialBase
     public override void Enter()
     {
         dialogSystem = GetComponent<DialogSystem>();
-        dialogSystem.DialogSetting();    
+        dialogSystem.DialogSetting();
+        dialogSystem.isFirstDialog = true;
     }
 
     public override void Execute(TutorialController controller)

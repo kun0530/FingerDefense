@@ -32,8 +32,9 @@ public class DialogSystem : MonoBehaviour
     private DialogData[] dialogData;
 
     [SerializeField]
-    private bool isAutoStart = false; //자동 시작 여부를 false로 변경
-    private bool isFirstDialog = true;
+    private bool isAutoStart = false;
+
+    public bool isFirstDialog = true;
     
     private int currentDialogIndex = -1;
     private int currentSpeakerIndex = 0;
@@ -95,6 +96,7 @@ public class DialogSystem : MonoBehaviour
         if (!visible)
         {
             dialog.dialogText.text = "";
+            dialog.nameText.text = "";
         }
     }
 
