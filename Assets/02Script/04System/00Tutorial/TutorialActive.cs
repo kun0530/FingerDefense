@@ -3,8 +3,8 @@ using UnityEngine;
 public class TutorialActive : TutorialBase
 {
     [SerializeField]
-    private GameObject tutorialObject;
-    GameManager gameManager;
+    private GameObject[] tutorialObject;
+    private GameManager gameManager;
     
     public void Awake()
     {
@@ -13,9 +13,9 @@ public class TutorialActive : TutorialBase
     
     public override void Enter()
     {
-        if (tutorialObject.activeSelf == false)
+        foreach (var obj in tutorialObject)
         {
-            tutorialObject.SetActive(true);
+            obj.SetActive(!obj.activeSelf);
         }
     }
 
@@ -28,4 +28,6 @@ public class TutorialActive : TutorialBase
     public override void Exit()
     {
     }
+    
+   
 }
