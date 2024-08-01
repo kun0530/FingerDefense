@@ -1,48 +1,95 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using UnityEngine.InputSystem;
 
 public class PlayerCharacterSpawner : MonoBehaviour
-{ 
+{
     public Transform poolTransform;
-    public Transform[] spawnPositions; // 6개 (전열: 0, 1 / 중열: 2, 3 / 후열: 4, 5)
+    public Transform[] spawnPositions;
 
     private PlayerCharacterTable playerCharacterTable;
     private SkillTable skillTable;
     private AssetListTable assetListTable;
 
-    //To-Do 다시 8개로 변경 예정
     private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[10];
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
-    
+
     public GameObject playerUICharacterPrefab;
     public RectTransform playerUICharacterParent;
-    
-    //To-Do 다시 8개로 변경 예정
     private Button[] characterButtons = new Button[10];
+
+    private int selectedCharacterIndex = -1;
+    
+    private InputManager inputManager;
+
     private void Awake()
     {
+        // 데이터 테이블 로드
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
-
+        
+        // InputManager 찾기
+        inputManager = GameObject.FindWithTag("InputManager").GetComponent<InputManager>();
+        
+        // 캐릭터 슬롯 생성
         for (var i = 0; i < Variables.LoadTable.characterIds.Length; i++)
         {
             if (Variables.LoadTable.characterIds[i] != 0)
             {
                 var data = playerCharacterTable.Get(Variables.LoadTable.characterIds[i]);
                 playerCharacters[i] = CreatePlayerCharacter(data);
-                CreateUICharacter(data,i);
+                CreateUICharacter(data, i);
             }
             else
             {
-                CreateUICharacter(null,i);
+                CreateUICharacter(null, i);
             }
         }
     }
 
-    private void CreateUICharacter(PlayerCharacterData data,int index)
+    private void OnEnable()
+    {
+        inputManager.OnTouchStartedEvent += OnTouchStarted;
+        inputManager.OnTouchEndedEvent += OnTouchEnded;
+    }
+
+    private void OnDisable()
+    {
+        inputManager.OnTouchStartedEvent -= OnTouchStarted;
+        inputManager.OnTouchEndedEvent -= OnTouchEnded;
+    }
+
+    private void OnTouchStarted(Vector2 touchPosition)
+    {
+    }
+
+    private void OnTouchEnded(Vector2 touchPosition)
+    {
+        if (selectedCharacterIndex == -1)
+        {
+            return;
+        }
+
+        Ray ray = Camera.main!.ScreenPointToRay(touchPosition);
+        var layerMask = LayerMask.GetMask("PlayerSpawner");
+
+        if (Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, layerMask))
+        {
+            // 검출한 오브젝트의 위치로 캐릭터 소환
+            for (var i = 0; i < spawnPositions.Length; i++)
+            {
+                if (spawnPositions[i].position.x - 1f <= ray.origin.x && ray.origin.x <= spawnPositions[i].position.x + 1f)
+                {
+                    SpawnPlayerCharacter(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void CreateUICharacter(PlayerCharacterData data, int index)
     {
         var uiCharacter = Instantiate(playerUICharacterPrefab, playerUICharacterParent);
         if (data != null)
@@ -71,7 +118,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
         var button = uiCharacter.GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(() => SpawnPlayerCharacter(index));
+            button.onClick.AddListener(() => SelectCharacterForSpawning(index));
             characterButtons[index] = button;
         }
     }
@@ -105,10 +152,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
             return null;
         }
         playerCharacter.Status.Data = data;
-        // 에러로 인해 비활성화 : 방민호
-        // var skillData = skillTable.Get(data.Skill);
-        // playerCharacter.skill = SkillFactory.CreateSkill(skillData, playerCharacter.transform);
-        // playerCharacter.skillData = skillData;
+        
         if (playerCharacter.TryGetComponent<PlayerAttackBehavior>(out var attackBehavior))
         {
             var normalAttackData = skillTable.Get(data.Skill1);
@@ -127,58 +171,43 @@ public class PlayerCharacterSpawner : MonoBehaviour
         return playerCharacter;
     }
 
-    public void SpawnPlayerCharacter(int index)
+    private void SelectCharacterForSpawning(int index)
     {
-        var playerCharacter = playerCharacters[index];
-
-        if (playerCharacter == null)
-        {
-            Logger.LogError("해당 캐릭터 데이터가 없습니다.");
-            return;
-        }
-        if (playerCharacter.gameObject.activeSelf)
-        {
-            Logger.LogError("캐릭터가 이미 소환되었습니다.");
-            return;
-        }
-       
-
-        var spawnClass = playerCharacter.Status.Data.Class;
-        Logger.Log($"Spawning character with Class {spawnClass}");
-
-        var positionIndex = spawnClass switch
-        {
-            // 전열
-            0 => activePlayerCharacters[0] == null || !activePlayerCharacters[0].gameObject.activeSelf ? 0 : 1,
-            // 중열
-            1 => activePlayerCharacters[2] == null || !activePlayerCharacters[2].gameObject.activeSelf ? 2 : 3,
-            // 후열
-            2 => activePlayerCharacters[4] == null || !activePlayerCharacters[4].gameObject.activeSelf ? 4 : 5,
-            _ => -1
-        };
+        selectedCharacterIndex = index;
+        Logger.Log($"Selected character at index {index} for spawning.");
+    }
+    
+    public void SpawnPlayerCharacter(int positionIndex)
+    {
+        var playerCharacter = playerCharacters[selectedCharacterIndex];
         
-        if (positionIndex == -1 || activePlayerCharacters[positionIndex] != null)
+        if (selectedCharacterIndex == -1 || playerCharacter == null || playerCharacter.gameObject.activeSelf)
         {
-            Logger.Log("해당 위치에 이미 캐릭터가 배치되어 있습니다.");
             return;
         }
 
-        // 캐릭터 위치 설정 후 활성화
+        if (positionIndex < 0 || positionIndex >= activePlayerCharacters.Length || activePlayerCharacters[positionIndex] != null)
+        {
+            return;
+        }
+
         playerCharacter.transform.position = spawnPositions[positionIndex].position;
 
         activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.Status.Init();
         playerCharacter.gameObject.SetActive(true);
-        
-        if (characterButtons[index] != null)
+
+        if (characterButtons[selectedCharacterIndex] != null)
         {
-            characterButtons[index].interactable = false;
+            characterButtons[selectedCharacterIndex].interactable = false;
         }
+
+        selectedCharacterIndex = -1; 
     }
 
     public void RemoveActiveCharacter(PlayerCharacterController character)
     {
-        if (character == null)
+        if (!character)
             return;
 
         for (var i = 0; i < activePlayerCharacters.Length; i++)
@@ -188,13 +217,12 @@ public class PlayerCharacterSpawner : MonoBehaviour
                 activePlayerCharacters[i].gameObject.SetActive(false);
                 activePlayerCharacters[i] = null;
             }
-            
+
             for (var j = 0; j < playerCharacters.Length; j++)
             {
                 if (playerCharacters[j] == character && characterButtons[j])
                 {
                     characterButtons[j].interactable = true;
-                    // UpdateRespawnTimer(characterButtons[j], character.Status.Data.RespawnCoolTime).Forget();
                 }
             }
         }
@@ -205,10 +233,9 @@ public class PlayerCharacterSpawner : MonoBehaviour
         float timer = 0f;
         while (timer <= respawnTime)
         {
-            // image.fillAmount = timer / respawnTime;
             await UniTask.Yield();
+            timer += Time.deltaTime;
         }
-        // image.fillAmount = 1f;
         button.interactable = true;
     }
 }

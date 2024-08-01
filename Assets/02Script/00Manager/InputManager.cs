@@ -10,7 +10,11 @@ public class InputManager : MonoBehaviour
     public event Action<InputAction.CallbackContext> OnClick;
     public event Action<InputAction.CallbackContext> OnRelease;
     public event Action<InputAction.CallbackContext> OnDrag;
-    public event Action<InputAction.CallbackContext> OnBack; 
+    public event Action<InputAction.CallbackContext> OnBack;
+    
+    public event Action<Vector2> OnTouchStartedEvent;
+    public event Action<Vector2> OnTouchEndedEvent;
+    
     #endregion
     private Control control;
 
@@ -28,18 +32,36 @@ public class InputManager : MonoBehaviour
         control.MonsterDrag.Release.performed += OnReleaseHandler;
         control.MonsterDrag.Drag.performed += OnDragHandler;
         control.UI.Back.performed += OnBackHandler;
+        control.Touch.TouchPress.started += OnTouchStarted;
+        control.Touch.TouchPress.canceled += OnTouchEnded;
+        
     }
+
     
     private void OnDisable()
     {
         control.Disable();
-
-        control.UI.Back.performed -= OnBackHandler;
         control.MonsterDrag.Click.performed -= OnClickHandler;
         control.MonsterDrag.Release.performed -= OnReleaseHandler;
         control.MonsterDrag.Drag.performed -= OnDragHandler;
-        
+        control.UI.Back.performed -= OnBackHandler;
+        control.Touch.TouchPress.started -= OnTouchStarted;
+        control.Touch.TouchPress.canceled -= OnTouchEnded;
     }
+
+    private void OnTouchStarted(InputAction.CallbackContext context)
+    {
+        var touchPosition = control.Touch.TouchPosition.ReadValue<Vector2>();
+        OnTouchStartedEvent?.Invoke(touchPosition);
+    }
+    
+    private void OnTouchEnded(InputAction.CallbackContext context)
+    {
+        var touchPosition = control.Touch.TouchPosition.ReadValue<Vector2>();
+        OnTouchEndedEvent?.Invoke(touchPosition);
+    }
+
+
     private void OnClickHandler(InputAction.CallbackContext context)
     {
         OnClick?.Invoke(context);
