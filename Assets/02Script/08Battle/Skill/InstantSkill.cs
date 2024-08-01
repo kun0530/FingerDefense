@@ -7,13 +7,13 @@ public class InstantSkill : BaseSkill
     public InstantSkill(SkillData skillData, SkillType skillType, IFindable targetingMethod)
     : base(skillData, skillType, targetingMethod) { }
 
-    public override bool UseSkill(bool isBuffApplied = false)
+    public override bool UseSkill()
     {
         var target = targetingMethod.FindTarget();
         if (target == null || skillType == null)
             return false;
 
-        if (skillType.UseSkill(target, isBuffApplied))
+        if (skillType.UseSkill(target))
         {
             IsSkillReady = false;
             return true;

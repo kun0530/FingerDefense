@@ -12,13 +12,13 @@ public class MonsterSpineAni : MonoBehaviour
     
     private Spine.AnimationState spineAnimationState;
     
-    // private MonsterController monsterController;
+    private MonsterController monsterController;
     
     public MonsterState CurrentMonsterState { get; private set; }
     public TrackEntry CurrentTrackEntry { get; private set; }
     private string currentAnimation;
 
-    // public event Action monsterDeathEvent;
+    public event Action monsterDeathEvent;
 
     public enum MonsterState
     {
@@ -34,7 +34,7 @@ public class MonsterSpineAni : MonoBehaviour
     {
         skeletonAnimation = GetComponentInChildren(typeof(SkeletonAnimation)) as SkeletonAnimation;
 
-        // monsterController = TryGetComponent(out MonsterController controller) ? controller : null;
+        monsterController = TryGetComponent(out MonsterController controller) ? controller : null;
         spineAnimationState = skeletonAnimation.AnimationState;
     }
 

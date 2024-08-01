@@ -7,7 +7,7 @@ public class TargetSkill : SkillType
     public TargetSkill(IFindable secondaryTargeting, SkillData data)
     : base(secondaryTargeting, data) { }
 
-    public override bool UseSkill(GameObject primaryTarget, bool isBuffApplied = false)
+    public override bool UseSkill(GameObject primaryTarget)
     {
         if (!primaryTarget)
             return false;
@@ -18,7 +18,7 @@ public class TargetSkill : SkillType
         var targetCount = 0;
         foreach (var target in targets)
         {
-            if (target != null && ApplySkillActions(target, isBuffApplied))
+            if (target != null && ApplySkillActions(target))
             {
                 EffectFactory.CreateEffect(AssetId, target);
                 targetCount++;

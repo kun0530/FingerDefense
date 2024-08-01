@@ -22,12 +22,12 @@ public abstract class SkillType
         this.AssetId = data.AssetNo;
     }
 
-    public abstract bool UseSkill(GameObject target, bool isBuffApplied = false);
+    public abstract bool UseSkill(GameObject target);
 
-    protected bool ApplySkillActions(GameObject target, bool isBuffApplied = false)
+    protected bool ApplySkillActions(GameObject target)
     {
-        var isAttacked = attackSkill != null ? attackSkill.ApplySkillAction(target, isBuffApplied) : false;
-        var isBuffed = buffSkill != null ? buffSkill.ApplySkillAction(target, isBuffApplied) : false;
+        var isAttacked = attackSkill != null ? attackSkill.ApplySkillAction(target) : false;
+        var isBuffed = buffSkill != null ? buffSkill.ApplySkillAction(target) : false;
 
         return isAttacked || isBuffed;
     }

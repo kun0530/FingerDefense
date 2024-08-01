@@ -16,7 +16,7 @@ public class PlacementSkill : SkillType
         Target = data.Target;
     }
 
-    public override bool UseSkill(GameObject target, bool isBuffApplied = false)
+    public override bool UseSkill(GameObject target)
     {
         var area = SkillFactory.CreateSkillArea();
         if (area == null)
