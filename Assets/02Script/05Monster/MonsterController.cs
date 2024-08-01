@@ -153,7 +153,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
     public override void Die(bool isDamageDeath = true)
     {
+        if (IsDead)
+            return;
+
         base.Die();
+
         if (stageManager)
             stageManager.EarnedGold += Status.Data.DropGold;
             
@@ -161,7 +165,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
             deathSkill?.UseSkill();
             
         deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
-        stateMachine.TransitionTo<IdleState<MonsterController>>();
+        var currentState = stateMachine.CurrentState.GetType();
+        if (currentState == typeof(DragState))
+            stateMachine.TransitionTo<FallState>();
+        else if (currentState != typeof(FallState))
+            stateMachine.TransitionTo<IdleState<MonsterController>>();
         if (deathTrackEntry != null)
         {
             deathTrackEntry.Complete += Die;

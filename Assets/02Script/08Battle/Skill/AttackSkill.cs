@@ -10,7 +10,7 @@ public class AttackSkill : ISkillAction
     public AttackSkill(float damage, GameObject gameObject = null)
     {
         this.damage = damage;
-        if (gameObject.TryGetComponent<IBuffGettable>(out var buffGettable))
+        if (gameObject != null && gameObject.TryGetComponent<IBuffGettable>(out var buffGettable))
         {
             buffHandler = buffGettable.BuffHandler;
         }

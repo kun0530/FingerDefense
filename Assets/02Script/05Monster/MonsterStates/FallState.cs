@@ -20,7 +20,8 @@ public class FallState : IState
         startY = controller.transform.position.y;
         velocity = 0f;
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
+        if (!controller.IsDead)
+            controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
     }
 
     public void Update()
@@ -42,8 +43,11 @@ public class FallState : IState
                 }
                 controller.Die(false);
             }
-            else
+            
+            if (!controller.IsDead)
                 controller.TryTransitionState<PatrolState>();
+            else
+                controller.TryTransitionState<IdleState<MonsterController>>();
         }
     }
 
