@@ -38,21 +38,34 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         buffHandler.TimerUpdate();
     }
 
+    public virtual bool IsBuffGettable => !IsDead;
+
     public bool TakeBuff(BuffData buffData)
     {
+        if (!IsBuffGettable)
+            return false;
+
         return buffHandler.AddBuff(buffData);
         // EffectFactoryTest.CreateEffect(buffData.EffectNo.ToString(), gameObject);
     }
 
     public bool TakeBuff(Buff buff)
     {
+        if (!IsBuffGettable)
+            return false;
+
         return buffHandler.AddBuff(buff);
         // EffectFactoryTest.CreateEffect(buff.buffData.EffectNo.ToString(), gameObject);
     }
 
+    public virtual bool IsDamageable => !IsDead;
+
     public bool TakeDamage(float damage)
     {
-        if (damage < 0 || IsDead)
+        if (!IsDamageable)
+            return false;
+
+        if (damage < 0)
             return false;
 
         if (Status == null)

@@ -14,12 +14,12 @@ public abstract class SkillType
     public AttackSkill attackSkill;
     protected IFindable secondaryTargeting;
 
-    protected string assetId;
+    public string AssetId { get; protected set; }
 
-    public SkillType(IFindable secondaryTargeting, string assetId)
+    public SkillType(IFindable secondaryTargeting, SkillData data)
     {
         this.secondaryTargeting = secondaryTargeting;
-        this.assetId = assetId;
+        this.AssetId = data.AssetNo;
     }
 
     public abstract bool UseSkill(GameObject target);

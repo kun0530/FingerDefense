@@ -4,6 +4,8 @@ using UnityEngine;
 
 public interface IBuffGettable
 {
+    bool IsBuffGettable { get; }
+
     bool TakeBuff(BuffData buffData);
     bool TakeBuff(Buff buff);
 }

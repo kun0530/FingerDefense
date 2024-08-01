@@ -20,4 +20,13 @@ public static class EffectFactory
         TargetFollower.Target = gameObject;
         return effect;
     }
+
+    public static ParticleSystem CreateEffect(string effectId)
+    {
+        var effectResource = Resources.Load<ParticleSystem>(string.Format(EffectFile, effectId));
+        if (effectResource == null)
+            return null;
+
+        return GameObject.Instantiate(effectResource);
+    }
 }
