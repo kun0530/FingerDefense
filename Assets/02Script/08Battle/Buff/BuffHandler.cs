@@ -48,29 +48,19 @@ public class BuffHandler
         }
     }
 
-    public bool AddBuff(BuffData data)
+    public bool AddBuff(BuffData buffData)
     {
-        if (data == null)
-        {
-            Logger.LogError("해당 버프의 정보가 없습니다.");
-            return false;
-        }
-
-        var buff = new Buff(data);
-        return AddBuff(buff);
+        return TryAddBuff(buffData, out var buff);
     }
 
-    public bool AddBuff(Buff buff)
+    public bool TryAddBuff(BuffData buffData, out Buff buff, bool isTimerStop = false)
     {
-        if (buff == null)
-        {
-            Logger.LogError("해당 버프의 정보가 없습니다.");
-            return false;
-        }
+        buff = null;
 
-        if (buffs.Count >= maxBuffCount)
+        if (buffData == null || buffs.Count >= maxBuffCount)
             return false;
 
+        buff = new Buff(buffData, isTimerStop);
         buffs.Add(buff);
         UpdateBuff();
 
@@ -82,6 +72,8 @@ public class BuffHandler
         if (index < 0 || index >= buffs.Count)
             return;
 
+        if (buffs[index].effect != null)
+            GameObject.Destroy(buffs[index].effect);
         buffs.RemoveAt(index);
         UpdateBuff();
     }

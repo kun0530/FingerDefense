@@ -14,7 +14,7 @@ public abstract class SkillType
     public AttackSkill attackSkill;
     protected IFindable secondaryTargeting;
 
-    public string AssetId { get; protected set; }
+    public int AssetId { get; protected set; }
 
     public SkillType(IFindable secondaryTargeting, SkillData data)
     {

@@ -20,7 +20,14 @@ public class TargetSkill : SkillType
         {
             if (target != null && ApplySkillActions(target, isBuffApplied))
             {
-                EffectFactory.CreateEffect(AssetId, target);
+                var effect = EffectFactory.CreateEffect(AssetId);
+                if (effect != null)
+                {
+                    var autoDestory = effect.gameObject.AddComponent<AutoDestroy>();
+                    autoDestory.lifeTime = 1f;
+                    var targetFollower = effect.gameObject.AddComponent<TargetFollower>();
+                    targetFollower.Target = target;
+                }
                 targetCount++;
             }
         }

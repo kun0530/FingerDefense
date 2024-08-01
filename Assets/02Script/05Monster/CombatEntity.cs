@@ -45,17 +45,38 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         if (!IsBuffGettable)
             return false;
 
-        return BuffHandler.AddBuff(buffData);
-        // EffectFactoryTest.CreateEffect(buffData.EffectNo.ToString(), gameObject);
+        if (!BuffHandler.TryAddBuff(buffData, out var buff))
+            return false;
+
+        var effect = EffectFactory.CreateEffect(buffData.EffectNo);
+        if (effect != null)
+        {
+            effect.transform.SetParent(transform);
+            buff.effect = effect;
+        }
+
+        return true;
     }
 
-    public bool TakeBuff(Buff buff)
+    public bool TryTakeBuff(BuffData buffData, out Buff buff, bool isTimerStop = false)
     {
+        buff = null;
+
         if (!IsBuffGettable)
             return false;
 
-        return BuffHandler.AddBuff(buff);
-        // EffectFactoryTest.CreateEffect(buff.buffData.EffectNo.ToString(), gameObject);
+        if (!BuffHandler.TryAddBuff(buffData, out buff, isTimerStop))
+            return false;
+
+        var effect = EffectFactory.CreateEffect(buffData.EffectNo);
+        if (effect != null)
+        {
+            effect.transform.position = transform.position;
+            effect.transform.SetParent(transform);
+            buff.effect = effect;
+        }
+
+        return true;
     }
 
     public virtual bool IsDamageable => !IsDead;

@@ -38,8 +38,14 @@ public class FallState : IState
                 if (controller.dragDeathSkill != null)
                 {
                     controller.dragDeathSkill.UseSkill();
-                    var dragDeathEffect = EffectFactory.CreateEffect(controller.dragDeathSkill.skillData.AssetNo, controller.gameObject);
-                    // dragDeathEffect.gameObject.transform.localScale *= 10f;
+                    
+                    var dragDeathEffect = EffectFactory.CreateEffect(controller.dragDeathSkill.skillData.AssetNo);
+                    if (dragDeathEffect != null)
+                    {
+                        dragDeathEffect.transform.position = controller.transform.position;
+                        dragDeathEffect.transform.SetParent(controller.transform);
+                        controller.effects.Add(dragDeathEffect);
+                    }
                 }
                 controller.Die(false);
             }

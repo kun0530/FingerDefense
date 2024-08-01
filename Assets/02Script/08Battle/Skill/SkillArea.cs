@@ -15,6 +15,7 @@ public class SkillArea : MonoBehaviour
     public int effectCount = 15;
 
     public Dictionary<GameObject, Buff> Buffs { get; private set; } = new();
+    private List<ParticleSystem> effects = new();
 
     public void Init(PlacementSkill skill)
     {
@@ -44,10 +45,15 @@ public class SkillArea : MonoBehaviour
         for (int i = 0; i < effectCount; i++)
         {
             var effect = EffectFactory.CreateEffect(skill.AssetId);
-            effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
-            effect.transform.SetParent(transform);
-            var main = effect.main;
-            main.loop = true;
+            if (effect != null)
+            {
+                effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
+                effect.transform.SetParent(transform);
+                var main = effect.main;
+                main.loop = true;
+
+                effects.Add(effect);
+            }
         }
     }
 
@@ -57,8 +63,14 @@ public class SkillArea : MonoBehaviour
         {
             buff.Value.IsTimerStop = false;
         }
-
         Buffs.Clear();
+
+        foreach (var effect in effects)
+        {
+            if (effect != null)
+                Destroy(effect);
+        }
+        effects.Clear();
     }
 
     private void Update()
