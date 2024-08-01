@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettable where T : BaseStatus, new()
 {
-    public T Status { get; protected set; }
-    protected BuffHandler buffHandler;
+    public T Status { get; private set; }
+    public BuffHandler BuffHandler { get; private set; }
 
     public Image hpBar;
     public bool IsDead { get; protected set; }
@@ -14,28 +14,28 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
     protected virtual void Awake()
     {
         Status = new();
-        buffHandler = new();
+        BuffHandler = new();
 
-        Status.buffHandler = buffHandler;
+        Status.buffHandler = BuffHandler;
     }
 
     protected virtual void OnEnable()
     {
         IsDead = false;
-        buffHandler.ResetBuffs();
+        BuffHandler.ResetBuffs();
         Status.OnHpBarUpdate += UpdateHpBar;
-        buffHandler.OnDotDamage += TakeDamage;
+        BuffHandler.OnDotDamage += TakeDamage;
     }
 
     protected virtual void OnDisable()
     {
         Status.OnHpBarUpdate -= UpdateHpBar;
-        buffHandler.OnDotDamage -= TakeDamage;
+        BuffHandler.OnDotDamage -= TakeDamage;
     }
 
     protected virtual void Update()
     {
-        buffHandler.TimerUpdate();
+        BuffHandler.TimerUpdate();
     }
 
     public virtual bool IsBuffGettable => !IsDead;
@@ -45,7 +45,7 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         if (!IsBuffGettable)
             return false;
 
-        return buffHandler.AddBuff(buffData);
+        return BuffHandler.AddBuff(buffData);
         // EffectFactoryTest.CreateEffect(buffData.EffectNo.ToString(), gameObject);
     }
 
@@ -54,7 +54,7 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         if (!IsBuffGettable)
             return false;
 
-        return buffHandler.AddBuff(buff);
+        return BuffHandler.AddBuff(buff);
         // EffectFactoryTest.CreateEffect(buff.buffData.EffectNo.ToString(), gameObject);
     }
 

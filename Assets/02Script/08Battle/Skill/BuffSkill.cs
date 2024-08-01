@@ -12,7 +12,7 @@ public class BuffSkill : ISkillAction
         buffData = data;
     }
 
-    public bool ApplySkillAction(GameObject target)
+    public bool ApplySkillAction(GameObject target, bool isBuffApplied = false)
     {
         if (target.TryGetComponent<IBuffGettable>(out var buffGettable)
         && buffGettable.TakeBuff(buffData))

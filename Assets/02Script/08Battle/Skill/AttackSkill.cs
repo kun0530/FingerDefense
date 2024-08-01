@@ -5,16 +5,26 @@ using UnityEngine;
 public class AttackSkill : ISkillAction
 {
     private float damage;
+    private BuffHandler buffHandler;
 
-    public AttackSkill(float damage)
+    public AttackSkill(float damage, GameObject gameObject = null)
     {
         this.damage = damage;
+        if (gameObject.TryGetComponent<IBuffGettable>(out var buffGettable))
+        {
+            buffHandler = buffGettable.BuffHandler;
+        }
     }
 
-    public bool ApplySkillAction(GameObject target)
+    public bool ApplySkillAction(GameObject target, bool isBuffApplied = false)
     {
         if (target.TryGetComponent<IDamageable>(out var damageable))
+        {
+            if (isBuffApplied && buffHandler != null)
+                return damageable.TakeDamage(damage + buffHandler.buffValues[BuffType.ATK]);
+                
             return damageable.TakeDamage(damage);
+        }
 
         return false;
     }
