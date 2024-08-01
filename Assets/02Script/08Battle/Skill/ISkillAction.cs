@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface ISkillAction
 {
-    void ApplySkillAction(IDamageable damageable);
+    bool ApplySkillAction(GameObject target);
+    bool EnterSkillArea(GameObject target, SkillArea area);
+    bool ExitSkillArea(GameObject target, SkillArea area);
 }

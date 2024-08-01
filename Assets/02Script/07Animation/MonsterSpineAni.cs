@@ -14,8 +14,8 @@ public class MonsterSpineAni : MonoBehaviour
     
     private MonsterController monsterController;
     
-    private MonsterState currentMonsterState;
-    private TrackEntry currentTrackEntry;
+    public MonsterState CurrentMonsterState { get; private set; }
+    public TrackEntry CurrentTrackEntry { get; private set; }
     private string currentAnimation;
 
     public event Action monsterDeathEvent;
@@ -45,7 +45,7 @@ public class MonsterSpineAni : MonoBehaviour
     
     public TrackEntry SetAnimation(MonsterState state, bool loop, float timeScale)
     {
-        if (currentMonsterState == MonsterState.DEAD && !currentTrackEntry.IsComplete)
+        if (CurrentMonsterState == MonsterState.DEAD && !CurrentTrackEntry.IsComplete)
         {
             Logger.LogError($"DEAD 애니메이션 중 {state} 애니메이션을 호출했습니다.");
             return null;
@@ -60,12 +60,12 @@ public class MonsterSpineAni : MonoBehaviour
         if (currentAnimation == state.ToString())
             return null;
         
-        currentMonsterState = state;
+        CurrentMonsterState = state;
         currentAnimation = state.ToString();
         var trackEntry = spineAnimationState.SetAnimation(0, monsterAnimClip[(int)state], loop);
         trackEntry.TimeScale = timeScale;
 
-        currentTrackEntry = trackEntry;
+        CurrentTrackEntry = trackEntry;
 
         return trackEntry;
     }

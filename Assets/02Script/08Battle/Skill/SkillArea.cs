@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 아이디어1. 버프를 줄 때, 따로 저장 -> 버프 리스트에 등록
-// 아이디어2. 버프를 줄 때, 버프 리스트에 등록, 타이머를 최솟값으로 설정 -> 타이머를 0으로 설정
 
 public class SkillArea : MonoBehaviour
 {
@@ -12,14 +10,18 @@ public class SkillArea : MonoBehaviour
     private float timer = 0f;
     private string targetTag;
 
-    public Dictionary<IDamageable, Buff> Buffs { get; private set; } = new();
+    private bool isInit = false;
 
-    public void Init(PlacementSkill skill, SkillData data)
+    private float areaOffsetY = 3f;
+
+    public Dictionary<GameObject, Buff> Buffs { get; private set; } = new();
+
+    public void Init(PlacementSkill skill)
     {
-        if (skill == null || data == null)
+        if (skill == null)
             return;
 
-        switch (data.Target)
+        switch (skill.Target)
         {
             case 0:
                 targetTag = Defines.Tags.PLAYER_TAG;
@@ -32,11 +34,38 @@ public class SkillArea : MonoBehaviour
         }
 
         placementSkill = skill;
-        areaDuration = data.Duration;
+        areaDuration = skill.Duration;
+        var collider = GetComponent<CapsuleCollider2D>();
+        if (collider != null)
+            collider.size = new Vector2(skill.Radius, areaOffsetY);
+
+        isInit = true;
+
+        for (int i = 0; i < 50; i++)
+        {
+            var effect = EffectFactory.CreateEffect(skill.AssetId);
+            effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
+            effect.transform.SetParent(transform);
+            var main = effect.main;
+            main.loop = true;
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (var buff in Buffs)
+        {
+            buff.Value.IsTimerStop = false;
+        }
+
+        Buffs.Clear();
     }
 
     private void Update()
     {
+        if (!isInit)
+            return;
+
         timer += Time.deltaTime;
         if (timer >= areaDuration)
         {
@@ -44,28 +73,39 @@ public class SkillArea : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (TryGetTarget(other, out var damageable))
-        {
-            placementSkill.EnterArea(damageable, this);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (TryGetTarget(other, out var damageable))
-        {
-            placementSkill.ExitArea(damageable, this);
-        }
-    }
-
-    private bool TryGetTarget(Collider other, out IDamageable damageable)
-    {
-        damageable = null;
         if (!other.CompareTag(targetTag))
-            return false;
-        
-        return other.TryGetComponent(out damageable);
+            return;
+
+        if (other.TryGetComponent<ITargetable>(out var targetable))
+        {
+            if (targetable.IsTargetable)
+            {
+                placementSkill.EnterArea(other.gameObject, this);
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (!other.CompareTag(targetTag))
+            return;
+
+        if (Buffs.ContainsKey(other.gameObject))
+            return;
+
+        if (other.TryGetComponent<ITargetable>(out var targetable))
+        {
+            if (targetable.IsTargetable)
+            {
+                placementSkill.EnterArea(other.gameObject, this);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        placementSkill.ExitArea(other.gameObject, this);
     }
 }

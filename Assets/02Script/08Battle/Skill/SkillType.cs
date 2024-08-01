@@ -14,19 +14,21 @@ public abstract class SkillType
     public AttackSkill attackSkill;
     protected IFindable secondaryTargeting;
 
-    protected string assetId;
+    public string AssetId { get; protected set; }
 
-    public SkillType(IFindable secondaryTargeting, string assetId)
+    public SkillType(IFindable secondaryTargeting, SkillData data)
     {
         this.secondaryTargeting = secondaryTargeting;
-        this.assetId = assetId;
+        this.AssetId = data.AssetNo;
     }
 
     public abstract bool UseSkill(GameObject target);
 
-    protected void ApplySkillActions(IDamageable damageable)
+    protected bool ApplySkillActions(GameObject target)
     {
-        attackSkill?.ApplySkillAction(damageable);
-        buffSkill?.ApplySkillAction(damageable);
+        var isAttacked = attackSkill != null ? attackSkill.ApplySkillAction(target) : false;
+        var isBuffed = buffSkill != null ? buffSkill.ApplySkillAction(target) : false;
+
+        return isAttacked || isBuffed;
     }
 }

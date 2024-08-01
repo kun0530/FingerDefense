@@ -10,7 +10,7 @@ public class MonsterSpawnTest : MonoBehaviour
     private Vector2 monsterSpawnPos;
     [SerializeField] private float monsterSpawnRadius = 2.5f;
 
-    [SerializeField] private bool isAutoSpawn = false;
+    private bool isAutoSpawn = false;
     [SerializeField] private float spawnInterval = 0.25f;
     private float spawnTimer = 0f;
 
@@ -66,5 +66,10 @@ public class MonsterSpawnTest : MonoBehaviour
         {
             Destroy(monster);
         }
+    }
+
+    public void AutoSpawn()
+    {
+        isAutoSpawn = !isAutoSpawn;
     }
 }

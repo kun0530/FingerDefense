@@ -69,7 +69,9 @@ public class PlayerAttackBehavior : MonoBehaviour
     {
         if (attactTrackEntry != null)
             attactTrackEntry.Complete -= SkillEnd;
-        characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
+
+        if (attactTrackEntry == characterAni.CurrentTrackEntry)
+            characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
 
         isAnimationEnded = true;
     }

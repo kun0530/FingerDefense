@@ -37,10 +37,10 @@ public class FallState : IState
                 if (controller.dragDeathSkill != null)
                 {
                     controller.dragDeathSkill.UseSkill();
-                    var dragDeathEffect = EffectFactoryTest.CreateEffect(controller.dragDeathSkill.skillData.AssetNo, controller.gameObject);
+                    var dragDeathEffect = EffectFactory.CreateEffect(controller.dragDeathSkill.skillData.AssetNo, controller.gameObject);
                     // dragDeathEffect.gameObject.transform.localScale *= 10f;
                 }
-                controller.PlayDeathAnimation();
+                controller.Die(false);
             }
             else
                 controller.TryTransitionState<PatrolState>();

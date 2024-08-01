@@ -4,9 +4,8 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    void TakeDamage(float hp);
-    // void TakeDamage(float hp, 공격자)
+    bool IsDamageable { get; }
 
-    void TakeBuff(BuffData buffData);
-    void TakeBuff(Buff buff);
+    bool TakeDamage(float damage);
+    // void TakeDamage(float hp, 공격자)
 }

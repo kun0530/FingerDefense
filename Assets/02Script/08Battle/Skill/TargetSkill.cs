@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TargetSkill : SkillType
 {
-    public TargetSkill(IFindable secondaryTargeting, string assetId)
-    : base(secondaryTargeting, assetId) { }
+    public TargetSkill(IFindable secondaryTargeting, SkillData data)
+    : base(secondaryTargeting, data) { }
 
     public override bool UseSkill(GameObject primaryTarget)
     {
@@ -18,10 +18,9 @@ public class TargetSkill : SkillType
         var targetCount = 0;
         foreach (var target in targets)
         {
-            if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
+            if (target != null && ApplySkillActions(target))
             {
-                ApplySkillActions(damageable);
-                EffectFactoryTest.CreateEffect(assetId, target);
+                EffectFactory.CreateEffect(AssetId, target);
                 targetCount++;
             }
         }

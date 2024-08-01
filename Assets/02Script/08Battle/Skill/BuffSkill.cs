@@ -12,17 +12,63 @@ public class BuffSkill : ISkillAction
         buffData = data;
     }
 
-    public void ApplySkillAction(IDamageable damageable)
+    public bool ApplySkillAction(GameObject target)
     {
-        // 버프 및 디버프 부여
-        damageable.TakeBuff(buffData);
+        if (target.TryGetComponent<IBuffGettable>(out var buffGettable)
+        && buffGettable.TakeBuff(buffData))
+        {
+            EffectFactory.CreateEffect(buffData.EffectNo.ToString(), target, buffData.LastingTime);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    public Buff ApplySkillEnterAreaAction(IDamageable damageable)
+    public bool EnterSkillArea(GameObject target, SkillArea area)
     {
-        var buff = new Buff(buffData, true);
-        damageable.TakeBuff(buff);
-
-        return buff;
+        if (target.TryGetComponent<IBuffGettable>(out var buffGettable))
+        {
+            var buff = new Buff(buffData, true);
+            if (!buffGettable.TakeBuff(buff))
+                return false;
+            EffectFactory.CreateEffect(buffData.EffectNo.ToString(), target, 10f);
+            if (area.Buffs.TryGetValue(target, out var prevBuff))
+            {
+                prevBuff.IsTimerStop = false;
+                area.Buffs.Remove(target);
+            }
+            
+            area.Buffs.Add(target, buff);
+            return true;
+        }
+        
+        return false;
     }
+
+    public bool ExitSkillArea(GameObject target, SkillArea area)
+    {
+        if (!target.TryGetComponent<ITargetable>(out var targetable)
+            || !targetable.IsTargetable) // To-Do: 조건문 수정
+            return false;
+
+        if (area.Buffs.TryGetValue(target, out var buff)
+            && buff != null)
+        {
+            buff.IsTimerStop = false;
+            area.Buffs.Remove(target);
+            return true;
+        }
+
+        return false;
+    }
+
+    // public Buff ApplySkillEnterAreaAction(IDamageable damageable)
+    // {
+    //     var buff = new Buff(buffData, true);
+    //     damageable.TakeBuff(buff);
+
+    //     return buff;
+    // }
 }
