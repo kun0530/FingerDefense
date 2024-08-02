@@ -15,11 +15,13 @@ public class MonsterFactory
     
     private Dictionary<int,IObjectPool<MonsterController>> monsterPool =
         new Dictionary<int, IObjectPool<MonsterController>>();
-    
+    private StageManager stageManager;
     public void Init(HashSet<int> ids)
     {
         assetList = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
+        
+        stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
         foreach (var id in ids)
         {
             monsterPool[id] = new ObjectPool<MonsterController>(
@@ -95,7 +97,10 @@ public class MonsterFactory
         {
             throw new InvalidOperationException($"몬스터 ID에 대한 풀을 찾을 수 없습니다. {id}");
         }
-
+        if(stageManager.CurrentState==StageState.GameOver)
+        {
+            return null;
+        }
         var monster = monsterPool[id].Get();
         // monster.Status.Data = data;
 

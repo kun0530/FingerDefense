@@ -109,7 +109,7 @@ public class DragAndDrop : MonoBehaviour
         
         if (context.control.device is Mouse or Touchscreen)
         {
-            if (!EventSystem.current.IsPointerOverGameObject() && IsDragging)
+            if (IsDragging)
             {
                 DropObject();
             }
