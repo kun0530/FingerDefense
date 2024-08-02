@@ -156,7 +156,7 @@ public class DragAndDrop : MonoBehaviour
     
     private async UniTask AutoDropAfterTime(float delay)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(delay));
+        await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale:true);
 
         if (IsDragging)
         {

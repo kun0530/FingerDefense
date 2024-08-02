@@ -10,6 +10,8 @@ public class DragState : IState
 
     private DragAndDrop dragAndDrop;
 
+    private bool isReachHeight;
+
     public DragState(MonsterController controller)
     {
         this.controller = controller;
@@ -21,6 +23,7 @@ public class DragState : IState
     public void Enter()
     {
         controller.targetFallY = controller.transform.position.y;
+        isReachHeight = false;
 
         if (controller.attackTarget)
             controller.attackTarget.TryRemoveMonster(controller);
@@ -31,8 +34,11 @@ public class DragState : IState
         renderer.sortingOrder = 1;
 
         controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
-        // TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
-        // CameraController.SetTargetWidth(25f, 0.25f);
+        TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
+        if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
+        {
+            cameraController.SetTargetWidth(25f, 0.25f);
+        }
     }
 
     public void Update()
@@ -41,7 +47,19 @@ public class DragState : IState
         {
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
             pos.z = 0f;
+            if (pos.y <= controller.targetFallY)
+                pos.y = controller.targetFallY;
             controller.transform.position = pos;
+
+            if (!isReachHeight && pos.y > controller.Status.Data.Height)
+            {
+                Handheld.Vibrate();
+                isReachHeight = true;
+            }
+            else if (isReachHeight && pos.y < controller.Status.Data.Height)
+            {
+                isReachHeight = false;
+            }
         }
         else
         {
@@ -52,7 +70,10 @@ public class DragState : IState
     public void Exit()
     {
         renderer.sortingOrder = 0;
-        // TimeScaleController.SetTimeScale(1f);
-        // CameraController.SetTargetWidth(20f, 0.5f);
+        TimeScaleController.SetTimeScale(1f);
+        if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
+        {
+            cameraController.SetTargetWidth(20f, 0.5f);
+        }
     }
 }

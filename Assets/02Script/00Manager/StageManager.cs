@@ -59,7 +59,7 @@ public class StageManager : MonoBehaviour
 
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
-            Time.timeScale = currentState is StageState.GameClear or StageState.GameOver  ? 0f : 1f;
+            TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
         }
     }
 
@@ -91,12 +91,12 @@ public class StageManager : MonoBehaviour
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Time.timeScale = 1f;
+        TimeScaleController.SetTimeScale(1f);
     }
     
     public void LobbyScene()
     {
         SceneManager.LoadScene(1);
-        Time.timeScale = 1f;
+        TimeScaleController.SetTimeScale(1f);
     }
 }
