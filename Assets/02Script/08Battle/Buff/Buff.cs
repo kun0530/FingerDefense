@@ -15,7 +15,7 @@ public class Buff
     private bool isDotDamageExist = false;
     public bool isDotDamage = false;
 
-    public ParticleSystem effect;
+    public EffectController effect;
 
     public Buff(BuffData data, bool isTimerStop = false)
     {

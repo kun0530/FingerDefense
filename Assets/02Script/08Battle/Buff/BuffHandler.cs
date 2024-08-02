@@ -37,7 +37,7 @@ public class BuffHandler
             }
             if (buffs[i].isDotDamage)
             {
-                OnDotDamage?.Invoke(buffs[i].dotDamage);
+                OnDotDamage?.Invoke(-buffs[i].dotDamage);
                 buffs[i].isDotDamage = false;
             }
         }

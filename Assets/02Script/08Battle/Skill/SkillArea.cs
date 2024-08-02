@@ -15,7 +15,7 @@ public class SkillArea : MonoBehaviour
     public int effectCount = 15;
 
     public Dictionary<GameObject, Buff> Buffs { get; private set; } = new();
-    private List<ParticleSystem> effects = new();
+    private List<EffectController> effects = new();
 
     public void Init(PlacementSkill skill)
     {
@@ -49,8 +49,6 @@ public class SkillArea : MonoBehaviour
             {
                 effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
                 effect.transform.SetParent(transform);
-                var main = effect.main;
-                main.loop = true;
 
                 effects.Add(effect);
             }

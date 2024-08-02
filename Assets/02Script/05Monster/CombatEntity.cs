@@ -51,6 +51,7 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         var effect = EffectFactory.CreateEffect(buffData.EffectNo);
         if (effect != null)
         {
+            effect.transform.position = transform.position;
             effect.transform.SetParent(transform);
             buff.effect = effect;
         }
