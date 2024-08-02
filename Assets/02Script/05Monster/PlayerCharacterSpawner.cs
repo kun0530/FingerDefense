@@ -75,17 +75,27 @@ public class PlayerCharacterSpawner : MonoBehaviour
         Ray ray = Camera.main!.ScreenPointToRay(touchPosition);
         var layerMask = LayerMask.GetMask("PlayerSpawner");
 
-        if (Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, layerMask))
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, layerMask);
+
+        if (hit.collider != null)
         {
+            Debug.Log($"Raycast hit: {hit.point}");
+
             // 검출한 오브젝트의 위치로 캐릭터 소환
             for (var i = 0; i < spawnPositions.Length; i++)
             {
-                if (spawnPositions[i].position.x - 1f <= ray.origin.x && ray.origin.x <= spawnPositions[i].position.x + 1f)
+                if (Mathf.Abs(spawnPositions[i].position.x - hit.point.x) 
+                    <= 1f && Mathf.Abs(spawnPositions[i].position.y - hit.point.y) <= 1f)
                 {
+                    Debug.Log($"Spawning character at position index {i}");
                     SpawnPlayerCharacter(i);
                     break;
                 }
             }
+        }
+        else
+        {
+            Debug.Log("Raycast did not hit any collider.");
         }
     }
 
