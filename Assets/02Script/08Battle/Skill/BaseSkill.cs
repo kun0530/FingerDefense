@@ -18,18 +18,18 @@ public abstract class BaseSkill
         this.targetingMethod = targetingMethod;
     }
 
-    public void TimerUpdate()
+    public void TimerUpdate(float coolTimeBuff = 0f)
     {
         if (IsSkillReady || skillData == null)
             return;
 
         skillTimer += Time.deltaTime;
-        if (skillTimer >= skillData.CoolTime)
+        if (skillTimer >= skillData.CoolTime - coolTimeBuff)
         {
             IsSkillReady = true;
             skillTimer = 0f;
         }
     }
 
-    public abstract bool UseSkill();
+    public abstract bool UseSkill(bool isBuffApplied = false);
 }

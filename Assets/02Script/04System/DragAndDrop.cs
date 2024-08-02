@@ -125,7 +125,7 @@ public class DragAndDrop : MonoBehaviour
         
         if (context.control.device is Mouse or Touchscreen)
         {
-            if (IsDragging)
+            if (IsDragging && draggingObject)
             {
                 var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition());
                 var transform1 = draggingObject.transform;

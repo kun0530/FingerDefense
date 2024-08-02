@@ -6,15 +6,16 @@ using UnityEngine;
 public class SkillArea : MonoBehaviour
 {
     public PlacementSkill placementSkill;
-    public float areaDuration;
+    private float areaDuration;
     private float timer = 0f;
     private string targetTag;
 
     private bool isInit = false;
 
-    private float areaOffsetY = 3f;
+    public int effectCount = 15;
 
     public Dictionary<GameObject, Buff> Buffs { get; private set; } = new();
+    private List<EffectController> effects = new();
 
     public void Init(PlacementSkill skill)
     {
@@ -35,19 +36,22 @@ public class SkillArea : MonoBehaviour
 
         placementSkill = skill;
         areaDuration = skill.Duration;
-        var collider = GetComponent<CapsuleCollider2D>();
+        var collider = GetComponent<CircleCollider2D>();
         if (collider != null)
-            collider.size = new Vector2(skill.Radius, areaOffsetY);
+            collider.radius = skill.Radius;
 
         isInit = true;
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < effectCount; i++)
         {
             var effect = EffectFactory.CreateEffect(skill.AssetId);
-            effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
-            effect.transform.SetParent(transform);
-            var main = effect.main;
-            main.loop = true;
+            if (effect != null)
+            {
+                effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
+                effect.transform.SetParent(transform);
+
+                effects.Add(effect);
+            }
         }
     }
 
@@ -57,8 +61,14 @@ public class SkillArea : MonoBehaviour
         {
             buff.Value.IsTimerStop = false;
         }
-
         Buffs.Clear();
+
+        foreach (var effect in effects)
+        {
+            if (effect != null)
+                Destroy(effect);
+        }
+        effects.Clear();
     }
 
     private void Update()

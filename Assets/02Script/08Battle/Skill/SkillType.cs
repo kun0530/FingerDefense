@@ -14,7 +14,7 @@ public abstract class SkillType
     public AttackSkill attackSkill;
     protected IFindable secondaryTargeting;
 
-    public string AssetId { get; protected set; }
+    public int AssetId { get; protected set; }
 
     public SkillType(IFindable secondaryTargeting, SkillData data)
     {
@@ -22,12 +22,12 @@ public abstract class SkillType
         this.AssetId = data.AssetNo;
     }
 
-    public abstract bool UseSkill(GameObject target);
+    public abstract bool UseSkill(GameObject target, bool isBuffApplied = false);
 
-    protected bool ApplySkillActions(GameObject target)
+    protected bool ApplySkillActions(GameObject target, bool isBuffApplied = false)
     {
-        var isAttacked = attackSkill != null ? attackSkill.ApplySkillAction(target) : false;
-        var isBuffed = buffSkill != null ? buffSkill.ApplySkillAction(target) : false;
+        var isAttacked = attackSkill != null ? attackSkill.ApplySkillAction(target, isBuffApplied) : false;
+        var isBuffed = buffSkill != null ? buffSkill.ApplySkillAction(target, isBuffApplied) : false;
 
         return isAttacked || isBuffed;
     }

@@ -7,7 +7,7 @@ public class TargetSkill : SkillType
     public TargetSkill(IFindable secondaryTargeting, SkillData data)
     : base(secondaryTargeting, data) { }
 
-    public override bool UseSkill(GameObject primaryTarget)
+    public override bool UseSkill(GameObject primaryTarget, bool isBuffApplied = false)
     {
         if (!primaryTarget)
             return false;
@@ -18,9 +18,16 @@ public class TargetSkill : SkillType
         var targetCount = 0;
         foreach (var target in targets)
         {
-            if (target != null && ApplySkillActions(target))
+            if (target != null && ApplySkillActions(target, isBuffApplied))
             {
-                EffectFactory.CreateEffect(AssetId, target);
+                var effect = EffectFactory.CreateEffect(AssetId);
+                if (effect != null)
+                {
+                    var autoDestory = effect.gameObject.AddComponent<AutoDestroy>();
+                    autoDestory.lifeTime = 1f;
+                    var targetFollower = effect.gameObject.AddComponent<TargetFollower>();
+                    targetFollower.Target = target;
+                }
                 targetCount++;
             }
         }

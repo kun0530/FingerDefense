@@ -5,13 +5,22 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
+    public enum ScreenMode
+    {
+        FULL_SCREEN_FIXED_WIDTH,
+        ASPECT_RATIO,
+        SAFE_AREA_FIXED_WIDTH
+    }
     private Camera mainCamera;
+
+    [SerializeField] private ScreenMode screenMode;
+    // private float screenWidth;
+    // private float screenHeight;
 
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
     [SerializeField] private float bottomY = -5f;
 
-    [SerializeField] private bool isExistLetterBox = true;
     [SerializeField] private GameObject letterBoxGameObject;
     private RectTransform letterBoxCanvasRect;
     private Image[] letterBoxes;
@@ -35,20 +44,37 @@ public class CameraController : MonoBehaviour
         letterBoxCanvasRect = letterBoxGameObject.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
         letterBoxes = letterBoxGameObject.GetComponentsInChildren<Image>();
 
-        if (isExistLetterBox)
-            AdjustCameraUsingLetterBox();
-        else
-            AdjustCamera();
+        ChangeResolution();
     }
 
     private void Update()
     {
-        if (isExistLetterBox)
-            AdjustCameraUsingLetterBox();
-        else
-            AdjustCamera();
+        ChangeResolution();
+
         // if (isWidthChange)
         //     ChangeTargetWidth();
+    }
+
+    private void ChangeResolution()
+    {
+        // if (screenWidth == Screen.width && screenHeight == Screen.height)
+        //     return;
+
+        // screenWidth = Screen.width;
+        // screenHeight = Screen.height;
+
+        switch (screenMode)
+        {
+            case ScreenMode.FULL_SCREEN_FIXED_WIDTH:
+                AdjustCamera();
+                break;
+            case ScreenMode.ASPECT_RATIO:
+                AdjustCameraUsingLetterBox();
+                break;
+            case ScreenMode.SAFE_AREA_FIXED_WIDTH:
+                AdjustCameraForSafeArea();
+                break;
+        }
     }
 
     private void AdjustCamera()
@@ -63,6 +89,27 @@ public class CameraController : MonoBehaviour
 
         var cameraPositionY = bottomY + orthographicSize;
         mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
+    }
+
+    private void AdjustCameraForSafeArea()
+    {
+        var safeAreaRect = Screen.safeArea;
+        var cameraRect = safeAreaRect;
+        cameraRect.x /= Screen.width;
+        cameraRect.y /= Screen.height;
+        cameraRect.width /= Screen.width;
+        cameraRect.height /= Screen.height;
+
+        mainCamera.rect = cameraRect;
+
+        var aspectRatio = (float)safeAreaRect.width / (float)safeAreaRect.height;
+        var orthographicSize = targetWidth / (aspectRatio * 2f);
+        mainCamera.orthographicSize = orthographicSize;
+
+        var cameraPositionY = bottomY + orthographicSize;
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
+
+        SetLetterBoxSize(cameraRect);
     }
 
     private void AdjustCameraUsingLetterBox()
@@ -103,6 +150,20 @@ public class CameraController : MonoBehaviour
             letterBox.gameObject.SetActive(true);
             letterBox.rectTransform.sizeDelta = new Vector2(newWidth, newHeight);
         }
+    }
+
+    private void SetLetterBoxSize(Rect rect)
+    {
+        float newLeftWidth = letterBoxCanvasRect.rect.width * rect.x;
+        float newRightWidth = letterBoxCanvasRect.rect.width * (1f - rect.x - rect.width);
+        float newBottomHeight = letterBoxCanvasRect.rect.height * rect.y;
+        float newTopHeight = letterBoxCanvasRect.rect.height * (1f - rect.y - rect.height);
+
+        // To-Do: 추후 수정
+        letterBoxes[0].gameObject.SetActive(true);
+        letterBoxes[0].rectTransform.sizeDelta = new Vector2(newLeftWidth, letterBoxCanvasRect.rect.height);
+        letterBoxes[1].gameObject.SetActive(true);
+        letterBoxes[1].rectTransform.sizeDelta = new Vector2(newRightWidth, letterBoxCanvasRect.rect.height);
     }
 
     private void SetLetterBoxInactive()

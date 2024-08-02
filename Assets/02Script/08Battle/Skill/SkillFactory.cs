@@ -59,7 +59,7 @@ public static class SkillFactory
         if (data.Damage != 0f)
         {
             // skill.skillActions.Add(new AttackSkill(data.Damage));
-            skillType.attackSkill = new AttackSkill(data.Damage);
+            skillType.attackSkill = new AttackSkill(data.Damage, gameObject);
         }
         if (data.BuffId != 0)
         {

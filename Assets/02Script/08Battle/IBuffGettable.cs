@@ -4,8 +4,9 @@ using UnityEngine;
 
 public interface IBuffGettable
 {
+    BuffHandler BuffHandler { get; }
     bool IsBuffGettable { get; }
 
     bool TakeBuff(BuffData buffData);
-    bool TakeBuff(Buff buff);
+    bool TryTakeBuff(BuffData buffData, out Buff buff, bool isTimerStop = false);
 }

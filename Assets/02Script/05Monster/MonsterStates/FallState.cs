@@ -20,7 +20,8 @@ public class FallState : IState
         startY = controller.transform.position.y;
         velocity = 0f;
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
+        if (!controller.IsDead)
+            controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
     }
 
     public void Update()
@@ -37,13 +38,22 @@ public class FallState : IState
                 if (controller.dragDeathSkill != null)
                 {
                     controller.dragDeathSkill.UseSkill();
-                    var dragDeathEffect = EffectFactory.CreateEffect(controller.dragDeathSkill.skillData.AssetNo, controller.gameObject);
-                    // dragDeathEffect.gameObject.transform.localScale *= 10f;
+                    
+                    var dragDeathEffect = EffectFactory.CreateEffect(controller.dragDeathSkill.skillData.AssetNo);
+                    if (dragDeathEffect != null)
+                    {
+                        dragDeathEffect.transform.position = controller.transform.position;
+                        dragDeathEffect.transform.SetParent(controller.transform);
+                        controller.effects.Add(dragDeathEffect);
+                    }
                 }
                 controller.Die(false);
             }
-            else
+            
+            if (!controller.IsDead)
                 controller.TryTransitionState<PatrolState>();
+            else
+                controller.TryTransitionState<IdleState<MonsterController>>();
         }
     }
 

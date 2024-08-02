@@ -7,6 +7,8 @@ public class PlacementSkill : SkillType
     public float Duration { get; private set; }
     public float Radius { get; private set; }
     public int Target { get; private set; }
+
+    private float areaOffsetY = -2.6f;
     
     public PlacementSkill(IFindable secondaryTargeting, SkillData data)
     : base(secondaryTargeting, data)
@@ -16,12 +18,12 @@ public class PlacementSkill : SkillType
         Target = data.Target;
     }
 
-    public override bool UseSkill(GameObject target)
+    public override bool UseSkill(GameObject target, bool isBuffApplied = false)
     {
         var area = SkillFactory.CreateSkillArea();
         if (area == null)
             return false;
-        area.transform.position = new Vector2(target.transform.position.x, -2.59f);
+        area.transform.position = new Vector2(target.transform.position.x, areaOffsetY);
         area.Init(this);
         return true;
     }

@@ -15,6 +15,8 @@ public class Buff
     private bool isDotDamageExist = false;
     public bool isDotDamage = false;
 
+    public EffectController effect;
+
     public Buff(BuffData data, bool isTimerStop = false)
     {
         buffData = data;

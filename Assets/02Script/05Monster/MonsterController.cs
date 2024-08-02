@@ -28,6 +28,8 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
 
+    public List<EffectController> effects = new();
+
     private bool isTargetReset=false;
     public bool IsDraggable
     {
@@ -102,6 +104,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void OnDisable()
     {
         base.OnDisable();
+        foreach (var effect in effects)
+        {
+            Destroy(effect);
+        }
+        effects.Clear();
     }
 
     private void Start()
@@ -153,7 +160,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
     public override void Die(bool isDamageDeath = true)
     {
+        if (IsDead)
+            return;
+
         base.Die();
+
         if (stageManager)
             stageManager.EarnedGold += Status.Data.DropGold;
             
@@ -161,7 +172,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
             deathSkill?.UseSkill();
             
         deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
-        stateMachine.TransitionTo<IdleState<MonsterController>>();
+        var currentState = stateMachine.CurrentState.GetType();
+        if (currentState == typeof(DragState))
+            stateMachine.TransitionTo<FallState>();
+        else if (currentState != typeof(FallState))
+            stateMachine.TransitionTo<IdleState<MonsterController>>();
         if (deathTrackEntry != null)
         {
             deathTrackEntry.Complete += Die;
@@ -194,10 +209,10 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public void SetFlip(bool isRight)
     {
         var newScaleX = isRight ? defaultRightScale : defaultRightScale * -1f;
-        var transform1 = transform;
-        var newScale = new Vector2(newScaleX, transform1.localScale.y);
+        // var transform1 = transform;
+        var newScale = new Vector3(newScaleX, transform.localScale.y, transform.localScale.z);
 
-        transform1.localScale = newScale;
+        transform.localScale = newScale;
     }
 
     public bool TryDrag()
