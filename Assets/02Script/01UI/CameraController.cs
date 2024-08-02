@@ -25,11 +25,11 @@ public class CameraController : MonoBehaviour
     private RectTransform letterBoxCanvasRect;
     private Image[] letterBoxes;
 
-    // private static float startWidth;
-    // private static float endWidth;
-    // private static float changeDuration;
-    // private static float timer = 0f;
-    // private static bool isWidthChange = false;
+    private float startWidth;
+    private float endWidth;
+    private float changeDuration;
+    private float timer = 0f;
+    private bool isWidthChange = false;
 
     private void Start()
     {
@@ -51,18 +51,12 @@ public class CameraController : MonoBehaviour
     {
         ChangeResolution();
 
-        // if (isWidthChange)
-        //     ChangeTargetWidth();
+        if (isWidthChange)
+            ChangeTargetWidth();
     }
 
     private void ChangeResolution()
     {
-        // if (screenWidth == Screen.width && screenHeight == Screen.height)
-        //     return;
-
-        // screenWidth = Screen.width;
-        // screenHeight = Screen.height;
-
         switch (screenMode)
         {
             case ScreenMode.FULL_SCREEN_FIXED_WIDTH:
@@ -188,30 +182,30 @@ public class CameraController : MonoBehaviour
         rectTransform.anchorMax = new Vector2(rect.x + rect.width, rect.y + rect.height);
     }
 
-    // public static void SetTargetWidth(float target, float duration)
-    // {
-    //     if (target < 0f || duration < 0f)
-    //         return;
+    public void SetTargetWidth(float target, float duration)
+    {
+        if (target < 0f || duration < 0f)
+            return;
 
-    //     startWidth = targetWidth;
-    //     endWidth = target;
-    //     changeDuration = duration;
-    //     timer = 0f;
+        startWidth = targetWidth;
+        endWidth = target;
+        changeDuration = duration;
+        timer = 0f;
 
-    //     isWidthChange = true;
-    // }
+        isWidthChange = true;
+    }
 
-    // private void ChangeTargetWidth()
-    // {
-    //     timer += Time.unscaledDeltaTime;
-    //     if (timer < changeDuration)
-    //     {
-    //         targetWidth = Mathf.Lerp(startWidth, endWidth, timer / changeDuration);
-    //     }
-    //     else
-    //     {
-    //         targetWidth = endWidth;
-    //         isWidthChange = false;
-    //     }
-    // }
+    private void ChangeTargetWidth()
+    {
+        timer += Time.unscaledDeltaTime;
+        if (timer < changeDuration)
+        {
+            targetWidth = Mathf.Lerp(startWidth, endWidth, timer / changeDuration);
+        }
+        else
+        {
+            targetWidth = endWidth;
+            isWidthChange = false;
+        }
+    }
 }

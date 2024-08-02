@@ -4,7 +4,7 @@ public class QuitUI : MonoBehaviour
 {
     public void ResumeGame()
     {
-        Time.timeScale = 1f;
+        TimeScaleController.SetTimeScale(1f);
     }
     
     public void OnClickQuit()
