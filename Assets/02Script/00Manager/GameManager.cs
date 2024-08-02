@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         LoadPlayerName();
+        
+        Application.targetFrameRate = 60;
     }
 
     private void LoadPlayerName()
