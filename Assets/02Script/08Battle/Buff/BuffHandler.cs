@@ -77,7 +77,7 @@ public class BuffHandler
             return;
 
         if (buffs[index].effect != null)
-            GameObject.Destroy(buffs[index].effect);
+            GameObject.Destroy(buffs[index].effect.gameObject);
         buffs.RemoveAt(index);
         UpdateBuff();
     }

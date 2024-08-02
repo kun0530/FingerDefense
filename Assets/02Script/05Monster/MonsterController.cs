@@ -102,11 +102,6 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void OnDisable()
     {
         base.OnDisable();
-        foreach (var effect in effects)
-        {
-            Destroy(effect);
-        }
-        effects.Clear();
     }
 
     private void Start()

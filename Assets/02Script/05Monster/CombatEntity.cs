@@ -24,16 +24,21 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
     protected virtual void OnEnable()
     {
         IsDead = false;
-        BuffHandler.ResetBuffs();
         Status.OnHpBarUpdate += UpdateHpBar;
         BuffHandler.OnDotDamage += TakeDamage;
     }
 
     protected virtual void OnDisable()
     {
-        BuffHandler.ResetBuffs();
         Status.OnHpBarUpdate -= UpdateHpBar;
         BuffHandler.OnDotDamage -= TakeDamage;
+
+        BuffHandler.ResetBuffs();
+        foreach (var effect in effects)
+        {
+            Destroy(effect.gameObject);
+        }
+        effects.Clear();
     }
 
     protected virtual void Update()
