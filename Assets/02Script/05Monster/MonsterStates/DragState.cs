@@ -51,12 +51,12 @@ public class DragState : IState
                 pos.y = controller.targetFallY;
             controller.transform.position = pos;
 
-            if (!isReachHeight && pos.y > controller.Status.Data.Height)
+            if (!isReachHeight && pos.y > controller.Status.Data.Height + controller.targetFallY)
             {
                 Handheld.Vibrate();
                 isReachHeight = true;
             }
-            else if (isReachHeight && pos.y < controller.Status.Data.Height)
+            else if (isReachHeight && pos.y < controller.Status.Data.Height + controller.targetFallY)
             {
                 isReachHeight = false;
             }
@@ -70,10 +70,11 @@ public class DragState : IState
     public void Exit()
     {
         renderer.sortingOrder = 0;
-        var stageManagerGo = GameObject.FindWithTag(Defines.Tags.STAGE_MANAGER_TAG);
-        var stageManager = stageManagerGo.GetComponent<StageManager>();
-        if (stageManager != null && stageManager.CurrentState == StageState.Playing)
-            TimeScaleController.SetTimeScale(1f);
+        
+        if (Time.timeScale == 0f)
+            return;
+
+        TimeScaleController.SetTimeScale(1f);
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
             cameraController.SetTargetWidth(20f, 0.5f);
