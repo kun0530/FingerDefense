@@ -70,7 +70,10 @@ public class DragState : IState
     public void Exit()
     {
         renderer.sortingOrder = 0;
-        TimeScaleController.SetTimeScale(1f);
+        var stageManagerGo = GameObject.FindWithTag(Defines.Tags.STAGE_MANAGER_TAG);
+        var stageManager = stageManagerGo.GetComponent<StageManager>();
+        if (stageManager != null && stageManager.CurrentState == StageState.Playing)
+            TimeScaleController.SetTimeScale(1f);
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
             cameraController.SetTargetWidth(20f, 0.5f);

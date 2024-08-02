@@ -28,8 +28,6 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
 
-    public List<EffectController> effects = new();
-
     private bool isTargetReset=false;
     public bool IsDraggable
     {

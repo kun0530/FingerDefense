@@ -21,6 +21,10 @@ public class BuffHandler
 
     public void ResetBuffs()
     {
+        foreach (var buff in buffs)
+        {
+            buff.ReleaseBuff();
+        }
         buffs.Clear();
         UpdateBuff();
     }

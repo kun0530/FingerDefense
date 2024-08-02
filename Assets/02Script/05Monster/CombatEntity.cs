@@ -11,6 +11,8 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
     public Image hpBar;
     public bool IsDead { get; protected set; }
 
+    public List<EffectController> effects = new();
+
     protected virtual void Awake()
     {
         Status = new();
@@ -29,6 +31,7 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
 
     protected virtual void OnDisable()
     {
+        BuffHandler.ResetBuffs();
         Status.OnHpBarUpdate -= UpdateHpBar;
         BuffHandler.OnDotDamage -= TakeDamage;
     }
