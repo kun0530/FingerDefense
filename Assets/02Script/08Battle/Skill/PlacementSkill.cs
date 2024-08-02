@@ -4,46 +4,59 @@ using UnityEngine;
 
 public class PlacementSkill : SkillType
 {
-    private SkillArea skillArea;
+    public float Duration { get; private set; }
+    public float Radius { get; private set; }
+    public int Target { get; private set; }
 
-    public PlacementSkill(IFindable secondaryTargeting, string assetId)
-    : base(secondaryTargeting, assetId) { }
-
-
-    // public AreaTargetSkill(AreaSkill area)
-    // {
-    //     this.area = area;
-    // }
-
-    public override bool UseSkill(GameObject target)
+    private float areaOffsetY = -2.6f;
+    
+    public PlacementSkill(IFindable secondaryTargeting, SkillData data)
+    : base(secondaryTargeting, data)
     {
-        // var area = GameObject.Instantiate(skillArea);
-        // area.transform.position = target.transform.position;
+        Duration = data.Duration;
+        Radius = data.Range;
+        Target = data.Target;
+    }
 
-        Logger.Log("미구현된 스킬입니다: 설치 스킬");
+    public override bool UseSkill(GameObject target, bool isBuffApplied = false)
+    {
+        var area = SkillFactory.CreateSkillArea();
+        if (area == null)
+            return false;
+        area.transform.position = new Vector2(target.transform.position.x, areaOffsetY);
+        area.Init(this);
         return true;
     }
 
-    public void EnterArea(IDamageable damageable, SkillArea area)
+    public bool EnterArea(GameObject target, SkillArea area)
     {
+        var isSkillApplied = false;
         if (buffSkill != null)
         {
-            var buff = buffSkill.ApplySkillEnterAreaAction(damageable);
-            area.Buffs.Add(damageable, buff);
+            isSkillApplied = buffSkill.EnterSkillArea(target, area);
         }
 
         if (attackSkill != null)
         {
-            attackSkill.ApplySkillAction(damageable);
+            isSkillApplied = isSkillApplied || attackSkill.EnterSkillArea(target, area);
         }
+
+        return isSkillApplied;
     }
 
-    public void ExitArea(IDamageable damageable, SkillArea area)
+    public bool ExitArea(GameObject target, SkillArea area)
     {
-        if (buffSkill != null && area.Buffs.TryGetValue(damageable, out var buff))
+        var isSkillApplied = false;
+        if (buffSkill != null)
         {
-            buff.IsTimerStop = true;
-            area.Buffs.Remove(damageable);
+            isSkillApplied = buffSkill.ExitSkillArea(target, area);
         }
+
+        if (attackSkill != null)
+        {
+            isSkillApplied = isSkillApplied || attackSkill.ExitSkillArea(target, area);
+        }
+
+        return isSkillApplied;
     }
 }

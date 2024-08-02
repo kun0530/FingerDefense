@@ -40,12 +40,13 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        
         if (context.control.device is Mouse or Touchscreen)
         {
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                return;
-            }
             if (!IsDragging)
             {
                 var mouseScreenPos = GetPointerPosition();
@@ -63,13 +64,10 @@ public class DragAndDrop : MonoBehaviour
                     if (hit.collider != null && mask == (mask | (1 << hit.collider.gameObject.layer)))
                     {
                         var spriteRenderer = hit.collider.gameObject.GetComponentInChildren<MeshRenderer>();
-                        if (spriteRenderer != null)
+                        if (spriteRenderer != null && spriteRenderer.sortingOrder > highestSortingOrder)
                         {
-                            if (spriteRenderer.sortingOrder > highestSortingOrder)
-                            {
-                                highestSortingOrder = spriteRenderer.sortingOrder;
-                                highestSortingOrderObject = hit.collider.gameObject;
-                            }
+                            highestSortingOrder = spriteRenderer.sortingOrder;
+                            highestSortingOrderObject = hit.collider.gameObject;
                         }
                     }
                 }
@@ -104,9 +102,14 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }  
+        
         if (context.control.device is Mouse or Touchscreen)
         {
-            if (IsDragging)
+            if (!EventSystem.current.IsPointerOverGameObject() && IsDragging)
             {
                 DropObject();
             }
@@ -115,9 +118,14 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDrag(InputAction.CallbackContext context)
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        } 
+        
         if (context.control.device is Mouse or Touchscreen)
         {
-            if (IsDragging)
+            if (IsDragging && draggingObject)
             {
                 var pos = mainCamera.ScreenToWorldPoint(GetPointerPosition());
                 var transform1 = draggingObject.transform;

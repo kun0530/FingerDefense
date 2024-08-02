@@ -2,40 +2,54 @@ using UnityEngine;
 
 public class MainUiManager : MonoBehaviour
 {
-    public GameObject MainUI;
+    public MainUI MainUI;
     public GameObject StageUI;
     public GameObject DeckUI;
+    public GameObject NicknameUI;
+    
     public QuitUI QuitUI;
     
     private GameManager gameManager;
-    private StageUITutorialManager stageUITutorialManager;
+    
+    public TutorialController tutorialController;
+    public TutorialController stageTutorialController;
     
     
+    private void Awake()
+    {
+        gameManager = GameManager.instance;
+    }
     public void Start()
     {
-        gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
-        stageUITutorialManager = GameObject.FindGameObjectWithTag("Tutorial")?.GetComponentInChildren<StageUITutorialManager>();
-        
-        MainUI.SetActive(false);
-        StageUI.SetActive(true);
-        DeckUI.SetActive(false);
-        QuitUI.gameObject.SetActive(false);
-        
-        if(gameManager != null && !gameManager.StageChoiceTutorialCheck)
+        if (!gameManager.NicknameCheck)
         {
-            if (stageUITutorialManager != null) stageUITutorialManager.StartTutorial(() => { });
+            tutorialController.gameObject.SetActive(true);
+            MainUI.gameObject.SetActive(false);
+            DeckUI.SetActive(false);
+            StageUI.SetActive(false);
+            NicknameUI.SetActive(false);
+        }
+        else
+        {
+            NicknameUI.SetActive(false);
+            tutorialController.gameObject.SetActive(false);
+            MainUI.gameObject.SetActive(true);
+            DeckUI.SetActive(false);
+            StageUI.SetActive(false);
         }
     }
     
     
     public void OnClickStartButton()
     {
-        StageUI.SetActive(true);
-        
-        //Prototype 삭제 예정
-        if (!gameManager.StageChoiceTutorialCheck)
+        if (!StageUI.activeSelf)
         {
-            stageUITutorialManager.StartTutorial(() => { });
+            StageUI.SetActive(true);
+            
+            if(!gameManager.StageChoiceTutorialCheck)
+            {
+                stageTutorialController.gameObject.SetActive(true);
+            }
         }
     }
     

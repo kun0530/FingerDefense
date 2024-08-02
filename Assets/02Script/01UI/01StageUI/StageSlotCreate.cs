@@ -1,13 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-
-public enum PanelState
-{
-    Active,
-    Inactive
-}
 
 public class StageSlotCreate : MonoBehaviour
 {
@@ -17,16 +10,16 @@ public class StageSlotCreate : MonoBehaviour
     public GameObject deckUI;
     private AssetListTable assetListTable;
     private StringTable stringTable;
-    
-    //포로토타입용 삭제 예정
     private GameManager gameManager;
-    private DeckUITutorialManager tutorialManager;
+    private bool slotsCreated = false;
+    public TutorialController DeckTutorialController;
     
-    private void Start()
+    private void Awake()
     {
-        
+        gameManager = GameManager.instance;
     }
-
+    
+    
     private void OnEnable()
     {
         if (stageTable == null)
@@ -35,15 +28,18 @@ public class StageSlotCreate : MonoBehaviour
             assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
             stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
         }
-
-        gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
-        tutorialManager = GameObject.FindGameObjectWithTag("Tutorial")?.GetComponentInChildren<DeckUITutorialManager>();
-
-        CreateStageSlots();
+        
+        if (!slotsCreated)
+        {
+            CreateStageSlots();
+            slotsCreated = true;
+        }
+        
     }
 
     private void CreateStageSlots()
     {
+        
         List<StageData> batch = new List<StageData>();
         int parentIndex = 0;
 
@@ -53,6 +49,7 @@ public class StageSlotCreate : MonoBehaviour
 
             if (batch.Count == 5)
             {
+                Logger.Log($"Creating batch for parent {parentIndex} with stages: {string.Join(", ", batch.Select(s => s.StageId))}");
                 CreateBatch(batch, slotParents[parentIndex]);
                 batch.Clear();
                 parentIndex = (parentIndex + 1) % slotParents.Length;
@@ -61,6 +58,7 @@ public class StageSlotCreate : MonoBehaviour
         
         if (batch.Count > 0)
         {
+            Logger.Log($"Creating final batch for parent {parentIndex} with stages: {string.Join(", ", batch.Select(s => s.StageId))}");
             CreateBatch(batch, slotParents[parentIndex]);
         }
     }
@@ -73,7 +71,6 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetAssetListTable(assetListTable);
             slot.Configure(stageData);
             slot.SetDeckUI(deckUI);
-            slot.SetManagers(gameManager, tutorialManager);
         }
     }
     

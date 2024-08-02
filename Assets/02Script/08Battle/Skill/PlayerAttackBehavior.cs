@@ -33,23 +33,26 @@ public class PlayerAttackBehavior : MonoBehaviour
         if (controller && controller.IsDead)
             return;
         
-        UpdateSkill(normalAttack);
+        if (controller != null)
+            UpdateSkill(normalAttack, controller.BuffHandler.buffValues[BuffType.ATK_SPEED], true);
+        else
+            UpdateSkill(normalAttack);
         UpdateSkill(skillAttack);
     }
 
-    private void UpdateSkill(BaseSkill skill)
+    private void UpdateSkill(BaseSkill skill, float coolTimeBuff = 0f, bool isBuffApplied = false)
     {
         if (skill == null)
             return;
 
-        skill.TimerUpdate();
+        skill.TimerUpdate(coolTimeBuff);
 
         if (!isAnimationEnded)
             return;
 
         if (skill.IsSkillReady)
         {
-            if (skill.UseSkill())
+            if (skill.UseSkill(isBuffApplied))
             {
                 currentAttack = skill;
                 SkillStart();
@@ -69,7 +72,9 @@ public class PlayerAttackBehavior : MonoBehaviour
     {
         if (attactTrackEntry != null)
             attactTrackEntry.Complete -= SkillEnd;
-        characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
+
+        if (attactTrackEntry == characterAni.CurrentTrackEntry)
+            characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
 
         isAnimationEnded = true;
     }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class TargetSkill : SkillType
 {
-    public TargetSkill(IFindable secondaryTargeting, string assetId)
-    : base(secondaryTargeting, assetId) { }
+    public TargetSkill(IFindable secondaryTargeting, SkillData data)
+    : base(secondaryTargeting, data) { }
 
-    public override bool UseSkill(GameObject primaryTarget)
+    public override bool UseSkill(GameObject primaryTarget, bool isBuffApplied = false)
     {
         if (!primaryTarget)
             return false;
@@ -18,10 +18,16 @@ public class TargetSkill : SkillType
         var targetCount = 0;
         foreach (var target in targets)
         {
-            if (target != null && target.TryGetComponent<IDamageable>(out var damageable))
+            if (target != null && ApplySkillActions(target, isBuffApplied))
             {
-                ApplySkillActions(damageable);
-                EffectFactoryTest.CreateEffect(assetId, target);
+                var effect = EffectFactory.CreateEffect(AssetId);
+                if (effect != null)
+                {
+                    var autoDestory = effect.gameObject.AddComponent<AutoDestroy>();
+                    autoDestory.lifeTime = 1f;
+                    var targetFollower = effect.gameObject.AddComponent<TargetFollower>();
+                    targetFollower.Target = target;
+                }
                 targetCount++;
             }
         }

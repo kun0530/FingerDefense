@@ -5,6 +5,8 @@ using UnityEngine;
 
 public static class SkillFactory
 {
+    private static readonly string skillArea = "SkillArea";
+
     public static BaseSkill CreateSkill(SkillData data, GameObject gameObject)
     {
         if (data == null || gameObject == null)
@@ -43,13 +45,13 @@ public static class SkillFactory
         switch ((SkillRangeTypes)data.Type)
         {
             case SkillRangeTypes.SingleTarget:
-                skillType = new TargetSkill(new FindingSelf(gameObject), data.AssetNo);
+                skillType = new TargetSkill(new FindingSelf(gameObject), data);
                 break;
             case SkillRangeTypes.MultipleTarget:
-                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data.AssetNo);
+                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data);
                 break;
             case SkillRangeTypes.AreaTarget: // 미구현
-                skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data.AssetNo);
+                skillType = new PlacementSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data);
                 break;
         }
 
@@ -57,7 +59,7 @@ public static class SkillFactory
         if (data.Damage != 0f)
         {
             // skill.skillActions.Add(new AttackSkill(data.Damage));
-            skillType.attackSkill = new AttackSkill(data.Damage);
+            skillType.attackSkill = new AttackSkill(data.Damage, gameObject);
         }
         if (data.BuffId != 0)
         {
@@ -86,5 +88,13 @@ public static class SkillFactory
         {
             return CreateSkill(skillData, gameObject);
         }
+    }
+
+    public static SkillArea CreateSkillArea()
+    {
+        var areaPrefab = Resources.Load<SkillArea>(skillArea);
+        var area = GameObject.Instantiate(areaPrefab);
+
+        return area;
     }
 }

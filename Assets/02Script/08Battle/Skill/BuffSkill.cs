@@ -4,25 +4,55 @@ using UnityEngine;
 
 public class BuffSkill : ISkillAction
 {
-    // 버프 데이터 저장
     public BuffData buffData { get; private set; }
 
-    public BuffSkill(BuffData data) // 버프 데이터 받음
+    public BuffSkill(BuffData data)
     {
         buffData = data;
     }
 
-    public void ApplySkillAction(IDamageable damageable)
+    public bool ApplySkillAction(GameObject target, bool isBuffApplied = false)
     {
-        // 버프 및 디버프 부여
-        damageable.TakeBuff(buffData);
+        if (target.TryGetComponent<IBuffGettable>(out var buffGettable) && buffGettable.TakeBuff(buffData))    
+            return true;
+
+        return false;
     }
 
-    public Buff ApplySkillEnterAreaAction(IDamageable damageable)
+    public bool EnterSkillArea(GameObject target, SkillArea area)
     {
-        var buff = new Buff(buffData, true);
-        damageable.TakeBuff(buff);
+        if (target.TryGetComponent<IBuffGettable>(out var buffGettable))
+        {
+            if (!buffGettable.TryTakeBuff(buffData, out var buff, true))
+                return false;
 
-        return buff;
+            if (area.Buffs.TryGetValue(target, out var prevBuff))
+            {
+                prevBuff.IsTimerStop = false;
+                area.Buffs.Remove(target);
+            }
+            
+            area.Buffs.Add(target, buff);
+            return true;
+        }
+        
+        return false;
+    }
+
+    public bool ExitSkillArea(GameObject target, SkillArea area)
+    {
+        if (!target.TryGetComponent<ITargetable>(out var targetable)
+            || !targetable.IsTargetable) // To-Do: 조건문 수정
+            return false;
+
+        if (area.Buffs.TryGetValue(target, out var buff)
+            && buff != null)
+        {
+            buff.IsTimerStop = false;
+            area.Buffs.Remove(target);
+            return true;
+        }
+
+        return false;
     }
 }

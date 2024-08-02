@@ -40,8 +40,8 @@ public class SkillCreateTest : MonoBehaviour
     public TMP_InputField buffIdInput;
     private int buffId;
 
-    public TMP_InputField AssetNoInput;
-    private string AssetNo;
+    public TMP_InputField assetNoInput;
+    private int assetNo;
 
 
     public void CreateSkill()
@@ -60,7 +60,7 @@ public class SkillCreateTest : MonoBehaviour
             Duration = duration,
             CastingTime = castingTime,
             BuffId = buffId,
-            AssetNo = AssetNo
+            AssetNo = assetNo
         };
 
         Logger.Log(skillData.ToString());
@@ -79,6 +79,6 @@ public class SkillCreateTest : MonoBehaviour
         float.TryParse(durationInput.text, out duration);
         float.TryParse(castingTimeInput.text, out castingTime);
         int.TryParse(buffIdInput.text, out buffId);
-        AssetNo = AssetNoInput.text;
+        int.TryParse(assetNoInput.text, out assetNo);
     }
 }
