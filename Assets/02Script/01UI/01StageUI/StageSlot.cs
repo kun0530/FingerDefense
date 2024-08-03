@@ -45,6 +45,7 @@ public class StageSlot : MonoBehaviour
         if (stageData.Monster1Id != 0) AddMonsterSlot(stageData.Monster1Id);
         if (stageData.Monster2Id != 0) AddMonsterSlot(stageData.Monster2Id);
         if (stageData.Monster3Id != 0) AddMonsterSlot(stageData.Monster3Id);
+        if (stageData.Monster4Id != 0) AddMonsterSlot(stageData.Monster4Id);
 
         if (stageData.Reward1Id != 0 && stageData.Reward1Value != 0) AddRewardSlot(stageData.Reward1Id, stageData.Reward1Value);
         //if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0) AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);

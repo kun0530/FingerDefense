@@ -39,7 +39,6 @@ public class StageSlotCreate : MonoBehaviour
 
     private void CreateStageSlots()
     {
-        
         List<StageData> batch = new List<StageData>();
         int parentIndex = 0;
 
