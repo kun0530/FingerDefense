@@ -33,6 +33,11 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (stagePanel.childCount <= 1)
+        {
+            return;
+        }
+        
         Vector2 dragDelta = eventData.position - dragStartPosition;
         float minDragDistance = 50.0f;
         if (dragDelta.x > minDragDistance && currentIndex > 0)
@@ -50,6 +55,13 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     private void UpdatePadding(bool instant = false)
     {
+        if (stagePanel.childCount <= 1)
+        {
+            layoutGroup.padding.left = 0;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(stagePanel);
+            return;
+        }
+        
         if (currentIndex < leftPaddings.Length)
         {
             if (instant)
