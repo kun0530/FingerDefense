@@ -7,7 +7,7 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
 {
     public RectTransform stagePanel;
     public float scaleFactor = 0.7f;
-    public float animationDuration = 0.5f;
+    public float animationDuration = 0.2f;
     private readonly int[] leftPaddings = { 200,-100,-375,-650,-1100 };
 
     private int currentIndex = 0;
@@ -34,15 +34,14 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     public void OnEndDrag(PointerEventData eventData)
     {
         Vector2 dragDelta = eventData.position - dragStartPosition;
-
-        switch (dragDelta.x)
+        float minDragDistance = 50.0f;
+        if (dragDelta.x > minDragDistance && currentIndex > 0)
         {
-            case > 0 when currentIndex > 0:
-                currentIndex--;
-                break;
-            case < 0 when currentIndex < leftPaddings.Length - 1:
-                currentIndex++;
-                break;
+            currentIndex--;
+        }
+        else if (dragDelta.x < -minDragDistance && currentIndex < leftPaddings.Length - 1)
+        {
+            currentIndex++;
         }
 
         UpdatePadding();
