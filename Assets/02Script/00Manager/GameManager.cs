@@ -8,6 +8,15 @@ public class GameManager : MonoBehaviour
     private static GameManager Instance;
     private DataManager dataManager;
 
+    private string playerName;
+    private bool nicknameCheck;
+    private bool stageChoiceTutorialCheck;
+    private bool deckUITutorialCheck;
+    private bool game1TutorialCheck;
+    private bool game2TutorialCheck;
+    private bool game3TutorialCheck;
+    private bool game4TutorialCheck;
+    
     [NotNull]
     public static GameManager instance
     {
@@ -62,78 +71,108 @@ public class GameManager : MonoBehaviour
     {
         GameData gameData = dataManager.LoadFile<GameData>("GameData.json") ?? new GameData();
 
-        _playerName = gameData.PlayerName;
-        _nicknameCheck = gameData.NicknameCheck;
-        _stageChoiceTutorialCheck = gameData.StageChoiceTutorialCheck;
-        _deckUITutorialCheck = gameData.DeckUITutorialCheck;
-        _gameTutorialCheck = gameData.GameTutorialCheck;
+        playerName = gameData.PlayerName;
+        nicknameCheck = gameData.NicknameCheck;
+        stageChoiceTutorialCheck = gameData.StageChoiceTutorialCheck;
+        deckUITutorialCheck = gameData.DeckUITutorialCheck;
+        game1TutorialCheck = gameData.Game1TutorialCheck;
+        game2TutorialCheck = gameData.Game2TutorialCheck;
+        game3TutorialCheck = gameData.Game3TutorialCheck;
+        game4TutorialCheck = gameData.Game4TutorialCheck;
     }
 
     private void SaveGameData()
     {
         GameData gameData = new GameData
         {
-            PlayerName = _playerName,
-            NicknameCheck = _nicknameCheck,
-            StageChoiceTutorialCheck = _stageChoiceTutorialCheck,
-            DeckUITutorialCheck = _deckUITutorialCheck,
-            GameTutorialCheck = _gameTutorialCheck
+            PlayerName = playerName,
+            NicknameCheck = nicknameCheck,
+            StageChoiceTutorialCheck = stageChoiceTutorialCheck,
+            DeckUITutorialCheck = deckUITutorialCheck,
+            Game1TutorialCheck = game1TutorialCheck,
+            Game2TutorialCheck = game2TutorialCheck,
+            Game3TutorialCheck = game3TutorialCheck,
+            Game4TutorialCheck = game4TutorialCheck
         };
         dataManager.SaveFile("GameData.json", gameData);
     }
-
-    private string _playerName;
-    private bool _nicknameCheck;
-    private bool _stageChoiceTutorialCheck;
-    private bool _deckUITutorialCheck;
-    private bool _gameTutorialCheck;
-
+    
     public string PlayerName
     {
-        get => _playerName;
+        get => playerName;
         set
         {
-            _playerName = value;
+            playerName = value;
             SaveGameData();
         }
     }
 
     public bool NicknameCheck
     {
-        get => _nicknameCheck;
+        get => nicknameCheck;
         set
         {
-            _nicknameCheck = value;
+            nicknameCheck = value;
             SaveGameData();
         }
     }
 
     public bool StageChoiceTutorialCheck
     {
-        get => _stageChoiceTutorialCheck;
+        get => stageChoiceTutorialCheck;
         set
         {
-            _stageChoiceTutorialCheck = value;
+            stageChoiceTutorialCheck = value;
             SaveGameData();
         }
     }
 
     public bool DeckUITutorialCheck
     {
-        get => _deckUITutorialCheck;
+        get => deckUITutorialCheck;
         set
         {
-            _deckUITutorialCheck = value;
+            deckUITutorialCheck = value;
             SaveGameData();
         }
     }
 
-    public bool GameTutorialCheck
+    public bool Game1TutorialCheck
     {
-        get => _gameTutorialCheck;
+        get => game1TutorialCheck;
         set
         {
-            _gameTutorialCheck = value;
+            game1TutorialCheck = value;
+            SaveGameData();
+        }
+    }
+    
+    public bool Game2TutorialCheck
+    {
+        get => game2TutorialCheck;
+        set
+        {
+            game2TutorialCheck = value;
+            SaveGameData();
+        }
+    }
+    
+    public bool Game3TutorialCheck
+    {
+        get => game3TutorialCheck;
+        set
+        {
+            game3TutorialCheck = value;
+            SaveGameData();
+        }
+    }
+    
+    public bool Game4TutorialCheck
+    {
+        get => game4TutorialCheck;
+        set
+        {
+            game4TutorialCheck = value;
             SaveGameData();
         }
     }
@@ -163,12 +202,16 @@ public class GameManager : MonoBehaviour
     private void ResetGameData()
     {
         // 데이터 초기화
-        _playerName = "";
-        _nicknameCheck = false;
-        _stageChoiceTutorialCheck = false;
-        _deckUITutorialCheck = false;
-        _gameTutorialCheck = false;
-
+        playerName = "";
+        nicknameCheck = false;
+        stageChoiceTutorialCheck = false;
+        deckUITutorialCheck = false;
+        game1TutorialCheck = false;
+        game2TutorialCheck = false;
+        game3TutorialCheck = false;
+        game4TutorialCheck = false;
+        
+        SceneManager.LoadScene(0);
         // 초기화된 데이터 저장
         SaveGameData();
     }

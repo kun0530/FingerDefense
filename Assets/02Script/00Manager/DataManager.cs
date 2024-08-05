@@ -11,7 +11,12 @@ public class GameData
     public bool NicknameCheck;
     public bool StageChoiceTutorialCheck;
     public bool DeckUITutorialCheck;
-    public bool GameTutorialCheck;
+    public bool Game1TutorialCheck;
+    public bool Game2TutorialCheck;
+    public bool Game3TutorialCheck;
+    public bool Game4TutorialCheck;
+    
+    
 }
 
 public class DataManager : MonoBehaviour
