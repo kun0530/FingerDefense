@@ -41,6 +41,7 @@ public class Projectile : MonoBehaviour
 
     public SkillType skill;
     public bool isBuffApplied = false;
+    public int skillType;
 
     private bool isTargetSet = false;
 
@@ -60,7 +61,10 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        MoveToTarget();
+        if (skillType == 0)
+            MoveToTarget();
+        else
+            MoveToPosition();
     }
 
     private void MoveToTarget()

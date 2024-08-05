@@ -24,6 +24,7 @@ public class ProjectileSkill : BaseSkill
         projectile.Target = target;
         projectile.skill = skillType;
         projectile.isBuffApplied = isBuffApplied;
+        projectile.skillType = skillData.Type;
 
         IsSkillReady = false;
         return true;
