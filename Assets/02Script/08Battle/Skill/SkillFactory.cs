@@ -50,7 +50,7 @@ public static class SkillFactory
             case SkillRangeTypes.MultipleTarget:
                 skillType = new TargetSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data);
                 break;
-            case SkillRangeTypes.AreaTarget: // 미구현
+            case SkillRangeTypes.AreaTarget:
                 skillType = new PlacementSkill(new FindingTargetInCircle(gameObject.transform, data.Range, layerMask), data);
                 break;
         }
@@ -70,7 +70,11 @@ public static class SkillFactory
         }
 
         // To-Do: Instant Skill과 Projectile Skill 분기
-        BaseSkill baseSkill = new InstantSkill(data, skillType, primaryTargeting);
+        BaseSkill baseSkill = null;
+        if (data.Projectile == 0)
+            baseSkill = new InstantSkill(data, skillType, primaryTargeting, gameObject);
+        else
+            baseSkill = new ProjectileSkill(data, skillType, primaryTargeting, gameObject);
 
         return baseSkill;
     }
