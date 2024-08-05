@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.F2))
         {
             ResetGameData();
             Logger.Log("Game data has been reset.");
@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
         gold += 1000;
         diamond += 100;
         ticket += 10;
-        mileage += 10;
+        mileage += 20;
         
         SaveGameData();
     }

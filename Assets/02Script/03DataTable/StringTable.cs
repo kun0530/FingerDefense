@@ -33,7 +33,8 @@ public class StringTable : DataTable
         var records = csvReader.GetRecords<StringData>();
         foreach (var record in records)
         {
-            table.TryAdd(record.Id, record.Text);
+            string processedText = record.Text.Replace("\\n", "\n");
+            table.TryAdd(record.Id, processedText);
         }
     }
 }

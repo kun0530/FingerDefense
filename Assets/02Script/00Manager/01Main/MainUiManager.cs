@@ -8,7 +8,7 @@ public class MainUiManager : MonoBehaviour
     public GameObject NicknameUI;
     
     public QuitUI QuitUI;
-    
+    public ShopSettingUI ShopUI;
     private GameManager gameManager;
     
     public TutorialController tutorialController;
@@ -28,6 +28,7 @@ public class MainUiManager : MonoBehaviour
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
             NicknameUI.SetActive(false);
+            ShopUI.gameObject.SetActive(false);
         }
         else
         {
@@ -36,6 +37,7 @@ public class MainUiManager : MonoBehaviour
             MainUI.gameObject.SetActive(true);
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
+            ShopUI.gameObject.SetActive(false);
         }
     }
     

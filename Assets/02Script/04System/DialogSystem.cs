@@ -44,7 +44,12 @@ public class DialogSystem : MonoBehaviour
     
     private bool isDialogComplete = false;
     public CanvasGroup dialogCanvasGroup;
-    
+
+    private bool isTyping = false; 
+    private bool skipToNext = false; 
+    private string fullText; 
+    private TextMeshProUGUI currentTextMesh; 
+
     private void Awake()
     {
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String); 
@@ -104,7 +109,6 @@ public class DialogSystem : MonoBehaviour
             }
         }
 
-        // 대화가 완료되었는지 확인
         return isDialogComplete;
     }
     
@@ -112,16 +116,23 @@ public class DialogSystem : MonoBehaviour
     {
         await OnNextButtonClicked();
     }
+
     private async UniTask OnNextButtonClicked()
     {
-        await SetNextDialogAsync();
+        if (isTyping)
+        {
+            currentTextMesh.text = fullText;
+            isTyping = false;
+            skipToNext = true;
+        }
+        else
+        {
+            await SetNextDialogAsync();
+        }
     }
 
     private async UniTask SetNextDialogAsync()
     {
-        nextButton.interactable = false;
-
-        // 모든 다이얼로그 텍스트 숨기기 및 초기화
         foreach (var dialog in systemDialog)
         {
             dialog.dialogText.text = "";
@@ -130,11 +141,9 @@ public class DialogSystem : MonoBehaviour
         }
 
         currentDialogIndex++;
-
-        // 배열 범위를 벗어나는지 확인
+        
         if (currentDialogIndex >= dialogData.Length)
         {
-            // 대화 종료
             isDialogComplete = true;
             dialogCanvasGroup.gameObject.SetActive(false);
             return;
@@ -144,21 +153,26 @@ public class DialogSystem : MonoBehaviour
 
         SetActiveObjects(systemDialog[currentSpeakerIndex], true);
         systemDialog[currentSpeakerIndex].nameText.text = dialogData[currentDialogIndex].name;
-
-        // 타이핑 애니메이션 적용
+        
         await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogData[currentDialogIndex].dialog);
-
-        nextButton.interactable = true;
     }
 
     private async UniTask TypeText(TextMeshProUGUI textMesh, string text)
     {
-        textMesh.text = ""; // 텍스트를 먼저 비웁니다.
+        isTyping = true;
+        fullText = text; 
+        currentTextMesh = textMesh; 
+        textMesh.text = ""; 
         foreach (var t in text)
         {
+            if (skipToNext)
+            {
+                skipToNext = false;
+                break;
+            }
             textMesh.text += t;
             await UniTask.Delay(50);
         }
+        isTyping = false;
     }
-    
 }

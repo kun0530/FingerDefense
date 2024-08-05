@@ -46,10 +46,10 @@ public class NickSettingUI : MonoBehaviour
     private void OnClickConfirm()
     {
         userId = inputField.text;
-        if(userId.Length is < 4 or > 10)
+        if(userId.Length is < 2 or > 8)
         {
-            ShowNotice("닉네임은 4자 이상 10자 이하로 입력해주세요.");
-            Logger.Log("닉네임은 4자 이상 10자 이하로 입력해주세요.");
+            ShowNotice("닉네임은 2자 이상 8자 이하로 입력해주세요.");
+            Logger.Log("닉네임은 2자 이상 8자 이하로 입력해주세요.");
             return;
         }
         if(!koreanFullSyllablesRegex.IsMatch(userId))
@@ -77,7 +77,7 @@ public class NickSettingUI : MonoBehaviour
     private void OnClickConfirmNick()
     {
         isComplete = true;
-        mainUI.UpdatePlayerName();
+        mainUI.UpdatePlayerInfo();
         gameObject.SetActive(false);
         Logger.Log("닉네임 설정이 완료되었습니다.");
     }

@@ -18,10 +18,10 @@ public class MainUI : MonoBehaviour
 
     private void Update()
     {
-        UpdatePlayerName();
+        UpdatePlayerInfo();
     }
     
-    public void UpdatePlayerName()
+    public void UpdatePlayerInfo()
     {
         if (!gameManager)
         {
