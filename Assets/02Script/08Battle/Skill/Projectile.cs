@@ -31,13 +31,13 @@ public class Projectile : MonoBehaviour
             if (!target)
                 return;
 
-            targetPos = target.transform.position;
-            direction = (targetPos - new Vector2(transform.position.x, transform.position.y)).normalized;
+            initialTargetPos = target.transform.position;
+            direction = (initialTargetPos - new Vector2(transform.position.x, transform.position.y)).normalized;
         }
     }
-    private Vector2 targetPos;
-    private Vector2 direction;
-    private float speed = 10f;
+    private Vector2 initialTargetPos;
+    private Vector3 direction;
+    private float speed = 20f;
 
     public SkillType skill;
     public bool isBuffApplied = false;
@@ -60,17 +60,31 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        targetPos = target.transform.position;
-        direction = (targetPos - new Vector2(transform.position.x, transform.position.y)).normalized;
-        var displacement = direction * speed * Time.deltaTime;
+        MoveToTarget();
+    }
+
+    private void MoveToTarget()
+    {
+        Vector2 targetPos = target.transform.position;
+        Vector2 projectilePos = transform.position;
+
+        var displacement = (targetPos - projectilePos).normalized * speed * Time.deltaTime;
         transform.position += new Vector3(displacement.x, displacement.y, 0f);
 
-        if (Vector3.Distance(transform.position, targetPos) < 0.1f || transform.position.y < targetPos.y)
+        if (Vector3.Distance(transform.position, targetPos) < 0.1f || transform.position.y < initialTargetPos.y)
         {
-            if (Target.TryGetComponent<ITargetable>(out var targetable) && targetable.IsTargetable)
-            {
-                skill?.UseSkill(target, isBuffApplied);
-            }
+            skill?.UseSkill(target, isBuffApplied);
+            Destroy(gameObject);
+        }
+    }
+
+    private void MoveToPosition()
+    {
+        transform.position += direction * speed * Time.deltaTime;
+
+        if (transform.position.y <= initialTargetPos.y)
+        {
+            skill?.UseSkill(gameObject, isBuffApplied);
             Destroy(gameObject);
         }
     }
