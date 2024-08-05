@@ -74,7 +74,8 @@ public class StageManager : MonoBehaviour
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
     }
-
+    
+    
     public void DamageCastle(float damage)
     {
         if (damage <= 0f)

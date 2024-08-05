@@ -61,7 +61,7 @@ public class BuffTable : DataTable
 
                 for (int i = patternStartIndex; i < columnCount; i += 2)
                 {
-                    (int type, float value) buff = (csvReader.GetField<int>(i), csvReader.GetField<int>(i + 1));
+                    (int type, float value) buff = (csvReader.GetField<int>(i), csvReader.GetField<float>(i + 1));
                     buffData.BuffActions.Add(buff);
                 }
 

@@ -17,11 +17,18 @@ public class DragAndDrop : MonoBehaviour
     private static readonly RaycastHit2D[] hits = new RaycastHit2D[10];
     private InputManager inputManager;
 
+    private StageManager stageManager;
+    
     
     private void Awake()
     {
         mainCamera = Camera.main;
         inputManager=GetComponent<InputManager>();
+    }
+
+    private void Start()
+    {
+        stageManager=GameObject.FindWithTag("StageManager").TryGetComponent(out StageManager manager) ? manager : null;
     }
 
     private void OnEnable()
@@ -102,14 +109,14 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject() || stageManager.CurrentState == StageState.GameOver)
         {
             return;
         }  
         
         if (context.control.device is Mouse or Touchscreen)
         {
-            if (!EventSystem.current.IsPointerOverGameObject() && IsDragging)
+            if (IsDragging)
             {
                 DropObject();
             }

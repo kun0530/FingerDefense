@@ -30,6 +30,8 @@ public class MonsterSpawner : MonoBehaviour
     private bool isWaveEnd;
     public HashSet<int> monsters { get; private set; } = new();
     
+    private StageManager stageManager;
+    
     private void Awake()
     {
         factory = new MonsterFactory();
@@ -77,6 +79,8 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Start()
     {
+        stageManager=GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+        
         factory.poolTransform = poolTransform; // To-Do: 추후 삭제
         spawnPosition = new Vector2(spawnTransform.position.x, spawnTransform.position.y);
     }
@@ -110,10 +114,14 @@ public class MonsterSpawner : MonoBehaviour
         {
             var spwanMonsterId = Utils.WeightedRandomPick<int>(monsters);
             var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
-            monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
-            monsterGo.moveTarget = moveTarget;
-            monsterGo.ResetMonsterData();
-
+            
+            if (stageManager)
+            {
+                monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                monsterGo.moveTarget = moveTarget;
+                monsterGo.ResetMonsterData();    
+            }
+            
             while (Time.timeScale == 0)
             {
                 await UniTask.Yield(PlayerLoopTiming.Update);
