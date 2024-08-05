@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager Instance;
+    public static GameManager instance;
     private DataManager dataManager;
 
     private string playerName;
@@ -16,36 +16,22 @@ public class GameManager : MonoBehaviour
     private bool game2TutorialCheck;
     private bool game3TutorialCheck;
     private bool game4TutorialCheck;
+    private int gold;
+    private int diamond;
+    private int ticket;
+    private int mileage;
     
-    [NotNull]
-    public static GameManager instance
-    {
-        get
-        {
-            if (Instance == null)
-            {
-                Instance = FindObjectOfType<GameManager>();
-                if (Instance == null)
-                {
-                    GameObject go = new GameObject("GameManager");
-                    Instance = go.AddComponent<GameManager>();
-                    DontDestroyOnLoad(go);
-                }
-            }
-            return Instance;
-        }
-        private set => Instance = value;
-    }
-
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+        
         Application.targetFrameRate = 60;
 
         dataManager = GetComponent<DataManager>();
@@ -63,7 +49,12 @@ public class GameManager : MonoBehaviour
         {
             ResetGameData();
             Logger.Log("Game data has been reset.");
-        }       
+        } 
+        
+        if(Input.GetKeyDown(KeyCode.F1))
+        {
+            TestCode();
+        }
 #endif
     }
 
@@ -79,6 +70,10 @@ public class GameManager : MonoBehaviour
         game2TutorialCheck = gameData.Game2TutorialCheck;
         game3TutorialCheck = gameData.Game3TutorialCheck;
         game4TutorialCheck = gameData.Game4TutorialCheck;
+        gold = gameData.Gold;
+        diamond = gameData.Diamond;
+        ticket = gameData.Ticket;
+        mileage = gameData.Mileage;
     }
 
     private void SaveGameData()
@@ -92,7 +87,11 @@ public class GameManager : MonoBehaviour
             Game1TutorialCheck = game1TutorialCheck,
             Game2TutorialCheck = game2TutorialCheck,
             Game3TutorialCheck = game3TutorialCheck,
-            Game4TutorialCheck = game4TutorialCheck
+            Game4TutorialCheck = game4TutorialCheck,
+            Gold = gold,
+            Diamond = diamond,
+            Ticket = ticket,
+            Mileage = mileage
         };
         dataManager.SaveFile("GameData.json", gameData);
     }
@@ -176,6 +175,46 @@ public class GameManager : MonoBehaviour
             SaveGameData();
         }
     }
+    
+    public int Gold
+    {
+        get => gold;
+        private set
+        {
+            gold = value;
+            SaveGameData();
+        }
+    }
+    
+    public int Diamond
+    {
+        get => diamond;
+        private set
+        {
+            diamond = value;
+            SaveGameData();
+        }
+    }
+    
+    public int Ticket
+    {
+        get => ticket;
+        private set
+        {
+            ticket = value;
+            SaveGameData();
+        }
+    }
+    
+    public int Mileage
+    {
+        get => mileage;
+        private set
+        {
+            mileage = value;
+            SaveGameData();
+        }
+    }
 
     private void OnEnable()
     {
@@ -210,10 +249,24 @@ public class GameManager : MonoBehaviour
         game2TutorialCheck = false;
         game3TutorialCheck = false;
         game4TutorialCheck = false;
+        gold = 0;
+        diamond = 0;
+        ticket = 0;
+        mileage = 0;
         
         SceneManager.LoadScene(0);
         // 초기화된 데이터 저장
         SaveGameData();
     }
 
+    private void TestCode()
+    {
+        gold += 1000;
+        diamond += 100;
+        ticket += 10;
+        mileage += 10;
+        
+        SaveGameData();
+    }
+    
 }
