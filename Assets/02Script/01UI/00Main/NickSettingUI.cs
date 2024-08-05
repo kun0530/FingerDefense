@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,11 +23,14 @@ public class NickSettingUI : MonoBehaviour
 
     public TextMeshProUGUI noticeText;
     private Vector3 noticeTextInitialPosition;
-    
+
+    public void Awake()
+    {
+        gameManager = GameObject.FindWithTag("Manager").TryGetComponent(out GameManager manager) ? manager : null;    
+    }
+
     public void Start()
     {
-        gameManager = GameManager.instance;
-        
         confirmButton.onClick.AddListener(OnClickConfirm);
         cancelButton.onClick.AddListener(OnClickCancel);
         confirmNickButton.onClick.AddListener(OnClickConfirmNick);
@@ -56,11 +60,9 @@ public class NickSettingUI : MonoBehaviour
         }
         
         gameManager.PlayerName = inputField.text;
-        Variables.LoadName.Nickname = gameManager.PlayerName;
+        
         nickCheckUI.SetActive(true);
         nickNameText.text = $"정말 <color=#FF0000>{gameManager.PlayerName}</color>으로 설정하시겠습니까?";
-        
-        mainUI.UpdatePlayerName();
         
         Logger.Log($"{gameManager.PlayerName}으로 설정되었습니다.");
     }
@@ -68,7 +70,7 @@ public class NickSettingUI : MonoBehaviour
     private void OnClickCancel()
     {
         nickCheckUI.SetActive(false);
-        Variables.LoadName.Nickname = "";
+        gameManager.PlayerName = "";
         Logger.Log($"{gameManager.PlayerName}으로 설정되었습니다.");
     }
 
