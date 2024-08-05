@@ -10,7 +10,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class PlayerCharacterData
 {
     public int Id { get; set; }
-    public int Name { get; set; }
+    public string Name { get; set; }
     public float Hp { get; set; }
     public int Grade { get; set; }
     public int Element { get; set; }
