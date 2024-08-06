@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     private int ticket;
     private int mileage;
     
+    public event Action OnResourcesChanged;
+    
     private void Awake()
     {
         if (instance == null)
@@ -74,6 +76,8 @@ public class GameManager : MonoBehaviour
         diamond = gameData.Diamond;
         ticket = gameData.Ticket;
         mileage = gameData.Mileage;
+        
+        OnResourcesChanged?.Invoke();
     }
 
     private void SaveGameData()
@@ -179,30 +183,33 @@ public class GameManager : MonoBehaviour
     public int Gold
     {
         get => gold;
-        private set
+        set
         {
             gold = value;
             SaveGameData();
+            OnResourcesChanged?.Invoke();
         }
     }
     
     public int Diamond
     {
         get => diamond;
-        private set
+        set
         {
             diamond = value;
             SaveGameData();
+            OnResourcesChanged?.Invoke();
         }
     }
     
     public int Ticket
     {
         get => ticket;
-        private set
+        set
         {
             ticket = value;
             SaveGameData();
+            OnResourcesChanged?.Invoke();
         }
     }
     
@@ -213,6 +220,7 @@ public class GameManager : MonoBehaviour
         {
             mileage = value;
             SaveGameData();
+            OnResourcesChanged?.Invoke();
         }
     }
 
@@ -266,7 +274,9 @@ public class GameManager : MonoBehaviour
         ticket += 10;
         mileage += 20;
         
+        Logger.Log($"TestCode executed: Gold={gold}, Diamond={diamond}, Ticket={ticket}, Mileage={mileage}");
         SaveGameData();
+        OnResourcesChanged?.Invoke();
     }
     
 }
