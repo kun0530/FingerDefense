@@ -7,7 +7,8 @@ public class BuffHandler
 {
     public List<Buff> buffs = new();
     public Dictionary<BuffType, float> buffValues = new();
-    public event Func<float, bool> OnDotDamage;
+    public event Func<float, DamageReason, Elements, bool> OnDotDamage;
+    public event Func<float, bool> OnDotHeal;
 
     public int maxBuffCount = 3;
 
@@ -41,7 +42,11 @@ public class BuffHandler
             }
             if (buffs[i].isDotDamage)
             {
-                OnDotDamage?.Invoke(-buffs[i].dotDamage);
+                var hpChange = buffs[i].dotDamage;
+                if (hpChange < 0f)
+                    OnDotDamage?.Invoke(-hpChange, DamageReason.DOT_DAMAGE, Elements.NONE);
+                if (hpChange > 0f)
+                    OnDotHeal?.Invoke(hpChange);
                 buffs[i].isDotDamage = false;
             }
         }

@@ -10,6 +10,7 @@ using UnityEngine.AddressableAssets;
 // TO-DO: 추후 위치 변경해야 합니다.
 public enum Elements
 {
+    NONE = -1,
     SCISSOR,
     ROCK,
     PAPER

@@ -48,7 +48,7 @@ public class AttackState : IState
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackCoolDown)
         {
-            controller.attackTarget.TakeDamage(controller.Status.CurrentAtk);
+            controller.attackTarget.TakeDamage(controller.Status.CurrentAtk, DamageReason.MONSTER_HIT_DAMAGE, controller.Status.element);
             attackTimer = 0f;
 
             return;

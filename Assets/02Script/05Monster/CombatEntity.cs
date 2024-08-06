@@ -26,12 +26,14 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         IsDead = false;
         Status.OnHpBarUpdate += UpdateHpBar;
         BuffHandler.OnDotDamage += TakeDamage;
+        BuffHandler.OnDotHeal += RecoverHeal;
     }
 
     protected virtual void OnDisable()
     {
         Status.OnHpBarUpdate -= UpdateHpBar;
         BuffHandler.OnDotDamage -= TakeDamage;
+        BuffHandler.OnDotHeal -= RecoverHeal;
 
         BuffHandler.ResetBuffs();
         foreach (var effect in effects)
@@ -90,7 +92,7 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
 
     public virtual bool IsDamageable => !IsDead;
 
-    public bool TakeDamage(float damage)
+    public bool TakeDamage(float damage, DamageReason reason = DamageReason.NONE, Elements element = Elements.NONE)
     {
         if (!IsDamageable)
             return false;
@@ -101,18 +103,39 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         if (Status == null)
             return false;
 
+        damage *= Utils.ScissorRockPaper(Status.element, element);
         Status.CurrentHp -= damage;
-        UpdateHpBar();
 
         if (Status.CurrentHp <= 0f)
         {
-            Die();
+            Die(reason);
         }
 
         return true;
     }
 
-    public virtual void Die(bool isDamageDeath = true)
+    public bool RecoverHeal(float heal)
+    {
+        if (!IsDamageable)
+            return false;
+
+        if (heal < 0)
+            return false;
+
+        if (Status == null)
+            return false;
+
+        Status.CurrentHp += heal;
+
+        if (Status.CurrentHp >= Status.CurrentMaxHp)
+        {
+            Status.CurrentHp = Status.CurrentMaxHp;
+        }
+
+        return true;
+    }
+
+    public virtual void Die(DamageReason reason = DamageReason.NONE)
     {
         IsDead = true;
         Status.CurrentHp = 0f;
