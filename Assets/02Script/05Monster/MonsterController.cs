@@ -151,18 +151,20 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         }
     }
 
-    public override void Die(bool isDamageDeath = true)
+    public override void Die(DamageReason reason = DamageReason.NONE)
     {
         if (IsDead)
             return;
 
-        base.Die();
+        base.Die(reason);
 
         if (stageManager)
             stageManager.EarnedGold += Status.Data.DropGold;
             
-        if (isDamageDeath)
+        if (reason == DamageReason.PLAYER_HIT_DAMAGE)
             deathSkill?.UseSkill();
+        else if (reason == DamageReason.FALL_DAMAGE || reason == DamageReason.MONSTER_HIT_DAMAGE)
+            dragDeathSkill?.UseSkill();
             
         deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
         var currentState = stateMachine.CurrentState.GetType();

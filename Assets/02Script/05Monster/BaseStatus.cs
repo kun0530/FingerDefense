@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class BaseStatus
 {
     public BuffHandler buffHandler;
+    public Elements element = Elements.NONE;
 
     public event Action OnHpBarUpdate;
     protected float currentMaxHp;

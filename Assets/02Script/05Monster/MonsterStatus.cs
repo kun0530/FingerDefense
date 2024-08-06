@@ -67,5 +67,6 @@ public class MonsterStatus : BaseStatus
 
         currentMaxHp = Data.Hp;
         CurrentHp = currentMaxHp;
+        element = (Elements)Data.Element;
     }
 }

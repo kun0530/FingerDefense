@@ -24,4 +24,24 @@ public static class Utils
 
         return weights[weights.Count - 1].Item1;
     }
+
+    public static float ScissorRockPaper(Elements targetElement, Elements attackerElement)
+    {
+        if (targetElement == Elements.NONE || attackerElement == Elements.NONE)
+            return 1f;
+
+        var diff = attackerElement - targetElement;
+        
+        switch (diff)
+        {
+            case 1:
+            case -2:
+                return 1.25f;
+            case -1:
+            case 2:
+                return 0.75f;
+        }
+
+        return 1f;
+    }
 }

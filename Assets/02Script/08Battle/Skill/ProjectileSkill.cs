@@ -17,7 +17,7 @@ public class ProjectileSkill : BaseSkill
         if (!effect)
             return false;
 
-        if (effect.gameObject.TryGetComponent<Projectile>(out var projectile))
+        if (!effect.gameObject.TryGetComponent<Projectile>(out var projectile))
             projectile = effect.gameObject.AddComponent<Projectile>();
 
         projectile.Caster = caster;
