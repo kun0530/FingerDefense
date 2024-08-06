@@ -15,6 +15,7 @@ public class StringData
 public class StringTable : DataTable
 {
     private readonly Dictionary<int, string> table = new Dictionary<int, string>();
+    private readonly Dictionary<string, string> tableString = new Dictionary<string, string>();
 
     public string Get(int id)
     {
@@ -37,4 +38,10 @@ public class StringTable : DataTable
             table.TryAdd(record.Id, processedText);
         }
     }
+
+    public string Get(string key)
+    {
+        return tableString.GetValueOrDefault(key);
+    }
+    
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public static class DataTableIds
 {
@@ -12,6 +13,9 @@ public static class DataTableIds
     public static readonly string Stage = "StageTable";
     public static readonly string Asset = "AssetListTable";
     public static readonly string String = "StringTable";
+    public static readonly string Item = "ItemTable";
+    public static readonly string Shop = "ShopTable";
+    public static readonly string Gacha = "GachaTable";
 
 }
 
@@ -52,6 +56,18 @@ public static class DataTableManager
         StringTable stringTable = new StringTable();
         stringTable.Load(DataTableIds.String);
         tables.Add(DataTableIds.String, stringTable);
+        
+        ItemTable itemTable = new ItemTable();
+        itemTable.Load(DataTableIds.Item);
+        tables.Add(DataTableIds.Item, itemTable);
+        
+        ShopTable shopTable = new ShopTable();
+        shopTable.Load(DataTableIds.Shop);
+        tables.Add(DataTableIds.Shop, shopTable);
+        
+        GachaTable gachaTable = new GachaTable();
+        gachaTable.Load(DataTableIds.Gacha);
+        tables.Add(DataTableIds.Gacha, gachaTable);
     }
 
     // public static StringTable GetStringTable()
