@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEditor.SceneManagement;
 
 public class DragAndDrop : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void Start()
     {
-        stageManager=GameObject.FindWithTag("StageManager").TryGetComponent(out StageManager manager) ? manager : null;
+        stageManager = GameObject.FindWithTag("StageManager")?.GetComponent<StageManager>();
     }
 
     private void OnEnable()
@@ -109,10 +110,10 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        if (EventSystem.current.IsPointerOverGameObject() || stageManager.CurrentState == StageState.GameOver)
+        if (EventSystem.current.IsPointerOverGameObject() || (stageManager != null && stageManager.CurrentState == StageState.GameOver))
         {
             return;
-        }  
+        } 
         
         if (context.control.device is Mouse or Touchscreen)
         {
