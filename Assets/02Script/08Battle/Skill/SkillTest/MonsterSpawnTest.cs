@@ -7,8 +7,6 @@ using TMPro;
 
 public class MonsterSpawnTest : MonoBehaviour
 {
-    public MonsterController baseMonsterPrefab;
-    public MonsterData monsterData { get; private set; }
     public Transform monsterPos;
     private Vector2 monsterSpawnPos;
     [SerializeField] private float monsterSpawnRadius = 2.5f;
@@ -25,18 +23,6 @@ public class MonsterSpawnTest : MonoBehaviour
     {
         monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
-
-        monsterData = new()
-        {
-            Hp = 100f,
-            DragType = 1,
-            Element = 0,
-            MoveSpeed = 2f,
-            AtkDmg = 0f,
-            AtkSpeed = 1f,
-            Height = 3f,
-            Skill = 0
-        };
     }
 
     private void Start()
@@ -87,7 +73,7 @@ public class MonsterSpawnTest : MonoBehaviour
         var assetFileName = assetListTable.Get(assetId);
         if (string.IsNullOrEmpty(assetFileName))
         {
-            Logger.LogError($"해당 아이디에 해당하는 에셋이 에셋 리스트에 존재하지 않습니다: {id}");
+            Logger.LogError($"해당 아이디에 해당하는 몬스터 에셋이 에셋 리스트에 존재하지 않습니다: {id}");
             return null;
         }
         var assetPath = $"Prefab/03MonsterGame/{assetFileName}";
@@ -95,7 +81,7 @@ public class MonsterSpawnTest : MonoBehaviour
         var monsterPrefab = Resources.Load<MonsterController>(assetPath);
         if (monsterPrefab == null)
         {
-            Logger.LogError($"해당 경로의 프리팹을 확인해주세요: {assetPath}");
+            Logger.LogError($"해당 경로의 몬스터 프리팹을 확인해주세요: {assetPath}");
             return null;
         }
 
