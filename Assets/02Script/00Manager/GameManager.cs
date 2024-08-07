@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     private int diamond;
     private int ticket;
     private int mileage;
+    private List<int> obtainedGachaIDs = new List<int>();
     
     public event Action OnResourcesChanged;
     
@@ -76,11 +78,12 @@ public class GameManager : MonoBehaviour
         diamond = gameData.Diamond;
         ticket = gameData.Ticket;
         mileage = gameData.Mileage;
+        obtainedGachaIDs = gameData.ObtainedGachaIDs;
         
         OnResourcesChanged?.Invoke();
     }
 
-    private void SaveGameData()
+    public void SaveGameData()
     {
         GameData gameData = new GameData
         {
@@ -95,7 +98,8 @@ public class GameManager : MonoBehaviour
             Gold = gold,
             Diamond = diamond,
             Ticket = ticket,
-            Mileage = mileage
+            Mileage = mileage,
+            ObtainedGachaIDs = obtainedGachaIDs
         };
         dataManager.SaveFile("GameData.json", gameData);
     }
@@ -216,11 +220,21 @@ public class GameManager : MonoBehaviour
     public int Mileage
     {
         get => mileage;
-        private set
+        set
         {
             mileage = value;
             SaveGameData();
             OnResourcesChanged?.Invoke();
+        }
+    }
+    
+    public List<int> ObtainedGachaIDs
+    {
+        get => obtainedGachaIDs;
+        set
+        {
+            obtainedGachaIDs = value;
+            SaveGameData();
         }
     }
 
@@ -261,6 +275,7 @@ public class GameManager : MonoBehaviour
         diamond = 0;
         ticket = 0;
         mileage = 0;
+        obtainedGachaIDs.Clear();
         
         SceneManager.LoadScene(0);
         // 초기화된 데이터 저장

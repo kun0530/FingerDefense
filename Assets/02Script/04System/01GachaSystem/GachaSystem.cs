@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
+
 
 public class GachaSystem : MonoBehaviour
 {
@@ -33,8 +33,33 @@ public class GachaSystem : MonoBehaviour
       for (int i = 0; i < times; i++)
       {
          GachaData result = GetRandomGachaResult();
-         SpawnResultSlot(result);
-      }   
+         if (result != null)
+         {
+            if (!GameManager.instance.ObtainedGachaIDs.Contains(result.Id))
+            {
+               GameManager.instance.ObtainedGachaIDs.Add(result.Id);
+               Logger.Log($"Obtained Gacha ID: {result.Id}");
+               GameManager.instance.SaveGameData();
+            }
+            else
+            {
+               switch (gachaTable.table[result.Id].Grade)
+               {
+                  case 0:
+                     GameManager.instance.Mileage += 1;
+                     break;
+                  case 1:
+                     GameManager.instance.Mileage += 5;
+                     break;
+                  case 2:
+                     GameManager.instance.Mileage += 10;
+                     break;   
+               } 
+               GameManager.instance.SaveGameData();
+            }
+            SpawnResultSlot(result);
+         }
+      }
    }
    
    private GachaData GetRandomGachaResult()
@@ -70,7 +95,7 @@ public class GachaSystem : MonoBehaviour
    }
    private void SpawnResultSlot(GachaData data)
    {
-      GachaResultSlot slot = Instantiate(resultSlot, gachaSlotParent);
+      var slot = Instantiate(resultSlot, gachaSlotParent);
       slot.Setup(data, aasetListTable, stringTable);
       spawnedSlots.Add(slot);
    }
