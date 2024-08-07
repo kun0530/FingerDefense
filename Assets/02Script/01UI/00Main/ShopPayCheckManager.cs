@@ -32,6 +32,14 @@ public class ShopPayCheckManager : MonoBehaviour
         extraConfirmButton.onClick.AddListener(OnExtraConfirmButtonClicked);
 
         gameManager = GameManager.instance;
+        if (gachaSystem == null)
+        {
+            Debug.LogError("GachaSystem이 참조되지 않았습니다!");
+        }
+        else
+        {
+            Debug.Log("GachaSystem이 성공적으로 참조되었습니다.");
+        }
     }
 
     public void HandleButtonClicked(ShopButtonType buttonType, int buttonNumber)
@@ -66,6 +74,12 @@ public class ShopPayCheckManager : MonoBehaviour
             if (currentButtonType == ShopButtonType.Ticket)
             {
                 StartCutscene();
+                if (!gachaSystem.gameObject.activeInHierarchy)
+                {
+                    gachaSystem.gameObject.SetActive(true);
+                }
+                gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
+                Logger.Log("GachaSystem.PerformGacha 호출됨");
             }
         }
 
@@ -89,7 +103,14 @@ public class ShopPayCheckManager : MonoBehaviour
         if (currentButtonType == ShopButtonType.Ticket)
         {
             ProcessPurchase(currentButtonType, currentButtonNumber);
+            
+            if (!gachaSystem.gameObject.activeInHierarchy)
+            {
+                gachaSystem.gameObject.SetActive(true);
+            }
+            
             gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
+            Logger.Log("GachaSystem.PerformGacha 호출됨");
             StartCutscene();
         }
         else

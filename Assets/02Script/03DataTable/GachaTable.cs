@@ -11,9 +11,16 @@ public class GachaTable : DataTable
 {
     public Dictionary<int, GachaData> table = new Dictionary<int, GachaData>();
     
+    public GachaData Get(int id)
+    {
+        return table.GetValueOrDefault(id);
+    }
+    
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
+        Logger.Log($"Loading GachaTable from path: {path}");
+        
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         using var reader = new StringReader(textAsset.text);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
