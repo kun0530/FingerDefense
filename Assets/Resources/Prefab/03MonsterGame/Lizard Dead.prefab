@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3756267429171771351}
@@ -118,7 +118,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: attack
+  _animationName: walk
   loop: 1
   timeScale: 1
 --- !u!1 &8544188026326245912
@@ -226,8 +226,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.50140107}
-  m_Size: {x: 0.5, y: 1.0153368}
+  m_Offset: {x: 0.12257838, y: 0.7056985}
+  m_Size: {x: 1.0274587, y: 1.4239316}
   m_Direction: 0
 --- !u!1001 &7088636109758688309
 PrefabInstance:
@@ -274,6 +274,18 @@ PrefabInstance:
       value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -303,11 +315,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.048
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

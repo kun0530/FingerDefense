@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4299064570551965331}
   - component: {fileID: 8188389372355961972}
   - component: {fileID: 8991383316089949561}
+  - component: {fileID: 8120643389457115845}
   m_Layer: 7
   m_Name: Ogre
   m_TagString: Monster
@@ -48,8 +49,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 2091879082140096521}
+  effects: []
   findRange: 3
   isDirectedRight: 1
+  monsterAni: {fileID: 0}
 --- !u!114 &8991383316089949561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +73,41 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c47756fc356a5e445b192a1a9b06f569, type: 2}
   - {fileID: 11400000, guid: 831fa064c8516b44aad09c7c669db000, type: 2}
   - {fileID: 11400000, guid: 3aa6b2dcb85189247b0f9ee3dcc78858, type: 2}
+--- !u!70 &8120643389457115845
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390919771921326569}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.04680705, y: 0.69011354}
+  m_Size: {x: 1.267937, y: 1.4772081}
+  m_Direction: 0
 --- !u!1 &4262361159848943152
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,7 +137,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4299064570551965331}
@@ -240,6 +278,18 @@ PrefabInstance:
       value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -273,7 +323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.974
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6657057688963498830, guid: d2abe04bd09366c4fa167dc01edbca42, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
