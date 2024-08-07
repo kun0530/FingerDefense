@@ -56,7 +56,7 @@ public class ShopPayCheckManager : MonoBehaviour
 
     private void OnExtraConfirmButtonClicked()
     {
-        bool isPurchaseSuccessful = ConfirmAdditionalPurchase(currentButtonType, currentButtonNumber);
+        var isPurchaseSuccessful = ConfirmAdditionalPurchase(currentButtonType, currentButtonNumber);
         UpdateResultText(isPurchaseSuccessful);
 
         if (isPurchaseSuccessful)
@@ -92,7 +92,7 @@ public class ShopPayCheckManager : MonoBehaviour
         }
         else
         {
-            int successMessageId = GetSuccessMessageId(currentButtonType, currentButtonNumber);
+            var successMessageId = GetSuccessMessageId(currentButtonType, currentButtonNumber);
             resultText.text = shopTable.Get(successMessageId);
             extraConfirmButton.gameObject.SetActive(false);
             extraConfirmPanel.SetActive(true);
@@ -107,7 +107,7 @@ public class ShopPayCheckManager : MonoBehaviour
         }
         else
         {
-            int failMessageId = GetFailMessageId(currentButtonType, currentButtonNumber);
+            var failMessageId = GetFailMessageId(currentButtonType, currentButtonNumber);
             resultText.text = shopTable.Get(failMessageId);
             extraConfirmButton.gameObject.SetActive(true);
             extraConfirmButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
@@ -117,7 +117,7 @@ public class ShopPayCheckManager : MonoBehaviour
 
     private void HandleTicketFailure()
     {
-        string message = GetTicketFailureMessage(currentButtonNumber, out var showConfirmButton);
+        var message = GetTicketFailureMessage(currentButtonNumber, out var showConfirmButton);
 
         resultText.text = message;
         extraConfirmButton.gameObject.SetActive(showConfirmButton);
@@ -126,20 +126,20 @@ public class ShopPayCheckManager : MonoBehaviour
 
     private string GetTicketFailureMessage(int buttonNumber, out bool showConfirmButton)
     {
-        int requiredTickets = buttonNumber == 1 ? 1 : 10;
-        int ticketsNeeded = requiredTickets - gameManager.Ticket;
-        int diamondsNeeded = ticketsNeeded * 160;
+        var requiredTickets = buttonNumber == 1 ? 1 : 10;
+        var ticketsNeeded = requiredTickets - gameManager.Ticket;
+        var diamondsNeeded = ticketsNeeded * 160;
 
         if (gameManager.Ticket < requiredTickets && gameManager.Diamond >= diamondsNeeded)
         {
             showConfirmButton = true;
             return $"캐릭터 모집 티켓의 개수가 부족합니다. {ticketsNeeded}개 만큼 {diamondsNeeded} 다이아로 구매해서 사용하시겠습니까?";
         }
-        else if (gameManager.Ticket < requiredTickets && gameManager.Diamond < diamondsNeeded)
+        if (gameManager.Ticket < requiredTickets && gameManager.Diamond < diamondsNeeded)
         {
             showConfirmButton = false;
             extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
-            return "티켓과 다이아몬드가 부족합니다.";
+            return "티켓이 부족합니다.";
         }
         else
         {
@@ -150,7 +150,7 @@ public class ShopPayCheckManager : MonoBehaviour
 
     private void UpdateResultText(bool isPurchaseSuccessful)
     {
-        int messageId = isPurchaseSuccessful
+        var messageId = isPurchaseSuccessful
             ? GetSuccessMessageId(currentButtonType, currentButtonNumber)
             : GetFailMessageId(currentButtonType, currentButtonNumber);
         resultText.text = shopTable.Get(messageId);
