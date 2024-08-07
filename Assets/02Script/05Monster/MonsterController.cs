@@ -128,6 +128,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         isTargetReset=false;
     }
 
+    private void CrossResetLine()
+    {
+        stageManager.monsterSpawner.TriggerMonsterReset(this);
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -149,7 +154,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
         if (other.CompareTag("ResetLine")) // To-Do: Defines에서 정의
         {
-            isTargetReset = true;
+            if (!isTargetReset)
+            {
+                isTargetReset = true;
+                CrossResetLine();
+            }
         }
     }
 

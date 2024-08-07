@@ -37,11 +37,11 @@ public class Projectile : MonoBehaviour
     }
     private Vector2 initialTargetPos;
     private Vector3 direction;
-    private float speed = 20f;
+    public float speed = 20f;
 
     public SkillType skill;
-    public bool isBuffApplied = false;
-    public int skillType;
+    [HideInInspector] public bool isBuffApplied = false;
+    [HideInInspector] public int skillType;
 
     private bool isTargetSet = false;
 
