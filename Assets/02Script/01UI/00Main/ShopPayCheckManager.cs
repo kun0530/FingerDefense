@@ -21,6 +21,7 @@ public class ShopPayCheckManager : MonoBehaviour
     private int currentButtonNumber;
     private ShopTable shopTable;
     private GameManager gameManager;
+    public GachaSystem gachaSystem;
 
     private void Start()
     {
@@ -88,6 +89,7 @@ public class ShopPayCheckManager : MonoBehaviour
         if (currentButtonType == ShopButtonType.Ticket)
         {
             ProcessPurchase(currentButtonType, currentButtonNumber);
+            gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
             StartCutscene();
         }
         else
@@ -161,6 +163,11 @@ public class ShopPayCheckManager : MonoBehaviour
         Debug.Log("Starting cutscene...");
         checkUIPanel.SetActive(false);
         extraConfirmPanel.SetActive(false);
+
+        // if (gachaSystem)
+        // {
+        //     
+        // }
     }
 
     #region MessageId

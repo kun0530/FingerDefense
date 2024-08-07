@@ -13,13 +13,17 @@ public class GachaSystem : MonoBehaviour
    private GachaTable gachaTable;
    private AssetListTable aasetListTable;
    private StringTable stringTable;
-
+   
    private void Start()
    {
       gachaTable = DataTableManager.Get<GachaTable>(DataTableIds.Gacha);
       aasetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
       stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
-      
+   }
+
+
+   public void PerformGacha(int i)
+   {
       
    }
 }
