@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
     
     public int Diamond
     {
-        get => diamond;
+        get { return diamond; }
         set
         {
             diamond = value;
@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviour
     
     public int Ticket
     {
-        get => ticket;
+        get { return ticket; }
         set
         {
             ticket = value;
@@ -270,7 +270,7 @@ public class GameManager : MonoBehaviour
     private void TestCode()
     {
         gold += 1000;
-        diamond += 100;
+        diamond += 1000;
         ticket += 10;
         mileage += 20;
         
@@ -279,4 +279,23 @@ public class GameManager : MonoBehaviour
         OnResourcesChanged?.Invoke();
     }
     
+    public void AddTickets(int amount)
+    {
+        Ticket += amount;
+    }
+
+    public void RemoveTickets(int amount)
+    {
+        Ticket -= amount;
+    }
+
+    public void AddDiamonds(int amount)
+    {
+        Diamond += amount;
+    }
+
+    public void RemoveDiamonds(int amount)
+    {
+        Diamond -= amount;
+    }
 }
