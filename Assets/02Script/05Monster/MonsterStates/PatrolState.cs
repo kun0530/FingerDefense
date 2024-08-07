@@ -40,6 +40,7 @@ public class PatrolState : IState
 
         // 성 포탈까지 이동
         var direction = (controller.moveTarget.transform.position - controller.transform.position).normalized;
+        direction *= controller.speedMultiplier;
         controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         if (moveTrackEntry != null)
             moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;

@@ -21,6 +21,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
+    [SerializeField] public float speedMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
@@ -97,6 +98,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void OnEnable()
     {
         base.OnEnable();
+        speedMultiplier = 1f;
     }
 
     protected override void OnDisable()
