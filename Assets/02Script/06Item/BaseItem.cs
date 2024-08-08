@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public abstract class BaseItem : ScriptableObject
 {
+    [HideInInspector] public int id;
+
     private StageManager stageManager;
     protected StageManager StageManager
     {

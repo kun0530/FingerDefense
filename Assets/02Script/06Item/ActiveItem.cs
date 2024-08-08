@@ -7,12 +7,12 @@ public abstract class ActiveItem : BaseItem
     public override bool IsPassive { get => false; }
 
     public float duration;
-    protected bool isItemUsed = false;
-    protected float durationTimer = 0f;
+    private bool isItemUsed = false;
+    private float durationTimer = 0f;
 
     public float coolDown;
-    protected bool isCoolDown = true;
-    protected float coolDownTimer = 0f;
+    private bool isCooledDown = true;
+    private float coolDownTimer = 0f;
 
     public override void UseItem()
     {
@@ -21,10 +21,11 @@ public abstract class ActiveItem : BaseItem
         isItemUsed = true;
         durationTimer = 0f;
 
-        isCoolDown = false;
+        isCooledDown = false;
         coolDownTimer = 0f;
 
         button.interactable = false;
+        button.GetComponent<UiSlotButton>().SetFillAmountBackground(1f);
     }
 
     public override void CancelItem()
@@ -52,14 +53,17 @@ public abstract class ActiveItem : BaseItem
 
     private void UpdateCoolDownTimer()
     {
-        if (count == 0 || isCoolDown)
+        if (count == 0 || isCooledDown)
             return;
 
         coolDownTimer += Time.deltaTime;
+        if (coolDown > 0f)
+            button.GetComponent<UiSlotButton>().SetFillAmountBackground(1f - coolDownTimer / coolDown);
         if (coolDownTimer >= coolDown)
         {
             button.interactable = true;
-            isCoolDown = true;
+            button.GetComponent<UiSlotButton>().SetFillAmountBackground(0f);
+            isCooledDown = true;
         }
     }
 }
