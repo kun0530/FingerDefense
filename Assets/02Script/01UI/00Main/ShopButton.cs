@@ -41,10 +41,12 @@ public class ShopButton : MonoBehaviour
     {
         shopTable = DataTableManager.Get<ShopTable>(DataTableIds.Shop);
         button.onClick.AddListener(OnButtonClicked);
+        ChoicePanel.SetActive(false);
     }
     
     public void OnButtonClicked()
     {
+        Logger.Log("Button clicked: " + buttonType + " " + buttonNumber);
         if (shopTable != null)
         {
             // 텍스트 설정
@@ -60,10 +62,10 @@ public class ShopButton : MonoBehaviour
         }
     }
     
-    private void SetButtonState(Button button, TextMeshProUGUI buttonText, string text)
+    private void SetButtonState(Button setbutton, TextMeshProUGUI buttonText, string text)
     {
         buttonText.text = text;
-        button.gameObject.SetActive(!string.IsNullOrEmpty(text));
+        setbutton.gameObject.SetActive(!string.IsNullOrEmpty(text));
     }
     public void ResetButtonState()
     {

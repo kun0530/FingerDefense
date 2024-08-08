@@ -76,7 +76,11 @@ public class ShopSettingUI : MonoBehaviour
         itemTitleTexts[9].text=shopTable.Get(90311);
         itemTitleTexts[10].text=shopTable.Get(90321);
         
-        
+        diamondBonusTexts[1].text=shopTable.Get(90071);
+        diamondBonusTexts[2].text=shopTable.Get(90091);
+        diamondBonusTexts[3].text=shopTable.Get(90111);
+        diamondBonusTexts[4].text=shopTable.Get(90131);
+        diamondBonusTexts[5].text=shopTable.Get(90151);
     }
 
 

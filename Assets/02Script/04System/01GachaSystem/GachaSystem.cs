@@ -56,13 +56,13 @@ public class GachaSystem : MonoBehaviour
                switch (gachaTable.table[result.Id].Grade)
                {
                   case 0:
-                     GameManager.instance.Mileage += 1;
+                     GameManager.instance.Mileage += 100;
                      break;
                   case 1:
-                     GameManager.instance.Mileage += 5;
+                     GameManager.instance.Mileage += 300;
                      break;
                   case 2:
-                     GameManager.instance.Mileage += 10;
+                     GameManager.instance.Mileage += 500;
                      break;   
                }
                GameManager.instance.SaveGameData();

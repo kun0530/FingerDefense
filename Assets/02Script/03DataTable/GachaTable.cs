@@ -19,7 +19,6 @@ public class GachaTable : DataTable
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
-        Logger.Log($"Loading GachaTable from path: {path}");
         
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         using var reader = new StringReader(textAsset.text);

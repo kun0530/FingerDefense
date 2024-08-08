@@ -39,8 +39,11 @@ public class ShopPayCheckManager : MonoBehaviour
         currentButtonType = buttonType;
         currentButtonNumber = buttonNumber;
         buttonInfoDict[buttonNumber] = buttonType;
+        
         confirmPanel.SetActive(true);
     }
+
+   
 
     private void OnConfirmButtonClicked()
     {
@@ -67,7 +70,6 @@ public class ShopPayCheckManager : MonoBehaviour
             {
                 StartCutscene();
                 EnsureGachaSystemActive();
-                //gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
                 Logger.Log("GachaSystem.PerformGacha 호출됨");
             }
         }
@@ -180,22 +182,22 @@ public class ShopPayCheckManager : MonoBehaviour
         {
             ShopButtonType.Diamond => buttonNumber switch
             {
-                0 => 2001,
-                1 => 2002,
-                2 => 2003,
-                3 => 2004,
-                4 => 2005,
-                5 => 2006,
+                0 => 90732,
+                1 => 90733,
+                2 => 90734,
+                3 => 90735,
+                4 => 90736,
+                5 => 90737,
                 _ => 0,
             },
             ShopButtonType.Gold => buttonNumber switch
             {
-                0 => 2001,
-                1 => 2002,
-                2 => 2003,
-                3 => 2004,
-                4 => 2005,
-                5 => 2006,
+                0 => 90744,
+                1 => 90745,
+                2 => 90746,
+                3 => 90747,
+                4 => 90748,
+                5 => 90749,
                 _ => 0,
             },
             ShopButtonType.Item => buttonNumber switch
@@ -236,55 +238,54 @@ public class ShopPayCheckManager : MonoBehaviour
     {
         return buttonType switch
         {
-            ShopButtonType.Ticket => 1003,
             ShopButtonType.Diamond => buttonNumber switch
             {
-                0 => 3001,
-                1 => 3002,
-                2 => 3003,
-                3 => 3004,
-                4 => 3005,
-                5 => 3006,
-                _ => 9999,
+                0 => 90738,
+                1 => 90738,
+                2 => 90738,
+                3 => 90738,
+                4 => 90738,
+                5 => 90738,
+                _ => 90738,
             },
             ShopButtonType.Gold => buttonNumber switch
             {
-                0 => 3001,
-                1 => 3002,
-                2 => 3003,
-                3 => 3004,
-                4 => 3005,
-                5 => 3006,
-                _ => 9999,
+                0 => 90738,
+                1 => 90738,
+                2 => 90738,
+                3 => 90738,
+                4 => 90738,
+                5 => 90738,
+                _ => 90738,
             },
             ShopButtonType.Item => buttonNumber switch
             {
-                0 => 3001,
-                1 => 3002,
-                2 => 3003,
-                3 => 3004,
-                4 => 3005,
-                5 => 3006,
-                6 => 3007,
-                7 => 3008,
-                8 => 3009,
-                9 => 3010,
-                10 => 3011,
+                0 => 90766,
+                1 => 90766,
+                2 => 90766,
+                3 => 90766,
+                4 => 90766,
+                5 => 90766,
+                6 => 90766,
+                7 => 90766,
+                8 => 90766,
+                9 => 90766,
+                10 => 90766,
                 _ => 9999,
             },
             ShopButtonType.Mileage => buttonNumber switch
             {
-                0 => 3001,
-                1 => 3002,
-                2 => 3003,
-                3 => 3004,
-                4 => 3005,
-                5 => 3006,
-                6 => 3007,
-                7 => 3008,
-                8 => 3009,
-                9 => 3010,
-                10 => 3011,
+                0 => 90815,
+                1 => 90815,
+                2 => 90815,
+                3 => 90815,
+                4 => 90815,
+                5 => 90815,
+                6 => 90815,
+                7 => 90815,
+                8 => 90815,
+                9 => 90815,
+                10 => 90815,
                 _ => 9999,
             },
             _ => 9999,
@@ -298,6 +299,11 @@ public class ShopPayCheckManager : MonoBehaviour
         {
             return CheckTicketResources(buttonNumber, out bool needsExtraConfirmation);
         }
+
+        if (buttonType == ShopButtonType.Gold)
+        {
+            return CheckGoldResources(buttonNumber,out bool needsExtraConfirmation);
+        }
         return buttonType switch
         {
             ShopButtonType.Diamond => AddDiamonds(buttonNumber),
@@ -305,6 +311,41 @@ public class ShopPayCheckManager : MonoBehaviour
         };
     }
 
+    private bool CheckGoldResources(int buttonNumber, out bool needsExtraConfirmation)
+    {
+        needsExtraConfirmation = false;
+        switch (buttonNumber)
+        {
+            case 0 when gameManager.Diamond >= 80:
+                return true;
+            case 1 when gameManager.Diamond >= 200:
+                return true;
+            case 2 when gameManager.Diamond >= 500:
+                return true;
+            case 3 when gameManager.Diamond >= 1000:
+                return true;
+            case 4 when gameManager.Diamond >= 3000:
+                return true;
+            case 5 when gameManager.Diamond >= 5000:
+                return true;
+            default:
+                return false;
+        }
+    }
+    private bool CheckGoldResources(int buttonNumber)
+    {
+        int diamondCostForGold = buttonNumber switch
+        {
+            0 => 1600,
+            1 => 4000,
+            2 => 10000,
+            3 => 20000,
+            4 => 60000,
+            5 => 100000,
+            _ => 0,
+        };
+        return gameManager.Diamond >= diamondCostForGold;
+    }
     private bool CheckTicketResources(int buttonNumber, out bool needsExtraConfirmation)
     {
         needsExtraConfirmation = false;
@@ -329,12 +370,12 @@ public class ShopPayCheckManager : MonoBehaviour
     {
         var diamondsToAdd = buttonNumber switch
         {
-            0 => 160,
-            1 => 1600,
-            2 => 4000,
-            3 => 8000,
-            4 => 16000,
-            5 => 40000,
+            0 => 60,
+            1 => 330,
+            2 => 1090,
+            3 => 2240,
+            4 => 3880,
+            5 => 8080,
             _ => 0,
         };
         gameManager.Diamond += diamondsToAdd;
@@ -400,15 +441,38 @@ public class ShopPayCheckManager : MonoBehaviour
             case ShopButtonType.Diamond:
                 int diamondsToAdd = buttonNumber switch
                 {
-                    0 => 160,
-                    1 => 1600,
-                    2 => 4000,
-                    3 => 8000,
-                    4 => 16000,
-                    5 => 40000,
+                    0 => 60,
+                    1 => 330,
+                    2 => 1090,
+                    3 => 2240,
+                    4 => 3880,
+                    5 => 8080,
                     _ => 0,
                 };
-                gameManager.Diamond += diamondsToAdd;
+                gameManager.Diamond += diamondsToAdd; 
+                break;
+            case ShopButtonType.Gold:
+                switch (buttonNumber)
+                {
+                    case 0:
+                        
+                        break;
+                    case 1:
+                        
+                        break;
+                    case 2:
+                        
+                        break;
+                    case 3:
+                        
+                        break;
+                    case 4:
+                        
+                        break;
+                    case 5:
+                        
+                        break;
+                }
                 break;
             // 다른 타입의 구매 처리 로직 필요 시 추가
         }
