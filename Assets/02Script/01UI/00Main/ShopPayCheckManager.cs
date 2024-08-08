@@ -32,14 +32,6 @@ public class ShopPayCheckManager : MonoBehaviour
         extraConfirmButton.onClick.AddListener(OnExtraConfirmButtonClicked);
 
         gameManager = GameManager.instance;
-        if (gachaSystem == null)
-        {
-            Debug.LogError("GachaSystem이 참조되지 않았습니다!");
-        }
-        else
-        {
-            Debug.Log("GachaSystem이 성공적으로 참조되었습니다.");
-        }
     }
 
     public void HandleButtonClicked(ShopButtonType buttonType, int buttonNumber)
@@ -74,11 +66,8 @@ public class ShopPayCheckManager : MonoBehaviour
             if (currentButtonType == ShopButtonType.Ticket)
             {
                 StartCutscene();
-                if (!gachaSystem.gameObject.activeInHierarchy)
-                {
-                    gachaSystem.gameObject.SetActive(true);
-                }
-                gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
+                EnsureGachaSystemActive();
+                //gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
                 Logger.Log("GachaSystem.PerformGacha 호출됨");
             }
         }
@@ -103,14 +92,7 @@ public class ShopPayCheckManager : MonoBehaviour
         if (currentButtonType == ShopButtonType.Ticket)
         {
             ProcessPurchase(currentButtonType, currentButtonNumber);
-            
-            if (!gachaSystem.gameObject.activeInHierarchy)
-            {
-                gachaSystem.gameObject.SetActive(true);
-            }
-            
-            gachaSystem.PerformGacha(currentButtonNumber == 1 ? 1 : 10);
-            Logger.Log("GachaSystem.PerformGacha 호출됨");
+            EnsureGachaSystemActive();
             StartCutscene();
         }
         else
@@ -383,34 +365,35 @@ public class ShopPayCheckManager : MonoBehaviour
                     if (gameManager.Ticket >= 1)
                     {
                         gameManager.RemoveTickets(1);
+                        gachaSystem.PerformGacha(1);
                     }
-                    else if (gameManager.Diamond >= 160)
+                    else if (gameManager.Diamond >= 160 && gameManager.Ticket == 0)
                     {
                         gameManager.RemoveDiamonds(160);
-                        gameManager.AddTickets(1);
+                        gachaSystem.PerformGacha(1);
                     }
                 }
                 else if (buttonNumber == 2)
                 {
-                    int requiredTickets = 10;
-                    int currentTickets = gameManager.Ticket;
-                    int ticketsToBuyWithDiamonds = requiredTickets - currentTickets;
-                    int diamondCost = ticketsToBuyWithDiamonds * 160;
-
-                    if (gameManager.Ticket >= 10)
+                    if (gameManager.Ticket is 10 or > 10)
                     {
                         gameManager.RemoveTickets(10);
+                        gachaSystem.PerformGacha(10);    
                     }
-                    else if (gameManager.Ticket >= 1 && gameManager.Diamond >= diamondCost)
+                    else
                     {
-                        gameManager.RemoveTickets(currentTickets);
-                        gameManager.RemoveDiamonds(diamondCost);
-                        gameManager.AddTickets(10 - currentTickets);
-                    }
-                    else if (gameManager.Diamond >= diamondCost)
-                    {
-                        gameManager.RemoveDiamonds(diamondCost);
-                        gameManager.AddTickets(10);
+                        int ticketsNeeded = 10 - gameManager.Ticket;
+                        int diamondCost = ticketsNeeded * 160;
+
+                        if (gameManager.Diamond >= diamondCost)
+                        {
+                            if (gameManager.Ticket > 0)
+                            {
+                                gameManager.RemoveTickets(gameManager.Ticket);
+                            }
+                            gameManager.RemoveDiamonds(diamondCost);
+                            gachaSystem.PerformGacha(10);
+                        }
                     }
                 }
                 break;
@@ -444,5 +427,13 @@ public class ShopPayCheckManager : MonoBehaviour
     {
         currentButtonType = ShopButtonType.None;
         currentButtonNumber = -1;
+    }
+    
+    private void EnsureGachaSystemActive()
+    {
+        if (!gachaSystem.gameObject.activeInHierarchy)
+        {
+            gachaSystem.gameObject.SetActive(true);
+        }
     }
 }
