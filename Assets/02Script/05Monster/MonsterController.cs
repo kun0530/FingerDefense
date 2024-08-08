@@ -134,7 +134,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
     private void CrossResetLine()
     {
-        stageManager.monsterSpawner.TriggerMonsterReset(this);
+        stageManager?.monsterSpawner?.TriggerMonsterReset(this);
     }
 
     protected override void Update()
