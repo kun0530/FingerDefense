@@ -3,39 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Item/Active Increase Gold", fileName = "Item.asset")]
-public class ItemActiveGetGoldIncrease : BaseItem
+public class ItemActiveGetGoldIncrease : ActiveItem
 {
     public float goldMultiplier;
-    public float lastingTime;
-    private float timer;
 
-    public override bool UseItem()
+    public override void UseItem()
     {
-        return SetGoldMultiplier(goldMultiplier);
+        SetGoldMultiplier(goldMultiplier);
+        base.UseItem();
     }
 
-    public override bool CancelItem()
+    public override void CancelItem()
     {
-        return SetGoldMultiplier(1f);
+        SetGoldMultiplier(1f);
+        base.CancelItem();
     }
 
-    public override void UpdateItem()
-    {
-        timer += Time.deltaTime;
-        if (timer >= lastingTime)
-        {
-            CancelItem();
-        }
-    }
-
-    private bool SetGoldMultiplier(float multiplier)
+    private void SetGoldMultiplier(float multiplier)
     {
         if (!StageManager)
-            return false;
+            return;
 
         StageManager.goldMultiplier = multiplier;
-
-        timer = 0f;
-        return true;
     }
 }

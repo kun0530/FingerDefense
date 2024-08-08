@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Item/Active Monster Debuff", fileName = "Item.asset")]
-public class ItemActiveDebuffMonster : ItemDebuffMonster
+public class ItemActiveDebuffMonster : ActiveItem
 {
-    public override bool UseItem()
+    [SerializeField] public ItemDebuffMonster debuff;
+
+    public override void UseItem()
     {
         var monsters = GameObject.FindGameObjectsWithTag(Defines.Tags.MONSTER_TAG);
         if (monsters == null)
-            return false;
+            return;
+
         foreach (var monster in monsters)
         {
             if (monster.TryGetComponent<MonsterController>(out var controller))
-                GiveBuff(controller);
+                debuff.GiveBuff(controller);
         }
-        return true;
+        
+        base.UseItem();
     }
 }

@@ -20,10 +20,11 @@ public abstract class BaseItem : ScriptableObject
     }
 
     [HideInInspector] public Button button;
+    [HideInInspector] public int count;
 
-    public virtual bool IsPassive { get => false; }
+    public virtual bool IsPassive { get => true; }
 
-    public abstract bool UseItem();
-    public virtual bool CancelItem() { return true; }
+    public abstract void UseItem();
+    public virtual void CancelItem() { }
     public virtual void UpdateItem() { }
 }

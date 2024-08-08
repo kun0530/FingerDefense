@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ItemDebuffMonster : BaseItem
+[Serializable]
+public struct ItemDebuffMonster
 {
     public int id;
     public BuffType buffType;
@@ -12,7 +14,7 @@ public abstract class ItemDebuffMonster : BaseItem
     public bool isPermanent;
     public float lastingTime;
 
-    protected void GiveBuff(MonsterController monster)
+    public void GiveBuff(MonsterController monster)
     {
         var buffData = new BuffData();
         var value = buffValue;
