@@ -43,7 +43,9 @@ public class GachaSystem : MonoBehaviour
          GachaData result = GetRandomGachaResult();
          if (result != null)
          {
-            if (!GameManager.instance.ObtainedGachaIDs.Contains(result.Id))
+            bool isNew = !GameManager.instance.ObtainedGachaIDs.Contains(result.Id);
+                
+            if (isNew)
             {
                GameManager.instance.ObtainedGachaIDs.Add(result.Id);
                Logger.Log($"Obtained Gacha ID: {result.Id}");
@@ -62,10 +64,10 @@ public class GachaSystem : MonoBehaviour
                   case 2:
                      GameManager.instance.Mileage += 10;
                      break;   
-               } 
+               }
                GameManager.instance.SaveGameData();
             }
-            SpawnResultSlot(result);
+            SpawnResultSlot(result,isNew);
          }
       }
    }
@@ -101,10 +103,10 @@ public class GachaSystem : MonoBehaviour
       int index = UnityEngine.Random.Range(0, possibleResults.Count);
       return possibleResults[index];
    }
-   private void SpawnResultSlot(GachaData data)
+   private void SpawnResultSlot(GachaData data,bool isNew)
    {
       var slot = Instantiate(resultSlot, gachaSlotParent);
-      slot.Setup(data, aasetListTable, stringTable);
+      slot.Setup(data, aasetListTable, stringTable,isNew);
       spawnedSlots.Add(slot);
    }
    private void ClearGachaResults()
