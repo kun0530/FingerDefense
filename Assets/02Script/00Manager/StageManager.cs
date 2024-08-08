@@ -14,13 +14,23 @@ public class StageManager : MonoBehaviour
 {
     public float CastleMaxHp { get; private set; } = 100f;
     private float castleHp;
-    public float CastleHp
+    private float CastleHp
     {
         get => castleHp;
-        private set
+        set
         {
             castleHp = value;
             gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+        }
+    }
+    private float castleShield;
+    private float CastleShield
+    {
+        get => castleShield;
+        set
+        {
+            castleShield = value;
+            gameUiManager.UpdateShieldBar(castleShield, CastleMaxHp);
         }
     }
 
@@ -81,6 +91,20 @@ public class StageManager : MonoBehaviour
         if (damage <= 0f)
             return;
 
+        if (CastleShield > 0f)
+        {
+            if (CastleShield > damage)
+            {
+                CastleShield -= damage;
+                return;
+            }
+            else
+            {
+                damage = CastleShield - damage;
+                CastleShield = 0f;
+            }
+        }
+
         CastleHp -= damage;
 
         if (CastleHp <= 0f)
@@ -98,6 +122,16 @@ public class StageManager : MonoBehaviour
 
         if (CastleHp >= CastleMaxHp)
             CastleHp = CastleMaxHp;
+    }
+
+    public void GetShield(float shield, bool isPercentage = false)
+    {
+        if (shield <= 0f)
+            return;
+
+        if (isPercentage)
+            shield *= CastleMaxHp;
+        CastleShield += shield;
     }
 
     public void RestartScene()
