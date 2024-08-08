@@ -87,6 +87,19 @@ public class StageManager : MonoBehaviour
             CurrentState = StageState.GameOver;
     }
 
+    public void RestoreCastle(float heal, bool isPercentage = false)
+    {
+        if (heal <= 0f)
+            return;
+
+        if (isPercentage)
+            heal *= CastleMaxHp;
+        CastleHp += heal;
+
+        if (CastleHp >= CastleMaxHp)
+            CastleHp = CastleMaxHp;
+    }
+
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
