@@ -21,6 +21,7 @@ public class DeckSlotController : MonoBehaviour
     public Button startButton;
     public Button closeButton;
 
+    
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
@@ -76,7 +77,7 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateCharacterSlots()
     {
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 8; i++)
         {
             AddEmptyCharacterSlot();
         }

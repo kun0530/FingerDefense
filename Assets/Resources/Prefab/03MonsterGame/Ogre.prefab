@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4299064570551965331}
   - component: {fileID: 8188389372355961972}
   - component: {fileID: 8991383316089949561}
+  - component: {fileID: 8346992303112400687}
   m_Layer: 7
   m_Name: Ogre
   m_TagString: Monster
@@ -48,8 +49,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 2091879082140096521}
+  effects: []
   findRange: 3
   isDirectedRight: 1
+  monsterAni: {fileID: 0}
 --- !u!114 &8991383316089949561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +73,41 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c47756fc356a5e445b192a1a9b06f569, type: 2}
   - {fileID: 11400000, guid: 831fa064c8516b44aad09c7c669db000, type: 2}
   - {fileID: 11400000, guid: 3aa6b2dcb85189247b0f9ee3dcc78858, type: 2}
+--- !u!70 &8346992303112400687
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390919771921326569}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.02572462, y: 0.4686353}
+  m_Size: {x: 0.77514154, y: 0.9664462}
+  m_Direction: 0
 --- !u!1 &4262361159848943152
 GameObject:
   m_ObjectHideFlags: 0

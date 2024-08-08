@@ -16,6 +16,14 @@ public class GachaSystem : MonoBehaviour
    
    public Button closeButton;
    private List<GachaResultSlot> spawnedSlots = new List<GachaResultSlot>();
+   
+   [SerializeField, Range(0f, 10f),Tooltip("고급 등급 확률이 해당 값에 따라서 변경됩니다."),Header("고급 등급 확률")]
+   private float highGradeProbability = 3f;
+
+   [SerializeField, Range(0f, 30f),Tooltip("중급 등급 확률이 해당 값에 따라서 변경됩니다."),Header("중급 등급 확률")]
+   private float midGradeProbability = 20f;
+   
+   
    private void Start()
    {
       gachaTable = DataTableManager.Get<GachaTable>(DataTableIds.Gacha);
@@ -67,11 +75,11 @@ public class GachaSystem : MonoBehaviour
       float rand = UnityEngine.Random.value * 100f;
       int grade;
 
-      if (rand <= 3f)
+      if (rand <= highGradeProbability)
       {
          grade = 2;
       }
-      else if (rand <= 23f)
+      else if (rand <= highGradeProbability + midGradeProbability)
       {
          grade = 1;
       }
