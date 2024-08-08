@@ -498,6 +498,7 @@ public class ShopPayCheckManager : MonoBehaviour
         if (!gachaSystem.gameObject.activeInHierarchy)
         {
             gachaSystem.gameObject.SetActive(true);
+            gachaSystem.transform.SetAsLastSibling();
         }
     }
 }

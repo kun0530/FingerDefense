@@ -46,7 +46,6 @@ public class ShopButton : MonoBehaviour
     
     public void OnButtonClicked()
     {
-        Logger.Log("Button clicked: " + buttonType + " " + buttonNumber);
         if (shopTable != null)
         {
             // 텍스트 설정
