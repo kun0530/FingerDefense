@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class BaseItem : ScriptableObject
 {
@@ -17,6 +18,8 @@ public abstract class BaseItem : ScriptableObject
             return stageManager;
         }
     }
+
+    [HideInInspector] public Button button;
 
     public virtual bool IsPassive { get => false; }
 

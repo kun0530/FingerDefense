@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
@@ -8,7 +9,10 @@ public class ItemManager : MonoBehaviour
     private int item1Id;
     private int item2Id;
 
-    // To-Do: 변수명 변경
+    public int maxItemCount = 2;
+
+    public Transform itemButtonTransform;
+    public Button itemButtonPrefab;
     public List<BaseItem> items = new();
 
     private void Awake()
@@ -33,6 +37,35 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        for (int i = 0; i < maxItemCount; i++)
+        {
+            var itemButton = Instantiate(itemButtonPrefab, itemButtonTransform);
+            if (items.Count <= i)
+            {
+                itemButton.interactable = false;
+                continue;
+            }
+
+            // 아이템 이미지 넣기
+            if (items[i].IsPassive)
+            {
+                itemButton.interactable = false;
+                continue;
+            }
+
+            items[i].button = itemButton;
+            int index = i;
+            itemButton.onClick.AddListener( () => 
+                {
+                    if (items[index].UseItem())
+                        itemButton.interactable = false;
+                }
+            );
+        }
+    }
+
     private void Update()
     {
         foreach (var item in items)
@@ -40,22 +73,4 @@ public class ItemManager : MonoBehaviour
             item?.UpdateItem();
         }
     }
-
-// To-Do: 빌드 버전에서는 삭제해야 함
-#if UNITY_EDITOR
-    private void OnGUI()
-    {
-        int count = 0;
-        foreach (var item in items)
-        {
-            if (item.IsPassive)
-                continue;
-
-            if (GUILayout.Button($"Item{count++}"))
-            {
-                item?.UseItem();
-            }
-        }
-    }
-#endif
 }

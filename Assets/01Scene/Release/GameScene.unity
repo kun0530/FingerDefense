@@ -2071,7 +2071,7 @@ GameObject:
   - component: {fileID: 814143008}
   - component: {fileID: 814143007}
   m_Layer: 5
-  m_Name: Monster UI (1)
+  m_Name: Item UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3206,7 +3206,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3830f4ee87167468abff15657e2ae6bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items: []
+  maxItemCount: 2
+  itemButtonTransform: {fileID: 1593054286}
+  itemButtonPrefab: {fileID: 3433207184494039088, guid: c7fe9192f0f8e443da12099aeb21bfbe, type: 3}
+  items:
+  - {fileID: 11400000, guid: 002114ef8bcc24fe9a9cf87440d401f8, type: 2}
 --- !u!4 &1266557095
 Transform:
   m_ObjectHideFlags: 0
@@ -3683,7 +3687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 100
+    m_Left: 10
     m_Right: 10
     m_Top: 10
     m_Bottom: 10
@@ -3693,7 +3697,7 @@ MonoBehaviour:
   m_CellSize: {x: 55, y: 55}
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 1
-  m_ConstraintCount: 4
+  m_ConstraintCount: 2
 --- !u!114 &1593054288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6120,6 +6124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12927a8c4b6a32c4b8a3a1b555a5b323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goldMultiplier: 1
   monsterSpawner: {fileID: 8871168008500403368}
   playerCharacterSpawner: {fileID: 5207598784014205432}
   gameUiManager: {fileID: 8012446288410363807}
