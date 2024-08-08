@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private Vector3 initialPosOffset = new Vector3(1f, 2f, 0f);
+    public Vector3 initialPosOffset = new Vector3(1f, 2f, 0f);
 
     private GameObject caster;
     public GameObject Caster
