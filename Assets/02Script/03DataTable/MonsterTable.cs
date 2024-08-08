@@ -69,14 +69,12 @@ public class MonsterTable : DataTable
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         //var textAsset = Resources.Load<TextAsset>(path);
 
-        using (var reader = new StringReader(textAsset.text))
-        using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+        using var reader = new StringReader(textAsset.text);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+        var records = csvReader.GetRecords<MonsterData>();
+        foreach (var record in records)
         {
-            var records = csvReader.GetRecords<MonsterData>();
-            foreach (var record in records)
-            {
-                table.TryAdd(record.Id, record);
-            }
+            table.TryAdd(record.Id, record);
         }
     }
 }

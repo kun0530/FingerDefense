@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using CsvHelper;
@@ -7,16 +8,17 @@ using System.Text;
 
 public class StringData
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public string Text { get; set; }
 }
 
 
 public class StringTable : DataTable
 {
-    private readonly Dictionary<int, string> table = new Dictionary<int, string>();
+    private readonly Dictionary<string, string> table = new Dictionary<string, string>();
+    
 
-    public string Get(int id)
+    public string Get(string id)
     {
         return table.GetValueOrDefault(id);
     }
@@ -26,15 +28,17 @@ public class StringTable : DataTable
         path = string.Format(FormatPath, path);
 
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
-        //var textAsset = Resources.Load<TextAsset>(path);
 
         using var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(textAsset.text)), Encoding.UTF8);
-        using var csvReader = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
         var records = csvReader.GetRecords<StringData>();
         foreach (var record in records)
         {
             string processedText = record.Text.Replace("\\n", "\n");
-            table.TryAdd(record.Id, processedText);
+            table.TryAdd(record.Id, processedText);  // 변경: int에서 string으로 변경
         }
     }
+
+   
+    
 }
