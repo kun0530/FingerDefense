@@ -18,13 +18,14 @@ public class ProjectileSkill : BaseSkill
             return false;
 
         if (!effect.gameObject.TryGetComponent<Projectile>(out var projectile))
-            projectile = effect.gameObject.AddComponent<Projectile>();
+        {
+            Logger.LogError("해당 투사체의 스크립트를 확인해주세요.");
+            return false;
+        }
 
-        projectile.Caster = caster;
-        projectile.Target = target;
-        projectile.skill = skillType;
         projectile.isBuffApplied = isBuffApplied;
-        projectile.skillType = skillData.Type;
+        projectile.skillTarget = (Projectile.SkillTarget)Mathf.Clamp(skillData.Type, 0, 1);
+        projectile.Init(caster, target, skillType);
 
         IsSkillReady = false;
         return true;

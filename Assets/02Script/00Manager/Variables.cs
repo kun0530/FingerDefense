@@ -10,11 +10,7 @@ namespace Variables
         
         //여기다가 슬롯 UI에서 선택한 캐릭터 ID를 넘겨줄 예정
         //To-Do 다시 8개로 변경 예정
-        public static int[] characterIds = new int[10];
+        public static int[] characterIds = new int[8];
     }
-    
-    public static class LoadName
-    {
-        public static string Nickname;
-    }
+
 }

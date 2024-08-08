@@ -9,8 +9,7 @@ public class ItemManager : MonoBehaviour
     private int item2Id;
 
     // To-Do: 변수명 변경
-    public BaseItem item1;
-    public BaseItem item2;
+    public List<BaseItem> items = new();
 
     private void Awake()
     {
@@ -19,34 +18,44 @@ public class ItemManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (item1 && item1.IsPassive)
-            item1.UseItem();
-        if (item2 && item2.IsPassive)
-            item2.UseItem();
+        foreach (var item in items)
+        {
+            if (item && item.IsPassive)
+                item.UseItem();
+        }
     }
 
     private void OnDisable()
     {
-        if (item1 && item1.IsPassive)
-            item1.CancelItem();
-        if (item2 && item2.IsPassive)
-            item2.CancelItem();
+        foreach (var item in items)
+        {
+            item.CancelItem();
+        }
     }
 
     private void Update()
     {
-        // 아이템 중 액티브의 쿨타임을 확인한다..
+        foreach (var item in items)
+        {
+            item?.UpdateItem();
+        }
     }
 
+// To-Do: 빌드 버전에서는 삭제해야 함
+#if UNITY_EDITOR
     private void OnGUI()
     {
-        if (GUILayout.Button("Item1"))
+        int count = 0;
+        foreach (var item in items)
         {
-            item1?.UseItem();
-        }
-        if (GUILayout.Button("Item2"))
-        {
-            item2?.UseItem();
+            if (item.IsPassive)
+                continue;
+
+            if (GUILayout.Button($"Item{count++}"))
+            {
+                item?.UseItem();
+            }
         }
     }
+#endif
 }

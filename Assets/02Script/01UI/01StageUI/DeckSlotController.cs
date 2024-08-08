@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,15 +20,16 @@ public class DeckSlotController : MonoBehaviour
     
     public Button startButton;
     public Button closeButton;
+
     
+    private void Awake()
+    {
+        playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
+    }
+
     private void Start()
     {
-        playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
-
-        CreateCharacterSlots();
-        CreateFilteringSlots();
-        
-        LoadCharacterSelection(); 
+        RefreshCharacterSlots();
         
         startButton.onClick.AddListener(() =>
         {
@@ -43,9 +45,39 @@ public class DeckSlotController : MonoBehaviour
         });
     }
 
+    private void OnEnable()
+    {
+        if (characterSlots.Count == 0 && filterSlots.Count == 0)
+        {
+            RefreshCharacterSlots();
+        }  
+    }
+
+    private void RefreshCharacterSlots()
+    {
+        foreach (var slot in filterSlots)
+        {
+            Destroy(slot.gameObject);
+        }
+        filterSlots.Clear();
+
+        foreach (var slot in characterSlots)
+        {
+            Destroy(slot.gameObject);
+        }
+        characterSlots.Clear();
+        addedCharacters.Clear();
+        activeChoicePanelSlots.Clear();
+
+        // 새로운 슬롯 생성
+        CreateCharacterSlots();
+        CreateFilteringSlots();
+        LoadCharacterSelection();
+    }
+
     private void CreateCharacterSlots()
     {
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 8; i++)
         {
             AddEmptyCharacterSlot();
         }
@@ -53,13 +85,25 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateFilteringSlots()
     {
-        var characters = playerCharacterTable.GetAll();
-        foreach (var characterData in characters)
+        if (GameManager.instance == null) return;
+        
+        var obtainedGachaIds = GameManager.instance.ObtainedGachaIDs;
+        Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
+        foreach (var characterId in obtainedGachaIds)
         {
-            var characterSlot = Instantiate(characterSlotPrefab, filterringSlotParent);
-            characterSlot.SetCharacterSlot(characterData);
-            characterSlot.OnSlotClick = HandleCharacterSlotClick;
-            filterSlots.Add(characterSlot);
+            var characterData = playerCharacterTable.Get(characterId);
+            if (characterData != null)
+            {
+                var characterSlot = Instantiate(characterSlotPrefab, filterringSlotParent);
+                characterSlot.SetCharacterSlot(characterData);
+                characterSlot.OnSlotClick = HandleCharacterSlotClick;
+                filterSlots.Add(characterSlot);
+                Logger.Log($"Created slot for Character ID: {characterId}");
+            }
+            else
+            {
+                Logger.Log($"Character data not found for ID: {characterId}");
+            }
         }
     }
 
@@ -128,6 +172,12 @@ public class DeckSlotController : MonoBehaviour
 
     private void UpdateCharacterIds()
     {
+        // Ensure the array is large enough
+        if (Variables.LoadTable.characterIds.Length < characterSlots.Count)
+        {
+            Array.Resize(ref Variables.LoadTable.characterIds, characterSlots.Count);
+        }
+
         for (var i = 0; i < characterSlots.Count; i++)
         {
             if (characterSlots[i].characterData != null)
@@ -140,7 +190,7 @@ public class DeckSlotController : MonoBehaviour
             }
         }
     }
-
+                                          
     public void UpdateFilteredSlots(List<PlayerCharacterData> filteredCharacters)
     {
         foreach (var slot in filterSlots)
@@ -219,12 +269,15 @@ public class DeckSlotController : MonoBehaviour
                 slot.SetCharacterSlot(characterData);
                 slot.ChoicePanel.SetActive(false);
                 addedCharacters.Add(characterId);
-                var originalSlot = filterSlots.First(s => s.characterData.Id == characterId);
-                originalSlot.ChoiceButton.interactable = false;
-                activeChoicePanelSlots.Add(originalSlot);
+                var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
+                if (originalSlot != null)
+                {
+                    originalSlot.ChoiceButton.interactable = false;
+                    activeChoicePanelSlots.Add(originalSlot);
+                }
             }
         }
-        
+
         UpdateChoicePanels();
         SortCharacterSlots();
     }

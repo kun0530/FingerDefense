@@ -9,6 +9,7 @@ public class MainUiManager : MonoBehaviour
     
     public QuitUI QuitUI;
     public ShopSettingUI ShopUI;
+    public GachaSystem GachaSystem;
     private GameManager gameManager;
     
     public TutorialController tutorialController;
@@ -29,6 +30,7 @@ public class MainUiManager : MonoBehaviour
             StageUI.SetActive(false);
             NicknameUI.SetActive(false);
             ShopUI.gameObject.SetActive(false);
+            GachaSystem.gameObject.SetActive(false);
         }
         else
         {
@@ -38,6 +40,7 @@ public class MainUiManager : MonoBehaviour
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
             ShopUI.gameObject.SetActive(false);
+            GachaSystem.gameObject.SetActive(false);
         }
     }
     

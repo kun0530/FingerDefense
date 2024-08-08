@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class GameData
     public bool Game3TutorialCheck;
     public bool Game4TutorialCheck;
     
-    public int[] CardDeck;
+    public List<int> ObtainedGachaIDs = new List<int>();
 }
 
 public class DataManager : MonoBehaviour
