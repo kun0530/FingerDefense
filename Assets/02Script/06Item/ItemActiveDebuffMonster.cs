@@ -17,10 +17,4 @@ public class ItemActiveDebuffMonster : ItemDebuffMonster
         }
         return true;
     }
-
-    public override bool CancelItem()
-    {
-        // 모든 몬스터에게 버프 취소
-        return true;
-    }
 }

@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
     [SerializeField] private float bottomY = -5f;
+    [SerializeField] private float zoomOutWidth = 25f;
+    [SerializeField] private float zoomTime = 0.25f;
 
     [SerializeField] private GameObject letterBoxGameObject;
     private RectTransform letterBoxCanvasRect;
@@ -180,6 +182,16 @@ public class CameraController : MonoBehaviour
 
         rectTransform.anchorMin = new Vector2(rect.x, rect.y);
         rectTransform.anchorMax = new Vector2(rect.x + rect.width, rect.y + rect.height);
+    }
+
+    public void ZoomOutCamera()
+    {
+        SetTargetWidth(zoomOutWidth, zoomTime);
+    }
+
+    public void ResetCamera()
+    {
+        SetTargetWidth(targetWidth, zoomTime);
     }
 
     public void SetTargetWidth(float target, float duration)

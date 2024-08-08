@@ -7,5 +7,6 @@ public abstract class BaseItem : ScriptableObject
     public virtual bool IsPassive { get => false; }
 
     public abstract bool UseItem();
-    public abstract bool CancelItem();
+    public virtual bool CancelItem() { return true; }
+    public virtual void UpdateItem() { }
 }

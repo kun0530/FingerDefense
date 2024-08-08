@@ -12,6 +12,10 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
+    public Type CurrentState
+    {
+        get => stateMachine.CurrentState.GetType();
+    }
 
     public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; }
@@ -21,7 +25,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
-    [SerializeField] public float speedMultiplier = 1f;
+    [SerializeField] public float directionMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
@@ -98,7 +102,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void OnEnable()
     {
         base.OnEnable();
-        speedMultiplier = 1f;
+        directionMultiplier = 1f;
     }
 
     protected override void OnDisable()
