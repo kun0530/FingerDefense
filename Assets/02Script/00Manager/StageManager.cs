@@ -57,6 +57,7 @@ public class StageManager : MonoBehaviour
             gameUiManager.UpdateEarnedGold(earnedGold);
         }
     }
+    [HideInInspector] public float goldMultiplier = 1f;
     
     private StageState currentState;
     public StageState CurrentState
@@ -132,6 +133,12 @@ public class StageManager : MonoBehaviour
         if (isPercentage)
             shield *= CastleMaxHp;
         CastleShield += shield;
+    }
+
+    public void GetGold(int gold)
+    {
+        EarnedGold += Mathf.CeilToInt(gold * goldMultiplier);
+        gameUiManager.UpdateEarnedGold(earnedGold);
     }
 
     public void RestartScene()

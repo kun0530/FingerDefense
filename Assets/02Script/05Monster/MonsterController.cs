@@ -174,7 +174,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         base.Die(reason);
 
         if (stageManager)
-            stageManager.EarnedGold += Status.Data.DropGold;
+            stageManager.GetGold(Status.Data.DropGold);
             
         if (reason == DamageReason.PLAYER_HIT_DAMAGE)
             deathSkill?.UseSkill();

@@ -29,8 +29,7 @@ public class ItemManager : MonoBehaviour
     {
         foreach (var item in items)
         {
-            if (item && item.IsPassive)
-                item.CancelItem();
+            item.CancelItem();
         }
     }
 
@@ -42,6 +41,8 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+// To-Do: 빌드 버전에서는 삭제해야 함
+#if UNITY_EDITOR
     private void OnGUI()
     {
         int count = 0;
@@ -56,4 +57,5 @@ public class ItemManager : MonoBehaviour
             }
         }
     }
+#endif
 }
