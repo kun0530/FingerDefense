@@ -26,14 +26,6 @@ public class SkillTest : MonoBehaviour
         playerAttackBehavior.normalAttack = normalAttack;
     }
 
-    public void ApplySkillDataToMonster()
-    {
-        if (int.TryParse(skillId.text, out var id))
-        {
-            monsterSpawnTest.monsterData.Skill = id;
-        }
-    }
-
     public BaseSkill CreateSkill()
     {
         if (int.TryParse(skillId.text, out var id))

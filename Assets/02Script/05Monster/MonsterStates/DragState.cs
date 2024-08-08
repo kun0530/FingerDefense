@@ -37,7 +37,7 @@ public class DragState : IState
         TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
-            cameraController.SetTargetWidth(25f, 0.25f);
+            cameraController.ZoomOutCamera();
         }
     }
 
@@ -77,7 +77,7 @@ public class DragState : IState
         TimeScaleController.SetTimeScale(1f);
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
-            cameraController.SetTargetWidth(20f, 0.5f);
+            cameraController.ResetCamera();
         }
     }
 }

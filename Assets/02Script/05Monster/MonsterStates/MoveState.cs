@@ -23,12 +23,7 @@ public class MoveState : IState
 
     public void Enter()
     {
-        if (controller.moveTarget != null)
-        {
-            direction.x = controller.moveTarget.transform.position.x
-            > controller.transform.position.x ? 1f : -1f;
-        }
-        controller.SetFlip(direction.x > 0);
+        direction = Vector3.zero;
 
         if (controller.monsterAni.CurrentMonsterState != MonsterSpineAni.MonsterState.WALK)
             moveTrackEntry = controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.WALK, true, controller.Status.CurrentMoveSpeed);
@@ -38,6 +33,14 @@ public class MoveState : IState
     
     public void Update()
     {
+        if (controller.moveTarget != null)
+        {
+            direction.x = controller.moveTarget.transform.position.x
+            > controller.transform.position.x ? 1f : -1f;
+            direction.x *= controller.directionMultiplier;
+        }
+        controller.SetFlip(direction.x > 0);
+
         controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         if (moveTrackEntry != null)
             moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;

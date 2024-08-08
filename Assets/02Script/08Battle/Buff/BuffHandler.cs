@@ -10,7 +10,7 @@ public class BuffHandler
     public event Func<float, DamageReason, Elements, bool> OnDotDamage;
     public event Func<float, bool> OnDotHeal;
 
-    public int maxBuffCount = 3;
+    public int maxBuffCount = 15;
 
     public BuffHandler()
     {

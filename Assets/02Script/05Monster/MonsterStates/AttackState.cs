@@ -57,5 +57,6 @@ public class AttackState : IState
 
     public void Exit()
     {
+        controller.attackTarget?.TryRemoveMonster(controller);
     }
 }
