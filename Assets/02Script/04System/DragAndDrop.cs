@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEditor.SceneManagement;
 
 public class DragAndDrop : MonoBehaviour
 {
