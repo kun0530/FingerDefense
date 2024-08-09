@@ -10,6 +10,7 @@ public class ItemManager : MonoBehaviour
     public int item1Id;
     public int item2Id;
     private List<(int itemId, int itemCount)> itemIds = new(); // To-Do: Variables.LoadTable.ItemId로부터 받기
+    private List<System.ValueTuple<int, int>> itemsd = new List<(int itemId, int itemCoutn)>();
 
     private ItemTable itemTable;
 
@@ -87,7 +88,7 @@ public class ItemManager : MonoBehaviour
             if (itemImage)
                 itemButton.GetComponent<UiSlotButton>().slotImage.sprite = itemImage;
 
-            if (items[i].IsPassive)
+            if (items[i].IsPassive || items[i].count <= 0)
             {
                 itemButton.ActiveButton(false);
                 continue;
