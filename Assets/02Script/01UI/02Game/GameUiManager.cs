@@ -18,6 +18,7 @@ public class GameUiManager : MonoBehaviour
     public TextMeshProUGUI monsterCountText;
 
     public Slider castleHpBar;
+    public Image castleShieldBar;
 
     private void Start()
     {
@@ -40,7 +41,18 @@ public class GameUiManager : MonoBehaviour
 
     public void UpdateHpBar(float currentHp, float maxHp)
     {
+        if (maxHp <= 0f)
+            return;
+        currentHp = Mathf.Clamp(currentHp, 0f, maxHp);
         castleHpBar.value = currentHp / maxHp;
+    }
+
+    public void UpdateShieldBar(float currentShield, float maxHp)
+    {
+        if (maxHp <= 0f)
+            return;
+        currentShield = Mathf.Clamp(currentShield, 0f, maxHp);
+        castleShieldBar.fillAmount = currentShield / maxHp;
     }
 
     public void UpdateMonsterCount(int monsterCount)

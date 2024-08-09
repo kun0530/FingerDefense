@@ -14,13 +14,23 @@ public class StageManager : MonoBehaviour
 {
     public float CastleMaxHp { get; private set; } = 100f;
     private float castleHp;
-    public float CastleHp
+    private float CastleHp
     {
         get => castleHp;
-        private set
+        set
         {
             castleHp = value;
             gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+        }
+    }
+    private float castleShield;
+    private float CastleShield
+    {
+        get => castleShield;
+        set
+        {
+            castleShield = value;
+            gameUiManager.UpdateShieldBar(castleShield, CastleMaxHp);
         }
     }
 
@@ -47,6 +57,7 @@ public class StageManager : MonoBehaviour
             gameUiManager.UpdateEarnedGold(earnedGold);
         }
     }
+    [HideInInspector] public float goldMultiplier = 1f;
     
     private StageState currentState;
     public StageState CurrentState
@@ -59,7 +70,7 @@ public class StageManager : MonoBehaviour
 
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
-            Time.timeScale = currentState is StageState.GameClear or StageState.GameOver  ? 0f : 1f;
+            TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
         }
     }
 
@@ -73,14 +84,27 @@ public class StageManager : MonoBehaviour
         CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
-        
-        
     }
-
+    
+    
     public void DamageCastle(float damage)
     {
         if (damage <= 0f)
             return;
+
+        if (CastleShield > 0f)
+        {
+            if (CastleShield > damage)
+            {
+                CastleShield -= damage;
+                return;
+            }
+            else
+            {
+                damage = CastleShield - damage;
+                CastleShield = 0f;
+            }
+        }
 
         CastleHp -= damage;
 
@@ -88,15 +112,44 @@ public class StageManager : MonoBehaviour
             CurrentState = StageState.GameOver;
     }
 
+    public void RestoreCastle(float heal, bool isPercentage = false)
+    {
+        if (heal <= 0f)
+            return;
+
+        if (isPercentage)
+            heal *= CastleMaxHp;
+        CastleHp += heal;
+
+        if (CastleHp >= CastleMaxHp)
+            CastleHp = CastleMaxHp;
+    }
+
+    public void GetShield(float shield, bool isPercentage = false)
+    {
+        if (shield <= 0f)
+            return;
+
+        if (isPercentage)
+            shield *= CastleMaxHp;
+        CastleShield += shield;
+    }
+
+    public void GetGold(int gold)
+    {
+        EarnedGold += Mathf.CeilToInt(gold * goldMultiplier);
+        gameUiManager.UpdateEarnedGold(earnedGold);
+    }
+
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Time.timeScale = 1f;
+        TimeScaleController.SetTimeScale(1f);
     }
     
     public void LobbyScene()
     {
         SceneManager.LoadScene(1);
-        Time.timeScale = 1f;
+        TimeScaleController.SetTimeScale(1f);
     }
 }

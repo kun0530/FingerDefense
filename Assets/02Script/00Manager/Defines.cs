@@ -11,6 +11,8 @@ namespace Defines
 
     public static class Tags
     {
+        public static readonly string STAGE_MANAGER_TAG = "StageManager";
+
         public static readonly string PLAYER_TAG = "PlayerCharacter";
         public static readonly string MONSTER_TAG = "Monster";
 

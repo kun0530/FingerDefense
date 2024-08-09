@@ -120,9 +120,9 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
         }
     }
 
-    public override void Die(bool isDamageDeath = true)
+    public override void Die(DamageReason reason = DamageReason.NONE)
     {
-        base.Die();
+        base.Die(reason);
 
         TryRemoveMonster(monsterUp);
         TryRemoveMonster(monsterDown);

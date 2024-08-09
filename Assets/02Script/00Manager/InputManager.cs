@@ -19,12 +19,21 @@ public class InputManager : MonoBehaviour
     private Control control;
 
     public GameObject QuitPanel;
+    public StageManager stageManager;
     
     private void Awake()
     {
         control = new Control();
     }
-    
+
+    private void Start()
+    {
+        if (stageManager == null)
+        {
+            Logger.Log("StageManager is null");
+        }
+    }
+
     private void OnEnable()
     {
         control.Enable();
@@ -83,8 +92,16 @@ public class InputManager : MonoBehaviour
         OnBack?.Invoke(context);
         QuitPanel.SetActive(!QuitPanel.activeSelf);
         QuitPanel.transform.SetAsLastSibling();
-        Time.timeScale = QuitPanel.activeSelf ? 0 : 1;
+        
+        if(stageManager.CurrentState==StageState.GameOver)
+        {
+            TimeScaleController.SetTimeScale(0f);
+        }
+        else
+        {
+            TimeScaleController.SetTimeScale(QuitPanel.activeSelf ? 0 : 1);   
+        }
+        
     }
-    
     
 }

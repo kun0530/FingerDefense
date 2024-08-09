@@ -8,14 +8,17 @@ public abstract class BaseSkill
     protected SkillType skillType;
     protected IFindable targetingMethod;
 
+    protected GameObject caster;
+
     private float skillTimer = 0f;
     public bool IsSkillReady { get; protected set; } = false;
 
-    public BaseSkill(SkillData skillData, SkillType skillType, IFindable targetingMethod)
+    public BaseSkill(SkillData skillData, SkillType skillType, IFindable targetingMethod, GameObject caster)
     {
         this.skillData = skillData;
         this.skillType = skillType;
         this.targetingMethod = targetingMethod;
+        this.caster = caster;
     }
 
     public void TimerUpdate(float coolTimeBuff = 0f)

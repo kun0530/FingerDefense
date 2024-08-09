@@ -35,19 +35,7 @@ public class FallState : IState
 
             if (controller.Status.Data.Height <= startY - controller.targetFallY)
             {
-                if (controller.dragDeathSkill != null)
-                {
-                    controller.dragDeathSkill.UseSkill();
-                    
-                    var dragDeathEffect = EffectFactory.CreateEffect(controller.dragDeathSkill.skillData.AssetNo);
-                    if (dragDeathEffect != null)
-                    {
-                        dragDeathEffect.transform.position = controller.transform.position;
-                        dragDeathEffect.transform.SetParent(controller.transform);
-                        controller.effects.Add(dragDeathEffect);
-                    }
-                }
-                controller.Die(false);
+                controller.Die(DamageReason.FALL_DAMAGE);
             }
             
             if (!controller.IsDead)

@@ -12,6 +12,10 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
+    public Type CurrentState
+    {
+        get => stateMachine.CurrentState.GetType();
+    }
 
     public bool CanPatrol { get; set; }
     public Transform moveTarget { get; set; }
@@ -21,14 +25,13 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
+    [SerializeField] public float directionMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
 
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
-
-    public List<EffectController> effects = new();
 
     private bool isTargetReset=false;
     public bool IsDraggable
@@ -99,16 +102,12 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void OnEnable()
     {
         base.OnEnable();
+        directionMultiplier = 1f;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        foreach (var effect in effects)
-        {
-            Destroy(effect);
-        }
-        effects.Clear();
     }
 
     private void Start()
@@ -133,6 +132,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         isTargetReset=false;
     }
 
+    private void CrossResetLine()
+    {
+        stageManager?.monsterSpawner?.TriggerMonsterReset(this);
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -154,22 +158,28 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
         if (other.CompareTag("ResetLine")) // To-Do: Defines에서 정의
         {
-            isTargetReset = true;
+            if (!isTargetReset)
+            {
+                isTargetReset = true;
+                CrossResetLine();
+            }
         }
     }
 
-    public override void Die(bool isDamageDeath = true)
+    public override void Die(DamageReason reason = DamageReason.NONE)
     {
         if (IsDead)
             return;
 
-        base.Die();
+        base.Die(reason);
 
         if (stageManager)
-            stageManager.EarnedGold += Status.Data.DropGold;
+            stageManager.GetGold(Status.Data.DropGold);
             
-        if (isDamageDeath)
+        if (reason == DamageReason.PLAYER_HIT_DAMAGE)
             deathSkill?.UseSkill();
+        else if (reason == DamageReason.FALL_DAMAGE || reason == DamageReason.MONSTER_HIT_DAMAGE)
+            dragDeathSkill?.UseSkill();
             
         deathTrackEntry = monsterAni.SetAnimation(MonsterSpineAni.MonsterState.DEAD, false, 1f);
         var currentState = stateMachine.CurrentState.GetType();

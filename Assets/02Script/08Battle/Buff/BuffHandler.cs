@@ -7,9 +7,10 @@ public class BuffHandler
 {
     public List<Buff> buffs = new();
     public Dictionary<BuffType, float> buffValues = new();
-    public event Func<float, bool> OnDotDamage;
+    public event Func<float, DamageReason, Elements, bool> OnDotDamage;
+    public event Func<float, bool> OnDotHeal;
 
-    public int maxBuffCount = 3;
+    public int maxBuffCount = 15;
 
     public BuffHandler()
     {
@@ -21,6 +22,10 @@ public class BuffHandler
 
     public void ResetBuffs()
     {
+        foreach (var buff in buffs)
+        {
+            buff.ReleaseBuff();
+        }
         buffs.Clear();
         UpdateBuff();
     }
@@ -37,7 +42,11 @@ public class BuffHandler
             }
             if (buffs[i].isDotDamage)
             {
-                OnDotDamage?.Invoke(-buffs[i].dotDamage);
+                var hpChange = buffs[i].dotDamage;
+                if (hpChange < 0f)
+                    OnDotDamage?.Invoke(-hpChange, DamageReason.DOT_DAMAGE, Elements.NONE);
+                if (hpChange > 0f)
+                    OnDotHeal?.Invoke(hpChange);
                 buffs[i].isDotDamage = false;
             }
         }
@@ -73,7 +82,7 @@ public class BuffHandler
             return;
 
         if (buffs[index].effect != null)
-            GameObject.Destroy(buffs[index].effect);
+            GameObject.Destroy(buffs[index].effect.gameObject);
         buffs.RemoveAt(index);
         UpdateBuff();
     }

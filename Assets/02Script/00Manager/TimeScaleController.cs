@@ -35,6 +35,11 @@ public class TimeScaleController : MonoBehaviour
         Time.timeScale = target;
         isTimeScaleChange = false;
     }
+    
+    public static float GetTimeScale()
+    {
+        return Time.timeScale;
+    }
 
     private void ChangeTimeScale()
     {

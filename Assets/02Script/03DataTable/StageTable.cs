@@ -14,6 +14,7 @@ public class StageData
     public int Monster1Id { get; set; }
     public int Monster2Id { get; set; }
     public int Monster3Id { get; set; }
+    public int Monster4Id { get; set; }
     public int AssetNo { get; set; }
     public int Reward1Id { get; set; }
     public int Reward1Value { get; set; }

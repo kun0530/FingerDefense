@@ -26,6 +26,14 @@ public class Buff
             isDotDamageExist = true;
     }
 
+    public void ReleaseBuff()
+    {
+        if (effect != null)
+        {
+            GameObject.Destroy(effect.gameObject);
+        }
+    }
+
     public void TimerUpdate()
     {
         if (isDotDamageExist)

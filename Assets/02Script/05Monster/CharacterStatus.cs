@@ -23,5 +23,6 @@ public class CharacterStatus : BaseStatus
 
         currentMaxHp = Data.Hp;
         CurrentHp = currentMaxHp;
+        element = (Elements)Data.Element;
     }
 }

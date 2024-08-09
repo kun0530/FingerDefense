@@ -18,7 +18,7 @@ public class MonsterSpawner : MonoBehaviour
 
     public Transform moveTarget;
 
-    private int stageId = Variables.LoadTable.StageId; // 테스트용. 나중에 다른 클래스의 static 변수로 변경.
+    private int stageId = Variables.LoadTable.StageId;
     private int waveId = 1;
     public int MonsterCount { get; private set; }
 
@@ -29,6 +29,10 @@ public class MonsterSpawner : MonoBehaviour
 
     private bool isWaveEnd;
     public HashSet<int> monsters { get; private set; } = new();
+    
+    private StageManager stageManager;
+
+    public event Action<MonsterController> onResetMonster;
     
     private void Awake()
     {
@@ -65,8 +69,6 @@ public class MonsterSpawner : MonoBehaviour
             spawnWaveTimer = 0f;
             isWaveTerm = true;
         }
-        
-
     }
     
     
@@ -77,6 +79,8 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Start()
     {
+        stageManager=GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+        
         factory.poolTransform = poolTransform; // To-Do: 추후 삭제
         spawnPosition = new Vector2(spawnTransform.position.x, spawnTransform.position.y);
     }
@@ -108,12 +112,16 @@ public class MonsterSpawner : MonoBehaviour
         
         while (repeatCount++ < currentWaveData.Repeat)
         {
-            var spwanMonsterId = Utils.WeightedRandomPick<int>(monsters);
+            var spwanMonsterId = Utils.WeightedRandomPick(monsters);
             var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
-            monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
-            monsterGo.moveTarget = moveTarget;
-            monsterGo.ResetMonsterData();
-
+            
+            if (stageManager)
+            {
+                monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                monsterGo.moveTarget = moveTarget;
+                monsterGo.ResetMonsterData();    
+            }
+            
             while (Time.timeScale == 0)
             {
                 await UniTask.Yield(PlayerLoopTiming.Update);
@@ -132,5 +140,10 @@ public class MonsterSpawner : MonoBehaviour
             isWaveEnd = true;
             Logger.Log("모든 몬스터가 소환되었습니다.");
         }
+    }
+
+    public void TriggerMonsterReset(MonsterController monster)
+    {
+        onResetMonster?.Invoke(monster);
     }
 }

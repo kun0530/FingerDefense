@@ -2,9 +2,24 @@ using UnityEngine;
 
 public class QuitUI : MonoBehaviour
 {
+    private StageManager stageManager;
+
+    private void Start()
+    {
+        if(stageManager == null)
+            stageManager = GameObject.FindWithTag("StageManager").TryGetComponent(out StageManager manager) ? manager : null;
+    }
+    
     public void ResumeGame()
     {
-        Time.timeScale = 1f;
+        if (stageManager.CurrentState == StageState.GameOver)
+        {
+            return;
+        }
+        else
+        {
+            TimeScaleController.SetTimeScale(1f);    
+        }
     }
     
     public void OnClickQuit()

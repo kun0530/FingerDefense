@@ -10,6 +10,7 @@ using UnityEngine.AddressableAssets;
 // TO-DO: 추후 위치 변경해야 합니다.
 public enum Elements
 {
+    NONE = -1,
     SCISSOR,
     ROCK,
     PAPER
@@ -68,14 +69,12 @@ public class MonsterTable : DataTable
         var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         //var textAsset = Resources.Load<TextAsset>(path);
 
-        using (var reader = new StringReader(textAsset.text))
-        using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+        using var reader = new StringReader(textAsset.text);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+        var records = csvReader.GetRecords<MonsterData>();
+        foreach (var record in records)
         {
-            var records = csvReader.GetRecords<MonsterData>();
-            foreach (var record in records)
-            {
-                table.TryAdd(record.Id, record);
-            }
+            table.TryAdd(record.Id, record);
         }
     }
 }
