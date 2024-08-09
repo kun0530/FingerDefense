@@ -28,8 +28,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8622324493191068274}
   m_Father: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2571822239935975186}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
@@ -59,15 +59,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initPosOption: 0
-  targetPosOption: 0
+  targetPosOption: 1
   moveOption: 0
   skillTarget: 0
   caster: {fileID: 0}
   casterOffsetPos: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
-  targetOffsetPos: {x: 0, y: 0, z: 0}
-  speed: 13
-  acceleration: 9.8
+  targetOffsetPos: {x: -0.46, y: 0.39, z: 0}
+  speed: 5
+  acceleration: 1
   isBuffApplied: 0
 --- !u!1001 &1621634284655783678
 PrefabInstance:
@@ -81,6 +81,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5963521823261456005, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5963521823401505979, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5963521823401505981, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
@@ -88,6 +96,18 @@ PrefabInstance:
     - target: {fileID: 5963521825017955544, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5963521825017955547, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001291729576727664, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001291729576727667, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7001291729576727692, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
       propertyPath: m_LocalScale.x

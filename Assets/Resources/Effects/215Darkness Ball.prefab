@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4096494985562558320}
   - component: {fileID: 5861676580090720044}
+  - component: {fileID: 4243741388424982071}
   m_Layer: 0
   m_Name: 215Darkness Ball
   m_TagString: Untagged
@@ -45,6 +46,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4243741388424982071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8210868760533548971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPosOption: 0
+  targetPosOption: 1
+  moveOption: 0
+  skillTarget: 0
+  caster: {fileID: 0}
+  casterOffsetPos: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  targetOffsetPos: {x: 0, y: 0, z: 0}
+  speed: 6.5
+  acceleration: 9.8
+  isBuffApplied: 0
 --- !u!1001 &4799459954831666815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -88,6 +112,10 @@ PrefabInstance:
     - target: {fileID: 7678701564198374880, guid: 6e26bdcd33ac575459216b5308114483, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678701564198374881, guid: 6e26bdcd33ac575459216b5308114483, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7678701564198374884, guid: 6e26bdcd33ac575459216b5308114483, type: 3}
       propertyPath: m_LocalPosition.x
