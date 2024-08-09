@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4346505721077041809}
   - component: {fileID: 8443317132512086414}
+  - component: {fileID: 3530737207268081118}
   m_Layer: 0
   m_Name: 211Light Ball
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8120844053035505928}
   m_Father: {fileID: 0}
@@ -45,6 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3530737207268081118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3368280320215440740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialPosOffset: {x: 1, y: 0.4, z: 0}
+  speed: 1
+  isBuffApplied: 0
+  skillType: 0
 --- !u!1001 &3218925036884803256
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,38 +70,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4346505721077041809}
     m_Modifications:
-    - target: {fileID: 3019228930103674502, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3273137646758929561, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3273137646829983877, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3273137647077192190, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3273137647823620684, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3273137648429750546, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3273137648469110887, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6636304635825448876, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6636304635825448880, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -128,10 +113,6 @@ PrefabInstance:
     - target: {fileID: 6636304635825448881, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
       propertyPath: m_Name
       value: 211
-      objectReference: {fileID: 0}
-    - target: {fileID: 6832313917689367830, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

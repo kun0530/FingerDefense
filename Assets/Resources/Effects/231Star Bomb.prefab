@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8329069496430161661}
   - component: {fileID: 450843668357403765}
+  - component: {fileID: 2812220540912324637}
   m_Layer: 0
   m_Name: 231Star Bomb
   m_TagString: Untagged
@@ -45,6 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2812220540912324637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4919273006493222068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialPosOffset: {x: 1, y: 1, z: 0}
+  speed: 1
+  isBuffApplied: 0
+  skillType: 0
 --- !u!1001 &3499007637492187329
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,21 +70,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8329069496430161661}
     m_Modifications:
-    - target: {fileID: 1281965719093991108, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281965719221507486, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1281965719775568678, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
       propertyPath: m_Name
       value: 231
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281965719775568681, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1281965719775568683, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -108,18 +113,6 @@ PrefabInstance:
     - target: {fileID: 1281965719775568683, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281965719932937309, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281965719960769024, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281965720598392721, guid: cb5bf97528889e54f829575cf601f43b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4175752133662860159}
   - component: {fileID: 2381467453188725483}
+  - component: {fileID: 3610869265737495896}
   m_Layer: 0
   m_Name: 206Sonar
   m_TagString: Untagged
@@ -40,11 +41,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2571822239935975186}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3610869265737495896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2571822239935975186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialPosOffset: {x: -0.9, y: 2, z: 0}
+  speed: 13
+  isBuffApplied: 0
+  skillType: 0
 --- !u!1001 &1621634284655783678
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,29 +70,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4175752133662860159}
     m_Modifications:
-    - target: {fileID: 5963521823261456005, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963521823401505979, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963521825017955547, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7001291729576727667, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7001291729576727692, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7001291729576727692, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7001291729576727692, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
       propertyPath: m_LocalPosition.z
