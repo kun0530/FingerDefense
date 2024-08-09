@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -10,29 +7,32 @@ public class ItemSlotUI : MonoBehaviour
 {
     public Image itemIcon;
     public TextMeshProUGUI itemCount;
-    
     public Button itemButton;
-    
-    public delegate void OnClickItemSlot(ItemSlotUI itemSlot);
-    public OnClickItemSlot onClickItemSlot;
-    
     public RectTransform ChoicePanel;
 
-    private int itemId; // 현재 슬롯에 설정된 아이템의 ID
-    
+    public delegate void OnClickItemSlot(ItemSlotUI itemSlot);
+    public OnClickItemSlot onClickItemSlot;
+
+    public int ItemId { get; private set; }
+    public Sprite ItemSprite => itemIcon.sprite;
+
+    private int originalLimit; // 선택 전 아이템의 원래 수량
+
     public void Setup(ItemData item, string assetPath, int count)
     {
+        ItemId = item?.Id ?? 0;
+        originalLimit = item?.Limit ?? 0;
+        
+        Logger.Log($"ItemSlotUI Setup: ItemId={ItemId}, Limit={originalLimit}");
+
         if (item != null && !string.IsNullOrEmpty(assetPath))
         {
-            itemId = item.Id;
-
             var sprite = Resources.Load<Sprite>($"Prefab/07GameItem/{assetPath}");
             if (sprite != null)
             {
                 itemIcon.sprite = sprite;
             }
 
-            // Variables.LoadTable.ItemId에서 가져온 실제 아이템 개수를 표시
             itemCount.text = count.ToString();
         }
         else
@@ -40,28 +40,41 @@ public class ItemSlotUI : MonoBehaviour
             itemIcon.sprite = null;
             itemCount.text = "";
         }
-        ChoicePanel.transform.SetAsLastSibling();
+
         itemButton.onClick.AddListener(() =>
         {
             onClickItemSlot?.Invoke(this);
-            UpdateItemCount();
         });
     }
 
-    private void UpdateItemCount()
+    public void SetItemSlot(int itemId, Sprite sprite)
     {
-        // Variables.LoadTable.ItemId에 해당 아이템이 있는지 확인
-        var existingItem = Variables.LoadTable.ItemId.FirstOrDefault(tuple => tuple.Item1 == itemId);
-
-        if (existingItem != null)
-        {
-            // 기존 아이템의 개수를 99로 설정
-            Variables.LoadTable.ItemId.Remove(existingItem);
-        }
+        ItemId = itemId;
+        itemIcon.sprite = sprite;
+        ChoicePanel.SetAsLastSibling();
         
-        Variables.LoadTable.ItemId.Add(new Tuple<int, int>(itemId, 99));
+    }
 
-        // UI에 변경된 개수를 표시
-        itemCount.text = "99";
+    public void ClearSlot()
+    {
+        ItemId = 0;
+        itemIcon.sprite = null;
+        itemCount.text = "";
+        ChoicePanel.transform.gameObject.SetActive(false);
+    }
+
+    public void ToggleInteractable(bool isInteractable)
+    {
+        itemButton.interactable = isInteractable;
+    }
+
+    public void UpdateItemCount(int newCount)
+    {
+        itemCount.text = newCount.ToString();
+    }
+
+    public int GetOriginalLimit()
+    {
+        return originalLimit;
     }
 }
