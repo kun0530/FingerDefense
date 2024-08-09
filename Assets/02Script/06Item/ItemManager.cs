@@ -54,7 +54,7 @@ public class ItemManager : MonoBehaviour
     {
         foreach (var item in items)
         {
-            item.CancelItem();
+            item?.CancelItem();
         }
     }
 
@@ -78,7 +78,7 @@ public class ItemManager : MonoBehaviour
             var itemName = stringTable.Get(itemData.NameId.ToString());
             itemButton.GetComponentInChildren<TextMeshProUGUI>().text = itemName;
 
-            var itemFilePath = assetListTable.Get(itemData.AssetNo);
+            var itemFilePath = assetListTable.Get(itemData.IconNo);
             var itemImage = Resources.Load<Sprite>($"Prefab/07GameItem/{itemFilePath}");
             if (itemImage)
                 itemButton.GetComponent<UiSlotButton>().slotImage.sprite = itemImage;

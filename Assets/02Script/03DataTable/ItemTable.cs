@@ -48,6 +48,6 @@ public class ItemData
     public int Duration { get; set; }
     public float Value { get; set; }
     public int Cooldown { get; set; }
-    public int AssetNo { get; set; }
+    public int IconNo { get; set; }
+    public string DataName { get; set; }
 }
-
