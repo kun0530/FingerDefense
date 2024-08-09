@@ -15,7 +15,7 @@ public class AssetData
 
 public class AssetListTable : DataTable
 {
-    private Dictionary<int, string> table = new Dictionary<int, string>();
+    public Dictionary<int, string> table = new Dictionary<int, string>();
 
     public string Get(int assetNo)
     {
