@@ -60,6 +60,7 @@ public class ItemSlotUI : MonoBehaviour
         itemIcon.sprite = null;
         itemCount.text = "";
         ChoicePanel.gameObject.SetActive(false);
+        ToggleInteractable(true);
     }
 
     public void ToggleInteractable(bool isInteractable)

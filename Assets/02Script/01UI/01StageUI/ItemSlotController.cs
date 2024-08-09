@@ -11,6 +11,7 @@ public class ItemSlotController : MonoBehaviour
     private ItemTable itemTable;
     private AssetListTable assetListTable;
 
+    private List<ItemSlotUI> itemSlots = new List<ItemSlotUI>();  // 아이템 슬롯 리스트
     private List<ItemSlotUI> emptySlots = new List<ItemSlotUI>();  // 빈 슬롯 리스트
     private HashSet<int> addedItems = new HashSet<int>();  // 추가된 아이템 ID를 관리
 
@@ -32,6 +33,7 @@ public class ItemSlotController : MonoBehaviour
             Destroy(slot.gameObject);
         }
         emptySlots.Clear();
+        itemSlots.Clear(); // 아이템 슬롯 리스트도 초기화
         addedItems.Clear();
 
         // 새로운 슬롯 생성
@@ -62,6 +64,7 @@ public class ItemSlotController : MonoBehaviour
             {
                 itemSlot.Setup(item, assetPath, item.Limit);
                 itemSlot.onClickItemSlot = clickedSlot => HandleItemSlotClick(clickedSlot);
+                itemSlots.Add(itemSlot); // 생성된 아이템 슬롯을 리스트에 추가
             }
         }
     }
@@ -97,8 +100,17 @@ public class ItemSlotController : MonoBehaviour
     {
         if (clickedSlot == null || clickedSlot.ItemId == 0) return;
 
+        // 선택된 아이템 해제
         RemoveItemFromLoadTable(clickedSlot.ItemId);
         addedItems.Remove(clickedSlot.ItemId);
+
+        // 클릭된 슬롯의 아이템 ID에 해당하는 원본 슬롯을 찾아 버튼 활성화
+        var originalSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == clickedSlot.ItemId);
+        if (originalSlot != null)
+        {
+            originalSlot.ToggleInteractable(true); // 슬롯의 버튼을 다시 활성화
+        }
+
         clickedSlot.ClearSlot();
     }
 
@@ -114,6 +126,7 @@ public class ItemSlotController : MonoBehaviour
         if (itemToRemove != default)
         {
             Variables.LoadTable.ItemId.Remove(itemToRemove);
+            
             Logger.Log($"Removed item {itemId} from LoadTable");
         }
     }
