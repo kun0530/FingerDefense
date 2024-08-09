@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using UnityEngine;
 
 public class AttackState : IState
@@ -8,6 +9,8 @@ public class AttackState : IState
 
     private float attackTimer;
     private float attackCoolDown;
+
+    private TrackEntry attackTrackEntry;
 
     public AttackState(MonsterController controller)
     {
@@ -21,7 +24,7 @@ public class AttackState : IState
 
         controller.SetFlip(false);
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.CurrentAtkSpeed);
+        attackTrackEntry = controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.CurrentAtkSpeed);
     }
 
     public void Update()
@@ -37,6 +40,16 @@ public class AttackState : IState
             controller.attackTarget.TryRemoveMonster(controller);
             controller.TryTransitionState<PatrolState>();
             return;
+        }
+
+        if (Mathf.Approximately(controller.Status.CurrentAtkSpeed, 0f))
+        {
+            attackTrackEntry.TimeScale = 0f;
+            return;
+        }
+        else
+        {
+            attackTrackEntry.TimeScale = controller.Status.CurrentAtkSpeed;
         }
 
         if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) > 0.1) // Attack Move Target의 위치 변경

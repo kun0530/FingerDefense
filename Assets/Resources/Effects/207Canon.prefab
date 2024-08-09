@@ -58,10 +58,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosOffset: {x: 1, y: 0.38, z: 0}
-  speed: 1
+  initPosOption: 0
+  targetPosOption: 0
+  moveOption: 0
+  skillTarget: 0
+  caster: {fileID: 0}
+  casterOffsetPos: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  targetOffsetPos: {x: 0, y: 0, z: 0}
+  speed: 8
+  acceleration: 9.8
   isBuffApplied: 0
-  skillType: 0
 --- !u!1001 &6707529979571989279
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70,6 +77,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5004599555775717648}
     m_Modifications:
+    - target: {fileID: 8168827185777978497, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8168827185777978509, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

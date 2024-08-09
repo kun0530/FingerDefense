@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Active Monster Debuff", fileName = "Item.asset")]
 public class ItemActiveDebuffMonster : ActiveItem
 {
-    [SerializeField] public ItemDebuffMonster debuff;
+    [SerializeField] public List<ItemDebuffMonster> debuffs;
 
     public override void UseItem()
     {
@@ -15,8 +15,12 @@ public class ItemActiveDebuffMonster : ActiveItem
 
         foreach (var monster in monsters)
         {
-            if (monster.TryGetComponent<MonsterController>(out var controller))
+            if (!monster.TryGetComponent<MonsterController>(out var controller))
+                continue;
+            foreach (var debuff in debuffs)
+            {
                 debuff.GiveBuff(controller);
+            }
         }
         
         base.UseItem();
