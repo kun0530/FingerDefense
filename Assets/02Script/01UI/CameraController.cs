@@ -27,6 +27,8 @@ public class CameraController : MonoBehaviour
     private RectTransform letterBoxCanvasRect;
     private Image[] letterBoxes;
 
+    private float currentWidth;
+
     private float startWidth;
     private float endWidth;
     private float changeDuration;
@@ -36,6 +38,7 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        currentWidth = targetWidth;
         
         if(mainCamera == null)
         {
@@ -80,7 +83,7 @@ public class CameraController : MonoBehaviour
         SetLetterBoxInactive();
 
         var aspectRatio = (float)Screen.width / (float)Screen.height;
-        var orthographicSize = targetWidth / (aspectRatio * 2f);
+        var orthographicSize = currentWidth / (aspectRatio * 2f);
         mainCamera.orthographicSize = orthographicSize;
 
         var cameraPositionY = bottomY + orthographicSize;
@@ -99,7 +102,7 @@ public class CameraController : MonoBehaviour
         mainCamera.rect = cameraRect;
 
         var aspectRatio = (float)safeAreaRect.width / (float)safeAreaRect.height;
-        var orthographicSize = targetWidth / (aspectRatio * 2f);
+        var orthographicSize = currentWidth / (aspectRatio * 2f);
         mainCamera.orthographicSize = orthographicSize;
 
         var cameraPositionY = bottomY + orthographicSize;
@@ -111,7 +114,7 @@ public class CameraController : MonoBehaviour
     private void AdjustCameraUsingLetterBox()
     {
         float screenAspectRatio = (float)Screen.width / (float)Screen.height;
-        float targetAspectRatio = targetWidth / targetHeight;
+        float targetAspectRatio = currentWidth / targetHeight;
 
         if (screenAspectRatio >= targetAspectRatio)
         {
@@ -199,7 +202,7 @@ public class CameraController : MonoBehaviour
         if (target < 0f || duration < 0f)
             return;
 
-        startWidth = targetWidth;
+        startWidth = currentWidth;
         endWidth = target;
         changeDuration = duration;
         timer = 0f;
@@ -212,11 +215,11 @@ public class CameraController : MonoBehaviour
         timer += Time.unscaledDeltaTime;
         if (timer < changeDuration)
         {
-            targetWidth = Mathf.Lerp(startWidth, endWidth, timer / changeDuration);
+            currentWidth = Mathf.Lerp(startWidth, endWidth, timer / changeDuration);
         }
         else
         {
-            targetWidth = endWidth;
+            currentWidth = endWidth;
             isWidthChange = false;
         }
     }
