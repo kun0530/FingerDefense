@@ -19,6 +19,7 @@ public class ItemSlotUI : MonoBehaviour
 
     public void Setup(ItemData item, string assetPath, int count)
     {
+        Logger.Log($"Setup called with Item ID: {item?.Id}, Limit: {item?.Limit}");
         ItemId = item?.Id ?? 0;
         originalLimit = item?.Limit ?? 0;
         

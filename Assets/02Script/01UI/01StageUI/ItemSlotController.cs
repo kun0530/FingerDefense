@@ -65,7 +65,7 @@ public class ItemSlotController : MonoBehaviour
             }
         }
     }
-
+    
     private void HandleItemSlotClick(ItemSlotUI clickedSlot)
     {
         if (clickedSlot == null) return;
@@ -80,22 +80,26 @@ public class ItemSlotController : MonoBehaviour
         {
             if (emptySlot.ItemId == 0) // 빈 슬롯에 아이템 배치
             {
-                emptySlot.SetItemSlot(clickedSlot.ItemId, clickedSlot.ItemSprite, clickedSlot.GetOriginalLimit());
+                // 클릭된 슬롯의 Limit 값을 가져옴
+                int limit = clickedSlot.GetOriginalLimit();
+                Logger.Log($"Attempting to add item {clickedSlot.ItemId} with limit {limit}");
+
+                emptySlot.SetItemSlot(clickedSlot.ItemId, clickedSlot.ItemSprite, limit);
                 addedItems.Add(clickedSlot.ItemId);
                 clickedSlot.ToggleInteractable(false);
-                SaveItemToLoadTable(emptySlot.ItemId, emptySlot.GetOriginalLimit());
+                SaveItemToLoadTable(clickedSlot.ItemId, limit);
                 break;
             }
         }
     }
 
-    private void HandleEmptySlotClick(ItemSlotUI emptySlot)
+    private void HandleEmptySlotClick(ItemSlotUI clickedSlot)
     {
-        if (emptySlot == null || emptySlot.ItemId == 0) return;
+        if (clickedSlot == null || clickedSlot.ItemId == 0) return;
 
-        RemoveItemFromLoadTable(emptySlot.ItemId);
-        addedItems.Remove(emptySlot.ItemId);
-        emptySlot.ClearSlot();
+        RemoveItemFromLoadTable(clickedSlot.ItemId);
+        addedItems.Remove(clickedSlot.ItemId);
+        clickedSlot.ClearSlot();
     }
 
     private void SaveItemToLoadTable(int itemId, int limit)
