@@ -20,7 +20,8 @@ public class DeckSlotController : MonoBehaviour
     
     public Button startButton;
     public Button closeButton;
-
+    
+    
     
     private void Awake()
     {
