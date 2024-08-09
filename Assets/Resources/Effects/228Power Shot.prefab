@@ -26,14 +26,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8834326132340203379}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 9188814293390734471}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &124459931960590821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,10 +58,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosOffset: {x: 1, y: 0.4, z: 0}
-  speed: 10
+  initPosOption: 0
+  targetPosOption: 1
+  moveOption: 1
+  skillTarget: 0
+  caster: {fileID: 0}
+  casterOffsetPos: {x: 1.6, y: 0, z: 0}
+  target: {fileID: 0}
+  targetOffsetPos: {x: 11, y: 0, z: 0}
+  speed: 13
+  acceleration: 15
   isBuffApplied: 0
-  skillType: 0
 --- !u!1001 &9190651159075828605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113,6 +120,18 @@ PrefabInstance:
     - target: {fileID: 4214851923150842, guid: 8f4fb23318e2029459b87adb7552771f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114005424339212566, guid: 8f4fb23318e2029459b87adb7552771f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224489326896184987, guid: 8f4fb23318e2029459b87adb7552771f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711300007407241634, guid: 8f4fb23318e2029459b87adb7552771f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

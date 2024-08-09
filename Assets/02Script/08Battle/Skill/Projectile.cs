@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public enum InitPosOption { CASTER, SKY, SPECIFIED }
+    public enum InitPosOption { CASTER, TARGET, SKY, SPECIFIED }
     public enum TargetPosOption { INITIAL, CURRENT }
     public enum MoveOption { CONSTANT_SPEED, CONSTANT_ACCELERATION }
     public enum SkillTarget { TARGET, PROJECTILE }
+    // public bool isEffectEnd = false;
 
     // 발동 옵션: 1. 콜라이더 / 2. 거리 / 3. 타이머
     // 타겟이 사라질 경우 옵션: 1. 즉시 삭제 / 2. 일정 시간 이후 삭제 / 3. 현재 방향 유지 후 화면 밖을 나갈 경우 삭제
@@ -25,6 +26,7 @@ public class Projectile : MonoBehaviour
     [HideInInspector] public GameObject target;
     public Vector3 targetOffsetPos = Vector3.zero;
     private Vector3 targetInitPos;
+    public ParticleSystem endEffect;
     public float speed = 20f;
     public float acceleration = 9.8f;
 
@@ -65,6 +67,9 @@ public class Projectile : MonoBehaviour
                     }
                     transform.position = caster.transform.position + casterOffsetPos;
                 }
+                break;
+            case InitPosOption.TARGET:
+                transform.position = target.transform.position + casterOffsetPos;
                 break;
             case InitPosOption.SKY:
                 transform.position = new Vector2(target.transform.position.x + casterOffsetPos.x, 25f); // To-Do: 카메라 컨트롤러의 줌아웃 너비로부터 받아온다
@@ -115,6 +120,23 @@ public class Projectile : MonoBehaviour
                 break;
         }
         movable.Move(targetPos);
+
+        // if (isEffectEnd && endEffect.isStopped)
+        // {
+        //     switch (skillTarget)
+        //     {
+        //         case SkillTarget.TARGET:
+        //             if (target && target.activeSelf) // 타겟이 사라진 경우
+        //             {
+        //                 skill?.UseSkill(target, isBuffApplied);
+        //             }
+        //             break;
+        //         case SkillTarget.PROJECTILE:
+        //             skill?.UseSkill(gameObject, isBuffApplied);
+        //             break;
+        //     }
+        //     Destroy(gameObject);
+        // }
 
         if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {

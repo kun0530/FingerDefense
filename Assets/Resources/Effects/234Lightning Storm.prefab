@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3282561925383588747}
   - component: {fileID: 2094869687948563074}
+  - component: {fileID: 649680854142322958}
   m_Layer: 0
   m_Name: 234Lightning Storm
   m_TagString: Untagged
@@ -45,6 +46,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &649680854142322958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048843070432732895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPosOption: 0
+  targetPosOption: 0
+  moveOption: 0
+  skillTarget: 0
+  caster: {fileID: 0}
+  casterOffsetPos: {x: 0, y: -6, z: 0}
+  target: {fileID: 0}
+  targetOffsetPos: {x: 0, y: 0, z: 0}
+  speed: 10
+  acceleration: 9.8
+  isBuffApplied: 0
 --- !u!1001 &6591729951231668932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,21 +77,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3282561925383588747}
     m_Modifications:
-    - target: {fileID: 615939991894065775, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
+    - target: {fileID: 3928905549335065769, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4294302568721399384, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
+    - target: {fileID: 4294302568721399385, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850296, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_Name
       value: 234
       objectReference: {fileID: 0}
-    - target: {fileID: 4294302568896850297, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
+    - target: {fileID: 4294302568896850298, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalPosition.x
@@ -109,20 +145,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4294302570083037705, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
+    - target: {fileID: 4294302570083037706, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5179660165121688916, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
+    - target: {fileID: 5405442902542948466, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7575402569573973433, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
+    - target: {fileID: 5434978940225523620, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9036760472263442236, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
-      propertyPath: m_Materials.Array.size
+    - target: {fileID: 8090287740018172557, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: simulationSpeed
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
