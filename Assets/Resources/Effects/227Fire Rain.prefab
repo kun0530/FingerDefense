@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2157448973719318281}
   - component: {fileID: 5485566544806035672}
+  - component: {fileID: 3869818731209634659}
   m_Layer: 0
   m_Name: 227Fire Rain
   m_TagString: Untagged
@@ -45,6 +46,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3869818731209634659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503140859819804905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPosOption: 0
+  targetPosOption: 1
+  moveOption: 0
+  skillTarget: 0
+  caster: {fileID: 0}
+  casterOffsetPos: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  targetOffsetPos: {x: 0, y: 0, z: 0}
+  speed: 3
+  acceleration: 9.8
+  isBuffApplied: 0
 --- !u!1001 &5791475391162656758
 PrefabInstance:
   m_ObjectHideFlags: 0
