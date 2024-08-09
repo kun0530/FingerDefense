@@ -6,11 +6,7 @@ using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
-    // 임시 아이템
-    public int item1Id;
-    public int item2Id;
-    private List<(int itemId, int itemCount)> itemIds = new(); // To-Do: Variables.LoadTable.ItemId로부터 받기
-    private List<System.ValueTuple<int, int>> itemsd = new List<(int itemId, int itemCoutn)>();
+    private List<(int itemId, int itemCount)> itemIds = new();
 
     private ItemTable itemTable;
 
@@ -23,10 +19,7 @@ public class ItemManager : MonoBehaviour
     private void Awake()
     {
         itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
-
-        // 아이템을 불러온다
-        itemIds.Add((item1Id, 3));
-        itemIds.Add((item2Id, 3));
+        itemIds = Variables.LoadTable.ItemId;
 
         foreach (var itemId in itemIds)
         {
