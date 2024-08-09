@@ -6,18 +6,24 @@ using UnityEngine.UI;
 
 public class UiSlotButton : MonoBehaviour
 {
+    public Button button;
     public Image backgroundBlack;
     public Image slotImage;
-    private TextMeshProUGUI text;
-
-    private void Awake()
-    {
-        text = GetComponentInChildren<TextMeshProUGUI>();
-    }
+    public TextMeshProUGUI text;
 
     public void SetFillAmountBackground(float amount)
     {
         amount = Mathf.Clamp01(amount);
         backgroundBlack.fillAmount = amount;
+
+        if (amount == 0f)
+            button.interactable = true;
+        else if (amount == 1f)
+            button.interactable = false;
+    }
+
+    public void ActiveButton(bool isActive)
+    {
+        SetFillAmountBackground(isActive ? 0f : 1f);
     }
 }

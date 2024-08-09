@@ -9,10 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7326b3d946fa4842ac74d938bf160ea, type: 3}
-  m_Name: 8010
+  m_Script: {fileID: 11500000, guid: 98ebc5bbd44af4d9da8691264e437521, type: 3}
+  m_Name: The Rage of the Sun
   m_EditorClassIdentifier: 
   button: {fileID: 0}
   count: 0
-  isPercentage: 1
-  castleShield: 0.1
+  debuff:
+    id: 0
+    buffType: 2
+    damageTerm: 1
+    isPercentage: 1
+    buffValue: -0.005
+    isPermanent: 1
+    lastingTime: 0

@@ -118,7 +118,8 @@ public class PlayerCharacterSpawner : MonoBehaviour
                 return;
             }
 
-            Instantiate(uiAsset, uiCharacter.transform);
+            Instantiate(uiAsset, uiCharacter.transform).transform.SetAsFirstSibling();
+            // uiAsset.transform.SetSiblingIndex(uiAsset.transform.parent.childCount - 1);
         }
         else
         {
@@ -209,7 +210,9 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
         if (characterButtons[selectedCharacterIndex] != null)
         {
-            characterButtons[selectedCharacterIndex].interactable = false;
+            // characterButtons[selectedCharacterIndex].interactable = false;
+            var slotButton = characterButtons[selectedCharacterIndex].GetComponent<UiSlotButton>();
+            slotButton?.ActiveButton(false);
         }
 
         selectedCharacterIndex = -1; 
@@ -232,7 +235,8 @@ public class PlayerCharacterSpawner : MonoBehaviour
             {
                 if (playerCharacters[j] == character && characterButtons[j])
                 {
-                    characterButtons[j].interactable = true;
+                    // characterButtons[j].interactable = true;
+                    UpdateRespawnTimer(characterButtons[j], character.Status.Data.RespawnCoolTime).Forget();
                 }
             }
         }
@@ -241,11 +245,15 @@ public class PlayerCharacterSpawner : MonoBehaviour
     private async UniTask UpdateRespawnTimer(Button button, float respawnTime)
     {
         float timer = 0f;
+        var slotButton = button.GetComponent<UiSlotButton>();
+
+        slotButton?.ActiveButton(false);
         while (timer <= respawnTime)
         {
             await UniTask.Yield();
             timer += Time.deltaTime;
+            slotButton?.SetFillAmountBackground(1f - timer / respawnTime);
         }
-        button.interactable = true;
+        slotButton?.ActiveButton(true);
     }
 }

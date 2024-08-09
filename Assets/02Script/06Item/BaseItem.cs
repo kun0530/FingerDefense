@@ -21,7 +21,7 @@ public abstract class BaseItem : ScriptableObject
         }
     }
 
-    [HideInInspector] public Button button;
+    [HideInInspector] public UiSlotButton button;
     [HideInInspector] public int count;
 
     public virtual bool IsPassive { get => true; }

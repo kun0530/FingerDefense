@@ -24,8 +24,7 @@ public abstract class ActiveItem : BaseItem
         isCooledDown = false;
         coolDownTimer = 0f;
 
-        button.interactable = false;
-        button.GetComponent<UiSlotButton>().SetFillAmountBackground(1f);
+        button.ActiveButton(false);
     }
 
     public override void CancelItem()
@@ -58,11 +57,10 @@ public abstract class ActiveItem : BaseItem
 
         coolDownTimer += Time.deltaTime;
         if (coolDown > 0f)
-            button.GetComponent<UiSlotButton>().SetFillAmountBackground(1f - coolDownTimer / coolDown);
+            button.SetFillAmountBackground(1f - coolDownTimer / coolDown);
         if (coolDownTimer >= coolDown)
         {
-            button.interactable = true;
-            button.GetComponent<UiSlotButton>().SetFillAmountBackground(0f);
+            button.ActiveButton(true);
             isCooledDown = true;
         }
     }
