@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7001291729576727693}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.000030517578, z: 0}
   m_LocalScale: {x: 1.0000103, y: 1.0000103, z: 1.0000103}
   m_ConstrainProportionsScale: 0
@@ -4795,6 +4795,7 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4854,7 +4855,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7001291729576727693}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bad435a8abb860943ab067f0db0c9068, type: 3}
   m_Name: 
@@ -4960,10 +4961,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7001291729576727692}
     m_Modifications:
-    - target: {fileID: 3741147941165275369, guid: fbe426ed30fa29c4fa6a3fd9434909b9, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3741147941591325393, guid: fbe426ed30fa29c4fa6a3fd9434909b9, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -4974,7 +4971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3741147941591325393, guid: fbe426ed30fa29c4fa6a3fd9434909b9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3741147941591325393, guid: fbe426ed30fa29c4fa6a3fd9434909b9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5013,13 +5010,9 @@ PrefabInstance:
       value: Projectile_Sonar
       objectReference: {fileID: 0}
     - target: {fileID: 3741147941591325399, guid: fbe426ed30fa29c4fa6a3fd9434909b9, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3741147942130739895, guid: fbe426ed30fa29c4fa6a3fd9434909b9, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

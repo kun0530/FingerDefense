@@ -22,6 +22,7 @@ public class GameData
     public bool Game4TutorialCheck;
     
     public List<int> ObtainedGachaIDs = new List<int>();
+    public List<Tuple<int,int>> ItemList = new List<Tuple<int, int>>();
 }
 
 public class DataManager : MonoBehaviour
