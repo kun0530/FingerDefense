@@ -16,7 +16,7 @@ public class ProjectileSkill : BaseSkill
         IsSkillReady = false;
 
         var effect = EffectFactory.CreateEffect(skillData.Projectile);
-        if (!effect || effect.gameObject.TryGetComponent<Projectile>(out var projectile))
+        if (!effect || !effect.gameObject.TryGetComponent<Projectile>(out var projectile))
         {
             Logger.LogError("해당 투사체 에셋이 존재하지 않습니다.");
             return false;
