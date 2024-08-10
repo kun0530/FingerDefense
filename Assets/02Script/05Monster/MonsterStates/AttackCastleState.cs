@@ -47,7 +47,10 @@ public class AttackCastleState : IState
             attackTrackEntry.TimeScale = controller.Status.CurrentAtkSpeed;
 
         if (Mathf.Approximately(controller.Status.CurrentAtkSpeed, 0f))
+        {
+            controller.monsterAni.CurrentTrackEntry.TimeScale = 0f;
             return;
+        }
         
         attackTimer += Time.deltaTime;
         attackCoolDown = 1f / controller.Status.CurrentAtkSpeed;

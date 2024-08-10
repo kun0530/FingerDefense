@@ -140,6 +140,8 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         base.Update();
         stateMachine.Update();
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
