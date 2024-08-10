@@ -48,7 +48,7 @@ public class PatrolState : IState
         if (Vector2.Distance(controller.transform.position, controller.moveTargetPos) < 0.1)
         {
             controller.transform.position = controller.moveTargetPos;
-            controller.TryTransitionState<IdleState<MonsterController>>();
+            controller.TryTransitionState<AttackCastleState>();
             return;
         }
 

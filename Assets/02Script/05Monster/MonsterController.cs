@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITargetable, IDraggable
 {
-    private StageManager stageManager;
+    [HideInInspector] public StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
@@ -98,6 +98,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         stateMachine.AddState(new PatrolState(this, findBehavior));
         stateMachine.AddState(new ChaseState(this));
         stateMachine.AddState(new AttackState(this));
+        stateMachine.AddState(new AttackCastleState(this));
     }
 
     protected override void OnEnable()

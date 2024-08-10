@@ -51,12 +51,11 @@ public class AttackState : IState
         if (attackTrackEntry != null)
             attackTrackEntry.TimeScale = controller.Status.CurrentAtkSpeed;
 
-        if (Mathf.Approximately(controller.Status.Data.AtkSpeed, 0f))
+        if (Mathf.Approximately(controller.Status.CurrentAtkSpeed, 0f))
             return;
         
         attackTimer += Time.deltaTime;
-        attackCoolDown = 1f / controller.Status.Data.AtkSpeed;
-        if (attackTimer >= attackCoolDown)
+        attackCoolDown = 1f / controller.Status.CurrentAtkSpeed;
         {
             controller.attackTarget.TakeDamage(controller.Status.CurrentAtk, DamageReason.MONSTER_HIT_DAMAGE, controller.Status.element);
             attackTimer = 0f;
