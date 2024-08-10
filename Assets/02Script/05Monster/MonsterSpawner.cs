@@ -16,7 +16,8 @@ public class MonsterSpawner : MonoBehaviour
     private MonsterTable monsterTable;
     private WaveTable waveTable;
 
-    public Transform moveTarget;
+    public Transform moveTarget1;
+    public Transform moveTarget2;
 
     private int stageId = Variables.LoadTable.StageId;
     private int waveId = 1;
@@ -118,8 +119,8 @@ public class MonsterSpawner : MonoBehaviour
             if (stageManager)
             {
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
-                monsterGo.moveTarget = moveTarget;
-                monsterGo.ResetMonsterData();    
+                monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(moveTarget1.position, moveTarget2.position);
+                monsterGo.ResetMonsterData();
             }
             
             while (Time.timeScale == 0)

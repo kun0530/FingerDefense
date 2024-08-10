@@ -44,4 +44,10 @@ public static class Utils
 
         return 1f;
     }
+
+    public static Vector3 GetRandomPositionBetweenTwoPositions(Vector3 pos1, Vector3 pos2)
+    {
+        var randomValue = Random.Range(0f, 1f);
+        return Vector3.Lerp(pos1, pos2, randomValue);
+    }
 }
