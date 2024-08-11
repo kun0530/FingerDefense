@@ -9,8 +9,10 @@ public class BlackHole : MonoBehaviour
 
     public float pullSpeed = 10f;  // 블랙홀로 빨아들이는 속도
     public float rotateSpeed = 200f;  // 오브젝트가 블랙홀 주위를 회전하는 속도 deg/sec
+    public float threshold = 0.1f;
 
-    private List<GameObject> monsters;
+    private HashSet<MonsterController> targetMonsters = new();
+    private HashSet<MonsterController> nonTargetMonsters = new();
 
     private void OnEnable()
     {
@@ -18,55 +20,112 @@ public class BlackHole : MonoBehaviour
         // monsters = targeting.FindTargets();
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        // timer += Time.deltaTime;
-        // if (timer >= lifeTime)
-        // {
-        //     Destroy(gameObject);
-        // }
+        foreach (var monster in targetMonsters)
+        {
+            monster.transform.rotation = Quaternion.Euler(Vector3.zero);
+            monster.TryTransitionState<PatrolState>();
+        }
+
+        targetMonsters.Clear();
+        nonTargetMonsters.Clear();
     }
 
-    // void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (!other.TryGetComponent<MonsterController>(out var monster)
-    //         || !monster.IsTargetable)
-    //         return;
+    private void Update()
+    {
+        UpdateTargetMonsters();
+        UpdateNonTargetMonsters();
+    }
 
-    //     var buff = new BuffData
-    //     {
-    //         LastingTime = 10f
-    //     };
-    //     buff.BuffActions.Add((1, -100));
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.TryGetComponent<MonsterController>(out var monster))
+            return;
+        if (monster.IsTargetable)
+            AddTargetMonsters(monster);
+        else
+            nonTargetMonsters.Add(monster);
+    }
 
-    //     monster.TakeBuff(buff);
-    // }
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.TryGetComponent<MonsterController>(out var monster))
+            return;
 
-    void OnTriggerStay2D(Collider2D other)
+        if (nonTargetMonsters.Contains(monster))
+            nonTargetMonsters.Remove(monster);
+    }
+
+    private void UpdateTargetMonsters()
+    {
+        List<MonsterController> removeMonsters = new ();
+        foreach (var monster in targetMonsters)
+        {
+            if (!monster.IsTargetable)
+            {
+                removeMonsters.Add(monster);
+                continue;
+            }
+            RotateAndPullObject(monster.gameObject);
+        }
+
+        foreach (var monster in removeMonsters)
+        {
+            targetMonsters.Remove(monster);
+            monster.transform.rotation = Quaternion.Euler(Vector3.zero);
+        }
+    }
+
+    private void UpdateNonTargetMonsters()
+    {
+        List<MonsterController> removeMonsters = new ();
+        foreach (var monster in nonTargetMonsters)
+        {
+            if (monster.IsTargetable)
+            {
+                removeMonsters.Add(monster);
+                AddTargetMonsters(monster);
+            }
+        }
+
+        foreach (var monster in removeMonsters)
+        {
+            nonTargetMonsters.Remove(monster);
+        }
+    }
+
+    private void AddTargetMonsters(MonsterController monster)
+    {
+        targetMonsters.Add(monster);
+        monster.TryTransitionState<IdleState<MonsterController>>();
+        monster.monsterAni.CurrentTrackEntry.TimeScale = 0f;
+    }
+
+    private void RemoveTargetMonsters(MonsterController monster)
+    {
+        targetMonsters.Remove(monster);
+        monster.transform.rotation = Quaternion.Euler(Vector3.zero);
+        monster.TryTransitionState<PatrolState>();
+    }
+
+    private void RotateAndPullObject(GameObject other)
     {
         if (!other.TryGetComponent<MonsterController>(out var monster)
             || !monster.IsTargetable)
             return;
 
         Vector2 center = transform.position;
-        Vector2 target = other.transform.position;
 
-        var rotatePos = Utils.RotatePosition(center, target, rotateSpeed * Time.deltaTime);
+        if (Vector2.Distance(center, other.transform.position) > threshold)
+        {
+            Vector3 pullVec = (center - (Vector2)other.transform.position).normalized * pullSpeed * Time.deltaTime;
+            other.transform.position += pullVec;
+        }
+
+        var rotatePos = Utils.RotatePosition(center, other.transform.position, rotateSpeed * Time.deltaTime);
         other.transform.position = rotatePos;
 
-        Vector3 pullVec = (center - rotatePos).normalized * pullSpeed * Time.deltaTime;
-        other.transform.position += pullVec;
-
-        // var angle = rotateSpeed * Time.deltaTime * Mathf.Deg2Rad;
         // other.transform.RotateAround(transform.position, Vector3.forward, 360f * Time.deltaTime);
     }
-
-    // void OnTriggerExit2D(Collider2D other)
-    // {
-    //     if (!other.TryGetComponent<MonsterController>(out var monster)
-    //         || !monster.IsTargetable)
-    //         return;
-
-    //     other.transform.rotation = Quaternion.Euler(Vector3.zero);
-    // }
 }
