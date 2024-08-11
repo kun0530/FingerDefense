@@ -43,31 +43,38 @@ public class GachaSystem : MonoBehaviour
          GachaData result = GetRandomGachaResult();
          if (result != null)
          {
-            bool isNew = !GameManager.instance.ObtainedGachaIDs.Contains(result.Id);
+            bool isNew = !GameManager.instance.ResourceManager.ObtainedGachaIDs.Contains(result.Id);
                 
             if (isNew)
             {
-               GameManager.instance.ObtainedGachaIDs.Add(result.Id);
+               GameManager.instance.ResourceManager.ObtainedGachaIDs.Add(result.Id);
                Logger.Log($"Obtained Gacha ID: {result.Id}");
-               GameManager.instance.SaveGameData();
+               GameManager.instance.ResourceManager.SaveData();
+                
+               // 새로운 캐릭터가 추가되었으므로, DeckSlotController를 새로고침
+               DeckSlotController deckSlotController = FindObjectOfType<DeckSlotController>();
+               if (deckSlotController != null)
+               {
+                  deckSlotController.RefreshCharacterSlots();
+               }
             }
             else
             {
                switch (gachaTable.table[result.Id].Grade)
                {
                   case 0:
-                     GameManager.instance.Mileage += 100;
+                     GameManager.instance.ResourceManager.Mileage += 100;
                      break;
                   case 1:
-                     GameManager.instance.Mileage += 300;
+                     GameManager.instance.ResourceManager.Mileage += 300;
                      break;
                   case 2:
-                     GameManager.instance.Mileage += 500;
+                     GameManager.instance.ResourceManager.Mileage += 500;
                      break;   
                }
-               GameManager.instance.SaveGameData();
+               GameManager.instance.ResourceManager.SaveData();
             }
-            SpawnResultSlot(result,isNew);
+            SpawnResultSlot(result, isNew);
          }
       }
    }

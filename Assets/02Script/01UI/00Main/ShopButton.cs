@@ -37,6 +37,7 @@ public class ShopButton : MonoBehaviour
 
     private StringTable shopTable;
     public ShopPayCheckManager shopPayCheck;
+    
     private void Start()
     {
         shopTable = DataTableManager.Get<StringTable>(DataTableIds.String);

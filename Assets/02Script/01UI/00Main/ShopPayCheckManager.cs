@@ -8,39 +8,168 @@ public class ShopPayCheckManager : MonoBehaviour
 {
     private Dictionary<int, ShopButtonType> buttonInfoDict = new Dictionary<int, ShopButtonType>();
 
+    private readonly Dictionary<int, int> buttonToItemIdMap = new Dictionary<int, int>
+    {
+        {0, 8005},
+        {1, 8006},
+        {2, 8007},
+        {3, 8008},
+        {4, 8009},
+        {5, 8010},
+        {6, 8011},
+        {7, 8012},
+        {8, 8013},
+        {9, 8014},
+        {10, 8015},    
+    };
+    
+    public GameObject checkUIPanel;
+    
+    [Header("처음에 클릭하면 나오는 확인 패널")]
     public Button confirmButton;
     public Button cancelButton;
     public GameObject confirmPanel;
+    
+    [Header("진짜 구매할건지 여부를 묻는 패널")]
     public GameObject extraConfirmPanel;
     public Button extraConfirmButton;
     public Button extraCancelButton;
     public TextMeshProUGUI resultText;
-    public GameObject checkUIPanel;
-
+    
+    [Header("아이템 UI 확인 패널")]
+    public GameObject itemConfirmPanel;
+    public Button itemConfirmButton;
+    public TextMeshProUGUI itemCountText;
+    public TextMeshProUGUI itemAmountText;
+    public Slider itemSlider;
+    
     private ShopButtonType currentButtonType;
     private int currentButtonNumber;
     private StringTable shopTable;
+    private ItemTable itemTable;
     private GameManager gameManager;
+    
+    [Header("가챠 시스템")]
     public GachaSystem gachaSystem;
+
+    private void Awake()
+    {
+        itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
+    }
 
     private void Start()
     {
         shopTable = DataTableManager.Get<StringTable>(DataTableIds.String);
+        
         confirmButton.onClick.AddListener(OnConfirmButtonClicked);
         cancelButton.onClick.AddListener(OnCancelButtonClicked);
         extraCancelButton.onClick.AddListener(OnExtraCancelButtonClicked);
         extraConfirmButton.onClick.AddListener(OnExtraConfirmButtonClicked);
+        
+        itemSlider.onValueChanged.AddListener(OnItemSliderValueChanged);
+        itemConfirmButton.onClick.AddListener(OnItemConfirmButtonClicked);
+        
+        itemSlider.minValue = 1;
+        itemSlider.maxValue = 99;
 
         gameManager = GameManager.instance;
     }
+    private void OnItemSliderValueChanged(float value)
+    {
+        var itemCount = (int)value;
 
+        if (buttonToItemIdMap.TryGetValue(currentButtonNumber, out var itemId))
+        {
+            var itemData = itemTable.Get(itemId);
+            if (itemData != null)
+            {
+                var itemPrice = itemData.Price;
+                var itemCost = CalculateItemCost(itemCount, itemPrice);
+
+                itemCountText.text = $"{itemCount}개";
+                itemAmountText.text = $"{itemCost} 골드";
+            }
+            else
+            {
+                Logger.LogError($"Item data for ID {itemId} is null.");
+            }
+        }
+        else
+        {
+            Logger.LogError($"No item ID mapped for button number {currentButtonNumber}.");
+        }
+    }
+    private int CalculateItemCost(int itemCount, int itemBasePrice)
+    {
+        return itemCount * itemBasePrice; // 아이템 개수 * 아이템 가격
+    }
+    private void OnItemConfirmButtonClicked()
+    {
+        if (buttonToItemIdMap.TryGetValue(currentButtonNumber, out var itemId))
+        {
+            var itemData = itemTable.Get(itemId);
+            if (itemData != null)
+            {
+                var itemCount = (int)itemSlider.value;
+                var itemPrice = itemData.Price;
+                var itemCost = CalculateItemCost(itemCount, itemPrice);
+
+                if (gameManager.ResourceManager.Gold >= itemCost)
+                {
+                    gameManager.ResourceManager.Gold -= itemCost;
+                    gameManager.ResourceManager.AddItem(itemId, itemCount); 
+                    ShowPurchaseResult($"아이템 {itemCount}개를 {itemCost} 골드로 구매했습니다.");
+                }
+                else
+                {
+                    ShowPurchaseResult("골드가 부족하여 아이템을 구매할 수 없습니다.");
+                }
+                itemConfirmPanel.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError($"Item data for ID {itemId} is null.");
+            }
+        }
+        else
+        {
+            Debug.LogError($"No item ID mapped for button number {currentButtonNumber}.");
+        }
+    }
     public void HandleButtonClicked(ShopButtonType buttonType, int buttonNumber)
     {
         currentButtonType = buttonType;
         currentButtonNumber = buttonNumber;
         buttonInfoDict[buttonNumber] = buttonType;
-        
-        confirmPanel.SetActive(true);
+
+        if (buttonType == ShopButtonType.Item)
+        {
+            if (buttonToItemIdMap.TryGetValue(buttonNumber, out var itemId))
+            {
+                var itemData = itemTable.Get(itemId);
+                if (itemData != null)
+                {
+                    itemSlider.interactable = true;
+                    itemSlider.value = 1;
+                    OnItemSliderValueChanged(itemSlider.value);
+
+                    checkUIPanel.SetActive(true);
+                    itemConfirmPanel.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogError($"Item data for ID {itemId} is null.");
+                }
+            }
+            else
+            {
+                Debug.LogError($"No item ID mapped for button number {buttonNumber}.");
+            }
+        }
+        else
+        {
+            confirmPanel.SetActive(true);
+        }
     }
 
     private void OnConfirmButtonClicked()
@@ -144,15 +273,15 @@ public class ShopPayCheckManager : MonoBehaviour
     private string GetTicketFailureMessage(int buttonNumber, out bool showConfirmButton)
     {
         var requiredTickets = buttonNumber == 1 ? 1 : 10;
-        var ticketsNeeded = requiredTickets - gameManager.Ticket;
+        var ticketsNeeded = requiredTickets - gameManager.ResourceManager.Ticket;
         var diamondsNeeded = ticketsNeeded * 160;
 
-        if (gameManager.Ticket < requiredTickets && gameManager.Diamond >= diamondsNeeded)
+        if (gameManager.ResourceManager.Ticket < requiredTickets && gameManager.ResourceManager.Diamond >= diamondsNeeded)
         {
             showConfirmButton = true;
             return $"캐릭터 모집 티켓의 개수가 부족합니다. {ticketsNeeded}개 만큼 {diamondsNeeded} 다이아로 구매해서 사용하시겠습니까?";
         }
-        if (gameManager.Ticket < requiredTickets && gameManager.Diamond < diamondsNeeded)
+        if (gameManager.ResourceManager.Ticket < requiredTickets && gameManager.ResourceManager.Diamond < diamondsNeeded)
         {
             showConfirmButton = false;
             extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
@@ -328,7 +457,7 @@ public class ShopPayCheckManager : MonoBehaviour
             5 => 5000,
             _ => 0,
         };
-        return gameManager.Diamond >= diamondCostForGold;
+        return gameManager.ResourceManager.Diamond >= diamondCostForGold;
     }
 
     private bool CheckTicketResources(int buttonNumber, out bool needsExtraConfirmation)
@@ -336,14 +465,14 @@ public class ShopPayCheckManager : MonoBehaviour
         needsExtraConfirmation = false;
         switch (buttonNumber)
         {
-            case 1 when gameManager.Ticket >= 1:
+            case 1 when gameManager.ResourceManager.Ticket >= 1:
                 return true;
-            case 1 when gameManager.Diamond >= 160:
+            case 1 when gameManager.ResourceManager.Diamond >= 160:
                 needsExtraConfirmation = true;
                 return false;
-            case 2 when gameManager.Ticket >= 10:
+            case 2 when gameManager.ResourceManager.Ticket >= 10:
                 return true;
-            case 2 when gameManager.Ticket >= 1 && gameManager.Diamond >= (10 - gameManager.Ticket) * 160:
+            case 2 when gameManager.ResourceManager.Ticket >= 1 && gameManager.ResourceManager.Diamond >= (10 - gameManager.ResourceManager.Ticket) * 160:
                 needsExtraConfirmation = true;
                 return false;
             default:
@@ -363,7 +492,7 @@ public class ShopPayCheckManager : MonoBehaviour
             5 => 8080,
             _ => 0,
         };
-        gameManager.Diamond += diamondsToAdd;
+        gameManager.ResourceManager.Diamond += diamondsToAdd;
         extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
         return true;
     }
@@ -374,8 +503,8 @@ public class ShopPayCheckManager : MonoBehaviour
         {
             switch (buttonNumber)
             {
-                case 1 when gameManager.Ticket < 1 && gameManager.Diamond >= 160:
-                case 2 when gameManager.Ticket < 10 && gameManager.Diamond >= (10 - gameManager.Ticket) * 160:
+                case 1 when gameManager.ResourceManager.Ticket < 1 && gameManager.ResourceManager.Diamond >= 160:
+                case 2 when gameManager.ResourceManager.Ticket < 10 && gameManager.ResourceManager.Diamond >= (10 - gameManager.ResourceManager.Ticket) * 160:
                     return true;
             }
         }
@@ -390,36 +519,41 @@ public class ShopPayCheckManager : MonoBehaviour
             case ShopButtonType.Ticket:
                 if (buttonNumber == 1)
                 {
-                    if (gameManager.Ticket >= 1)
+                    if (gameManager.ResourceManager.Ticket >= 1)
                     {
-                        gameManager.RemoveTickets(1);
+                        gameManager.ResourceManager.Ticket -= 1;
+                        gameManager.ResourceManager.NotifyObservers(ResourceType.Ticket, gameManager.ResourceManager.Ticket);
                         gachaSystem.PerformGacha(1);
                     }
-                    else if (gameManager.Diamond >= 160 && gameManager.Ticket == 0)
+                    else if (gameManager.ResourceManager.Diamond >= 160 && gameManager.ResourceManager.Ticket == 0)
                     {
-                        gameManager.RemoveDiamonds(160);
+                        gameManager.ResourceManager.Diamond -= 160;
+                        gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
                         gachaSystem.PerformGacha(1);
                     }
                 }
                 else if (buttonNumber == 2)
                 {
-                    if (gameManager.Ticket is 10 or > 10)
+                    if (gameManager.ResourceManager.Ticket is 10 or > 10)
                     {
-                        gameManager.RemoveTickets(10);
+                        gameManager.ResourceManager.Ticket -= 10;
+                        gameManager.ResourceManager.NotifyObservers(ResourceType.Ticket, gameManager.ResourceManager.Ticket);
                         gachaSystem.PerformGacha(10);    
                     }
                     else
                     {
-                        int ticketsNeeded = 10 - gameManager.Ticket;
+                        int ticketsNeeded = 10 - gameManager.ResourceManager.Ticket;
                         diamondCost = ticketsNeeded * 160;
 
-                        if (gameManager.Diamond >= diamondCost)
+                        if (gameManager.ResourceManager.Diamond >= diamondCost)
                         {
-                            if (gameManager.Ticket > 0)
+                            if (gameManager.ResourceManager.Ticket > 0)
                             {
-                                gameManager.RemoveTickets(gameManager.Ticket);
+                                gameManager.ResourceManager.Ticket-=gameManager.ResourceManager.Ticket;
+                                gameManager.ResourceManager.NotifyObservers(ResourceType.Ticket, gameManager.ResourceManager.Ticket);
                             }
-                            gameManager.RemoveDiamonds(diamondCost);
+                            gameManager.ResourceManager.Diamond -= diamondCost;
+                            gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
                             gachaSystem.PerformGacha(10);
                         }
                     }
@@ -436,7 +570,8 @@ public class ShopPayCheckManager : MonoBehaviour
                     5 => 8080,
                     _ => 0,
                 };
-                gameManager.Diamond += diamondsToAdd;
+                gameManager.ResourceManager.Diamond += diamondsToAdd;
+                gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
                 ShowPurchaseResult($"{diamondsToAdd} 다이아를 구매했습니다.");
                 break;
             
@@ -462,11 +597,12 @@ public class ShopPayCheckManager : MonoBehaviour
                     _ => 0,
                 };
 
-                if (gameManager.Diamond >= diamondCost)
+                if (gameManager.ResourceManager.Diamond >= diamondCost)
                 {
-                    gameManager.RemoveDiamonds(diamondCost); // 다이아 차감
-                    gameManager.AddGold(goldAmount); // 골드 추가
-                    
+                    gameManager.ResourceManager.Diamond -= diamondCost; // 다이아 차감
+                    gameManager.ResourceManager.Gold +=goldAmount; // 골드 추가
+                    gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
+                    gameManager.ResourceManager.NotifyObservers(ResourceType.Gold, gameManager.ResourceManager.Gold);
                     var messageId = GetSuccessMessageId(buttonType, buttonNumber);
                     var successMessage = shopTable.Get(messageId.ToString());
                 

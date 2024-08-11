@@ -21,7 +21,7 @@ public class DeckSlotController : MonoBehaviour
     public Button startButton;
     public Button closeButton;
     
-    
+    public GameManager gameManager;
     
     private void Awake()
     {
@@ -30,6 +30,7 @@ public class DeckSlotController : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameManager.instance;
         RefreshCharacterSlots();
         
         startButton.onClick.AddListener(() =>
@@ -48,13 +49,16 @@ public class DeckSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (characterSlots.Count == 0 && filterSlots.Count == 0)
-        {
-            RefreshCharacterSlots();
-        }  
+        LoadCharacterSelection();
+        RefreshCharacterSlots();
     }
 
-    private void RefreshCharacterSlots()
+    private void OnDisable()
+    {
+        SaveCharacterSelection();
+    }
+
+    public void RefreshCharacterSlots()
     {
         foreach (var slot in filterSlots)
         {
@@ -86,9 +90,9 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateFilteringSlots()
     {
-        if (GameManager.instance == null) return;
         
-        var obtainedGachaIds = GameManager.instance.ObtainedGachaIDs;
+        
+        var obtainedGachaIds = GameManager.instance.ResourceManager.ObtainedGachaIDs;
         Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
         foreach (var characterId in obtainedGachaIds)
         {

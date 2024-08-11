@@ -22,7 +22,7 @@ public class TutorialActive : TutorialBase
     public override void Execute(TutorialController controller)
     {
         controller.SetNextTutorial();
-        gameManager.NicknameCheck = true;
+        gameManager.ResourceManager.NicknameCheck = true;
     }
 
     public override void Exit()
