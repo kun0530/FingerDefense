@@ -33,6 +33,7 @@ public class ItemManager : MonoBehaviour
                 Logger.LogError($"해당 아이템 ID에 대응하는 아이템이 폴더에 존재하지 않습니다: {itemId.itemId}");
                 continue;
             }
+            item.Init();
             item.id = itemId.itemId;
             item.count = itemId.itemCount;
             items.Add(item);
