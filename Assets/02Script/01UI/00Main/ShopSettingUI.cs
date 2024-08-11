@@ -20,7 +20,7 @@ public class ShopSettingUI : MonoBehaviour
     
     public TextMeshProUGUI[] tapMenuTexts;
     
-    private ShopTable shopTable;
+    private StringTable shopTable;
     
     private bool dataLoaded = false;
     private void OnEnable()
@@ -35,7 +35,7 @@ public class ShopSettingUI : MonoBehaviour
     }
     private void LoadData()
     {
-        shopTable = DataTableManager.Get<ShopTable>(DataTableIds.Shop);
+        shopTable = DataTableManager.Get<StringTable>(DataTableIds.String);
         if (shopTable == null)
         {
             Logger.LogError("ShopTable is null");
@@ -45,42 +45,42 @@ public class ShopSettingUI : MonoBehaviour
     }
     private void SetTextElements()
     {
-        tapMenuTexts[0].text=shopTable.Get(90571);
-        tapMenuTexts[1].text=shopTable.Get(90581);
-        tapMenuTexts[2].text=shopTable.Get(90591);
-        tapMenuTexts[4].text=shopTable.Get(90601);
+        tapMenuTexts[0].text=shopTable.Get(90581.ToString());
+        tapMenuTexts[1].text=shopTable.Get(90591.ToString());
+        tapMenuTexts[2].text=shopTable.Get(90601.ToString());
+        tapMenuTexts[4].text=shopTable.Get(90611.ToString());
         
-        diamondPayTexts[0].text=shopTable.Get(90051);
-        diamondPayTexts[1].text=shopTable.Get(90061);
-        diamondPayTexts[2].text=shopTable.Get(90081);
-        diamondPayTexts[3].text=shopTable.Get(90101);
-        diamondPayTexts[4].text=shopTable.Get(90121);
-        diamondPayTexts[5].text=shopTable.Get(90141);
+        diamondPayTexts[0].text=shopTable.Get(90051.ToString());
+        diamondPayTexts[1].text=shopTable.Get(90061.ToString());
+        diamondPayTexts[2].text=shopTable.Get(90081.ToString());
+        diamondPayTexts[3].text=shopTable.Get(90101.ToString());
+        diamondPayTexts[4].text=shopTable.Get(90121.ToString());
+        diamondPayTexts[5].text=shopTable.Get(90141.ToString());
         
-        goldPayTexts[0].text=shopTable.Get(90161);
-        goldPayTexts[1].text=shopTable.Get(90171);
-        goldPayTexts[2].text=shopTable.Get(90181);
-        goldPayTexts[3].text=shopTable.Get(90191);
-        goldPayTexts[4].text=shopTable.Get(90201);
-        goldPayTexts[5].text=shopTable.Get(90211);
+        goldPayTexts[0].text=shopTable.Get(90161.ToString());
+        goldPayTexts[1].text=shopTable.Get(90171.ToString());
+        goldPayTexts[2].text=shopTable.Get(90181.ToString());
+        goldPayTexts[3].text=shopTable.Get(90191.ToString());
+        goldPayTexts[4].text=shopTable.Get(90201.ToString());
+        goldPayTexts[5].text=shopTable.Get(90211.ToString());
         
-        itemTitleTexts[0].text=shopTable.Get(90221);
-        itemTitleTexts[1].text=shopTable.Get(90231);
-        itemTitleTexts[2].text=shopTable.Get(90241);
-        itemTitleTexts[3].text=shopTable.Get(90251);
-        itemTitleTexts[4].text=shopTable.Get(90261);
-        itemTitleTexts[5].text=shopTable.Get(90271);
-        itemTitleTexts[6].text=shopTable.Get(90281);
-        itemTitleTexts[7].text=shopTable.Get(90291);
-        itemTitleTexts[8].text=shopTable.Get(90301);
-        itemTitleTexts[9].text=shopTable.Get(90311);
-        itemTitleTexts[10].text=shopTable.Get(90321);
+        itemTitleTexts[0].text=shopTable.Get(90221.ToString());
+        itemTitleTexts[1].text=shopTable.Get(90231.ToString());
+        itemTitleTexts[2].text=shopTable.Get(90241.ToString());
+        itemTitleTexts[3].text=shopTable.Get(90251.ToString());
+        itemTitleTexts[4].text=shopTable.Get(90261.ToString());
+        itemTitleTexts[5].text=shopTable.Get(90271.ToString());
+        itemTitleTexts[6].text=shopTable.Get(90281.ToString());
+        itemTitleTexts[7].text=shopTable.Get(90291.ToString());
+        itemTitleTexts[8].text=shopTable.Get(90301.ToString());
+        itemTitleTexts[9].text=shopTable.Get(90311.ToString());
+        itemTitleTexts[10].text=shopTable.Get(90321.ToString());
         
-        diamondBonusTexts[1].text=shopTable.Get(90071);
-        diamondBonusTexts[2].text=shopTable.Get(90091);
-        diamondBonusTexts[3].text=shopTable.Get(90111);
-        diamondBonusTexts[4].text=shopTable.Get(90131);
-        diamondBonusTexts[5].text=shopTable.Get(90151);
+        diamondBonusTexts[1].text=shopTable.Get(90071.ToString());
+        diamondBonusTexts[2].text=shopTable.Get(90091.ToString());
+        diamondBonusTexts[3].text=shopTable.Get(90111.ToString());
+        diamondBonusTexts[4].text=shopTable.Get(90131.ToString());
+        diamondBonusTexts[5].text=shopTable.Get(90151.ToString());
     }
 
 

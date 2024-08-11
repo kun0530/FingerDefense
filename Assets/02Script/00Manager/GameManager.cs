@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     private int ticket;
     private int mileage;
     private List<int> obtainedGachaIDs = new List<int>();
-    
+    private List<(int itemId, int itemCount)> items = new List<(int, int)>();
     public event Action OnResourcesChanged;
     
     private void Awake()
@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
         ticket = gameData.Ticket;
         mileage = gameData.Mileage;
         obtainedGachaIDs = gameData.ObtainedGachaIDs;
+        items = gameData.ItemId;
         
         OnResourcesChanged?.Invoke();
     }
@@ -99,7 +100,8 @@ public class GameManager : MonoBehaviour
             Diamond = diamond,
             Ticket = ticket,
             Mileage = mileage,
-            ObtainedGachaIDs = obtainedGachaIDs
+            ObtainedGachaIDs = obtainedGachaIDs,
+            ItemId = items
         };
         dataManager.SaveFile("GameData.json", gameData);
     }
@@ -307,10 +309,45 @@ public class GameManager : MonoBehaviour
     public void AddDiamonds(int amount)
     {
         Diamond += amount;
+        SaveGameData();
+        OnResourcesChanged?.Invoke();
     }
 
     public void RemoveDiamonds(int amount)
     {
         Diamond -= amount;
+        SaveGameData();
+        OnResourcesChanged?.Invoke();
+    }
+    
+    public void AddItem(int itemId, int itemCount)
+    {
+        var item = items.Find(i => i.itemId == itemId);
+        if (item != default)
+        {
+            int index = items.IndexOf(item);
+            items[index] = (itemId, item.itemCount + itemCount);
+        }
+        else
+        {
+            items.Add((itemId, itemCount));
+        }
+
+        // 저장 로직 추가
+        SaveGameData();
+    }
+
+    public void RemoveGold(int totalCost)
+    {
+        Gold -= totalCost;
+        if (Gold < 0) Gold = 0;
+        SaveGameData();
+    }
+
+    public void AddGold(int goldAmount)
+    {
+        Gold += goldAmount;
+        SaveGameData();
+        OnResourcesChanged?.Invoke();
     }
 }
