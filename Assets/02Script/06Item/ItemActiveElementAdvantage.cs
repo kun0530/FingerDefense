@@ -9,23 +9,23 @@ public class ItemActiveElementAdvantage : ActiveItem
     {
         base.Init();
 
-        if (StageManager)
-            StageManager.isPlayerElementAdvantage = false;
+        if (StageMgr)
+            StageMgr.isPlayerElementAdvantage = false;
     }
 
     public override void UseItem()
     {
         base.UseItem();
 
-        if (StageManager)
-            StageManager.isPlayerElementAdvantage = true;
+        if (StageMgr)
+            StageMgr.isPlayerElementAdvantage = true;
     }
 
     public override void CancelItem()
     {
         base.CancelItem();
 
-        if (StageManager)
-            StageManager.isPlayerElementAdvantage = false;
+        if (StageMgr)
+            StageMgr.isPlayerElementAdvantage = false;
     }
 }

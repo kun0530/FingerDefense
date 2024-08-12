@@ -140,7 +140,11 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
 
     private void Die(TrackEntry trackEntry)
     {
-        spawner?.RemoveActiveCharacter(this);
+        if (spawner)
+            spawner.RemoveActiveCharacter(this);
+        else
+            Destroy(gameObject);
+            
         if (deathTrackEntry != null)
             deathTrackEntry.Complete -= Die;
     }

@@ -10,7 +10,7 @@ public class ItemActiveRestoreCastle : ActiveItem
 
     public override void UseItem()
     {
-        StageManager?.RestoreCastle(restoreCastleValue, isPercentage);
+        StageMgr?.RestoreCastle(restoreCastleValue, isPercentage);
         base.UseItem();
     }
 }
