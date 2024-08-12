@@ -13,7 +13,7 @@ public class PlayerAttackBehavior : MonoBehaviour
     private CharacterSpineAni characterAni;
     private bool isAnimationEnded = true;
 
-    private TrackEntry attactTrackEntry;
+    private TrackEntry attackTrackEntry;
     private PlayerCharacterController controller;
 
     private void Awake()
@@ -62,18 +62,18 @@ public class PlayerAttackBehavior : MonoBehaviour
 
     private void SkillStart()
     {
-        attactTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
-        if (attactTrackEntry != null)
-            attactTrackEntry.Complete += SkillEnd;
+        attackTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
+        if (attackTrackEntry != null)
+            attackTrackEntry.Complete += SkillEnd;
         isAnimationEnded = false;
     }
 
     private void SkillEnd(TrackEntry entry)
     {
-        if (attactTrackEntry != null)
-            attactTrackEntry.Complete -= SkillEnd;
+        if (attackTrackEntry != null)
+            attackTrackEntry.Complete -= SkillEnd;
 
-        if (attactTrackEntry == characterAni.CurrentTrackEntry)
+        if (attackTrackEntry == characterAni.CurrentTrackEntry)
             characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
 
         isAnimationEnded = true;

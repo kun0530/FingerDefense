@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
-    private List<(int itemId, int itemCount)> itemIds = new();
-
     private ItemTable itemTable;
 
     public int maxItemCount = 2;
@@ -19,7 +17,7 @@ public class ItemManager : MonoBehaviour
     private void Awake()
     {
         itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
-        itemIds = Variables.LoadTable.ItemId;
+        var itemIds = Variables.LoadTable.ItemId;
 
         foreach (var itemId in itemIds)
         {
@@ -35,10 +33,13 @@ public class ItemManager : MonoBehaviour
                 Logger.LogError($"해당 아이템 ID에 대응하는 아이템이 폴더에 존재하지 않습니다: {itemId.itemId}");
                 continue;
             }
+            item.Init();
             item.id = itemId.itemId;
             item.count = itemId.itemCount;
             items.Add(item);
         }
+
+        itemIds.Clear();
     }
 
     private void OnEnable()

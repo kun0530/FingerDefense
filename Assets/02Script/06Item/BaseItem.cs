@@ -26,6 +26,13 @@ public abstract class BaseItem : ScriptableObject
 
     public virtual bool IsPassive { get => true; }
 
+    public virtual void Init()
+    {
+        stageManager = null;
+        button = null;
+        count = 0;
+    }
+
     public abstract void UseItem();
     public virtual void CancelItem() { }
     public virtual void UpdateItem() { }

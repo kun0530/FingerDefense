@@ -250,9 +250,9 @@ public class PlayerCharacterSpawner : MonoBehaviour
         slotButton?.ActiveButton(false);
         while (timer <= respawnTime)
         {
-            await UniTask.Yield();
             timer += Time.deltaTime;
             slotButton?.SetFillAmountBackground(1f - timer / respawnTime);
+            await UniTask.Yield();
         }
         slotButton?.ActiveButton(true);
     }

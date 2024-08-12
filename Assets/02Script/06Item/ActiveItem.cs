@@ -14,6 +14,16 @@ public abstract class ActiveItem : BaseItem
     private bool isCooledDown = true;
     private float coolDownTimer = 0f;
 
+    public override void Init()
+    {
+        base.Init();
+        
+        isItemUsed = false;
+        durationTimer = 0f;
+        isCooledDown = true;
+        coolDownTimer = 0f;
+    }
+
     public override void UseItem()
     {
         count--;

@@ -12,7 +12,7 @@ public enum StageState
 
 public class StageManager : MonoBehaviour
 {
-    public float CastleMaxHp { get; private set; } = 100f;
+    public float CastleMaxHp { get; private set; } = 500f; // To-Do: 추후 변경
     private float castleHp;
     private float CastleHp
     {

@@ -44,4 +44,27 @@ public static class Utils
 
         return 1f;
     }
+
+    public static Vector3 GetRandomPositionBetweenTwoPositions(Vector3 pos1, Vector3 pos2)
+    {
+        var randomValue = Random.Range(0f, 1f);
+        return Vector3.Lerp(pos1, pos2, randomValue);
+    }
+
+    public static Vector2 RotatePosition(Vector2 center, Vector2 target, float angle, bool isRadian = false)
+    {
+        var targetVec = center - target;
+
+        if (!isRadian)
+            angle *= Mathf.Deg2Rad;
+        float cosTheta = Mathf.Cos(angle);
+        float sinTheta = Mathf.Sin(angle);
+
+        float targetNewVecX = cosTheta * targetVec.x - sinTheta * targetVec.y; 
+        float targetNewVecY = sinTheta * targetVec.x + cosTheta * targetVec.y;
+
+        Vector2 newPos = center - new Vector2(targetNewVecX, targetNewVecY);
+
+        return newPos;
+    }
 }
