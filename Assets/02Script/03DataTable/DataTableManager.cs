@@ -16,6 +16,7 @@ public static class DataTableIds
     public static readonly string Item = "ItemTable";
     public static readonly string Shop = "ShopTable";
     public static readonly string Gacha = "GachaTable";
+    public static readonly string Upgrade = "UpgradeTable";
 
 }
 
@@ -68,6 +69,11 @@ public static class DataTableManager
         GachaTable gachaTable = new GachaTable();
         gachaTable.Load(DataTableIds.Gacha);
         tables.Add(DataTableIds.Gacha, gachaTable);
+        
+        UpgradeTable upgradeTable = new UpgradeTable();
+        upgradeTable.Load(DataTableIds.Upgrade);
+        tables.Add(DataTableIds.Upgrade, upgradeTable);
+        
     }
 
     // public static StringTable GetStringTable()

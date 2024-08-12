@@ -30,8 +30,16 @@ public class CharacterSlotUI : MonoBehaviour
     private void Awake()
     {
         MapSkillsToIndices();
-        
-        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
+    }
+
+    private void Start()
+    {
+          
+    }
+
+    private void OnEnable()
+    {
+        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);  
     }
 
     private void MapSkillsToIndices()
