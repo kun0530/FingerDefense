@@ -270,19 +270,27 @@ public class DeckSlotController : MonoBehaviour
             if (characterId != 0)
             {
                 var characterData = playerCharacterTable.Get(characterId);
-                var slot = characterSlots[i];
-                slot.SetCharacterSlot(characterData);
-                slot.ChoicePanel.SetActive(false);
-                addedCharacters.Add(characterId);
-                var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
-                if (originalSlot != null)
+        
+                // Index 체크 추가
+                if (i < characterSlots.Count)
                 {
-                    originalSlot.ChoiceButton.interactable = false;
-                    activeChoicePanelSlots.Add(originalSlot);
+                    var slot = characterSlots[i];
+                    slot.SetCharacterSlot(characterData);
+                    slot.ChoicePanel.SetActive(false);
+                    addedCharacters.Add(characterId);
+                    var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
+                    if (originalSlot != null)
+                    {
+                        originalSlot.ChoiceButton.interactable = false;
+                        activeChoicePanelSlots.Add(originalSlot);
+                    }
+                }
+                else
+                {
+                    Logger.LogWarning($"Character slot index {i} is out of range. Skipping slot assignment.");
                 }
             }
         }
-
         UpdateChoicePanels();
         SortCharacterSlots();
     }
