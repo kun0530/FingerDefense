@@ -54,17 +54,20 @@ public class ItemSlotController : MonoBehaviour
 
     private void CreateItemSlots()
     {
-        var filteredItems = itemTable.table.Values.Where(item => item.Purpose == 1).ToList();
+        var purchasedItems = GameManager.instance.ResourceManager.Items;
 
-        foreach (var item in filteredItems)
+        foreach (var purchasedItem in purchasedItems)
         {
-            var itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
-
-            if (assetListTable.table.TryGetValue(item.IconNo, out var assetPath))
+            if (itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
             {
-                itemSlot.Setup(item, assetPath, item.Limit);
-                itemSlot.onClickItemSlot = clickedSlot => HandleItemSlotClick(clickedSlot);
-                itemSlots.Add(itemSlot); // 생성된 아이템 슬롯을 리스트에 추가
+                var itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
+
+                if (assetListTable.table.TryGetValue(itemData.IconNo, out var assetPath))
+                {
+                    itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
+                    itemSlot.onClickItemSlot = HandleItemSlotClick;
+                    itemSlots.Add(itemSlot); // 생성된 아이템 슬롯을 리스트에 추가
+                }
             }
         }
     }
@@ -83,15 +86,31 @@ public class ItemSlotController : MonoBehaviour
         {
             if (emptySlot.ItemId == 0) // 빈 슬롯에 아이템 배치
             {
-                // 클릭된 슬롯의 Limit 값을 가져옴
                 int limit = clickedSlot.GetOriginalLimit();
-                Logger.Log($"Attempting to add item {clickedSlot.ItemId} with limit {limit}");
+                int currentCount = clickedSlot.GetItemCount();
 
-                emptySlot.SetItemSlot(clickedSlot.ItemId, clickedSlot.ItemSprite, limit);
-                addedItems.Add(clickedSlot.ItemId);
-                clickedSlot.ToggleInteractable(false);
-                SaveItemToLoadTable(clickedSlot.ItemId, limit);
-                break;
+                if (currentCount >= limit)
+                {
+                    Logger.Log($"Attempting to add item {clickedSlot.ItemId} with limit {limit}");
+                    emptySlot.SetItemSlot(clickedSlot.ItemId, clickedSlot.ItemSprite, limit);
+                    addedItems.Add(clickedSlot.ItemId);
+
+                    // 클릭된 슬롯에서 리미트만큼 수량을 차감
+                    currentCount -= limit;
+                    clickedSlot.UpdateItemCount(currentCount);
+
+                    if (currentCount == 0)
+                    {
+                        clickedSlot.ToggleInteractable(false);
+                    }
+
+                    SaveItemToLoadTable(clickedSlot.ItemId, limit);
+                    break;
+                }
+                else
+                {
+                    Logger.Log("아이템의 개수가 부족합니다.");
+                }
             }
         }
     }
@@ -100,15 +119,16 @@ public class ItemSlotController : MonoBehaviour
     {
         if (clickedSlot == null || clickedSlot.ItemId == 0) return;
 
-        // 선택된 아이템 해제
         RemoveItemFromLoadTable(clickedSlot.ItemId);
         addedItems.Remove(clickedSlot.ItemId);
-
-        // 클릭된 슬롯의 아이템 ID에 해당하는 원본 슬롯을 찾아 버튼 활성화
+        
         var originalSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == clickedSlot.ItemId);
         if (originalSlot != null)
         {
-            originalSlot.ToggleInteractable(true); // 슬롯의 버튼을 다시 활성화
+            int restoredCount = originalSlot.GetItemCount() + clickedSlot.GetItemCount();
+            originalSlot.UpdateItemCount(restoredCount);
+
+            originalSlot.ToggleInteractable(true);
         }
 
         clickedSlot.ClearSlot();

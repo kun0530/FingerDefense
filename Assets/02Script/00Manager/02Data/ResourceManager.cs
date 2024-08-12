@@ -186,15 +186,16 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
 
     public void AddItem(int itemId, int itemCount)
     {
-        var item = items.Find(i => i.itemId == itemId);
-        if (item != default)
+        var existingItem = Items.Find(item => item.itemId == itemId);
+        if (existingItem != (0, 0))
         {
-            int index = items.IndexOf(item);
-            items[index] = (itemId, item.itemCount + itemCount);
+            // 이미 있는 아이템인 경우 수량만 증가시킴
+            existingItem.itemCount += itemCount;
         }
         else
         {
-            items.Add((itemId, itemCount));
+            // 새로운 아이템 추가
+            Items.Add((itemId, itemCount));
         }
         NotifyObservers(ResourceType.ItemCount, itemCount);
         SaveData();

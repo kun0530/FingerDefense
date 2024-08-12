@@ -119,6 +119,10 @@ public class ShopPayCheckManager : MonoBehaviour
                     gameManager.ResourceManager.Gold -= itemCost;
                     gameManager.ResourceManager.AddItem(itemId, itemCount); 
                     ShowPurchaseResult($"아이템 {itemCount}개를 {itemCost} 골드로 구매했습니다.");
+                   
+                    //테스트용 아이템 구매 확인
+                    var purchasedItem = CheckItemPurchase(itemId);
+                    Debug.Log($"구매한 아이템: ID = {purchasedItem.itemId}, Count = {purchasedItem.itemCount}");
                 }
                 else
                 {
@@ -649,5 +653,12 @@ public class ShopPayCheckManager : MonoBehaviour
             gachaSystem.gameObject.SetActive(true);
             gachaSystem.transform.SetAsLastSibling();
         }
+    }
+    
+    //테스트용 아이템 구매 확인
+    private (int itemId, int itemCount) CheckItemPurchase(int itemId)
+    {
+        var purchasedItem = gameManager.ResourceManager.Items.Find(item => item.itemId == itemId);
+        return purchasedItem;
     }
 }

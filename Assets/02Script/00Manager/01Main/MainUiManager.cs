@@ -15,7 +15,6 @@ public class MainUiManager : MonoBehaviour
     public TutorialController tutorialController;
     public TutorialController stageTutorialController;
     
-    
     private void Awake()
     {
         gameManager = GameManager.instance;
