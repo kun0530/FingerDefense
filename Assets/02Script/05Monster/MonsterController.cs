@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITargetable, IDraggable
 {
-    [HideInInspector] public StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
@@ -82,6 +81,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void Awake()
     {
         base.Awake();
+        entityType = EntityType.MONSTER;
 
         monsterAni = GetComponent<MonsterSpineAni>();
 
@@ -112,10 +112,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         base.OnDisable();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        var stageManagerGo = GameObject.FindWithTag("StageManager");
-        stageManager = stageManagerGo?.GetComponent<StageManager>();
+        base.Start();
 
         stateMachine.Initialize<MoveState>();
     }
