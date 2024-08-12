@@ -8,19 +8,25 @@ using UnityEngine.UI;
 
 public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITargetable, IDraggable
 {
-    private StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
+    public Type CurrentState
+    {
+        get => stateMachine.CurrentState.GetType();
+    }
 
     public bool CanPatrol { get; set; }
-    public Transform moveTarget { get; set; }
+    [HideInInspector] public Vector3 moveTargetPos;
+
     public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
 
+    [Header("몬스터 특성")]
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
+    [HideInInspector] public float directionMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
@@ -76,6 +82,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void Awake()
     {
         base.Awake();
+        entityType = EntityType.MONSTER;
 
         monsterAni = GetComponent<MonsterSpineAni>();
 
@@ -92,11 +99,13 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         stateMachine.AddState(new PatrolState(this, findBehavior));
         stateMachine.AddState(new ChaseState(this));
         stateMachine.AddState(new AttackState(this));
+        stateMachine.AddState(new AttackCastleState(this));
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+        directionMultiplier = 1f;
     }
 
     protected override void OnDisable()
@@ -104,13 +113,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         base.OnDisable();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        var stageManagerGo = GameObject.FindWithTag("StageManager");
-        stageManager = stageManagerGo?.GetComponent<StageManager>();
-
-        var castleGo = GameObject.FindWithTag(Defines.Tags.CASTLE_TAG);
-        moveTarget = castleGo.transform;
+        base.Start();
 
         stateMachine.Initialize<MoveState>();
     }
@@ -126,10 +131,17 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         isTargetReset=false;
     }
 
+    private void CrossResetLine()
+    {
+        stageManager?.monsterSpawner?.TriggerMonsterReset(this);
+    }
+
     protected override void Update()
     {
         base.Update();
         stateMachine.Update();
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -139,15 +151,13 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
             CanPatrol = true;
         }
 
-        if (other.CompareTag(Defines.Tags.CASTLE_TAG))
-        {
-            stageManager?.DamageCastle(10f); // To-Do: 몬스터의 종류에 따라 포털에 다른 데미지를 줘야합니다.
-            OnDie();
-        }
-
         if (other.CompareTag("ResetLine")) // To-Do: Defines에서 정의
         {
-            isTargetReset = true;
+            if (!isTargetReset)
+            {
+                isTargetReset = true;
+                CrossResetLine();
+            }
         }
     }
 
@@ -159,7 +169,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         base.Die(reason);
 
         if (stageManager)
-            stageManager.EarnedGold += Status.Data.DropGold;
+            stageManager.GetGold(Status.Data.DropGold);
             
         if (reason == DamageReason.PLAYER_HIT_DAMAGE)
             deathSkill?.UseSkill();

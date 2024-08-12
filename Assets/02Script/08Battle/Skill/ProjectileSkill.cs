@@ -13,20 +13,19 @@ public class ProjectileSkill : BaseSkill
         if (target == null || skillType == null)
             return false;
 
-        var effect = EffectFactory.CreateEffect(skillData.Projectile);
-        if (!effect)
-            return false;
-
-        if (!effect.gameObject.TryGetComponent<Projectile>(out var projectile))
-            projectile = effect.gameObject.AddComponent<Projectile>();
-
-        projectile.Caster = caster;
-        projectile.Target = target;
-        projectile.skill = skillType;
-        projectile.isBuffApplied = isBuffApplied;
-        projectile.skillType = skillData.Type;
-
         IsSkillReady = false;
+
+        var effect = EffectFactory.CreateEffect(skillData.Projectile);
+        if (!effect || !effect.gameObject.TryGetComponent<Projectile>(out var projectile))
+        {
+            Logger.LogError("해당 투사체 에셋이 존재하지 않습니다.");
+            return false;
+        }
+
+        projectile.isBuffApplied = isBuffApplied;
+        projectile.skillTarget = (Projectile.SkillTarget)Mathf.Clamp(skillData.Type, 0, 1);
+        projectile.Init(caster, target, skillType);
+
         return true;
     }
 }

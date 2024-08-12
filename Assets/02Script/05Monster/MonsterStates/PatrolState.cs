@@ -32,22 +32,23 @@ public class PatrolState : IState
 
     public void Update()
     {
-        if (controller.moveTarget == null)
+        if (controller.moveTargetPos == null)
         {
             controller.TryTransitionState<IdleState<MonsterController>>();
             return;
         }
 
         // 성 포탈까지 이동
-        var direction = (controller.moveTarget.transform.position - controller.transform.position).normalized;
+        Vector3 direction = ((Vector2)controller.moveTargetPos - (Vector2)controller.transform.position).normalized;
+        direction *= controller.directionMultiplier;
         controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         if (moveTrackEntry != null)
             moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;
         controller.SetFlip(direction.x > 0);
-        if (Vector2.Distance(controller.transform.position, controller.moveTarget.transform.position) < 0.1)
+        if (Vector2.Distance(controller.transform.position, controller.moveTargetPos) < 0.1)
         {
-            controller.transform.position = controller.moveTarget.transform.position;
-            controller.TryTransitionState<IdleState<MonsterController>>();
+            controller.transform.position = controller.moveTargetPos;
+            controller.TryTransitionState<AttackCastleState>();
             return;
         }
 

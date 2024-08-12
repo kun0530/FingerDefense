@@ -12,6 +12,8 @@ public class DragState : IState
 
     private bool isReachHeight;
 
+    private float limitX;
+
     public DragState(MonsterController controller)
     {
         this.controller = controller;
@@ -25,6 +27,18 @@ public class DragState : IState
         controller.targetFallY = controller.transform.position.y;
         isReachHeight = false;
 
+        var stageManager = controller.stageManager;
+        if (stageManager)
+        {
+            var limitX1 = stageManager.monsterSpawner.moveTarget1.position.x;
+            var limitX2 = controller.stageManager.monsterSpawner.moveTarget2.position.x;
+            limitX = limitX1 > limitX2 ? limitX1 : limitX2;
+        }
+        else
+        {
+            limitX = controller.moveTargetPos.x;
+        }
+
         if (controller.attackTarget)
             controller.attackTarget.TryRemoveMonster(controller);
 
@@ -37,7 +51,7 @@ public class DragState : IState
         TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
-            cameraController.SetTargetWidth(25f, 0.25f);
+            cameraController.ZoomOutCamera();
         }
     }
 
@@ -49,6 +63,8 @@ public class DragState : IState
             pos.z = 0f;
             if (pos.y <= controller.targetFallY)
                 pos.y = controller.targetFallY;
+            if (pos.x <= limitX)
+                pos.x = limitX;
             controller.transform.position = pos;
 
             if (!isReachHeight && pos.y > controller.Status.Data.Height + controller.targetFallY)
@@ -77,7 +93,7 @@ public class DragState : IState
         TimeScaleController.SetTimeScale(1f);
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
-            cameraController.SetTargetWidth(20f, 0.5f);
+            cameraController.ResetCamera();
         }
     }
 }

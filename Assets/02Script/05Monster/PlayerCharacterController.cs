@@ -34,6 +34,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void Awake()
     {
         base.Awake();
+        entityType = EntityType.PLAYER_CHARACTER;
 
         anim = GetComponent<CharacterSpineAni>();
     }
@@ -51,6 +52,11 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void OnDisable()
     {
         base.OnDisable();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
     }
 
     protected override void Update()

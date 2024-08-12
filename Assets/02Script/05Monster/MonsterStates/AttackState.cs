@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using UnityEngine;
 
 public class AttackState : IState
@@ -8,6 +9,8 @@ public class AttackState : IState
 
     private float attackTimer;
     private float attackCoolDown;
+
+    private TrackEntry attackTrackEntry;
 
     public AttackState(MonsterController controller)
     {
@@ -21,7 +24,7 @@ public class AttackState : IState
 
         controller.SetFlip(false);
 
-        controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.CurrentAtkSpeed);
+        attackTrackEntry = controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.ATTACK, true, controller.Status.CurrentAtkSpeed);
     }
 
     public void Update()
@@ -45,8 +48,14 @@ public class AttackState : IState
             return;
         }
 
+        if (attackTrackEntry != null)
+            attackTrackEntry.TimeScale = controller.Status.CurrentAtkSpeed;
+
+        if (Mathf.Approximately(controller.Status.CurrentAtkSpeed, 0f))
+            return;
+        
         attackTimer += Time.deltaTime;
-        if (attackTimer >= attackCoolDown)
+        attackCoolDown = 1f / controller.Status.CurrentAtkSpeed;
         {
             controller.attackTarget.TakeDamage(controller.Status.CurrentAtk, DamageReason.MONSTER_HIT_DAMAGE, controller.Status.element);
             attackTimer = 0f;
@@ -57,5 +66,6 @@ public class AttackState : IState
 
     public void Exit()
     {
+        controller.attackTarget?.TryRemoveMonster(controller);
     }
 }

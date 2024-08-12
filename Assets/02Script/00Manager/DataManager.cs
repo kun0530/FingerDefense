@@ -4,26 +4,7 @@ using System.Security.Cryptography;
 using UnityEngine;
 using Newtonsoft.Json;
 
-[Serializable]
-public class GameData
-{
-    public string PlayerName = "";
-    public int Gold;
-    public int Diamond;
-    public int Ticket;
-    public int Mileage;
-    public bool NicknameCheck;
-    public bool StageChoiceTutorialCheck;
-    public bool DeckUITutorialCheck;
-    public bool Game1TutorialCheck;
-    public bool Game2TutorialCheck;
-    public bool Game3TutorialCheck;
-    public bool Game4TutorialCheck;
-    
-    public int[] CardDeck;
-}
-
-public class DataManager : MonoBehaviour
+public class DataManager : MonoBehaviour, IDataManager
 {
     private static DataManager instance;
     
@@ -31,6 +12,19 @@ public class DataManager : MonoBehaviour
     private readonly string ivFileName = "encryptionIV.dat";
     private byte[] encryptionKey;
     private byte[] encryptionIV;
+
+    public static DataManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new GameObject(nameof(DataManager)).AddComponent<DataManager>();
+                DontDestroyOnLoad(instance.gameObject);
+            }
+            return instance;
+        }
+    }
 
     private void Awake()
     {
@@ -75,16 +69,17 @@ public class DataManager : MonoBehaviour
     {
         string json = JsonConvert.SerializeObject(data);
         string encrypt = Encrypt(json);
-        File.WriteAllText(Application.persistentDataPath + "/" + fileName, encrypt);
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, fileName), encrypt);
     }
 
     public T LoadFile<T>(string fileName)
     {
-        string path = Application.persistentDataPath + "/" + fileName;
+        string path = Path.Combine(Application.persistentDataPath, fileName);
         if (!File.Exists(path))
         {
-            return default(T);
+            return default;
         }
+
         string encrypt = File.ReadAllText(path);
         string decrypt = Decrypt(encrypt);
         return JsonConvert.DeserializeObject<T>(decrypt);

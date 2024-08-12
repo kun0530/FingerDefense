@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class MonsterSpawnTest : MonoBehaviour
 {
-    public Transform monsterPos;
-    private Vector2 monsterSpawnPos;
+    public Transform monsterSpawnPos;
     [SerializeField] private float monsterSpawnRadius = 2.5f;
+    [SerializeField] private Transform monsterTargetPos;
 
     public bool IsAutoSpawn{ get; set; } = false;
     [SerializeField] private float spawnInterval = 0.25f;
@@ -23,11 +22,6 @@ public class MonsterSpawnTest : MonoBehaviour
     {
         monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
-    }
-
-    private void Start()
-    {
-        monsterSpawnPos = new Vector2(monsterPos.transform.position.x, monsterPos.transform.position.y);
     }
 
     private void Update()
@@ -85,7 +79,7 @@ public class MonsterSpawnTest : MonoBehaviour
             return null;
         }
 
-        var spawnPos = monsterSpawnPos + Random.insideUnitCircle * monsterSpawnRadius;
+        var spawnPos = (Vector2)monsterSpawnPos.position + Random.insideUnitCircle * monsterSpawnRadius;
         var instantiatedMonster = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         instantiatedMonster.Status.Data = monsterData;
 
@@ -93,6 +87,8 @@ public class MonsterSpawnTest : MonoBehaviour
         instantiatedMonster.deathSkill = deathSkill;
         var dragDeathSkill = SkillFactory.CreateSkill(monsterData.DragSkill, instantiatedMonster.gameObject);
         instantiatedMonster.dragDeathSkill = dragDeathSkill;
+
+        instantiatedMonster.moveTargetPos = monsterTargetPos.position;
 
         return instantiatedMonster;
     }

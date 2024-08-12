@@ -4,50 +4,95 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private Vector3 initialPosOffset = new Vector3(1f, 2f, 0f);
+    public enum InitPosOption { CASTER, TARGET, SKY, SPECIFIED }
+    public enum TargetPosOption { INITIAL, CURRENT }
+    public enum MoveOption { CONSTANT_SPEED, CONSTANT_ACCELERATION }
+    public enum SkillTarget { TARGET, PROJECTILE }
+    // public bool isEffectEnd = false;
 
-    private GameObject caster;
-    public GameObject Caster
-    {
-        get => caster;
-        set
-        {
-            caster = value;
-            if (!caster)
-                return;
+    // 발동 옵션: 1. 콜라이더 / 2. 거리 / 3. 타이머
+    // 타겟이 사라질 경우 옵션: 1. 즉시 삭제 / 2. 일정 시간 이후 삭제 / 3. 현재 방향 유지 후 화면 밖을 나갈 경우 삭제
 
-            transform.position = caster.transform.position + initialPosOffset;
-        }
-    }
+    [Header("투사체의 초기 위치")]
+    public InitPosOption initPosOption;
+    [Header("투사체의 목표 위치")]
+    public TargetPosOption targetPosOption;
+    [Header("투사체의 이동 방식")]
+    public MoveOption moveOption;
+    [HideInInspector] public SkillTarget skillTarget; // Projectile Skill에서 결정
 
-    private GameObject target;
-    public GameObject Target{
-        get => target;
-        set
-        {
-            isTargetSet = true;
+    [HideInInspector] public GameObject caster;
+    public Vector3 casterOffsetPos = Vector3.zero;
+    [HideInInspector] public GameObject target;
+    public Vector3 targetOffsetPos = Vector3.zero;
+    private Vector3 targetInitPos;
+    public ParticleSystem endEffect;
+    public float speed = 20f;
+    public float acceleration = 9.8f;
 
-            target = value;
-            if (!target)
-                return;
-
-            initialTargetPos = target.transform.position;
-            direction = (initialTargetPos - new Vector2(transform.position.x, transform.position.y)).normalized;
-        }
-    }
-    private Vector2 initialTargetPos;
-    private Vector3 direction;
-    private float speed = 20f;
+    private IMovable movable;
 
     public SkillType skill;
-    public bool isBuffApplied = false;
-    public int skillType;
+    [HideInInspector] public bool isBuffApplied = false;
+    // [HideInInspector] public int skillType;
 
     private bool isTargetSet = false;
+    private Vector3 prevTargetPos;
 
     private void OnEnable()
     {
         isTargetSet = false;
+    }
+
+    public void Init(GameObject casterGo, GameObject targetGo, SkillType skill)
+    {
+        if (!targetGo)
+        {
+            Logger.LogError("투사체의 타겟이 존재하지 않습니다!");
+            return;
+        }
+
+        this.caster = casterGo;
+        this.target = targetGo;
+        this.skill = skill;
+
+        switch (initPosOption)
+        {
+            case InitPosOption.CASTER:
+                {
+                    if (!caster)
+                    {
+                        Logger.LogError("투사체의 캐스터가 존재하지 않습니다!");
+                        return;
+                    }
+                    transform.position = caster.transform.position + casterOffsetPos;
+                }
+                break;
+            case InitPosOption.TARGET:
+                transform.position = target.transform.position + casterOffsetPos;
+                break;
+            case InitPosOption.SKY:
+                transform.position = new Vector2(target.transform.position.x + casterOffsetPos.x, 25f); // To-Do: 카메라 컨트롤러의 줌아웃 너비로부터 받아온다
+                break;
+            case InitPosOption.SPECIFIED:
+                transform.position = casterOffsetPos;
+                break;
+        }
+
+        targetInitPos = target.transform.position + targetOffsetPos;
+        prevTargetPos = targetInitPos;
+
+        switch (moveOption)
+        {
+            case MoveOption.CONSTANT_SPEED:
+                movable = new MoveConstantSpeed(gameObject, speed);
+                break;
+            case MoveOption.CONSTANT_ACCELERATION:
+                movable = new MoveConstantAcceleration(gameObject, speed, acceleration);
+                break;
+        }
+
+        isTargetSet = true;
     }
 
     private void Update()
@@ -55,51 +100,59 @@ public class Projectile : MonoBehaviour
         if (!isTargetSet)
             return;
 
-        if (!Target)
+        var targetPos = Vector3.zero;
+        switch (targetPosOption)
         {
-            Destroy(gameObject);
-            return;
+            case TargetPosOption.INITIAL:
+                targetPos = targetInitPos;
+                break;
+            case TargetPosOption.CURRENT:
+                {
+                    if (!target || !target.activeSelf) // 타겟이 사라진 경우
+                    {
+                        targetInitPos = prevTargetPos;
+                        targetPosOption = TargetPosOption.INITIAL;
+                        return;
+                    }
+                    targetPos = target.transform.position + targetOffsetPos;
+                    prevTargetPos = target.transform.position;
+                }
+                break;
         }
+        movable.Move(targetPos);
 
-        if (skillType == 0)
-            MoveToTarget();
-        else
-            MoveToPosition();
-    }
+        // if (isEffectEnd && endEffect.isStopped)
+        // {
+        //     switch (skillTarget)
+        //     {
+        //         case SkillTarget.TARGET:
+        //             if (target && target.activeSelf) // 타겟이 사라진 경우
+        //             {
+        //                 skill?.UseSkill(target, isBuffApplied);
+        //             }
+        //             break;
+        //         case SkillTarget.PROJECTILE:
+        //             skill?.UseSkill(gameObject, isBuffApplied);
+        //             break;
+        //     }
+        //     Destroy(gameObject);
+        // }
 
-    private void MoveToTarget()
-    {
-        Vector2 targetPos = target.transform.position;
-        Vector2 projectilePos = transform.position;
-
-        var displacement = (targetPos - projectilePos).normalized * speed * Time.deltaTime;
-        transform.position += new Vector3(displacement.x, displacement.y, 0f);
-
-        if (Vector3.Distance(transform.position, targetPos) < 0.1f || transform.position.y < initialTargetPos.y)
+        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
-            skill?.UseSkill(target, isBuffApplied);
+            switch (skillTarget)
+            {
+                case SkillTarget.TARGET:
+                    if (target && target.activeSelf) // 타겟이 사라진 경우
+                    {
+                        skill?.UseSkill(target, isBuffApplied);
+                    }
+                    break;
+                case SkillTarget.PROJECTILE:
+                    skill?.UseSkill(gameObject, isBuffApplied);
+                    break;
+            }
             Destroy(gameObject);
         }
     }
-
-    private void MoveToPosition()
-    {
-        transform.position += direction * speed * Time.deltaTime;
-
-        if (transform.position.y <= initialTargetPos.y)
-        {
-            skill?.UseSkill(gameObject, isBuffApplied);
-            Destroy(gameObject);
-        }
-    }
-
-    // private void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (other.gameObject != Target)
-    //         return;
-
-    //     skill?.UseSkill(Target, isBuffApplied);
-    // }
-
-    // protected abstract void MoveToTarget();
 }
