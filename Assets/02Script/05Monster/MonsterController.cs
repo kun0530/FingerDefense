@@ -22,10 +22,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
 
+    [Header("몬스터 특성")]
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
-    [SerializeField] public float directionMultiplier = 1f;
+    [HideInInspector] public float directionMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;

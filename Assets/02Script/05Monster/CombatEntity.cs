@@ -17,11 +17,15 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
     public T Status { get; private set; }
     public BuffHandler BuffHandler { get; private set; }
 
+    [Header("공통 특성")]
     public Image hpBar;
     public bool IsDead { get; protected set; }
 
     protected EntityType entityType = EntityType.NONE;
 
+    [Header("이펙트")]
+    public Vector3 effectScale = Vector3.one;
+    public Transform effectPosition;
     [HideInInspector] public List<EffectController> effects = new();
 
     protected virtual void Awake()
@@ -78,8 +82,9 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         var effect = EffectFactory.CreateEffect(buffData.EffectNo);
         if (effect != null)
         {
-            effect.transform.position = transform.position;
-            effect.transform.SetParent(transform);
+            effect.transform.SetParent(effectPosition ? effectPosition : transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localScale = effectScale;
             buff.effect = effect;
         }
 
@@ -99,8 +104,9 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         var effect = EffectFactory.CreateEffect(buffData.EffectNo);
         if (effect != null)
         {
-            effect.transform.position = transform.position;
-            effect.transform.SetParent(transform);
+            effect.transform.SetParent(effectPosition ? effectPosition : transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localScale = effectScale;
             buff.effect = effect;
         }
 
