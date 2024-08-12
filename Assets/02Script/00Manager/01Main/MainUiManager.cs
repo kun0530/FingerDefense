@@ -11,6 +11,7 @@ public class MainUiManager : MonoBehaviour
     public ShopSettingUI ShopUI;
     public GachaSystem GachaSystem;
     private GameManager gameManager;
+    public UpgradePanelManager upgradePanelManager;
     
     public TutorialController tutorialController;
     public TutorialController stageTutorialController;
@@ -30,6 +31,7 @@ public class MainUiManager : MonoBehaviour
             NicknameUI.SetActive(false);
             ShopUI.gameObject.SetActive(false);
             GachaSystem.gameObject.SetActive(false);
+            upgradePanelManager.gameObject.SetActive(false);
         }
         else
         {
@@ -40,6 +42,7 @@ public class MainUiManager : MonoBehaviour
             StageUI.SetActive(false);
             ShopUI.gameObject.SetActive(false);
             GachaSystem.gameObject.SetActive(false);
+            upgradePanelManager.gameObject.SetActive(false);
         }
     }
     

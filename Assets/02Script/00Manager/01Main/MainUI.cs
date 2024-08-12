@@ -42,9 +42,6 @@ public class MainUI : MonoBehaviour, IResourceObserver
             case ResourceType.Ticket:
                 ticketText.text = newValue.ToString();
                 break;
-            case ResourceType.Mileage:
-                ticketText.text = newValue.ToString();
-                break;
         }
     }
     
