@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITargetable, IDraggable
 {
-    private StageManager stageManager;
+    [HideInInspector] public StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
@@ -18,7 +18,8 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     }
 
     public bool CanPatrol { get; set; }
-    public Transform moveTarget { get; set; }
+    [HideInInspector] public Vector3 moveTargetPos;
+
     public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
 
@@ -97,6 +98,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         stateMachine.AddState(new PatrolState(this, findBehavior));
         stateMachine.AddState(new ChaseState(this));
         stateMachine.AddState(new AttackState(this));
+        stateMachine.AddState(new AttackCastleState(this));
     }
 
     protected override void OnEnable()
@@ -114,9 +116,6 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         var stageManagerGo = GameObject.FindWithTag("StageManager");
         stageManager = stageManagerGo?.GetComponent<StageManager>();
-
-        var castleGo = GameObject.FindWithTag(Defines.Tags.CASTLE_TAG);
-        moveTarget = castleGo.transform;
 
         stateMachine.Initialize<MoveState>();
     }
@@ -141,6 +140,8 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         base.Update();
         stateMachine.Update();
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -148,12 +149,6 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         if (other.CompareTag(Defines.Tags.PATROL_LINE_TAG))
         {
             CanPatrol = true;
-        }
-
-        if (other.CompareTag(Defines.Tags.CASTLE_TAG))
-        {
-            stageManager?.DamageCastle(10f); // To-Do: 몬스터의 종류에 따라 포털에 다른 데미지를 줘야합니다.
-            OnDie();
         }
 
         if (other.CompareTag("ResetLine")) // To-Do: Defines에서 정의
