@@ -12,6 +12,8 @@ public enum StageState
 
 public class StageManager : MonoBehaviour
 {
+    public List<GameObject> castleImages;
+
     public float CastleMaxHp { get; private set; } = 500f; // To-Do: 추후 변경
     private float castleHp;
     private float CastleHp
@@ -21,6 +23,16 @@ public class StageManager : MonoBehaviour
         {
             castleHp = value;
             gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+
+            if (castleImages.Count != 0)
+            {
+                int castleIndex = Mathf.FloorToInt(castleHp / (CastleMaxHp / castleImages.Count));
+                castleIndex = Mathf.Clamp(castleIndex, 0, castleImages.Count - 1);
+                for(int i = 0; i < castleImages.Count; i++)
+                {
+                    castleImages[i].SetActive(i == castleIndex);
+                }
+            }
         }
     }
     private float castleShield;
