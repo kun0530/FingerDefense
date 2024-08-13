@@ -34,6 +34,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void Awake()
     {
         base.Awake();
+        entityType = EntityType.PLAYER_CHARACTER;
 
         anim = GetComponent<CharacterSpineAni>();
     }
@@ -51,6 +52,11 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void OnDisable()
     {
         base.OnDisable();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
     }
 
     protected override void Update()
@@ -134,7 +140,11 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
 
     private void Die(TrackEntry trackEntry)
     {
-        spawner?.RemoveActiveCharacter(this);
+        if (spawner)
+            spawner.RemoveActiveCharacter(this);
+        else
+            Destroy(gameObject);
+            
         if (deathTrackEntry != null)
             deathTrackEntry.Complete -= Die;
     }

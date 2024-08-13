@@ -3,15 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum EntityType
+{
+    NONE = -1,
+    PLAYER_CHARACTER,
+    MONSTER
+}
+
 public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettable where T : BaseStatus, new()
 {
+    [HideInInspector] public StageManager stageManager;
+
     public T Status { get; private set; }
     public BuffHandler BuffHandler { get; private set; }
 
+    [Header("공통 특성")]
     public Image hpBar;
     public bool IsDead { get; protected set; }
 
-    public List<EffectController> effects = new();
+    protected EntityType entityType = EntityType.NONE;
+
+    [Header("이펙트")]
+    public Vector3 effectScale = Vector3.one;
+    public Transform effectPosition;
+    [HideInInspector] public List<EffectController> effects = new();
 
     protected virtual void Awake()
     {
@@ -19,6 +34,12 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         BuffHandler = new();
 
         Status.buffHandler = BuffHandler;
+    }
+
+    protected virtual void Start()
+    {
+        var stageManagerGo = GameObject.FindWithTag("StageManager");
+        stageManager = stageManagerGo?.GetComponent<StageManager>();
     }
 
     protected virtual void OnEnable()
@@ -61,8 +82,9 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         var effect = EffectFactory.CreateEffect(buffData.EffectNo);
         if (effect != null)
         {
-            effect.transform.position = transform.position;
-            effect.transform.SetParent(transform);
+            effect.transform.SetParent(effectPosition ? effectPosition : transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localScale = effectScale;
             buff.effect = effect;
         }
 
@@ -82,8 +104,9 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         var effect = EffectFactory.CreateEffect(buffData.EffectNo);
         if (effect != null)
         {
-            effect.transform.position = transform.position;
-            effect.transform.SetParent(transform);
+            effect.transform.SetParent(effectPosition ? effectPosition : transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localScale = effectScale;
             buff.effect = effect;
         }
 
@@ -103,7 +126,22 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
         if (Status == null)
             return false;
 
-        damage *= Utils.ScissorRockPaper(Status.element, element);
+        var damageMultiplier = Utils.ScissorRockPaper(Status.element, element);
+        if (stageManager && stageManager.isPlayerElementAdvantage)
+        {
+            switch (entityType)
+            {
+                case EntityType.PLAYER_CHARACTER:
+                    if (reason == DamageReason.MONSTER_HIT_DAMAGE)
+                        damageMultiplier = Mathf.Clamp01(damageMultiplier);
+                    break;
+                case EntityType.MONSTER:
+                    if (reason == DamageReason.PLAYER_HIT_DAMAGE)
+                        damageMultiplier = Mathf.Max(damageMultiplier, 1f);
+                    break;
+            }
+        }
+        damage *= damageMultiplier;
         Status.CurrentHp -= damage;
 
         if (Status.CurrentHp <= 0f)

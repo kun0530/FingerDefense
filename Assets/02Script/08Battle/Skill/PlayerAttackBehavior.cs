@@ -2,11 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Spine;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerAttackBehavior : MonoBehaviour
 {
     public BaseSkill normalAttack;
-    public BaseSkill skillAttack;
+    private BaseSkill skillAttack;
+    public BaseSkill SkillAttack
+    {
+        get => skillAttack;
+        set
+        {
+            skillAttack = value;
+            if (skillAttack != null)
+                skillAttack.coolTimeBar = skillAttackCoolTimeBar;
+        }
+    }
 
     private BaseSkill currentAttack;
 
@@ -15,6 +26,8 @@ public class PlayerAttackBehavior : MonoBehaviour
 
     private TrackEntry attackTrackEntry;
     private PlayerCharacterController controller;
+
+    public Image skillAttackCoolTimeBar;
 
     private void Awake()
     {
@@ -37,7 +50,7 @@ public class PlayerAttackBehavior : MonoBehaviour
             UpdateSkill(normalAttack, controller.BuffHandler.buffValues[BuffType.ATK_SPEED], true);
         else
             UpdateSkill(normalAttack);
-        UpdateSkill(skillAttack);
+        UpdateSkill(SkillAttack);
     }
 
     private void UpdateSkill(BaseSkill skill, float coolTimeBuff = 0f, bool isBuffApplied = false)

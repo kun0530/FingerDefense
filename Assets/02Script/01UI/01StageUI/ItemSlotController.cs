@@ -65,7 +65,7 @@ public class ItemSlotController : MonoBehaviour
 
     private void CreateItemSlots()
     {
-        var purchasedItems = GameManager.instance.ResourceManager.Items;
+        var purchasedItems = GameManager.instance.GameData.Items;
 
         foreach (var purchasedItem in purchasedItems)
         {

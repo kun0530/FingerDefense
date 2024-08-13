@@ -22,7 +22,7 @@ public class SkillTest : MonoBehaviour
         var skill = CreateSkill();
         var normalAttack = CreateNoramalAttack();
 
-        playerAttackBehavior.skillAttack = skill;
+        playerAttackBehavior.SkillAttack = skill;
         playerAttackBehavior.normalAttack = normalAttack;
     }
 

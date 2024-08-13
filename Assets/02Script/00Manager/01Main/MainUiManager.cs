@@ -22,7 +22,7 @@ public class MainUiManager : MonoBehaviour
     }
     public void Start()
     {
-        if (!gameManager.ResourceManager.NicknameCheck)
+        if (!gameManager.GameData.NicknameCheck)
         {
             tutorialController.gameObject.SetActive(true);
             MainUI.gameObject.SetActive(false);
@@ -53,7 +53,7 @@ public class MainUiManager : MonoBehaviour
         {
             StageUI.SetActive(true);
             
-            if(!gameManager.ResourceManager.StageChoiceTutorialCheck)
+            if(!gameManager.GameData.StageChoiceTutorialCheck)
             {
                 stageTutorialController.gameObject.SetActive(true);
             }

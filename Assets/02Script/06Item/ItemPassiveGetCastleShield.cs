@@ -10,6 +10,6 @@ public class ItemPassiveGetCastleShield : BaseItem
 
     public override void UseItem()
     {
-        StageManager?.GetShield(castleShield, isPercentage);
+        StageMgr?.GetShield(castleShield, isPercentage);
     }
 }

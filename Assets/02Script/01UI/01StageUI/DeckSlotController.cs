@@ -100,7 +100,7 @@ public class DeckSlotController : MonoBehaviour
     {
         
         
-        var obtainedGachaIds = GameManager.instance.ResourceManager.ObtainedGachaIDs;
+        var obtainedGachaIds = GameManager.instance.GameData.ObtainedGachaIDs;
         Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
         foreach (var characterId in obtainedGachaIds)
         {

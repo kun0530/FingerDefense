@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class BaseSkill
 {
@@ -12,6 +13,8 @@ public abstract class BaseSkill
 
     private float skillTimer = 0f;
     public bool IsSkillReady { get; protected set; } = false;
+
+    public Image coolTimeBar;
 
     public BaseSkill(SkillData skillData, SkillType skillType, IFindable targetingMethod, GameObject caster)
     {
@@ -31,6 +34,16 @@ public abstract class BaseSkill
         {
             IsSkillReady = true;
             skillTimer = 0f;
+        }
+
+        if (coolTimeBar)
+        {
+            if (IsSkillReady)
+                coolTimeBar.fillAmount = 1f;
+            else if (skillData.CoolTime - coolTimeBuff > 0f && skillTimer > 0f)
+                coolTimeBar.fillAmount = skillTimer / (skillData.CoolTime - coolTimeBuff);
+            else
+                coolTimeBar.fillAmount = 0f;
         }
     }
 

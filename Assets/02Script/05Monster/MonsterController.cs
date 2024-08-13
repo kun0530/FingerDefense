@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITargetable, IDraggable
 {
-    [HideInInspector] public StageManager stageManager;
     public IObjectPool<MonsterController> pool;
 
     private StateMachine<MonsterController> stateMachine;
@@ -23,13 +22,16 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public Transform attackMoveTarget { get; set; }
     public PlayerCharacterController attackTarget { get; set; }
 
+    [Header("몬스터 특성")]
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
-    [SerializeField] public float directionMultiplier = 1f;
+    [HideInInspector] public float directionMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
+
+    public SpriteRenderer shadowImage;
 
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
@@ -82,6 +84,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     protected override void Awake()
     {
         base.Awake();
+        entityType = EntityType.MONSTER;
 
         monsterAni = GetComponent<MonsterSpineAni>();
 
@@ -105,6 +108,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         base.OnEnable();
         directionMultiplier = 1f;
+        shadowImage?.gameObject.SetActive(true);
     }
 
     protected override void OnDisable()
@@ -112,10 +116,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         base.OnDisable();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        var stageManagerGo = GameObject.FindWithTag("StageManager");
-        stageManager = stageManagerGo?.GetComponent<StageManager>();
+        base.Start();
 
         stateMachine.Initialize<MoveState>();
     }

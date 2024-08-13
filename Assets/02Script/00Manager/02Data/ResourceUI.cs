@@ -11,9 +11,8 @@ public class ResourceUI : MonoBehaviour, IResourceObserver
     {
         if (GameManager.instance != null)
         {
-            GameManager.instance.ResourceManager.RegisterObserver(this);    
+            GameManager.instance.GameData.RegisterObserver(this);    
         }
-        
     }
 
     private void Start()
@@ -25,7 +24,7 @@ public class ResourceUI : MonoBehaviour, IResourceObserver
     {
         if (GameManager.instance != null)
         {
-            GameManager.instance.ResourceManager.RemoveObserver(this);
+            GameManager.instance.GameData.RemoveObserver(this);
         }
     }
 
@@ -45,7 +44,7 @@ public class ResourceUI : MonoBehaviour, IResourceObserver
 
     private void UpdateUI()
     {
-        OnResourceUpdate(ResourceType.Gold, GameManager.instance.ResourceManager.Gold);
-        OnResourceUpdate(ResourceType.Diamond, GameManager.instance.ResourceManager.Diamond);
+        OnResourceUpdate(ResourceType.Gold, GameManager.instance.GameData.Gold);
+        OnResourceUpdate(ResourceType.Diamond, GameManager.instance.GameData.Diamond);
     }
 }

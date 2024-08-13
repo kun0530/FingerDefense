@@ -21,9 +21,9 @@ public class ItemActiveGetGoldIncrease : ActiveItem
 
     private void SetGoldMultiplier(float multiplier)
     {
-        if (!StageManager)
+        if (!StageMgr)
             return;
 
-        StageManager.goldMultiplier = multiplier;
+        StageMgr.goldMultiplier = multiplier;
     }
 }
