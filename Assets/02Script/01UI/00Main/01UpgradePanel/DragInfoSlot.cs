@@ -23,7 +23,7 @@ public class DragInfoSlot : MonoBehaviour
     private void CheckBuy()
     {
         var cost = int.Parse(monsterCost.text);
-        var playerGold = GameManager.instance.ResourceManager.Gold;
+        var playerGold = GameManager.instance.GameData.Gold;
 
         if (playerGold >= cost)
         {
@@ -32,7 +32,7 @@ public class DragInfoSlot : MonoBehaviour
                 .SetBody($"{cost}골드를 사용해서 해당 몬스터의 드래그기능을 구매하시겠습니까?")
                 .AddButton("확인", () =>
                 {
-                    GameManager.instance.ResourceManager.Gold -= cost;
+                    GameManager.instance.GameData.Gold -= cost;
                     UpdateInteractive();
                     this.gameObject.SetActive(false);
                 })

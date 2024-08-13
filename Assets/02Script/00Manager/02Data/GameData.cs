@@ -48,7 +48,7 @@ public class GameData : IResourceSubject
     private bool nicknameCheck;
     public bool NicknameCheck
     {
-        get => NicknameCheck;
+        get => nicknameCheck;
         set
         {
             nicknameCheck = value;

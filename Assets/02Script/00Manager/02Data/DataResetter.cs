@@ -53,7 +53,7 @@ public class DataResetter : MonoBehaviour
             gameManager.GameData.Mileage += mileageIncreaseAmount;
             
             Debug.Log("테스트 모드에서 재화를 증가시켰습니다.");
-            DataManager.SaveFile(gameManager.GameData);
+            //DataManager.SaveFile(gameManager.GameData);
         }
     }
 
