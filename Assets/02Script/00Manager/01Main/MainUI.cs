@@ -47,22 +47,22 @@ public class MainUI : MonoBehaviour, IResourceObserver
 
     public void UpdatePlayerInfo()
     {
-        if (playerNameText != null && gameManager.ResourceManager is { NicknameCheck: true })
+        if (playerNameText)
         {
             playerNameText.text = gameManager.ResourceManager.PlayerName;
         }
         
-        if (goldText != null)
+        if (goldText)
         {
             goldText.text = gameManager.ResourceManager!.Gold.ToString();
         }
 
-        if (diamondText != null)
+        if (diamondText)
         {
             diamondText.text = gameManager.ResourceManager!.Diamond.ToString();
         }
 
-        if (ticketText != null)
+        if (ticketText)
         {
             ticketText.text = gameManager.ResourceManager!.Ticket.ToString();
         }

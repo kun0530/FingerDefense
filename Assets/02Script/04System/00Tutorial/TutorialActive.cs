@@ -17,8 +17,6 @@ public class TutorialActive : TutorialBase
         {
             obj.SetActive(!obj.activeSelf);
         }
-        
-        
     }
 
     public override void Execute(TutorialController controller)
@@ -29,6 +27,7 @@ public class TutorialActive : TutorialBase
 
     public override void Exit()
     {
+                
     }
     
    
