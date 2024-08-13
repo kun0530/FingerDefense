@@ -69,7 +69,7 @@ public class ItemActiveCreateDummy : ActiveItem
         isDragging = false;
         if (inputManager)
             inputManager.OnClick -= CreateDummy;
-            
+
         var spawnPos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
         if (spawnPos.y > maxY || spawnPos.y < minY)
             return;
@@ -97,7 +97,7 @@ public class ItemActiveCreateDummy : ActiveItem
             var skillAttack = SkillFactory.CreateSkill(skillAttackData, instantiatedCharacter.gameObject);
 
             attackBehavior.normalAttack = normalAttack;
-            attackBehavior.skillAttack = skillAttack;
+            attackBehavior.SkillAttack = skillAttack;
         }
 
         if (instantiatedCharacter.TryGetComponent<DummyMoveBehavior>(out var moveBehavior))
