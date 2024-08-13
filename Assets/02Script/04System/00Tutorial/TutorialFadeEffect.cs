@@ -10,6 +10,7 @@ public class TutorialFadeEffect : TutorialBase
 
     public override void Enter()
     {
+        fadeEffect.gameObject.transform.SetAsLastSibling();
         fadeEffect.gameObject.SetActive(true);
         fadeEffect.Initialize(isFadeIn ? 0 : 1);
         
@@ -21,6 +22,7 @@ public class TutorialFadeEffect : TutorialBase
         {
             fadeEffect.FadeOut(OnAfterFadeEffect);
         }
+        
     }
     
     private void OnAfterFadeEffect()

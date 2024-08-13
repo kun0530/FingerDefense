@@ -18,6 +18,7 @@ public interface IResourceManager
     List<int> ObtainedGachaIDs { get; set; }
     List<(int itemId, int itemCount)> Items { get; set; }
 
+
     void AddItem(int itemId, int itemCount);
     void SaveData();
     void LoadData();

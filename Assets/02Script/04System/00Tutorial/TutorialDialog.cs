@@ -10,6 +10,7 @@ public class TutorialDialog : TutorialBase
         dialogSystem = GetComponent<DialogSystem>();
         dialogSystem.DialogSetting();
         dialogSystem.isFirstDialog = true;
+        dialogSystem.dialogCanvasGroup.gameObject.transform.SetAsLastSibling();
     }
 
     public override void Execute(TutorialController controller)
