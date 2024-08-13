@@ -207,10 +207,10 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
     
     public void AddItem(int itemId, int itemCount)
     {
-        var existingItem = Items.Find(item => item.itemId == itemId);
-        if (existingItem != (0, 0))
+        var itemIndex = Items.FindIndex(i => i.itemId == itemId);
+        if (itemIndex != -1)
         {
-            existingItem.itemCount += itemCount;
+            Items[itemIndex] = (itemId, Items[itemIndex].itemCount + itemCount);
         }
         else
         {
@@ -222,17 +222,17 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
     
     public void RemoveItem(int itemId, int itemCount)
     {
-        var existingItem = Items.Find(item => item.itemId == itemId);
-        if (existingItem != (0, 0))
+        var itemIndex = Items.FindIndex(i => i.itemId == itemId);
+        if (itemIndex != -1)
         {
-            existingItem.itemCount -= itemCount;
-            if (existingItem.itemCount <= 0)
-            {
-                Items.Remove(existingItem);
-            }
-            NotifyObservers(ResourceType.ItemCount, itemCount);
-            SaveData();
+            Items[itemIndex] = (itemId, Items[itemIndex].itemCount - itemCount);
         }
+        else
+        {
+            Items.Add((itemId, itemCount));
+        }
+        NotifyObservers(ResourceType.ItemCount, itemCount);
+        SaveData();
     }
 
     public void SaveData()
