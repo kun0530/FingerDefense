@@ -21,7 +21,7 @@ public class ItemSlotController : MonoBehaviour
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         RefreshItemSlots();
     }
@@ -33,7 +33,7 @@ public class ItemSlotController : MonoBehaviour
             Destroy(slot.gameObject);
         }
         emptySlots.Clear();
-        itemSlots.Clear(); // 아이템 슬롯 리스트도 초기화
+        itemSlots.Clear(); 
         addedItems.Clear();
 
         // 새로운 슬롯 생성
@@ -58,7 +58,7 @@ public class ItemSlotController : MonoBehaviour
 
         foreach (var purchasedItem in purchasedItems)
         {
-            if (itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
+            if (!addedItems.Contains(purchasedItem.itemId) && itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
             {
                 var itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
 
@@ -66,7 +66,8 @@ public class ItemSlotController : MonoBehaviour
                 {
                     itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
                     itemSlot.onClickItemSlot = HandleItemSlotClick;
-                    itemSlots.Add(itemSlot); // 생성된 아이템 슬롯을 리스트에 추가
+                    itemSlots.Add(itemSlot); 
+                    addedItems.Add(purchasedItem.itemId); 
                 }
             }
         }

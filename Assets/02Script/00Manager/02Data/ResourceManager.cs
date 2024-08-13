@@ -22,7 +22,8 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
     private int mileage;
     private List<int> obtainedGachaIDs = new List<int>();
     private List<(int itemId, int itemCount)> items = new List<(int, int)>();
-
+    public List<(int MonsterGimmick, int level)> MonsterGimmickLevel = new List<(int, int)>();
+    public List<(int PlayerUpgrade, int level)> PlayerUpgradeLevel = new List<(int, int)>();
     private List<IResourceObserver> observers = new List<IResourceObserver>();
 
     private void Awake()
@@ -183,22 +184,55 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
             SaveData();
         }
     }
-
+    
+    public List<(int MonsterGimmick, int level)> monsterGimmickLevel
+    {
+        get => MonsterGimmickLevel;
+        set
+        {
+            MonsterGimmickLevel = value;
+            SaveData();
+        }
+    }
+    
+    public List<(int PlayerUpgrade, int level)> playerUpgradeLevel
+    {
+        get => PlayerUpgradeLevel;
+        set
+        {
+            PlayerUpgradeLevel = value;
+            SaveData();
+        }
+    }
+    
     public void AddItem(int itemId, int itemCount)
     {
         var existingItem = Items.Find(item => item.itemId == itemId);
         if (existingItem != (0, 0))
         {
-            // 이미 있는 아이템인 경우 수량만 증가시킴
             existingItem.itemCount += itemCount;
         }
         else
         {
-            // 새로운 아이템 추가
             Items.Add((itemId, itemCount));
         }
         NotifyObservers(ResourceType.ItemCount, itemCount);
         SaveData();
+    }
+    
+    public void RemoveItem(int itemId, int itemCount)
+    {
+        var existingItem = Items.Find(item => item.itemId == itemId);
+        if (existingItem != (0, 0))
+        {
+            existingItem.itemCount -= itemCount;
+            if (existingItem.itemCount <= 0)
+            {
+                Items.Remove(existingItem);
+            }
+            NotifyObservers(ResourceType.ItemCount, itemCount);
+            SaveData();
+        }
     }
 
     public void SaveData()
@@ -219,6 +253,7 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
             Mileage = mileage,
             ObtainedGachaIDs = obtainedGachaIDs,
             ItemId = new List<(int, int)>(items)
+            
         };
         dataManager.SaveFile("GameData.json", gameData);
     }

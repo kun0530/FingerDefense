@@ -58,7 +58,6 @@ public class DialogSystem : MonoBehaviour
     private void Start()
     {
         DialogSetting();
-
         nextButton.onClick.AddListener(() => OnNextButtonClickedWrapper().Forget());
     }
 
