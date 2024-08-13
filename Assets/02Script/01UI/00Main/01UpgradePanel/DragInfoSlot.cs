@@ -15,7 +15,7 @@ public class DragInfoSlot : MonoBehaviour
     public void UpdateCostColor()
     {
         var cost = int.Parse(monsterCost.text);
-        var playerGold = GameManager.instance.ResourceManager.Gold;
+        var playerGold = GameManager.instance.GameData.Gold;
 
         monsterCost.color = playerGold >= cost ? Color.black : // 구매 가능 시 검은색
             Color.red; // 구매 불가능 시 빨간색

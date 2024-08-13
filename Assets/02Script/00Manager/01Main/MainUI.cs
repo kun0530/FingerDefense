@@ -7,7 +7,6 @@ public class MainUI : MonoBehaviour, IResourceObserver
 {
     public TextMeshProUGUI playerNameText;
     private GameManager gameManager;
-    private ResourceManager resourceManager;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI diamondText;
     public TextMeshProUGUI ticketText;
@@ -15,17 +14,16 @@ public class MainUI : MonoBehaviour, IResourceObserver
     private void Start()
     {
         gameManager = GameManager.instance;
-        resourceManager = GameObject.FindWithTag("Resources").TryGetComponent(out ResourceManager manager) ? manager : null;
         
-        gameManager.ResourceManager.RegisterObserver(this);
+        gameManager.GameData.RegisterObserver(this);
         UpdatePlayerInfo();
     }
 
     private void OnDestroy()
     {
-        if (gameManager != null && gameManager.ResourceManager != null)
+        if (gameManager != null && gameManager.GameData != null)
         {
-            gameManager.ResourceManager.RemoveObserver(this);
+            gameManager.GameData.RemoveObserver(this);
         }
     }
 
@@ -49,22 +47,22 @@ public class MainUI : MonoBehaviour, IResourceObserver
     {
         if (playerNameText)
         {
-            playerNameText.text = gameManager.ResourceManager.PlayerName;
+            playerNameText.text = gameManager.GameData.PlayerName;
         }
         
         if (goldText)
         {
-            goldText.text = gameManager.ResourceManager!.Gold.ToString();
+            goldText.text = gameManager.GameData!.Gold.ToString();
         }
 
         if (diamondText)
         {
-            diamondText.text = gameManager.ResourceManager!.Diamond.ToString();
+            diamondText.text = gameManager.GameData!.Diamond.ToString();
         }
 
         if (ticketText)
         {
-            ticketText.text = gameManager.ResourceManager!.Ticket.ToString();
+            ticketText.text = gameManager.GameData!.Ticket.ToString();
         }
     }
 }

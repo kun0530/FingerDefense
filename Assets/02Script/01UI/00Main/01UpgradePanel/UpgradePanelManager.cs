@@ -20,9 +20,9 @@ public class UpgradePanelManager : MonoBehaviour
         upgradePanelButtons[3].onClick.AddListener(() => ShowPanel(characterGimmickPanelPrefab));
         
         ShowPanel(monsterUpgradePanelPrefab);
-        costTexts[0].text = GameManager.instance.ResourceManager.Diamond.ToString();
-        costTexts[1].text = GameManager.instance.ResourceManager.Gold.ToString();
-        costTexts[2].text = GameManager.instance.ResourceManager.Ticket.ToString();
+        costTexts[0].text = GameManager.instance.GameData.Diamond.ToString();
+        costTexts[1].text = GameManager.instance.GameData.Gold.ToString();
+        costTexts[2].text = GameManager.instance.GameData.Ticket.ToString();
     }
 
     private void ShowPanel(MonoBehaviour selectedPanel)

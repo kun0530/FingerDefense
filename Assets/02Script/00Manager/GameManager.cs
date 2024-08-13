@@ -3,15 +3,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-
-
+    public GameData GameData { get; private set; }
 
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            ResourceManager = gameObject.AddComponent<ResourceManager>();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -19,7 +17,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         Application.targetFrameRate = 60;
-    }
 
-    public IResourceManager ResourceManager { get; private set; }
+        DataManager.LoadEncryptionKeyAndIv();
+        GameData = DataManager.LoadFile() ?? new GameData();
+    }
 }
