@@ -203,7 +203,7 @@ public class ResourceManager : MonoBehaviour, IResourceManager, IResourceSubject
 
     public void SaveData()
     {
-        GameData gameData = new GameData
+        var gameData = new GameData
         {
             PlayerName = playerName,
             NicknameCheck = nicknameCheck,

@@ -50,7 +50,15 @@ public class DeckSlotController : MonoBehaviour
     private void OnEnable()
     {
         LoadCharacterSelection();
-        RefreshCharacterSlots();
+        if (filterringSlotParent != null)
+        {
+            RefreshCharacterSlots();
+        }
+        else
+        {
+            Logger.LogError("CharacterPanel is not assigned in DeckSlotController.");
+        }
+
     }
 
     private void OnDisable()
