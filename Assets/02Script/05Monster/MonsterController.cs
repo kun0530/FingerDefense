@@ -31,6 +31,8 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
 
+    public SpriteRenderer shadowImage;
+
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
 
@@ -106,6 +108,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         base.OnEnable();
         directionMultiplier = 1f;
+        shadowImage?.gameObject.SetActive(true);
     }
 
     protected override void OnDisable()

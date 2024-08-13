@@ -46,6 +46,7 @@ public class DragState : IState
 
         collider.enabled = false;
         renderer.sortingOrder = 1;
+        controller.shadowImage?.gameObject.SetActive(false);
 
         controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
         TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
