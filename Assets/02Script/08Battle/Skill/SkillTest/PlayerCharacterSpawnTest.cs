@@ -69,7 +69,7 @@ public class PlayerCharacterSpawnTest : MonoBehaviour
             var skillAttack = SkillFactory.CreateSkill(skillAttackData, instantiatedCharacter.gameObject);
 
             attackBehavior.normalAttack = normalAttack;
-            attackBehavior.skillAttack = skillAttack;
+            attackBehavior.SkillAttack = skillAttack;
         }
 
         if (currentCharacter)

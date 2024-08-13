@@ -173,7 +173,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
             var skillAttack = SkillFactory.CreateSkill(skillAttackData, playerCharacter.gameObject);
 
             attackBehavior.normalAttack = normalAttack;
-            attackBehavior.skillAttack = skillAttack;
+            attackBehavior.SkillAttack = skillAttack;
         }
 
         playerCharacter.spawner = this;
