@@ -181,6 +181,7 @@ public class StageSlot : MonoBehaviour
         deckUI.SetActive(true);
         GameManager.instance.ResourceManager.StageChoiceTutorialCheck = true;
         Variables.LoadTable.StageId = StageId;
+        deckUI.transform.SetAsLastSibling();
         Logger.Log($"스테이지 {StageId} 선택");
     }
 }

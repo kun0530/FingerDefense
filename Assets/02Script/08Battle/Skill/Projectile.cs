@@ -39,6 +39,10 @@ public class Projectile : MonoBehaviour
     private bool isTargetSet = false;
     private Vector3 prevTargetPos;
 
+    [Header("충돌 이펙트")]
+    [SerializeField] private EffectController impactEffect;
+    [SerializeField] private float impactEffectLifeTime;
+
     private void OnEnable()
     {
         isTargetSet = false;
@@ -153,6 +157,10 @@ public class Projectile : MonoBehaviour
                     break;
             }
             Destroy(gameObject);
+            var pos = transform.position;
+            pos.z = pos.y;
+            var effect = GameObject.Instantiate(impactEffect, pos, Quaternion.identity);
+            effect.LifeTime = impactEffectLifeTime;
         }
     }
 }
