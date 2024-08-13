@@ -5,7 +5,6 @@ public class TutorialActive : TutorialBase
     [SerializeField]
     private GameObject[] tutorialObject;
     private GameManager gameManager;
-    private MainUI mainUI;
     
     public void Awake()
     {
@@ -24,17 +23,11 @@ public class TutorialActive : TutorialBase
     {
         controller.SetNextTutorial();
         gameManager.ResourceManager.NicknameCheck = true;
-
-        if (mainUI)
-        {
-            mainUI.UpdatePlayerInfo();    
-        }
-        
     }
 
     public override void Exit()
     {
-        
+                
     }
     
    
