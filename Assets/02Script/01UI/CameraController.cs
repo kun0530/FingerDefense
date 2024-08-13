@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
-    [SerializeField] private float bottomY = -5f;
+    public float bottomY = -5f;
     [SerializeField] private float zoomOutWidth = 25f;
     [SerializeField] private float zoomTime = 0.25f;
 
@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private List<Image> letterBoxes;
     [SerializeField] private RectTransform letterBoxCanvasRect;
 
-    private float currentWidth;
+    public float currentWidth { get; private set; }
 
     private float startWidth;
     private float endWidth;
