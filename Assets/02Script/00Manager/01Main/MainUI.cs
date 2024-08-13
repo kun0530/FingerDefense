@@ -44,27 +44,27 @@ public class MainUI : MonoBehaviour, IResourceObserver
                 break;
         }
     }
-    
+
     public void UpdatePlayerInfo()
     {
-        if (playerNameText != null)
+        if (playerNameText)
         {
-            playerNameText.text = gameManager.ResourceManager.PlayerName.ToString();
+            playerNameText.text = gameManager.ResourceManager.PlayerName;
         }
         
-        if (goldText != null)
+        if (goldText)
         {
-            goldText.text = gameManager.ResourceManager.Gold.ToString();
+            goldText.text = gameManager.ResourceManager!.Gold.ToString();
         }
 
-        if (diamondText != null)
+        if (diamondText)
         {
-            diamondText.text = gameManager.ResourceManager.Diamond.ToString();
+            diamondText.text = gameManager.ResourceManager!.Diamond.ToString();
         }
 
-        if (ticketText != null)
+        if (ticketText)
         {
-            ticketText.text = gameManager.ResourceManager.Ticket.ToString();
+            ticketText.text = gameManager.ResourceManager!.Ticket.ToString();
         }
     }
 }

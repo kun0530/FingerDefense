@@ -15,14 +15,13 @@ public class ItemSlotUI : MonoBehaviour
     public int ItemId { get; private set; }
     public Sprite ItemSprite => itemIcon.sprite;
 
-    private int originalLimit; // 선택 전 아이템의 원래 수량
+    private int originalLimit; 
 
     public void Setup(ItemData item, string assetPath, int count)
     {
-        Logger.Log($"Setup called with Item ID: {item?.Id}, Limit: {item?.Limit}");
+        Logger.Log($"Setup called with Item ID: {item?.Id}, Count: {count}");
         ItemId = item?.Id ?? 0;
-        originalLimit = item?.Limit ?? 0;
-        
+
         if (item != null && !string.IsNullOrEmpty(assetPath))
         {
             var sprite = Resources.Load<Sprite>($"Prefab/07GameItem/{assetPath}");
@@ -30,7 +29,7 @@ public class ItemSlotUI : MonoBehaviour
             {
                 itemIcon.sprite = sprite;
             }
-
+            originalLimit = item.Limit;
             itemCount.text = count.ToString();
         }
         else
@@ -39,7 +38,7 @@ public class ItemSlotUI : MonoBehaviour
             itemCount.text = "";
         }
 
-        itemButton.onClick.RemoveAllListeners(); // 기존 리스너 제거
+        itemButton.onClick.RemoveAllListeners();
         itemButton.onClick.AddListener(() =>
         {
             onClickItemSlot?.Invoke(this);
