@@ -179,7 +179,7 @@ public class StageSlot : MonoBehaviour
     public void OnClick()
     {
         deckUI.SetActive(true);
-        GameManager.instance.StageChoiceTutorialCheck = true;
+        GameManager.instance.ResourceManager.StageChoiceTutorialCheck = true;
         Variables.LoadTable.StageId = StageId;
         Logger.Log($"스테이지 {StageId} 선택");
     }

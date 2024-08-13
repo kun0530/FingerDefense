@@ -78,6 +78,8 @@ public class StageManager : MonoBehaviour
     public PlayerCharacterSpawner playerCharacterSpawner;
     public GameUiManager gameUiManager;
 
+    [HideInInspector] public bool isPlayerElementAdvantage = false;
+
     private void Start()
     {
         CastleHp = CastleMaxHp;

@@ -35,11 +35,12 @@ public class ShopButton : MonoBehaviour
     public TextMeshProUGUI choiceButton1Text;
     public TextMeshProUGUI choiceButton2Text;
 
-    private ShopTable shopTable;
+    private StringTable shopTable;
     public ShopPayCheckManager shopPayCheck;
+    
     private void Start()
     {
-        shopTable = DataTableManager.Get<ShopTable>(DataTableIds.Shop);
+        shopTable = DataTableManager.Get<StringTable>(DataTableIds.String);
         button.onClick.AddListener(OnButtonClicked);
         ChoicePanel.SetActive(false);
     }
@@ -49,8 +50,8 @@ public class ShopButton : MonoBehaviour
         if (shopTable != null)
         {
             // 텍스트 설정
-            choiceTitleText.text = shopTable.Get(ChoiceTitleText);
-            choiceContentText.text = shopTable.Get(ChoiceContentText);
+            choiceTitleText.text = shopTable.Get(ChoiceTitleText.ToString());
+            choiceContentText.text = shopTable.Get(ChoiceContentText.ToString());
             SetButtonState(ChoiceButton1, choiceButton1Text, ChoiceButton1Text);
             SetButtonState(ChoiceButton2, choiceButton2Text, ChoiceButton2Text);
             

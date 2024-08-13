@@ -51,6 +51,8 @@ public class ItemSlotUI : MonoBehaviour
         ItemId = itemId;
         itemIcon.sprite = sprite;
         itemCount.text = count.ToString();
+        
+        
         ChoicePanel.SetAsLastSibling();
     }
 
@@ -72,4 +74,15 @@ public class ItemSlotUI : MonoBehaviour
     {
         return originalLimit;
     }
+
+    public int GetItemCount()
+    {
+        return itemCount.text == "" ? 0 : int.Parse(itemCount.text);
+    }
+
+    public void UpdateItemCount(int currentCount)
+    {
+        itemCount.text = currentCount.ToString();
+    }
+    
 }

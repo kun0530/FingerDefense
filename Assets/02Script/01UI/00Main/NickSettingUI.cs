@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
 public class NickSettingUI : MonoBehaviour
@@ -18,67 +19,77 @@ public class NickSettingUI : MonoBehaviour
     public bool isComplete = false;
     public MainUI mainUI;
     private GameManager gameManager;
+    private ResourceManager resourceManager;
     private readonly Regex koreanFullSyllablesRegex = new("^[가-힣a-zA-Z0-9]*$");
     private string userId;
 
     public TextMeshProUGUI noticeText;
     private Vector3 noticeTextInitialPosition;
 
-    public void Awake()
+    private void Start()
     {
-        gameManager = GameObject.FindWithTag("Manager").TryGetComponent(out GameManager manager) ? manager : null;    
-    }
-
-    public void Start()
-    {
-        confirmButton.onClick.AddListener(OnClickConfirm);
-        cancelButton.onClick.AddListener(OnClickCancel);
-        confirmNickButton.onClick.AddListener(OnClickConfirmNick);
+        gameManager = GameManager.instance;
+        resourceManager=GameObject.FindWithTag("Resources").TryGetComponent(out ResourceManager manager) ? manager : null;
         
         noticeTextInitialPosition = noticeText.transform.localPosition;
-        
+    }
+
+    private void OnEnable()
+    {
+        confirmNickButton.onClick.AddListener(OnClickConfirmNick);
+        confirmButton.onClick.AddListener(OnClickConfirm);
+        cancelButton.onClick.AddListener(OnClickCancel);
         inputField.onSelect.AddListener(OnInputFieldSelected);
     }
+
     private void OnInputFieldSelected(string text)
     {
         inputField.ActivateInputField();
     }
+    
     private void OnClickConfirm()
     {
         userId = inputField.text;
-        if(userId.Length is < 2 or > 8)
+        if (userId.Length is < 2 or > 8)
         {
             ShowNotice("닉네임은 2자 이상 8자 이하로 입력해주세요.");
             Logger.Log("닉네임은 2자 이상 8자 이하로 입력해주세요.");
             return;
         }
-        if(!koreanFullSyllablesRegex.IsMatch(userId))
+        if (!koreanFullSyllablesRegex.IsMatch(userId))
         {
             ShowNotice("닉네임은 한글 음절, 영어, 숫자만 입력 가능합니다.");
             Logger.Log("닉네임은 한글 음절, 영어, 숫자만 입력 가능합니다.");
             return;
         }
         
-        gameManager.PlayerName = inputField.text;
+        gameManager.ResourceManager.PlayerName = inputField.text;
         
         nickCheckUI.SetActive(true);
-        nickNameText.text = $"정말 <color=#FF0000>{gameManager.PlayerName}</color>으로 설정하시겠습니까?";
+        nickNameText.text = $"정말 <color=#FF0000>{gameManager.ResourceManager.PlayerName}</color>으로 설정하시겠습니까?";
         
-        Logger.Log($"{gameManager.PlayerName}으로 설정되었습니다.");
+        Logger.Log($"{gameManager.ResourceManager.PlayerName}으로 설정되었습니다.");
     }
 
     private void OnClickCancel()
     {
+        if (gameManager == null || gameManager.ResourceManager == null)
+        {
+            Debug.LogError("GameManager or ResourceManager is not initialized.");
+            return;
+        }
+
         nickCheckUI.SetActive(false);
-        gameManager.PlayerName = "";
-        Logger.Log($"{gameManager.PlayerName}으로 설정되었습니다.");
+        gameManager.ResourceManager.PlayerName = "";
+        Logger.Log($"{gameManager.ResourceManager.PlayerName}으로 설정되었습니다.");
     }
 
     private void OnClickConfirmNick()
     {
+        gameObject.SetActive(false);
         isComplete = true;
         mainUI.UpdatePlayerInfo();
-        gameObject.SetActive(false);
+        
         Logger.Log("닉네임 설정이 완료되었습니다.");
     }
     

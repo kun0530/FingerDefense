@@ -11,10 +11,10 @@ public class MainUiManager : MonoBehaviour
     public ShopSettingUI ShopUI;
     public GachaSystem GachaSystem;
     private GameManager gameManager;
+    public UpgradePanelManager upgradePanelManager;
     
     public TutorialController tutorialController;
     public TutorialController stageTutorialController;
-    
     
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class MainUiManager : MonoBehaviour
     }
     public void Start()
     {
-        if (!gameManager.NicknameCheck)
+        if (!gameManager.ResourceManager.NicknameCheck)
         {
             tutorialController.gameObject.SetActive(true);
             MainUI.gameObject.SetActive(false);
@@ -31,6 +31,7 @@ public class MainUiManager : MonoBehaviour
             NicknameUI.SetActive(false);
             ShopUI.gameObject.SetActive(false);
             GachaSystem.gameObject.SetActive(false);
+            upgradePanelManager.gameObject.SetActive(false);
         }
         else
         {
@@ -41,6 +42,7 @@ public class MainUiManager : MonoBehaviour
             StageUI.SetActive(false);
             ShopUI.gameObject.SetActive(false);
             GachaSystem.gameObject.SetActive(false);
+            upgradePanelManager.gameObject.SetActive(false);
         }
     }
     
@@ -51,7 +53,7 @@ public class MainUiManager : MonoBehaviour
         {
             StageUI.SetActive(true);
             
-            if(!gameManager.StageChoiceTutorialCheck)
+            if(!gameManager.ResourceManager.StageChoiceTutorialCheck)
             {
                 stageTutorialController.gameObject.SetActive(true);
             }

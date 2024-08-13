@@ -21,7 +21,7 @@ public class DeckSlotController : MonoBehaviour
     public Button startButton;
     public Button closeButton;
     
-    
+    public GameManager gameManager;
     
     private void Awake()
     {
@@ -30,6 +30,7 @@ public class DeckSlotController : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameManager.instance;
         RefreshCharacterSlots();
         
         startButton.onClick.AddListener(() =>
@@ -48,13 +49,24 @@ public class DeckSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (characterSlots.Count == 0 && filterSlots.Count == 0)
+        LoadCharacterSelection();
+        if (filterringSlotParent != null)
         {
             RefreshCharacterSlots();
-        }  
+        }
+        else
+        {
+            Logger.LogError("CharacterPanel is not assigned in DeckSlotController.");
+        }
+
     }
 
-    private void RefreshCharacterSlots()
+    private void OnDisable()
+    {
+        SaveCharacterSelection();
+    }
+
+    public void RefreshCharacterSlots()
     {
         foreach (var slot in filterSlots)
         {
@@ -86,9 +98,9 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateFilteringSlots()
     {
-        if (GameManager.instance == null) return;
         
-        var obtainedGachaIds = GameManager.instance.ObtainedGachaIDs;
+        
+        var obtainedGachaIds = GameManager.instance.ResourceManager.ObtainedGachaIDs;
         Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
         foreach (var characterId in obtainedGachaIds)
         {
@@ -266,19 +278,27 @@ public class DeckSlotController : MonoBehaviour
             if (characterId != 0)
             {
                 var characterData = playerCharacterTable.Get(characterId);
-                var slot = characterSlots[i];
-                slot.SetCharacterSlot(characterData);
-                slot.ChoicePanel.SetActive(false);
-                addedCharacters.Add(characterId);
-                var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
-                if (originalSlot != null)
+        
+                // Index 체크 추가
+                if (i < characterSlots.Count)
                 {
-                    originalSlot.ChoiceButton.interactable = false;
-                    activeChoicePanelSlots.Add(originalSlot);
+                    var slot = characterSlots[i];
+                    slot.SetCharacterSlot(characterData);
+                    slot.ChoicePanel.SetActive(false);
+                    addedCharacters.Add(characterId);
+                    var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
+                    if (originalSlot != null)
+                    {
+                        originalSlot.ChoiceButton.interactable = false;
+                        activeChoicePanelSlots.Add(originalSlot);
+                    }
+                }
+                else
+                {
+                    Logger.LogWarning($"Character slot index {i} is out of range. Skipping slot assignment.");
                 }
             }
         }
-
         UpdateChoicePanels();
         SortCharacterSlots();
     }

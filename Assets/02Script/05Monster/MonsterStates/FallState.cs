@@ -48,5 +48,6 @@ public class FallState : IState
     public void Exit()
     {
         collider.enabled = true;
+        controller.shadowImage?.gameObject.SetActive(true);
     }
 }
