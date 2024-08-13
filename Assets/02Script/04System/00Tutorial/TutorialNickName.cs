@@ -10,6 +10,7 @@ public class TutorialNickName: TutorialBase
         if (ActiveObject.gameObject.activeSelf == false)
         {
             ActiveObject.gameObject.SetActive(true);
+            ActiveObject.gameObject.transform.SetAsLastSibling();
         }
     }
 
