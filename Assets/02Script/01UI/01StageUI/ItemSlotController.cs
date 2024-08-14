@@ -175,4 +175,71 @@ public class ItemSlotController : MonoBehaviour
             Logger.Log($"Removed item {itemId} from LoadTable");
         }
     }
+    public void OnStartButtonClick()
+    {
+        // 빈 슬롯에서 아이템 사용 처리
+        foreach (var emptySlot in emptySlots)
+        {
+            if (emptySlot.ItemId == 0) continue;
+
+            int usedCount = emptySlot.GetItemCount(); // 실제 사용한 아이템 개수
+            if (usedCount > 0)
+            {
+                // 게임 데이터에서 아이템 사용 처리
+                ApplyItemUsage(emptySlot.ItemId, usedCount);
+
+                // 사용한 아이템을 LoadTable에서 업데이트
+                UpdateItemInLoadTable(emptySlot.ItemId, usedCount);
+
+                // UI에서 아이템 개수를 업데이트
+                emptySlot.UpdateItemCount(0);
+                emptySlot.ClearSlot(); // 사용 후 슬롯 초기화
+            }
+        }
+
+        // 사용 후 아이템 슬롯을 새로고침
+        RefreshItemSlots();
+    }
+
+    private void ApplyItemUsage(int itemId, int usedCount)
+    {
+        // 실제 게임 데이터에서 아이템 수량 감소 처리
+        var gameItem = GameManager.instance.GameData.Items.FirstOrDefault(item => item.itemId == itemId);
+
+        // 기본값과 비교하여 유효한 값인지 확인합니다.
+        if (!gameItem.Equals(default((int itemId, int itemCount))))
+        {
+            var updatedItemCount = gameItem.itemCount - usedCount;
+
+            if (updatedItemCount <= 0)
+            {
+                GameManager.instance.GameData.Items.Remove(gameItem);
+            }
+            else
+            {
+                // 아이템 수량을 업데이트합니다.
+                var updatedItem = (gameItem.itemId, updatedItemCount);
+                GameManager.instance.GameData.Items.Remove(gameItem);
+                GameManager.instance.GameData.Items.Add(updatedItem);
+            }
+        }
+    }
+
+    private void UpdateItemInLoadTable(int itemId, int usedCount)
+    {
+        // LoadTable에서 사용된 아이템의 상태 업데이트
+        var itemInLoadTable = Variables.LoadTable.ItemId.FirstOrDefault(item => item.itemId == itemId);
+        if (itemInLoadTable != default)
+        {
+            Variables.LoadTable.ItemId.Remove(itemInLoadTable);
+            Variables.LoadTable.ItemId.Add((itemId, usedCount));
+            Logger.Log($"Updated item {itemId} in LoadTable with used count {usedCount}");
+        }
+        else
+        {
+            Variables.LoadTable.ItemId.Add((itemId, usedCount));
+            Logger.Log($"Added new item {itemId} to LoadTable with count {usedCount}");
+        }
+    }
+
 }

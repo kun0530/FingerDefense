@@ -34,11 +34,9 @@ public class DragInfoSlot : MonoBehaviour
                 {
                     GameManager.instance.GameData.Gold -= cost;
                     UpdateInteractive();
-                    this.gameObject.SetActive(false);
                 })
                 .AddButton("취소", () =>
                 {
-                    this.gameObject.SetActive(false);
                 })
                 .Show();
         }
@@ -49,7 +47,6 @@ public class DragInfoSlot : MonoBehaviour
                 .SetBody("골드가 부족합니다.")
                 .AddButton("확인", () =>
                 {
-                    this.gameObject.SetActive(false);
                 })
                 .Show();
         }
@@ -66,6 +63,11 @@ public class DragInfoSlot : MonoBehaviour
 
     private void UpdateInteractive()
     {
-        this.gameObject.SetActive(false);
+        buyButton.interactable = false;
+        monsterCost.text = "구매 완료";
+        monsterCost.color = Color.black;
+        
+        // 구매 완료 시 해당 아이디랑 같은 몬스터의 드래그 기능 활성화
+        
     }
 }

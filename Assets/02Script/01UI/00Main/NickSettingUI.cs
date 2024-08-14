@@ -86,6 +86,7 @@ public class NickSettingUI : MonoBehaviour
     {
         gameObject.SetActive(false);
         isComplete = true;
+        gameManager.GameData.NicknameCheck = true;
         
         Logger.Log("닉네임 설정이 완료되었습니다.");
     }
