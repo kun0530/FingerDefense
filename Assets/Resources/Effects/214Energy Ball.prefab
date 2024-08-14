@@ -66,6 +66,7 @@ MonoBehaviour:
   casterOffsetPos: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   targetOffsetPos: {x: -1, y: 0, z: 0}
+  endEffect: {fileID: 0}
   speed: 5
   acceleration: 9.8
   isBuffApplied: 0
@@ -157,8 +158,20 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6185780758814626542, guid: b23fce14ddd22254fadd9fe322e3643b, type: 3}
+      propertyPath: startDelay.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6185780758814626542, guid: b23fce14ddd22254fadd9fe322e3643b, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8087170151539688576, guid: b23fce14ddd22254fadd9fe322e3643b, type: 3}
       propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8670905817630857501, guid: b23fce14ddd22254fadd9fe322e3643b, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
