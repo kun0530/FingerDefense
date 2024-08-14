@@ -71,6 +71,15 @@ public class StageManager : MonoBehaviour
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
             TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
+            
+            if (currentState == StageState.GameClear &&
+                Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
+            {
+                //GetGold(earnedGold);
+                GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+                DataManager.SaveFile(GameManager.instance.GameData);
+                Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
+            }
         }
     }
 

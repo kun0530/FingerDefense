@@ -21,8 +21,38 @@ public class MonsterGimmickPanel : MonoBehaviour
     private void Start()
     {
         SetupGimmickUpgradeButtons();
+        for(var i=0; i<GimmickRangeUpgradeButtons.Length; i++)
+        {
+            var index = i;
+            GimmickRangeUpgradeButtons[index].onClick.AddListener(() => OnClickGimmickRangeUpgradeButton(index));
+        }
+        for(var i=0; i<GimmickDamageUpgradeButtons.Length; i++)
+        {
+            var index = i;
+            GimmickDamageUpgradeButtons[index].onClick.AddListener(() => OnClickGimmickDamageUpgradeButton(index));
+        }
+        for(var i=0; i<GimmickDurationUpgradeButtons.Length; i++)
+        {
+            var index = i;
+            GimmickDurationUpgradeButtons[index].onClick.AddListener(() => OnClickGimmickDurationGradeButton(index));
+        }
+    }
+    private void OnClickGimmickRangeUpgradeButton(int index)
+    {
+        
+    }
+    private void OnClickGimmickDamageUpgradeButton(int index)
+    {
+        
+    }
+    private void OnClickGimmickDurationGradeButton(int index)
+    {
+        
     }
 
+    
+   
+    
     private void SetupGimmickUpgradeButtons()
     {
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
@@ -65,4 +95,6 @@ public class MonsterGimmickPanel : MonoBehaviour
             }
         }
     }
+
+
 }
