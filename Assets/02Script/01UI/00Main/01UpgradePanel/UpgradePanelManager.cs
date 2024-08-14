@@ -16,6 +16,7 @@ public class UpgradePanelManager : MonoBehaviour,IResourceObserver
     public TextMeshProUGUI[] ChapterText;
     private StringTable stringTable;
     private GameManager gameManager;
+    
     private void Awake()
     {
         stringTable ??= DataTableManager.Get<StringTable>(DataTableIds.String);

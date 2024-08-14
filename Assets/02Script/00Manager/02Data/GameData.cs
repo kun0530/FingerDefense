@@ -115,14 +115,20 @@ public class GameData : IResourceSubject
             NotifyObservers(ResourceType.Game4TutorialCheck, game4TutorialCheck ? 1 : 0);
         }
     }
+    public int StageClearNum; //스테이지 클리어 한 최종 ID
+    public int stageClearNum
+    {
+        get => StageClearNum;
+        set => StageClearNum = value;
+    }
     
-    public HashSet<int> MonsterDragIds = new HashSet<int>();
     
     public List<int> ObtainedGachaIDs = new List<int>();
     public List<(int itemId, int itemCount)> Items = new List<(int, int)>();
     
-    public List<(int monsterGimmick, int level)> MonsterGimmickLevel = new List<(int, int)>();
-    public List<(int playerUpgrade, int level)> PlayerUpgradeLevel = new List<(int, int)>();
+    
+    
+    public List<(int stage, int clear)> StageClear = new List<(int, int)>();
     
     public int StageClearCount; 
     enum TutorialCheck
@@ -137,22 +143,68 @@ public class GameData : IResourceSubject
         GAME4
     }
 
-    enum MonsterGimmick
+    public enum MonsterDrag
     {
         NONE = -1,
-        ATTACKRANGE=0,
-        ATTACKDAMAG=1,
-        ATTACKDURATION=2,
+        LOCK=0,
+        UNLOCK=1,
+        ACTIVE=2,
+    }
+    MonsterDrag monsterDrag;
+    public List<(int monsterId, int monsterDrag)> MonsterDragLevel = new List<(int, int)>();
+    public void UpdateMonsterDragLevel(int monsterId, int newDragLevel)
+    {
+        for (var i = 0; i < MonsterDragLevel.Count; i++)
+        {
+            if (MonsterDragLevel[i].monsterId == monsterId)
+            {
+                MonsterDragLevel[i] = (monsterId, newDragLevel);
+                return;
+            }
+        }
+    }
+    
+    public enum MonsterGimmick
+    {
+        NONE = -1,
+        ATTACKRANGE = 0,
+        ATTACKDAMAGE = 1,
+        ATTACKDURATION = 2,
     }
     MonsterGimmick monsterGimmick;
-    enum PlayerUpgrade
+    public List<(int monsterGimmick,int level)> MonsterGimmickLevel = new List<(int,int)>();
+    public void UpdateMonsterGimmickLevel(int gimmick, int level)
+    {
+        for (var i = 0; i < MonsterGimmickLevel.Count; i++)
+        {
+            if(MonsterGimmickLevel[i].monsterGimmick == gimmick)
+            {
+                MonsterGimmickLevel[i] = (gimmick, level);
+                return;
+            }
+        }
+    }
+    
+    public enum PlayerUpgrade
     {
         NONE = -1,
-        CHARACTER_ARRANGEMENT=0,
-        PLAYER_HEALTH=1,
-        INCREASE_DRAG=2,
+        CHARACTER_ARRANGEMENT = 3,
+        PLAYER_HEALTH = 4,
+        INCREASE_DRAG = 5,
     }
     PlayerUpgrade playerUpgrade;
+    public List<(int playerUpgrade, int level)> PlayerUpgradeLevel = new List<(int,int)>();
+    public void UpdatePlayerUpgradeLevel(int player, int level)
+    {
+        for (var i = 0; i < PlayerUpgradeLevel.Count; i++)
+        {
+            if(PlayerUpgradeLevel[i].playerUpgrade == player)
+            {
+                PlayerUpgradeLevel[i] = (player, level);
+                return;
+            }
+        }
+    }
 
     public void AddItem(int itemId, int itemCount)
     {
@@ -179,7 +231,7 @@ public class GameData : IResourceSubject
             }
         }
     }
-
+    
     private List<IResourceObserver> observers = new List<IResourceObserver>();
 
     // 옵저버 패턴 관련 메서드

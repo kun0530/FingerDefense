@@ -6,11 +6,11 @@ public class MonsterDragPanel : MonoBehaviour
     private UpgradeTable upgradeTable;
     private AssetListTable assetListTable;
     private StringTable stringTable;
-    
+
     public DragInfoSlot dragInfoSlotPrefab;
     public RectTransform[] dragInfoParent;
     public Button[] stageButton;
-    
+
     private void Awake()
     {
         upgradeTable ??= DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
@@ -32,6 +32,7 @@ public class MonsterDragPanel : MonoBehaviour
             stageButton[index].onClick.AddListener(() => ShowDragInfoParent(index));
         }
     }
+
     private void ShowDragInfoParent(int index)
     {
         foreach (var parent in dragInfoParent)
@@ -44,6 +45,7 @@ public class MonsterDragPanel : MonoBehaviour
             dragInfoParent[index].gameObject.SetActive(true);
         }
     }
+
     private void CreateSlots()
     {
         var parentIndex = 0;
@@ -54,9 +56,14 @@ public class MonsterDragPanel : MonoBehaviour
             if (upgradeData.Type == 0)
             {
                 var slot = Instantiate(dragInfoSlotPrefab, dragInfoParent[parentIndex]);
-                slot.monsterCost.text = upgradeData.UpgradePrice.ToString();
+
+                // 현재 UpgradeResultId에 대한 MonsterDragLevel을 가져옵니다.
+                var dragLevel = GameManager.instance.GameData.MonsterDragLevel
+                    .Find(x => x.monsterId == upgradeData.UpgradeResultId).monsterDrag;
+
+                slot.SetupSlot(upgradeData.UpgradePrice, dragLevel, upgradeData.UpgradeResultId);
+
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-            
                 if (!string.IsNullOrEmpty(assetName))
                 {
                     string assetPath = $"Prefab/01MonsterUI/{assetName}";
@@ -65,8 +72,8 @@ public class MonsterDragPanel : MonoBehaviour
                     if (assetObject != null)
                     {
                         var instantiatedObject = Instantiate(assetObject, slot.transform);
-                        instantiatedObject.transform.localPosition = Vector3.zero; // 원하는 위치로 조정
-                        instantiatedObject.transform.localScale = new Vector3(2, 2, 2); // 필요에 따라 스케일 조정
+                        instantiatedObject.transform.localPosition = Vector3.zero;
+                        instantiatedObject.transform.localScale = new Vector3(2, 2, 2);
                     }
                     else
                     {
@@ -78,8 +85,8 @@ public class MonsterDragPanel : MonoBehaviour
                     Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 AssetName을 찾을 수 없습니다.");
                 }
 
+                slot.UpdateLockState(dragLevel == (int)GameData.MonsterDrag.LOCK);
                 slot.UpdateCostColor();
-
                 slot.transform.SetParent(dragInfoParent[parentIndex], false);
 
                 slotCount++;
@@ -95,5 +102,6 @@ public class MonsterDragPanel : MonoBehaviour
             }
         }
     }
+
 
 }

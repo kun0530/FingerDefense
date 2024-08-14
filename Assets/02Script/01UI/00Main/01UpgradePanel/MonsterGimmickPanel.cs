@@ -21,8 +21,38 @@ public class MonsterGimmickPanel : MonoBehaviour
     private void Start()
     {
         SetupGimmickUpgradeButtons();
+        for(var i=0; i<GimmickRangeUpgradeButtons.Length; i++)
+        {
+            var index = i;
+            GimmickRangeUpgradeButtons[index].onClick.AddListener(() => OnClickGimmickRangeUpgradeButton(index));
+        }
+        for(var i=0; i<GimmickDamageUpgradeButtons.Length; i++)
+        {
+            var index = i;
+            GimmickDamageUpgradeButtons[index].onClick.AddListener(() => OnClickGimmickDamageUpgradeButton(index));
+        }
+        for(var i=0; i<GimmickDurationUpgradeButtons.Length; i++)
+        {
+            var index = i;
+            GimmickDurationUpgradeButtons[index].onClick.AddListener(() => OnClickGimmickDurationGradeButton(index));
+        }
+    }
+    private void OnClickGimmickRangeUpgradeButton(int index)
+    {
+        
+    }
+    private void OnClickGimmickDamageUpgradeButton(int index)
+    {
+        
+    }
+    private void OnClickGimmickDurationGradeButton(int index)
+    {
+        
     }
 
+    
+   
+    
     private void SetupGimmickUpgradeButtons()
     {
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
@@ -30,7 +60,7 @@ public class MonsterGimmickPanel : MonoBehaviour
             if (upgradeData.Type == 1)
             {
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-                Sprite sprite = Resources.Load<Sprite>($"Prefab/06ShopIcon/{assetName}"); // 경로는 프로젝트 구조에 맞게 수정
+                Sprite sprite = Resources.Load<Sprite>($"Prefab/10UpgradeUI/{assetName}");
 
                 if (sprite == null)
                 {
@@ -43,19 +73,28 @@ public class MonsterGimmickPanel : MonoBehaviour
                     case 0:
                         if (GimmickRangeUpgradeButtons.Length > 0)
                         {
-                            GimmickRangeUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var t in GimmickRangeUpgradeButtons)
+                            {
+                                t.image.sprite = sprite;
+                            }
                         }
                         break;
                     case 1:
                         if (GimmickDamageUpgradeButtons.Length > 0)
                         {
-                            GimmickDamageUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var t in GimmickDamageUpgradeButtons)
+                            {
+                                t.image.sprite = sprite;
+                            }
                         }
                         break;
                     case 2:
                         if (GimmickDurationUpgradeButtons.Length > 0)
                         {
-                            GimmickDurationUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var t in GimmickDurationUpgradeButtons)
+                            {
+                                t.image.sprite = sprite;
+                            }
                         }
                         break;
                     default:
@@ -65,4 +104,6 @@ public class MonsterGimmickPanel : MonoBehaviour
             }
         }
     }
+
+
 }

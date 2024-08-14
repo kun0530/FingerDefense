@@ -11,6 +11,7 @@ public class UpgradeData
     public int Name { get; set; }
     public int Type { get; set; }
     public int UpStatType { get; set; }
+    public int Level { get; set; }
     public float UpStatValue { get; set; }
     public int UpgradePrice { get; set; }
     public int NeedClearStage { get; set; }
