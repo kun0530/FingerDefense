@@ -119,7 +119,6 @@ public class ShopPayCheckManager : MonoBehaviour
                     gameManager.GameData.Gold -= itemCost;
                     gameManager.GameData.AddItem(itemId, itemCount); 
                     ShowPurchaseResult($"아이템 {itemCount}개를 {itemCost} 골드로 구매했습니다.");
-                   
                     
                 }
                 else
@@ -627,6 +626,7 @@ public class ShopPayCheckManager : MonoBehaviour
         extraConfirmButton.gameObject.SetActive(false);
         extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
         extraConfirmPanel.SetActive(true);
+        DataManager.SaveFile(gameManager.GameData);
     }
 
     private void ResetState()

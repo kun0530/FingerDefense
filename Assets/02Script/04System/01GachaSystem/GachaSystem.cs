@@ -72,7 +72,7 @@ public class GachaSystem : MonoBehaviour
                      GameManager.instance.GameData.Mileage += 500;
                      break;   
                }
-               DataManager.SaveFile(GameManager.instance.GameData);
+               
             }
             SpawnResultSlot(result, isNew);
          }
@@ -115,6 +115,7 @@ public class GachaSystem : MonoBehaviour
       var slot = Instantiate(resultSlot, gachaSlotParent);
       slot.Setup(data, aasetListTable, stringTable,isNew);
       spawnedSlots.Add(slot);
+      DataManager.SaveFile(GameManager.instance.GameData);
    }
    private void ClearGachaResults()
    {

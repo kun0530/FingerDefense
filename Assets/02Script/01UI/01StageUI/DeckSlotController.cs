@@ -21,7 +21,7 @@ public class DeckSlotController : MonoBehaviour
     public Button startButton;
     public Button closeButton;
     
-    public GameManager gameManager;
+    private GameManager gameManager;
     
     private void Awake()
     {
