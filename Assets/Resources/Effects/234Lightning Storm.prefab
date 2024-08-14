@@ -66,9 +66,12 @@ MonoBehaviour:
   casterOffsetPos: {x: 0, y: -6, z: 0}
   target: {fileID: 0}
   targetOffsetPos: {x: 0, y: 0, z: 0}
+  endEffect: {fileID: 0}
   speed: 10
   acceleration: 9.8
   isBuffApplied: 0
+  impactEffects: []
+  impactEffectLifeTime: 0
 --- !u!1001 &6591729951231668932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77,9 +80,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3282561925383588747}
     m_Modifications:
+    - target: {fileID: 740392730440788899, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3928905549335065769, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: simulationSpeed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294302568721399367, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568721399385, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: simulationSpeed
@@ -95,15 +106,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalPosition.x
@@ -111,7 +122,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 4294302568896850299, guid: 9239e5d11f88ce74c8e63582e0438e87, type: 3}
       propertyPath: m_LocalPosition.z

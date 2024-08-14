@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
     private Vector3 prevTargetPos;
 
     [Header("충돌 이펙트")]
-    [SerializeField] private List<EffectController> impactEffects;
+    [SerializeField] private List<GameObject> impactEffects;
     [SerializeField] private float impactEffectLifeTime;
 
     private void OnEnable()
