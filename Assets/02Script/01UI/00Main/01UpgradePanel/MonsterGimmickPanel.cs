@@ -60,7 +60,7 @@ public class MonsterGimmickPanel : MonoBehaviour
             if (upgradeData.Type == 1)
             {
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-                Sprite sprite = Resources.Load<Sprite>($"Prefab/06ShopIcon/{assetName}"); // 경로는 프로젝트 구조에 맞게 수정
+                Sprite sprite = Resources.Load<Sprite>($"Prefab/10UpgradeUI/{assetName}");
 
                 if (sprite == null)
                 {
@@ -73,19 +73,28 @@ public class MonsterGimmickPanel : MonoBehaviour
                     case 0:
                         if (GimmickRangeUpgradeButtons.Length > 0)
                         {
-                            GimmickRangeUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var t in GimmickRangeUpgradeButtons)
+                            {
+                                t.image.sprite = sprite;
+                            }
                         }
                         break;
                     case 1:
                         if (GimmickDamageUpgradeButtons.Length > 0)
                         {
-                            GimmickDamageUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var t in GimmickDamageUpgradeButtons)
+                            {
+                                t.image.sprite = sprite;
+                            }
                         }
                         break;
                     case 2:
                         if (GimmickDurationUpgradeButtons.Length > 0)
                         {
-                            GimmickDurationUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var t in GimmickDurationUpgradeButtons)
+                            {
+                                t.image.sprite = sprite;
+                            }
                         }
                         break;
                     default:

@@ -29,7 +29,7 @@ public class CharacterFeaturePanel : MonoBehaviour
             if (upgradeData.Type == 3)
             {
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-                Sprite sprite = Resources.Load<Sprite>($"Prefab/06GameIcon/{assetName}"); 
+                Sprite sprite = Resources.Load<Sprite>($"Prefab/10UpgradeUI/{assetName}"); 
 
                 if (sprite == null)
                 {
@@ -42,19 +42,28 @@ public class CharacterFeaturePanel : MonoBehaviour
                     case 3:
                         if (characterArrangementButtons.Length > 0)
                         {
-                            characterArrangementButtons[0].image.sprite = sprite;
+                            foreach (var button in characterArrangementButtons)
+                            {
+                                button.image.sprite = sprite;    
+                            }
                         }
                         break;
                     case 4:
                         if (characterHpUpgradeButtons.Length > 0)
                         {
-                            characterHpUpgradeButtons[0].image.sprite = sprite;
+                            foreach (var button in characterHpUpgradeButtons)
+                            {
+                                button.image.sprite = sprite;    
+                            }
                         }
                         break;
                     case 5:
                         if (characterEnhancedGradeButtons.Length > 0)
                         {
-                            characterEnhancedGradeButtons[0].image.sprite = sprite;
+                            foreach (var button in characterEnhancedGradeButtons)
+                            {
+                                button.image.sprite = sprite;    
+                            }
                         }
                         break;
                     default:

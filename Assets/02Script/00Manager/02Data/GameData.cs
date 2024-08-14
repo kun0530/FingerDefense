@@ -126,15 +126,9 @@ public class GameData : IResourceSubject
     public List<int> ObtainedGachaIDs = new List<int>();
     public List<(int itemId, int itemCount)> Items = new List<(int, int)>();
     
-    public List<(int monsterGimmick, int level)> MonsterGimmickLevel = new List<(int, int)>();
-    public List<(int playerUpgrade, int level)> PlayerUpgradeLevel = new List<(int playerUpgrade, int)>();
+    
+    
     public List<(int stage, int clear)> StageClear = new List<(int, int)>();
-    
-    public List<int> UnlockMonsterID = new List<int>();  //스테이지 ID에 의해서 잠금이 해제된 몬스터 기능 ID
-    public List<int> ActiveMonsterID = new List<int>(); //활성화된 몬스터 기능 ID
-    
-    public List<int> UnlockPlayerID = new List<int>(); //스테이지 ID에 의해서 잠금이 해제된 플레이어 기능 ID
-    public List<int> ActivePlayerID = new List<int>(); //활성화된 플레이어 기능 ID
     
     public int StageClearCount; 
     enum TutorialCheck
@@ -170,23 +164,47 @@ public class GameData : IResourceSubject
         }
     }
     
-    
     public enum MonsterGimmick
     {
         NONE = -1,
-        ATTACKRANGE=0,
-        ATTACKDAMAG=1,
-        ATTACKDURATION=2,
+        ATTACKRANGE = 0,
+        ATTACKDAMAGE = 1,
+        ATTACKDURATION = 2,
     }
     MonsterGimmick monsterGimmick;
+    public List<(int monsterGimmick,int level)> MonsterGimmickLevel = new List<(int,int)>();
+    public void UpdateMonsterGimmickLevel(int gimmick, int level)
+    {
+        for (var i = 0; i < MonsterGimmickLevel.Count; i++)
+        {
+            if(MonsterGimmickLevel[i].monsterGimmick == gimmick)
+            {
+                MonsterGimmickLevel[i] = (gimmick, level);
+                return;
+            }
+        }
+    }
+    
     public enum PlayerUpgrade
     {
         NONE = -1,
-        CHARACTER_ARRANGEMENT=0,
-        PLAYER_HEALTH=1,
-        INCREASE_DRAG=2,
+        CHARACTER_ARRANGEMENT = 3,
+        PLAYER_HEALTH = 4,
+        INCREASE_DRAG = 5,
     }
     PlayerUpgrade playerUpgrade;
+    public List<(int playerUpgrade, int level)> PlayerUpgradeLevel = new List<(int,int)>();
+    public void UpdatePlayerUpgradeLevel(int player, int level)
+    {
+        for (var i = 0; i < PlayerUpgradeLevel.Count; i++)
+        {
+            if(PlayerUpgradeLevel[i].playerUpgrade == player)
+            {
+                PlayerUpgradeLevel[i] = (player, level);
+                return;
+            }
+        }
+    }
 
     public void AddItem(int itemId, int itemCount)
     {
