@@ -14,14 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 8006
   button: {fileID: 0}
-  count: 3
-  duration: 0
+  count: 0
+  effectPrefab: {fileID: -6794517186462047971, guid: 36fc1f938b1754f9d837e1dbe26e58dc, type: 3}
+  effectPos: {x: -5, y: -2}
+  effectCount: 5
+  effectInterval: {x: 3, y: 0}
+  duration: 2
   coolDown: 30
-  debuff:
-    id: 0
-    buffType: 1
+  debuffs:
+  - buffType: 1
     damageTerm: 0
     isPercentage: 1
     buffValue: -1
     isPermanent: 0
-    lastingTime: 2
+    lastingTime: 10
+    effectNo: 105
+  - buffType: 0
+    damageTerm: 0
+    isPercentage: 1
+    buffValue: -1
+    isPermanent: 0
+    lastingTime: 10
+    effectNo: 0

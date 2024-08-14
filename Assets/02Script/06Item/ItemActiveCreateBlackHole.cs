@@ -55,6 +55,7 @@ public class ItemActiveCreateBlackHole : ActiveItem
         var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
         pos.z = 0;
         activeBlackHole = GameObject.Instantiate(blackHolePrefab, pos, Quaternion.identity);
+        activeBlackHole.LifeTime = duration;
         if (inputManager)
             inputManager.OnClick -= PutBlackHole;
     }

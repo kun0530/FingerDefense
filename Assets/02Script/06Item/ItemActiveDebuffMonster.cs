@@ -23,6 +23,21 @@ public class ItemActiveDebuffMonster : ActiveItem
             }
         }
         
+        CreateEffect();
         base.UseItem();
+    }
+
+    private void CreateEffect()
+    {
+        if (!effectPrefab)
+            return;
+
+        for (int i = 0; i < effectCount; i++)
+        {
+            Vector3 pos = effectPos + effectInterval * i;
+            pos.z = pos.y;
+            var effect = Instantiate(effectPrefab, pos, Quaternion.identity);
+            effect.LifeTime = duration;
+        }
     }
 }

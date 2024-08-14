@@ -37,7 +37,6 @@ public class MoveState : IState
         {
             direction.x = controller.moveTargetPos.x
             > controller.transform.position.x ? 1f : -1f;
-            direction.x *= controller.directionMultiplier;
         }
         controller.SetFlip(direction.x > 0);
 

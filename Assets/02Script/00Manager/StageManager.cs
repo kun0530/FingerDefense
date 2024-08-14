@@ -43,8 +43,13 @@ public class StageManager : MonoBehaviour
         {
             castleShield = value;
             gameUiManager.UpdateShieldBar(castleShield, CastleMaxHp);
+            if (castleShield > 0f)
+                shieldEffect?.gameObject.SetActive(true);
+            else
+                shieldEffect?.gameObject.SetActive(false);
         }
     }
+    [SerializeField] private EffectController shieldEffect;
 
     private int monsterCount;
     public int MonsterCount

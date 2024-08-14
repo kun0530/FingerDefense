@@ -10,7 +10,7 @@ public enum EntityType
     MONSTER
 }
 
-public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettable where T : BaseStatus, new()
+public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettable, IEffectGettable where T : BaseStatus, new()
 {
     [HideInInspector] public StageManager stageManager;
 
@@ -189,5 +189,25 @@ public abstract class CombatEntity<T> : MonoBehaviour, IDamageable, IBuffGettabl
 
         var hpPercent = Status.CurrentHp / Status.CurrentMaxHp;
         hpBar.fillAmount = hpPercent;
+    }
+
+    public void AddEffect(EffectController effect)
+    {
+        if (effects.Contains(effect))
+            return;
+
+        effects.Add(effect);
+        effect.target = this;
+        effect.transform.SetParent(effectPosition);
+        effect.transform.localPosition = Vector3.zero;
+        effect.transform.localScale = effectScale;
+    }
+
+    public void RemoveEffect(EffectController effect)
+    {
+        if (!effects.Contains(effect))
+            return;
+
+        effects.Remove(effect);
     }
 }

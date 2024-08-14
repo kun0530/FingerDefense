@@ -21,6 +21,8 @@ public class EffectController : MonoBehaviour
     private bool isAutoDestroy = false;
     private float timer = 0f;
 
+    public IEffectGettable target;
+
     private void Update()
     {
         AutoDestroy();
@@ -34,7 +36,15 @@ public class EffectController : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > lifeTime)
         {
-            Destroy(gameObject);
+            ReleaseEffect();
         }
+    }
+
+    public void ReleaseEffect()
+    {
+        if (target != null)
+            target.RemoveEffect(this);
+
+        Destroy(gameObject);
     }
 }

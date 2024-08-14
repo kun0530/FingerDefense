@@ -5,8 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Active Monster Direction Change", fileName = "Item.asset")]
 public class ItemActiveMonsterDirection : ActiveItem
 {
-    [Tooltip("몬스터의 방향 조정: -1인 경우, 반대 방향")]
-    public float directionMultiplier;
+    public float speedMultiplier;
 
     public override void UseItem()
     {
@@ -18,9 +17,15 @@ public class ItemActiveMonsterDirection : ActiveItem
         {
             if (monster.TryGetComponent<MonsterController>(out var controller))
             {
-                if (controller.CurrentState == typeof(AttackState))
-                    controller.TryTransitionState<PatrolState>();
-                controller.directionMultiplier = directionMultiplier;
+                controller.TryTransitionState<BackMoveState>();
+                controller.speedMultiplier = speedMultiplier;
+
+                if (effectPrefab)
+                {
+                    var effect = Instantiate(effectPrefab);
+                    controller.AddEffect(effect);
+                    effect.LifeTime = duration;
+                }
             }
         }
 
@@ -35,7 +40,8 @@ public class ItemActiveMonsterDirection : ActiveItem
         foreach (var monster in monsters)
         {
             if (monster.TryGetComponent<MonsterController>(out var controller))
-                controller.directionMultiplier = 1f;
+                controller.TryTransitionState<PatrolState>();
+            controller.speedMultiplier = 1f;
         }
 
         base.CancelItem();

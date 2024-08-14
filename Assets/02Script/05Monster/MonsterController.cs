@@ -26,7 +26,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public float findRange = 3f;
     [SerializeField] private bool isDirectedRight = true;
     private float defaultRightScale;
-    [HideInInspector] public float directionMultiplier = 1f;
+    [HideInInspector] public float speedMultiplier = 1f;
 
     [HideInInspector] public MonsterSpineAni monsterAni;
     [HideInInspector] public TrackEntry deathTrackEntry;
@@ -102,12 +102,13 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
         stateMachine.AddState(new ChaseState(this));
         stateMachine.AddState(new AttackState(this));
         stateMachine.AddState(new AttackCastleState(this));
+        stateMachine.AddState(new BackMoveState(this));
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        directionMultiplier = 1f;
+        speedMultiplier = 1f;
         shadowImage?.gameObject.SetActive(true);
     }
 

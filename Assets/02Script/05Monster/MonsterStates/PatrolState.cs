@@ -40,7 +40,6 @@ public class PatrolState : IState
 
         // 성 포탈까지 이동
         Vector3 direction = ((Vector2)controller.moveTargetPos - (Vector2)controller.transform.position).normalized;
-        direction *= controller.directionMultiplier;
         controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         if (moveTrackEntry != null)
             moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;
