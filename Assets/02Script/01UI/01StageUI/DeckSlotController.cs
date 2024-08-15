@@ -98,8 +98,6 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateFilteringSlots()
     {
-        
-        
         var obtainedGachaIds = GameManager.instance.GameData.ObtainedGachaIDs;
         Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
         foreach (var characterId in obtainedGachaIds)
