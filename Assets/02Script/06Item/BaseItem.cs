@@ -27,8 +27,6 @@ public abstract class BaseItem : ScriptableObject
     [HideInInspector] public UiSlotButton button;
     [HideInInspector] public int count;
 
-    public EffectController effectPrefab;
-
     public virtual bool IsPassive { get => true; }
 
     public virtual void Init()

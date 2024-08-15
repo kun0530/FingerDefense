@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Passive Monster Debuff", fileName = "Item.asset")]
 public class ItemPassiveDebuffMonster : BaseItem
 {
+    [Header("이펙트")]
+    public EffectController effectPrefab;
     [Header("몬스터 디버프")]
     [SerializeField] public ItemDebuffMonster debuff;
 

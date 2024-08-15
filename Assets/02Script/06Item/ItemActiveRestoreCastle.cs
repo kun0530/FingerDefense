@@ -6,7 +6,7 @@ using UnityEngine;
 public class ItemActiveRestoreCastle : ActiveItem
 {
     [Header("이펙트")]
-    public EffectController effectPrefab2;
+    public EffectController effectPrefab;
     public Vector2 effectPos;
 
     [Header("성 체력 회복량")]
@@ -16,11 +16,11 @@ public class ItemActiveRestoreCastle : ActiveItem
     public override void UseItem()
     {
         StageMgr?.RestoreCastle(restoreCastleValue, isPercentage);
-        if (effectPrefab2)
+        if (effectPrefab)
         {
             Vector3 pos = effectPos;
             pos.z = pos.y;
-            var effect = Instantiate(effectPrefab2, pos, Quaternion.identity);
+            var effect = Instantiate(effectPrefab, pos, Quaternion.identity);
             effect.LifeTime = duration;
         }
         base.UseItem();
