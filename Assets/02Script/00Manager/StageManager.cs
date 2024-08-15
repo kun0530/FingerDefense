@@ -12,7 +12,10 @@ public enum StageState
 
 public class StageManager : MonoBehaviour
 {
+    [Header("Castle")]
     public List<GameObject> castleImages;
+    public Transform castleRightTopPos;
+    public Transform castleLeftBottomPos;
 
     public float CastleMaxHp { get; private set; } = 500f; // To-Do: 추후 변경
     private float castleHp;

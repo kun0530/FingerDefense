@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public abstract class BaseItem : ScriptableObject
 {
     [HideInInspector] public int id;
+    [Header("아이템 설명")]
+    [TextArea(3, 10)]
+    public string itemDesc;
 
     private StageManager stageManager;
     protected StageManager StageMgr
@@ -24,18 +27,13 @@ public abstract class BaseItem : ScriptableObject
     [HideInInspector] public UiSlotButton button;
     [HideInInspector] public int count;
 
-    public EffectController effectPrefab;
-    public Vector2 effectPos;
-    public int effectCount;
-    public Vector2 effectInterval;
-
     public virtual bool IsPassive { get => true; }
 
     public virtual void Init()
     {
-        stageManager = null;
-        button = null;
-        count = 0;
+        // stageManager = null;
+        // button = null;
+        // count = 0;
     }
 
     public abstract void UseItem();

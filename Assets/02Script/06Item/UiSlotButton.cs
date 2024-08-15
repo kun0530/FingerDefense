@@ -14,6 +14,9 @@ public class UiSlotButton : MonoBehaviour
     public void SetFillAmountBackground(float amount)
     {
         amount = Mathf.Clamp01(amount);
+        if (!backgroundBlack)
+            return;
+            
         backgroundBlack.fillAmount = amount;
 
         if (amount == 0f)

@@ -5,6 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Active Monster Debuff", fileName = "Item.asset")]
 public class ItemActiveDebuffMonster : ActiveItem
 {
+    [Header("이펙트")]
+    public EffectController effectPrefab;
+    public int effectCount;
+    public Vector2 effectPos;
+    public Vector2 effectInterval;
+
+    [Header("몬스터 디버프")]
     [SerializeField] public List<ItemDebuffMonster> debuffs;
 
     public override void UseItem()

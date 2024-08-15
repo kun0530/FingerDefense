@@ -12,19 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75943d28a22240ac8802192a7a40af9, type: 3}
   m_Name: An Agent of God
   m_EditorClassIdentifier: 
-  id: 0
+  id: 8015
+  itemDesc: "\uC544\uC774\uD15C \uC0AC\uC6A9 \uC2DC \uB9F5\uC744 \uB3CC\uC544\uB2E4\uB2C8\uBA70
+    \uBAAC\uC2A4\uD130\uB97C \uCD94\uC801\uD558\uB294 \uC2E0\uC758 \uB300\uB9AC\uC778\uC744
+    \uBCF4\uB0B4 \uACF5\uACA9\uD55C\uB2E4. \uC2E0\uC758 \uB300\uB9AC\uC778\uC758
+    \uB2A5\uB825\uCE58\uB294 \uB4DC\uB798\uADF8\uD558\uC5EC \uC801\uC6A9\uD55C \uCE90\uB9AD\uD130\uC758
+    \uC808\uBC18\uC758 \uAC12\uC744 \uAC00\uC9C4\uB2E4."
   button: {fileID: 0}
   count: 0
-  effectPrefab: {fileID: 0}
-  effectPos: {x: 0, y: 0}
-  effectCount: 0
-  effectInterval: {x: 0, y: 0}
-  duration: 0
-  coolDown: 0
-  characterPrefab: {fileID: 0}
-  hp: 0
-  skillId1: 0
-  skillId2: 0
-  moveSpeed: 0
-  findRange: 0
-  thresholdRange: 0
+  duration: 30
+  coolDown: 120
+  entryEffectPrefab: {fileID: -6794517186462047971, guid: 2a70df186a79d4694980dbc73f01dafe, type: 3}
+  exitEffectPrefab: {fileID: -6794517186462047971, guid: 01ba24b23e2674f519eba3878d84c927, type: 3}
+  characterPrefab: {fileID: 3104257420887257626, guid: 1d4dfbe2c0bae430098967a5cc003b1c, type: 3}
+  spawnRange:
+    serializedVersion: 2
+    x: 0
+    y: -4
+    width: 10
+    height: 3
+  hp: 5000
+  skillId1: 41001221
+  skillId2: 40010228
+  moveSpeed: 5
+  findRange: 5
+  thresholdRange: 3

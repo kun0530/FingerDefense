@@ -5,7 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Passive Monster Debuff", fileName = "Item.asset")]
 public class ItemPassiveDebuffMonster : BaseItem
 {
+    [Header("이펙트")]
+    public EffectController effectPrefab;
+    [Header("몬스터 디버프")]
     [SerializeField] public ItemDebuffMonster debuff;
+
+    private EffectController activeEffect;
 
     public override void UseItem()
     {
@@ -15,11 +20,14 @@ public class ItemPassiveDebuffMonster : BaseItem
 
         monsterSpawner.onResetMonster += debuff.GiveBuff;
         if (effectPrefab)
-            Instantiate(effectPrefab, new Vector3(0f, -4f, -4f), Quaternion.identity);
+            activeEffect = Instantiate(effectPrefab);
     }
 
     public override void CancelItem()
     {
+        if (activeEffect)
+            Destroy(activeEffect.gameObject);
+
         var stageManager = GameObject.FindGameObjectWithTag(Defines.Tags.STAGE_MANAGER_TAG)?.GetComponent<StageManager>();
         var monsterSpawner = stageManager?.monsterSpawner;
         if (!monsterSpawner)

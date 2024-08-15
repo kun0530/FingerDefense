@@ -63,8 +63,8 @@ public class AttackState : IState
         attackCoolDown = 1f / controller.Status.CurrentAtkSpeed;
         if (attackTimer > attackCoolDown)
         {
-            controller.attackTarget.TakeDamage(controller.Status.CurrentAtk, DamageReason.MONSTER_HIT_DAMAGE, controller.Status.element);
             controller.SetFlip(controller.attackTarget.transform.position.x > controller.transform.position.x);
+            controller.attackTarget.TakeDamage(controller.Status.CurrentAtk, DamageReason.MONSTER_HIT_DAMAGE, controller.Status.element);
             AttackStart();
         }
     }

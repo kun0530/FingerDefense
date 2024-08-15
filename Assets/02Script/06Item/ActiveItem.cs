@@ -6,6 +6,7 @@ public abstract class ActiveItem : BaseItem
 {
     public override bool IsPassive { get => false; }
 
+    [Header("액티브 아이템")]
     public float duration;
     private bool isItemUsed = false;
     private float durationTimer = 0f;
