@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Active Monster Direction Change", fileName = "Item.asset")]
 public class ItemActiveMonsterDirection : ActiveItem
 {
+    [Header("스피드 배율")]
+    [Tooltip("후퇴하는 몬스터들의 현재 이동 속도에 해당 배율을 적용하여 후퇴 속도를 결정합니다.")]
     public float speedMultiplier;
 
     public override void UseItem()

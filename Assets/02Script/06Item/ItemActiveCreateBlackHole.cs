@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(menuName = "Item/Active Create BlackHole", fileName = "Item.asset")]
 public class ItemActiveCreateBlackHole : ActiveItem
 {
+    [Header("블랙홀 프리팹")]
     public BlackHole blackHolePrefab;
 
     public float radius;

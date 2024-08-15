@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(menuName = "Item/Active Create Dummy", fileName = "Item.asset")]
 public class ItemActiveCreateDummy : ActiveItem
 {
+    [Header("이펙트")]
+    public EffectController entryEffectPrefab;
+    public EffectController exitEffectPrefab;
+    [Header("신의 대리인")]
     public PlayerCharacterController characterPrefab;
 
     [Header("신의 대리인의 스탯")]
@@ -38,8 +42,8 @@ public class ItemActiveCreateDummy : ActiveItem
         dragAndDrop = inputSystemGo?.GetComponent<DragAndDrop>();
         inputManager = inputSystemGo?.GetComponent<InputManager>();
 
-        var castlePos1Y = StageMgr.monsterSpawner.moveTarget1.position.y;
-        var castlePos2Y = StageMgr.monsterSpawner.moveTarget2.position.y;
+        var castlePos1Y = StageMgr.castleRightTopPos.position.y;
+        var castlePos2Y = StageMgr.castleLeftBottomPos.position.y;
         minY = Mathf.Min(castlePos1Y, castlePos2Y);
         maxY = Mathf.Max(castlePos1Y, castlePos2Y);
 
@@ -59,6 +63,13 @@ public class ItemActiveCreateDummy : ActiveItem
     public override void CancelItem()
     {
         base.CancelItem();
+
+        if (activeAgent != null)
+        {
+            var exitEffect = Instantiate(exitEffectPrefab, activeAgent.transform.position, Quaternion.identity);
+            exitEffect.LifeTime = 1f;
+            Destroy(activeAgent.gameObject);
+        }
     }
 
     public override void UpdateItem()
@@ -111,6 +122,8 @@ public class ItemActiveCreateDummy : ActiveItem
             moveBehavior.Init();
         }
 
+        var entryEffect = Instantiate(entryEffectPrefab, spawnPos, Quaternion.identity);
+        entryEffect.LifeTime = 1f;
         activeAgent = instantiatedCharacter;
     }
 }

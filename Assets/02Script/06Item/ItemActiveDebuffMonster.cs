@@ -5,6 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Active Monster Debuff", fileName = "Item.asset")]
 public class ItemActiveDebuffMonster : ActiveItem
 {
+    [Header("이펙트")]
+    public EffectController effectPrefab2;
+    public int effectCount;
+    public Vector2 effectPos;
+    public Vector2 effectInterval;
+
+    [Header("몬스터 디버프")]
     [SerializeField] public List<ItemDebuffMonster> debuffs;
 
     public override void UseItem()
@@ -29,14 +36,14 @@ public class ItemActiveDebuffMonster : ActiveItem
 
     private void CreateEffect()
     {
-        if (!effectPrefab)
+        if (!effectPrefab2)
             return;
 
         for (int i = 0; i < effectCount; i++)
         {
             Vector3 pos = effectPos + effectInterval * i;
             pos.z = pos.y;
-            var effect = Instantiate(effectPrefab, pos, Quaternion.identity);
+            var effect = Instantiate(effectPrefab2, pos, Quaternion.identity);
             effect.LifeTime = duration;
         }
     }
