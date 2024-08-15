@@ -22,6 +22,7 @@ public class DeckSlotController : MonoBehaviour
     public Button closeButton;
     
     private GameManager gameManager;
+    private int maxCharacterSlots = 3;
     
     private void Awake()
     {
@@ -68,6 +69,11 @@ public class DeckSlotController : MonoBehaviour
 
     public void RefreshCharacterSlots()
     {
+        // 업그레이드 상태에 따라 최대 캐릭터 슬롯 개수 설정
+        int arrangementLevel = GameManager.instance.GameData.PlayerUpgradeLevel
+            .Find(x => x.playerUpgrade == (int)GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT).level;
+        maxCharacterSlots = 3 + arrangementLevel; // 기본 3개 + 업그레이드 레벨
+    
         foreach (var slot in filterSlots)
         {
             Destroy(slot.gameObject);
@@ -92,7 +98,20 @@ public class DeckSlotController : MonoBehaviour
     {
         for (var i = 0; i < 8; i++)
         {
-            AddEmptyCharacterSlot();
+            var slot = Instantiate(characterSlotPrefab, characterSlotParent);
+
+            if (i < maxCharacterSlots)
+            {
+                slot.SetLocked(false);
+                slot.ChoicePanel.SetActive(false);
+                slot.OnSlotClick = HandleCharacterSlotClick;
+            }
+            else
+            {
+                slot.SetLocked(true); 
+            }
+
+            characterSlots.Add(slot);
         }
     }
 
@@ -109,11 +128,9 @@ public class DeckSlotController : MonoBehaviour
                 characterSlot.SetCharacterSlot(characterData);
                 characterSlot.OnSlotClick = HandleCharacterSlotClick;
                 filterSlots.Add(characterSlot);
-                Logger.Log($"Created slot for Character ID: {characterId}");
             }
             else
             {
-                Logger.Log($"Character data not found for ID: {characterId}");
             }
         }
     }
@@ -128,6 +145,13 @@ public class DeckSlotController : MonoBehaviour
 
     private void HandleCharacterSlotClick(CharacterSlotUI clickedSlot)
     {
+        // 슬롯이 잠겨있는지 확인
+        if (clickedSlot.LockImage.gameObject.activeSelf)
+        {
+            Logger.Log("이 슬롯은 잠겨있어 캐릭터를 배치할 수 없습니다.");
+            return; // 슬롯이 잠겨있다면 아무 동작도 하지 않음
+        }
+
         if (clickedSlot.transform.parent == filterringSlotParent)
         {
             if (addedCharacters.Contains(clickedSlot.characterData.Id))
@@ -135,7 +159,7 @@ public class DeckSlotController : MonoBehaviour
                 Logger.Log("이미 추가된 캐릭터입니다.");
                 return;
             }
-            
+
             if (addedCharacters.Count >= 8)
             {
                 Logger.Log("최대 8개까지만 추가 가능합니다.");
@@ -144,7 +168,8 @@ public class DeckSlotController : MonoBehaviour
 
             foreach (var slot in characterSlots)
             {
-                if (slot.characterData == null)
+                // 이미 캐릭터가 추가된 슬롯에만 캐릭터 배치 가능
+                if (slot.characterData == null && !slot.LockImage.gameObject.activeSelf)
                 {
                     slot.SetCharacterSlot(clickedSlot.characterData);
                     slot.ChoicePanel.SetActive(false);
@@ -152,11 +177,9 @@ public class DeckSlotController : MonoBehaviour
                     addedCharacters.Add(clickedSlot.characterData.Id);
                     activeChoicePanelSlots.Add(clickedSlot);
                     UpdateChoicePanels();
-                    
                     break;
                 }
             }
-            SortCharacterSlots();
         }
         else if (clickedSlot.transform.parent == characterSlotParent)
         {
@@ -173,17 +196,19 @@ public class DeckSlotController : MonoBehaviour
             clickedSlot.ClearSlot();
             characterSlots.Remove(clickedSlot);
             Destroy(clickedSlot.gameObject);
+
             AddEmptyCharacterSlot();
-            
+
             SortCharacterSlots();
         }
 
         UpdateCharacterIds();
     }
 
+
+
     private void UpdateCharacterIds()
     {
-        // Ensure the array is large enough
         if (Variables.LoadTable.characterIds.Length < characterSlots.Count)
         {
             Array.Resize(ref Variables.LoadTable.characterIds, characterSlots.Count);
@@ -221,22 +246,22 @@ public class DeckSlotController : MonoBehaviour
 
     private void SortCharacterSlots()
     {
-        characterSlots = characterSlots
+        var unlockedSlots = characterSlots
+            .Where(slot => !slot.LockImage.gameObject.activeSelf) 
             .OrderBy(slot => slot.characterData?.Class ?? int.MaxValue)
             .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
             .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
             .ToList();
-    
-        foreach (var slot in characterSlots)
-        {
-            Logger.Log(slot.characterData != null
-                ? $"Priority: {slot.characterData.Class}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
-                : "빈 슬롯");
-        }
-    
+
+        
+        int index = 0;
         for (var i = 0; i < characterSlots.Count; i++)
         {
-            characterSlots[i].transform.SetSiblingIndex(i);
+            if (!characterSlots[i].LockImage.gameObject.activeSelf) 
+            {
+                characterSlots[i].transform.SetSiblingIndex(index);
+                index++;
+            }
         }
     }
 

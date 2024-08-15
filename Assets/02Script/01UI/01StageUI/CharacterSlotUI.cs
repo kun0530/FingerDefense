@@ -19,6 +19,7 @@ public class CharacterSlotUI : MonoBehaviour
     public GameObject ChoicePanel;
     public Button ChoiceButton;
 
+    public Image LockImage;
     public delegate void SlotClickDelegate(CharacterSlotUI slot);
     public SlotClickDelegate OnSlotClick;
 
@@ -31,12 +32,12 @@ public class CharacterSlotUI : MonoBehaviour
     {
         MapSkillsToIndices();
     }
-
-    private void Start()
+    public void SetLocked(bool isLocked)
     {
-          
+        LockImage.gameObject.SetActive(isLocked);
+        ChoiceButton.interactable = !isLocked;
     }
-
+    
     private void OnEnable()
     {
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);  
@@ -93,7 +94,6 @@ public class CharacterSlotUI : MonoBehaviour
         if (skillImage != null)
         {
             int skillIndex = GetSkillIndex(characterData.SkillIcon);
-            Logger.Log("Character Skill: " + characterData.SkillIcon + ", Mapped Index: " + skillIndex);
             if (skillIndex >= 0 && skillIndex < skillImages.Length)
             {
                 skillImage.sprite = skillImages[skillIndex];
