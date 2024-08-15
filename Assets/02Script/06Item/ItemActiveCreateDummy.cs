@@ -11,6 +11,7 @@ public class ItemActiveCreateDummy : ActiveItem
     public EffectController exitEffectPrefab;
     [Header("신의 대리인")]
     public PlayerCharacterController characterPrefab;
+    public Rect spawnRange;
 
     [Header("신의 대리인의 스탯")]
     public float hp;
@@ -28,9 +29,6 @@ public class ItemActiveCreateDummy : ActiveItem
 
     private SkillTable skillTable;
 
-    private float minY;
-    private float maxY;
-
     private PlayerCharacterController activeAgent;
 
     public override void Init()
@@ -41,11 +39,6 @@ public class ItemActiveCreateDummy : ActiveItem
         var inputSystemGo = GameObject.FindWithTag("InputManager");
         dragAndDrop = inputSystemGo?.GetComponent<DragAndDrop>();
         inputManager = inputSystemGo?.GetComponent<InputManager>();
-
-        var castlePos1Y = StageMgr.castleRightTopPos.position.y;
-        var castlePos2Y = StageMgr.castleLeftBottomPos.position.y;
-        minY = Mathf.Min(castlePos1Y, castlePos2Y);
-        maxY = Mathf.Max(castlePos1Y, castlePos2Y);
 
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
     }
@@ -84,10 +77,12 @@ public class ItemActiveCreateDummy : ActiveItem
             inputManager.OnClick -= CreateDummy;
 
         var spawnPos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
-        if (spawnPos.y > maxY || spawnPos.y < minY)
+        if (spawnPos.x < spawnRange.x || spawnPos.x > spawnRange.x + spawnRange.width
+            || spawnPos.y < spawnRange.y || spawnPos.y > spawnRange.y + spawnRange.height)
             return;
-
-        base.UseItem();
+            
+        spawnPos.z = spawnPos.y;
+        var instantiatedCharacter = Instantiate(characterPrefab, spawnPos, Quaternion.identity);
 
         var data = new PlayerCharacterData
         {
@@ -97,8 +92,6 @@ public class ItemActiveCreateDummy : ActiveItem
             Skill2 = skillId2
         };
 
-        spawnPos.z = spawnPos.y;
-        var instantiatedCharacter = Instantiate(characterPrefab, spawnPos, Quaternion.identity);
         instantiatedCharacter.Status.Data = data;
         
         if (instantiatedCharacter.TryGetComponent<PlayerAttackBehavior>(out var attackBehavior))
@@ -125,5 +118,7 @@ public class ItemActiveCreateDummy : ActiveItem
         var entryEffect = Instantiate(entryEffectPrefab, spawnPos, Quaternion.identity);
         entryEffect.LifeTime = 1f;
         activeAgent = instantiatedCharacter;
+
+        base.UseItem();
     }
 }
