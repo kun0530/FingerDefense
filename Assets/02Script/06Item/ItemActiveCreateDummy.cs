@@ -27,6 +27,8 @@ public class ItemActiveCreateDummy : ActiveItem
     private float minY;
     private float maxY;
 
+    private PlayerCharacterController activeAgent;
+
     public override void Init()
     {
         base.Init();
@@ -102,7 +104,13 @@ public class ItemActiveCreateDummy : ActiveItem
 
         if (instantiatedCharacter.TryGetComponent<DummyMoveBehavior>(out var moveBehavior))
         {
+            moveBehavior.moveSpeed = moveSpeed;
+            moveBehavior.findRange = findRange;
+            moveBehavior.thresholdRange = thresholdRange;
+
             moveBehavior.Init();
         }
+
+        activeAgent = instantiatedCharacter;
     }
 }

@@ -33,9 +33,9 @@ public abstract class BaseItem : ScriptableObject
 
     public virtual void Init()
     {
-        stageManager = null;
-        button = null;
-        count = 0;
+        // stageManager = null;
+        // button = null;
+        // count = 0;
     }
 
     public abstract void UseItem();

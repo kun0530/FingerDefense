@@ -12,9 +12,9 @@ public class DummyMoveBehavior : MonoBehaviour
         MOVE
     }
 
-    public float moveSpeed = 5f;
-    public float findRange = 5f;
-    public float thresholdRange = 1f;
+    [HideInInspector] public float moveSpeed = 5f;
+    [HideInInspector] public float findRange = 5f;
+    [HideInInspector] public float thresholdRange = 1f;
 
     private IFindable findBehavior;
     private GameObject target;
