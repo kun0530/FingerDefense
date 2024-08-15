@@ -255,11 +255,11 @@ public class DeckSlotController : MonoBehaviour
 
         
         int index = 0;
-        for (var i = 0; i < characterSlots.Count; i++)
+        foreach (var t in characterSlots)
         {
-            if (!characterSlots[i].LockImage.gameObject.activeSelf) 
+            if (!t.LockImage.gameObject.activeSelf) 
             {
-                characterSlots[i].transform.SetSiblingIndex(index);
+                t.transform.SetSiblingIndex(index);
                 index++;
             }
         }
@@ -289,12 +289,7 @@ public class DeckSlotController : MonoBehaviour
 
     private void LoadCharacterSelection()
     {
-        for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
-        {
-            Variables.LoadTable.characterIds[i] = PlayerPrefs.GetInt($"CharacterId_{i}", 0);
-        }
-
-        // 불러온 캐릭터 ID를 슬롯에 설정
+        // 캐릭터 ID를 불러와 슬롯에 설정
         for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
         {
             int characterId = Variables.LoadTable.characterIds[i];
@@ -302,6 +297,14 @@ public class DeckSlotController : MonoBehaviour
             {
                 var characterData = playerCharacterTable.Get(characterId);
         
+                // 필터링 슬롯에 없는 캐릭터는 내려지게 함
+                if (!filterSlots.Any(s => s.characterData != null && s.characterData.Id == characterId))
+                {
+                    Logger.Log($"Character ID {characterId} is not in filter slots, removing from character slots.");
+                    Variables.LoadTable.characterIds[i] = 0; // 캐릭터 ID 초기화
+                    continue;
+                }
+
                 // Index 체크 추가
                 if (i < characterSlots.Count)
                 {
@@ -322,7 +325,9 @@ public class DeckSlotController : MonoBehaviour
                 }
             }
         }
+
         UpdateChoicePanels();
         SortCharacterSlots();
     }
+
 }

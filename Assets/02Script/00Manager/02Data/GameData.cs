@@ -231,7 +231,7 @@ public class GameData : IResourceSubject
             }
         }
     }
-    
+    public List<int> characterIds = new List<int>();
     private List<IResourceObserver> observers = new List<IResourceObserver>();
 
     // 옵저버 패턴 관련 메서드

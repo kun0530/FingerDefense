@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using CsvHelper;
 using UnityEngine.AddressableAssets;
 
@@ -44,4 +45,5 @@ public class UpgradeTable : DataTable
             upgradeTable.TryAdd(record.Id, record);
         }
     }
+    
 }
