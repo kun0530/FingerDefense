@@ -151,18 +151,7 @@ public class GameData : IResourceSubject
         ACTIVE=2,
     }
     MonsterDrag monsterDrag;
-    public List<(int monsterId, int monsterDrag)> MonsterDragLevel = new List<(int, int)>();
-    public void UpdateMonsterDragLevel(int monsterId, int newDragLevel)
-    {
-        for (var i = 0; i < MonsterDragLevel.Count; i++)
-        {
-            if (MonsterDragLevel[i].monsterId == monsterId)
-            {
-                MonsterDragLevel[i] = (monsterId, newDragLevel);
-                return;
-            }
-        }
-    }
+    public Dictionary<int, int> MonsterDragLevel = new ();
     
     public enum MonsterGimmick
     {

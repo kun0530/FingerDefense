@@ -10,6 +10,7 @@ public enum StageState
     None, Playing, GameOver, GameClear
 }
 
+[DefaultExecutionOrder(-1)]
 public class StageManager : MonoBehaviour
 {
     [Header("Castle")]
@@ -126,15 +127,8 @@ public class StageManager : MonoBehaviour
             }
         }
 
-        var upgradeTableDic = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade).upgradeTable;
-        foreach (var upgradeData in upgradeTableDic)
-        {
-            if (upgradeData.Value.UpStatType == (int)GameData.PlayerUpgrade.PLAYER_HEALTH
-                && upgradeData.Value.Level == castleMaxHpLevel)
-            {
-                castleMaxHp = upgradeData.Value.UpStatValue;
-            }
-        }
+        var upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
+        castleMaxHp = upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.PLAYER_HEALTH, castleMaxHpLevel).UpStatValue;
     }
 
     private void Start()

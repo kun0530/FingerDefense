@@ -58,8 +58,7 @@ public class MonsterDragPanel : MonoBehaviour
                 var slot = Instantiate(dragInfoSlotPrefab, dragInfoParent[parentIndex]);
 
                 // 현재 UpgradeResultId에 대한 MonsterDragLevel을 가져옵니다.
-                var dragLevel = GameManager.instance.GameData.MonsterDragLevel
-                    .Find(x => x.monsterId == upgradeData.UpgradeResultId).monsterDrag;
+                var dragLevel = GameManager.instance.GameData.MonsterDragLevel[upgradeData.UpgradeResultId];
 
                 slot.SetupSlot(upgradeData.UpgradePrice, dragLevel, upgradeData.UpgradeResultId);
 

@@ -55,7 +55,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
                 case (int)MonsterData.DragTypes.NORMAL:
                     return true;
                 case (int)MonsterData.DragTypes.SPECIAL:
-                    return true; // To-Do: 세이브 데이터로부터 해당 몬스터를 들 수 있는지, 조건문을 더 걸어야 합니다.
+                    {
+                        return GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] == (int)GameData.MonsterDrag.ACTIVE;
+                    }
                 default:
                     return false;
             }
@@ -138,6 +140,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     private void CrossResetLine()
     {
         stageManager?.monsterSpawner?.TriggerMonsterReset(this);
+        if (Status.Data.DragType == (int)MonsterData.DragTypes.SPECIAL && 
+            GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] == (int)GameData.MonsterDrag.LOCK)
+        {
+            GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] = (int)GameData.MonsterDrag.UNLOCK;
+        }
     }
 
     protected override void Update()
