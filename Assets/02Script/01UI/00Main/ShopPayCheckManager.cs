@@ -51,6 +51,9 @@ public class ShopPayCheckManager : MonoBehaviour
     
     [Header("가챠 시스템")]
     public GachaSystem gachaSystem;
+    
+    [Header("아이템 슬롯 컨트롤러")]
+    public ItemSlotController ItemSlotController;
 
     private void Awake()
     {
@@ -117,9 +120,14 @@ public class ShopPayCheckManager : MonoBehaviour
                 if (gameManager.GameData.Gold >= itemCost)
                 {
                     gameManager.GameData.Gold -= itemCost;
+
+                    // 아이템 추가 로직
                     gameManager.GameData.AddItem(itemId, itemCount); 
+                    DataManager.SaveFile(gameManager.GameData);
+                    // UI 업데이트
+                    ItemSlotController.RefreshItemSlots();
+
                     ShowPurchaseResult($"아이템 {itemCount}개를 {itemCost} 골드로 구매했습니다.");
-                    
                 }
                 else
                 {
@@ -137,6 +145,9 @@ public class ShopPayCheckManager : MonoBehaviour
             Debug.LogError($"No item ID mapped for button number {currentButtonNumber}.");
         }
     }
+
+    
+
     public void HandleButtonClicked(ShopButtonType buttonType, int buttonNumber)
     {
         currentButtonType = buttonType;
@@ -156,6 +167,8 @@ public class ShopPayCheckManager : MonoBehaviour
 
                     checkUIPanel.SetActive(true);
                     itemConfirmPanel.SetActive(true);
+                    
+                    ItemSlotController.RefreshItemSlots();
                 }
                 else
                 {

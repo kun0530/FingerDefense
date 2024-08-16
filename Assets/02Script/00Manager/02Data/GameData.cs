@@ -124,7 +124,7 @@ public class GameData : IResourceSubject
     
     
     public List<int> ObtainedGachaIDs = new List<int>();
-    public List<(int itemId, int itemCount)> Items = new List<(int, int)>();
+    
     
     
     
@@ -208,17 +208,30 @@ public class GameData : IResourceSubject
 
     public void AddItem(int itemId, int itemCount)
     {
-        var existingItem = Items.Find(item => item.itemId == itemId);
-        if (existingItem != (0, 0))
+        //리스트로 인덱스 참조해서 개수 증가 시키도록 수정
+        // 리스트에서 인덱스를 찾음
+        int itemIndex = Items.FindIndex(item => item.itemId == itemId);
+    
+        if (itemIndex != -1)
         {
+            // 기존 아이템이 있으면 수량을 합산
+            var existingItem = Items[itemIndex];
             existingItem.itemCount += itemCount;
+            Items[itemIndex] = existingItem; // 업데이트된 아이템을 다시 리스트에 저장
         }
         else
         {
+            // 기존 아이템이 없으면 새로 추가
             Items.Add((itemId, itemCount));
+            itemIndex = Items.Count - 1;
         }
+
+        NotifyObservers(ResourceType.ItemId, itemId);
+        NotifyObservers(ResourceType.ItemCount, Items[itemIndex].itemCount);
+        
+        
     }
-    
+    public List<(int itemId, int itemCount)> Items = new List<(int, int)>();
     public void RemoveItem(int itemId, int itemCount)
     {
         var existingItem = Items.Find(item => item.itemId == itemId);
