@@ -27,6 +27,29 @@ public class SkillData
     {
         return $"{Id}: {Target} / {Projectile} / {Center} / {Type} / {Range} / {Damage} / {CoolTime} / {Duration} / {CastingTime} / {BuffId} / {AssetNo}";
     }
+
+    public SkillData CreateNewSkillData()
+    {
+        var data = new SkillData()
+        {
+            Id = this.Id,
+            Name = this.Name,
+            Target = this.Target,
+            Projectile = this.Projectile,
+            Center = this.Center,
+            Type = this.Type,
+            Range = this.Range,
+            Damage = this.Damage,
+            CoolTime = this.CoolTime,
+            Duration = this.Duration,
+            CastingTime = this.CastingTime,
+            IsDot = this.IsDot,
+            BuffId = this.BuffId,
+            AssetNo = this.AssetNo
+        };
+
+        return data;
+    }
 }
 
 public class SkillTable : DataTable
