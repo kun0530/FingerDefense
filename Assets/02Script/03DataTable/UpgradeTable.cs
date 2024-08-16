@@ -36,11 +36,17 @@ public class UpgradeTable : DataTable
 
     public Dictionary<int,UpgradeData> upgradeTable = new Dictionary<int, UpgradeData>();
 
+    private Dictionary<(int UpStatType, int Level), UpgradeData> monsterGimmickUpgradeTable = new();
     private Dictionary<(int UpStatType, int Level), UpgradeData> playerUpgradeTable = new();
     
     public UpgradeData Get(int id)
     {
         return upgradeTable.GetValueOrDefault(id);
+    }
+    
+    public UpgradeData GetMonsterGimmickUpgrade(int statType, int level)
+    {
+        return monsterGimmickUpgradeTable.GetValueOrDefault((statType, level));
     }
 
     public UpgradeData GetPlayerUpgrade(int statType, int level)
@@ -65,6 +71,10 @@ public class UpgradeTable : DataTable
                 case UpgradeType.MONSTER_DRAG:
                     break;
                 case UpgradeType.MONSTER_GIMMICK:
+                    {
+                        var key = (record.UpStatType, record.Level);
+                        monsterGimmickUpgradeTable.Add(key, record);
+                    }
                     break;
                 case UpgradeType.CHARACTER:
                     break;
