@@ -17,6 +17,8 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     private CharacterSpineAni anim;
     private TrackEntry deathTrackEntry;
 
+    public Image elementImage;
+
     private int MonsterCount
     {
         get

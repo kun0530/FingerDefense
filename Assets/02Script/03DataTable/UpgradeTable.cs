@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using CsvHelper;
 using UnityEngine.AddressableAssets;
 
@@ -11,6 +12,7 @@ public class UpgradeData
     public int Name { get; set; }
     public int Type { get; set; }
     public int UpStatType { get; set; }
+    public int Level { get; set; }
     public float UpStatValue { get; set; }
     public int UpgradePrice { get; set; }
     public int NeedClearStage { get; set; }
@@ -43,4 +45,5 @@ public class UpgradeTable : DataTable
             upgradeTable.TryAdd(record.Id, record);
         }
     }
+    
 }

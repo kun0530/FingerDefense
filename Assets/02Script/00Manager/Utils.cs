@@ -67,4 +67,12 @@ public static class Utils
 
         return newPos;
     }
+
+    public static float GetXFromLinear(Vector2 pos1, Vector2 pos2, float y)
+    {
+        if (pos1.y == pos2.y)
+            return pos1.x;
+
+        return (y * (pos2.x - pos1.x) - (pos1.y * pos2.x - pos1.x * pos2.y)) / (pos2.y - pos1.y);
+    }
 }

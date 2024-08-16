@@ -45,15 +45,15 @@ public class DataResetter : MonoBehaviour
 
     private void IncreaseTestResources()
     {
-        if(gameManager != null && gameManager.ResourceManager != null)
+        if(gameManager != null && gameManager.GameData != null)
         {
-            gameManager.ResourceManager.Gold += goldIncreaseAmount;
-            gameManager.ResourceManager.Diamond += gemIncreaseAmount;
-            gameManager.ResourceManager.Ticket += ticketIncreaseAmount;
-            gameManager.ResourceManager.Mileage += mileageIncreaseAmount;
+            gameManager.GameData.Gold += goldIncreaseAmount;
+            gameManager.GameData.Diamond += gemIncreaseAmount;
+            gameManager.GameData.Ticket += ticketIncreaseAmount;
+            gameManager.GameData.Mileage += mileageIncreaseAmount;
             
             Debug.Log("테스트 모드에서 재화를 증가시켰습니다.");
-            gameManager.ResourceManager.SaveData();
+            //DataManager.SaveFile(gameManager.GameData);
         }
     }
 

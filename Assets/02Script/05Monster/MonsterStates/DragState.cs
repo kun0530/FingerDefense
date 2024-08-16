@@ -30,9 +30,7 @@ public class DragState : IState
         var stageManager = controller.stageManager;
         if (stageManager)
         {
-            var limitX1 = stageManager.monsterSpawner.moveTarget1.position.x;
-            var limitX2 = controller.stageManager.monsterSpawner.moveTarget2.position.x;
-            limitX = limitX1 > limitX2 ? limitX1 : limitX2;
+            limitX = Utils.GetXFromLinear(stageManager.castleRightTopPos.position, stageManager.castleLeftBottomPos.position, controller.transform.position.y);
         }
         else
         {
@@ -61,11 +59,11 @@ public class DragState : IState
         if (dragAndDrop.IsDragging)
         {
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
-            pos.z = 0f;
             if (pos.y <= controller.targetFallY)
                 pos.y = controller.targetFallY;
             if (pos.x <= limitX)
                 pos.x = limitX;
+            pos.z = pos.y;
             controller.transform.position = pos;
 
             if (!isReachHeight && pos.y > controller.Status.Data.Height + controller.targetFallY)
@@ -95,6 +93,13 @@ public class DragState : IState
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
             cameraController.ResetCamera();
+        }
+
+        if (controller.transform.position.x <= limitX)
+        {
+            var pos = controller.transform.position;
+            pos.x = limitX;
+            controller.transform.position = pos;
         }
     }
 }

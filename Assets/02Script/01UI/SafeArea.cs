@@ -13,12 +13,12 @@ public class SafeArea : MonoBehaviour
 
     private void Start()
     {
-        ApplySafeArea();
+        ApplyRectArea(Camera.main.rect);
     }
 
     private void Update()
     {
-        ApplySafeArea();
+        ApplyRectArea(Camera.main.rect);
     }
 
     private void ApplySafeArea()
@@ -34,5 +34,11 @@ public class SafeArea : MonoBehaviour
 
         safeArea.anchorMin = minAnchor;
         safeArea.anchorMax = maxAnchor;
+    }
+
+    private void ApplyRectArea(Rect rect)
+    {
+        safeArea.anchorMin = rect.min;
+        safeArea.anchorMax = rect.max;
     }
 }

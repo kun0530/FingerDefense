@@ -19,7 +19,6 @@ public class NickSettingUI : MonoBehaviour
     public bool isComplete = false;
     public MainUI mainUI;
     private GameManager gameManager;
-    private ResourceManager resourceManager;
     private readonly Regex koreanFullSyllablesRegex = new("^[가-힣a-zA-Z0-9]*$");
     private string userId;
 
@@ -29,7 +28,6 @@ public class NickSettingUI : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.instance;
-        resourceManager=GameObject.FindWithTag("Resources").TryGetComponent(out ResourceManager manager) ? manager : null;
         
         noticeTextInitialPosition = noticeText.transform.localPosition;
     }
@@ -63,31 +61,32 @@ public class NickSettingUI : MonoBehaviour
             return;
         }
         
-        gameManager.ResourceManager.PlayerName = inputField.text;
+        gameManager.GameData.PlayerName = inputField.text;
         
         nickCheckUI.SetActive(true);
-        nickNameText.text = $"정말 <color=#FF0000>{gameManager.ResourceManager.PlayerName}</color>으로 설정하시겠습니까?";
+        nickNameText.text = $"정말 <color=#FF0000>{gameManager.GameData.PlayerName}</color>으로 설정하시겠습니까?";
         
-        Logger.Log($"{gameManager.ResourceManager.PlayerName}으로 설정되었습니다.");
+        Logger.Log($"{gameManager.GameData.PlayerName}으로 설정되었습니다.");
     }
 
     private void OnClickCancel()
     {
-        if (gameManager == null || gameManager.ResourceManager == null)
+        if (gameManager == null || gameManager.GameData == null)
         {
             Debug.LogError("GameManager or ResourceManager is not initialized.");
             return;
         }
 
         nickCheckUI.SetActive(false);
-        gameManager.ResourceManager.PlayerName = "";
-        Logger.Log($"{gameManager.ResourceManager.PlayerName}으로 설정되었습니다.");
+        gameManager.GameData.PlayerName = "";
+        Logger.Log($"{gameManager.GameData.PlayerName}으로 설정되었습니다.");
     }
 
     private void OnClickConfirmNick()
     {
         gameObject.SetActive(false);
         isComplete = true;
+        gameManager.GameData.NicknameCheck = true;
         
         Logger.Log("닉네임 설정이 완료되었습니다.");
     }

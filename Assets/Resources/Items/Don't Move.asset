@@ -13,15 +13,30 @@ MonoBehaviour:
   m_Name: Don't Move
   m_EditorClassIdentifier: 
   id: 8006
+  itemDesc: "\uC544\uC774\uD15C \uC0AC\uC6A9 \uC2DC \uBCBC\uB77D\uC744 \uB5A8\uC5B4\uB728\uB824
+    \uB9F5\uC5D0 \uC788\uB294 \uBAA8\uB4E0 \uBAAC\uC2A4\uD130\uB4E4\uC774 2\uCD08
+    \uB3D9\uC548 \uC2A4\uD134\uC5D0 \uAC78\uB9B0\uB2E4. \uCFE8\uD0C0\uC784\uC740
+    30\uCD08\uC774\uB2E4."
   button: {fileID: 0}
-  count: 3
-  duration: 0
+  count: 0
+  duration: 2
   coolDown: 30
-  debuff:
-    id: 0
-    buffType: 1
+  effectPrefab: {fileID: -6794517186462047971, guid: 36fc1f938b1754f9d837e1dbe26e58dc, type: 3}
+  effectCount: 5
+  effectPos: {x: -5, y: -2}
+  effectInterval: {x: 3, y: 0}
+  debuffs:
+  - buffType: 1
     damageTerm: 0
     isPercentage: 1
     buffValue: -1
     isPermanent: 0
-    lastingTime: 2
+    lastingTime: 10
+    effectNo: 111
+  - buffType: 0
+    damageTerm: 0
+    isPercentage: 1
+    buffValue: -1
+    isPermanent: 0
+    lastingTime: 10
+    effectNo: 0

@@ -114,12 +114,11 @@ public class ShopPayCheckManager : MonoBehaviour
                 var itemPrice = itemData.Price;
                 var itemCost = CalculateItemCost(itemCount, itemPrice);
 
-                if (gameManager.ResourceManager.Gold >= itemCost)
+                if (gameManager.GameData.Gold >= itemCost)
                 {
-                    gameManager.ResourceManager.Gold -= itemCost;
-                    gameManager.ResourceManager.AddItem(itemId, itemCount); 
+                    gameManager.GameData.Gold -= itemCost;
+                    gameManager.GameData.AddItem(itemId, itemCount); 
                     ShowPurchaseResult($"아이템 {itemCount}개를 {itemCost} 골드로 구매했습니다.");
-                   
                     
                 }
                 else
@@ -275,15 +274,15 @@ public class ShopPayCheckManager : MonoBehaviour
     private string GetTicketFailureMessage(int buttonNumber, out bool showConfirmButton)
     {
         var requiredTickets = buttonNumber == 1 ? 1 : 10;
-        var ticketsNeeded = requiredTickets - gameManager.ResourceManager.Ticket;
+        var ticketsNeeded = requiredTickets - gameManager.GameData.Ticket;
         var diamondsNeeded = ticketsNeeded * 160;
 
-        if (gameManager.ResourceManager.Ticket < requiredTickets && gameManager.ResourceManager.Diamond >= diamondsNeeded)
+        if (gameManager.GameData.Ticket < requiredTickets && gameManager.GameData.Diamond >= diamondsNeeded)
         {
             showConfirmButton = true;
             return $"캐릭터 모집 티켓의 개수가 부족합니다. {ticketsNeeded}개 만큼 {diamondsNeeded} 다이아로 구매해서 사용하시겠습니까?";
         }
-        if (gameManager.ResourceManager.Ticket < requiredTickets && gameManager.ResourceManager.Diamond < diamondsNeeded)
+        if (gameManager.GameData.Ticket < requiredTickets && gameManager.GameData.Diamond < diamondsNeeded)
         {
             showConfirmButton = false;
             extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
@@ -459,7 +458,7 @@ public class ShopPayCheckManager : MonoBehaviour
             5 => 5000,
             _ => 0,
         };
-        return gameManager.ResourceManager.Diamond >= diamondCostForGold;
+        return gameManager.GameData.Diamond >= diamondCostForGold;
     }
 
     private bool CheckTicketResources(int buttonNumber, out bool needsExtraConfirmation)
@@ -467,14 +466,14 @@ public class ShopPayCheckManager : MonoBehaviour
         needsExtraConfirmation = false;
         switch (buttonNumber)
         {
-            case 1 when gameManager.ResourceManager.Ticket >= 1:
+            case 1 when gameManager.GameData.Ticket >= 1:
                 return true;
-            case 1 when gameManager.ResourceManager.Diamond >= 160:
+            case 1 when gameManager.GameData.Diamond >= 160:
                 needsExtraConfirmation = true;
                 return false;
-            case 2 when gameManager.ResourceManager.Ticket >= 10:
+            case 2 when gameManager.GameData.Ticket >= 10:
                 return true;
-            case 2 when gameManager.ResourceManager.Ticket >= 1 && gameManager.ResourceManager.Diamond >= (10 - gameManager.ResourceManager.Ticket) * 160:
+            case 2 when gameManager.GameData.Ticket >= 1 && gameManager.GameData.Diamond >= (10 - gameManager.GameData.Ticket) * 160:
                 needsExtraConfirmation = true;
                 return false;
             default:
@@ -494,7 +493,7 @@ public class ShopPayCheckManager : MonoBehaviour
             5 => 8080,
             _ => 0,
         };
-        gameManager.ResourceManager.Diamond += diamondsToAdd;
+        gameManager.GameData.Diamond += diamondsToAdd;
         extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
         return true;
     }
@@ -505,8 +504,8 @@ public class ShopPayCheckManager : MonoBehaviour
         {
             switch (buttonNumber)
             {
-                case 1 when gameManager.ResourceManager.Ticket < 1 && gameManager.ResourceManager.Diamond >= 160:
-                case 2 when gameManager.ResourceManager.Ticket < 10 && gameManager.ResourceManager.Diamond >= (10 - gameManager.ResourceManager.Ticket) * 160:
+                case 1 when gameManager.GameData.Ticket < 1 && gameManager.GameData.Diamond >= 160:
+                case 2 when gameManager.GameData.Ticket < 10 && gameManager.GameData.Diamond >= (10 - gameManager.GameData.Ticket) * 160:
                     return true;
             }
         }
@@ -521,41 +520,41 @@ public class ShopPayCheckManager : MonoBehaviour
             case ShopButtonType.Ticket:
                 if (buttonNumber == 1)
                 {
-                    if (gameManager.ResourceManager.Ticket >= 1)
+                    if (gameManager.GameData.Ticket >= 1)
                     {
-                        gameManager.ResourceManager.Ticket -= 1;
-                        gameManager.ResourceManager.NotifyObservers(ResourceType.Ticket, gameManager.ResourceManager.Ticket);
+                        gameManager.GameData.Ticket -= 1;
+                        gameManager.GameData.NotifyObservers(ResourceType.Ticket, gameManager.GameData.Ticket);
                         gachaSystem.PerformGacha(1);
                     }
-                    else if (gameManager.ResourceManager.Diamond >= 160 && gameManager.ResourceManager.Ticket == 0)
+                    else if (gameManager.GameData.Diamond >= 160 && gameManager.GameData.Ticket == 0)
                     {
-                        gameManager.ResourceManager.Diamond -= 160;
-                        gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
+                        gameManager.GameData.Diamond -= 160;
+                        gameManager.GameData.NotifyObservers(ResourceType.Diamond, gameManager.GameData.Diamond);
                         gachaSystem.PerformGacha(1);
                     }
                 }
                 else if (buttonNumber == 2)
                 {
-                    if (gameManager.ResourceManager.Ticket is 10 or > 10)
+                    if (gameManager.GameData.Ticket is 10 or > 10)
                     {
-                        gameManager.ResourceManager.Ticket -= 10;
-                        gameManager.ResourceManager.NotifyObservers(ResourceType.Ticket, gameManager.ResourceManager.Ticket);
+                        gameManager.GameData.Ticket -= 10;
+                        gameManager.GameData.NotifyObservers(ResourceType.Ticket, gameManager.GameData.Ticket);
                         gachaSystem.PerformGacha(10);    
                     }
                     else
                     {
-                        int ticketsNeeded = 10 - gameManager.ResourceManager.Ticket;
+                        int ticketsNeeded = 10 - gameManager.GameData.Ticket;
                         diamondCost = ticketsNeeded * 160;
 
-                        if (gameManager.ResourceManager.Diamond >= diamondCost)
+                        if (gameManager.GameData.Diamond >= diamondCost)
                         {
-                            if (gameManager.ResourceManager.Ticket > 0)
+                            if (gameManager.GameData.Ticket > 0)
                             {
-                                gameManager.ResourceManager.Ticket-=gameManager.ResourceManager.Ticket;
-                                gameManager.ResourceManager.NotifyObservers(ResourceType.Ticket, gameManager.ResourceManager.Ticket);
+                                gameManager.GameData.Ticket-=gameManager.GameData.Ticket;
+                                gameManager.GameData.NotifyObservers(ResourceType.Ticket, gameManager.GameData.Ticket);
                             }
-                            gameManager.ResourceManager.Diamond -= diamondCost;
-                            gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
+                            gameManager.GameData.Diamond -= diamondCost;
+                            gameManager.GameData.NotifyObservers(ResourceType.Diamond, gameManager.GameData.Diamond);
                             gachaSystem.PerformGacha(10);
                         }
                     }
@@ -572,8 +571,8 @@ public class ShopPayCheckManager : MonoBehaviour
                     5 => 8080,
                     _ => 0,
                 };
-                gameManager.ResourceManager.Diamond += diamondsToAdd;
-                gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
+                gameManager.GameData.Diamond += diamondsToAdd;
+                gameManager.GameData.NotifyObservers(ResourceType.Diamond, gameManager.GameData.Diamond);
                 ShowPurchaseResult($"{diamondsToAdd} 다이아를 구매했습니다.");
                 break;
             
@@ -599,12 +598,12 @@ public class ShopPayCheckManager : MonoBehaviour
                     _ => 0,
                 };
 
-                if (gameManager.ResourceManager.Diamond >= diamondCost)
+                if (gameManager.GameData.Diamond >= diamondCost)
                 {
-                    gameManager.ResourceManager.Diamond -= diamondCost; // 다이아 차감
-                    gameManager.ResourceManager.Gold +=goldAmount; // 골드 추가
-                    gameManager.ResourceManager.NotifyObservers(ResourceType.Diamond, gameManager.ResourceManager.Diamond);
-                    gameManager.ResourceManager.NotifyObservers(ResourceType.Gold, gameManager.ResourceManager.Gold);
+                    gameManager.GameData.Diamond -= diamondCost; // 다이아 차감
+                    gameManager.GameData.Gold +=goldAmount; // 골드 추가
+                    gameManager.GameData.NotifyObservers(ResourceType.Diamond, gameManager.GameData.Diamond);
+                    gameManager.GameData.NotifyObservers(ResourceType.Gold, gameManager.GameData.Gold);
                     var messageId = GetSuccessMessageId(buttonType, buttonNumber);
                     var successMessage = shopTable.Get(messageId.ToString());
                 
@@ -627,6 +626,7 @@ public class ShopPayCheckManager : MonoBehaviour
         extraConfirmButton.gameObject.SetActive(false);
         extraCancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "확인";
         extraConfirmPanel.SetActive(true);
+        DataManager.SaveFile(gameManager.GameData);
     }
 
     private void ResetState()

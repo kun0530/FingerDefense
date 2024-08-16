@@ -31,7 +31,6 @@ public class ChaseState : IState
         }
 
         var direction = ((Vector2)(controller.attackMoveTarget.position - controller.transform.position)).normalized;
-        direction *= controller.directionMultiplier;
         controller.transform.position += (Vector3)direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         if (moveTrackEntry != null)
             moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;

@@ -20,6 +20,7 @@ public struct DialogData
     public string name;
     
     [TextArea(3, 5)]
+    public int? dialogId;
     public string dialog;
 }
 
@@ -140,7 +141,7 @@ public class DialogSystem : MonoBehaviour
         }
 
         currentDialogIndex++;
-        
+    
         if (currentDialogIndex >= dialogData.Length)
         {
             isDialogComplete = true;
@@ -152,9 +153,12 @@ public class DialogSystem : MonoBehaviour
 
         SetActiveObjects(systemDialog[currentSpeakerIndex], true);
         systemDialog[currentSpeakerIndex].nameText.text = dialogData[currentDialogIndex].name;
-        
-        await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogData[currentDialogIndex].dialog);
+
+        var dialogText = dialogData[currentDialogIndex].dialogId.HasValue ? stringTable.Get(dialogData[currentDialogIndex].dialogId.Value.ToString()) : dialogData[currentDialogIndex].dialog;
+
+        await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogText);  // 수정된 부분
     }
+
 
     private async UniTask TypeText(TextMeshProUGUI textMesh, string text)
     {

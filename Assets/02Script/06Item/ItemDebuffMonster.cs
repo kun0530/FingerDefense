@@ -6,13 +6,13 @@ using UnityEngine;
 [Serializable]
 public struct ItemDebuffMonster
 {
-    public int id;
     public BuffType buffType;
     public float damageTerm;
     public bool isPercentage;
     public float buffValue;
     public bool isPermanent;
     public float lastingTime;
+    public int effectNo;
 
     public void GiveBuff(MonsterController monster)
     {
@@ -43,6 +43,7 @@ public struct ItemDebuffMonster
         }
         buffData.BuffActions.Add(((int)buffType, value));
         buffData.LastingTime = lastingTime;
+        buffData.EffectNo = effectNo;
         monster.TryTakeBuff(buffData, out var buff, isPermanent);
     }
 }

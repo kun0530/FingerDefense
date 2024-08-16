@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Spine.Unity;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
@@ -15,10 +15,12 @@ public class CharacterSlotUI : MonoBehaviour
     public RectTransform skillParent;
     public RectTransform gradeParent;
     public RectTransform classParent;
+    public TextMeshProUGUI upgradeText;
 
     public GameObject ChoicePanel;
     public Button ChoiceButton;
 
+    public Image LockImage;
     public delegate void SlotClickDelegate(CharacterSlotUI slot);
     public SlotClickDelegate OnSlotClick;
 
@@ -26,17 +28,24 @@ public class CharacterSlotUI : MonoBehaviour
 
     private Dictionary<int, int> skillIndexMapping = new Dictionary<int, int>();
     private AssetListTable assetListTable;
+    public TextMeshProUGUI upgradeLevelText;
     
     private void Awake()
     {
         MapSkillsToIndices();
     }
-
-    private void Start()
+    public void SetLocked(bool isLocked)
     {
-          
+        if (LockImage != null)
+        {
+            LockImage.gameObject.SetActive(isLocked); 
+        }
+        if (ChoiceButton != null)
+        {
+            ChoiceButton.interactable = !isLocked;  // 버튼의 상호작용 가능 여부 설정
+        }
     }
-
+    
     private void OnEnable()
     {
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);  
@@ -59,12 +68,20 @@ public class CharacterSlotUI : MonoBehaviour
     public void SetCharacterSlot(PlayerCharacterData characterData)
     {
         this.characterData = characterData;
-        
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        // 기존 Grade 이미지를 제거
+        foreach (Transform child in gradeParent)
+        {
+            Destroy(child.gameObject);
+        }
+
         var assetName = assetListTable.Get(characterData.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
         {
-            // TO-DO: Addressables.LoadAssetAsync<GameObject>($"Prefabs/{assetName}")를 사용하여 프리팹을 로드하도록 수정해야 합니다.
-            //GameObject prefab = Addressables.LoadAssetAsync<GameObject>($"Prefab/{assetName}").WaitForCompletion();
             GameObject prefab = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetName}");
             if (prefab != null)
             {
@@ -72,28 +89,26 @@ public class CharacterSlotUI : MonoBehaviour
                 spineInstance.transform.localPosition = Vector3.zero; 
             }
         }
-        
-        
+
+        // 새로운 Grade 이미지 추가
         for (var i = 0; i <= characterData.Grade; i++)
         {
             var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
             gradeInstance.sprite = gradeImage;
             gradeInstance.transform.SetParent(gradeParent, false);
-            // 필요한 경우 gradeInstance에 추가적인 설정
         }
-        
+
         var elementImage = elementParent.GetComponent<Image>();
         if (elementImage != null && characterData.Element >= 0 && characterData.Element < elementImages.Length)
         {
             elementImage.sprite = elementImages[characterData.Element];
             elementImage.gameObject.SetActive(true);
         }
-        
+
         var skillImage = skillParent.GetComponent<Image>();
         if (skillImage != null)
         {
             int skillIndex = GetSkillIndex(characterData.SkillIcon);
-            Logger.Log("Character Skill: " + characterData.SkillIcon + ", Mapped Index: " + skillIndex);
             if (skillIndex >= 0 && skillIndex < skillImages.Length)
             {
                 skillImage.sprite = skillImages[skillIndex];
@@ -104,41 +119,67 @@ public class CharacterSlotUI : MonoBehaviour
                 skillImage.gameObject.SetActive(false);
             }
         }
+
+        upgradeLevelText.text = $"+ {characterData.Plus}";
         ChoicePanel.transform.SetAsLastSibling();
-        
+
         ChoiceButton.onClick.AddListener(OnClick);
     }
+
 
     public void ClearSlot()
     {
         characterData = null;
-        
+
         foreach (Transform child in classParent)
         {
-            Destroy(child.gameObject);
+            if (child != null)
+            {
+                Destroy(child.gameObject);
+            }
         }
-        
+
         foreach (Transform child in gradeParent)
         {
-            Destroy(child.gameObject);
+            if (child != null)
+            {
+                Destroy(child.gameObject);
+            }
         }
-        
-        var elementImage = elementParent.GetComponent<Image>();
-        if (elementImage != null)
+
+        if (elementParent != null)
         {
-            elementImage.gameObject.SetActive(false);
+            var elementImage = elementParent.GetComponent<Image>();
+            if (elementImage != null)
+            {
+                elementImage.gameObject.SetActive(false);
+            }
         }
-        
-        var skillImage = skillParent.GetComponent<Image>();
-        if (skillImage != null)
+
+        if (skillParent != null)
         {
-            skillImage.gameObject.SetActive(false);
+            var skillImage = skillParent.GetComponent<Image>();
+            if (skillImage != null)
+            {
+                skillImage.gameObject.SetActive(false);
+            }
         }
-        
-        ChoicePanel.SetActive(false);
-        ChoiceButton.interactable = false;
+
+        if (ChoicePanel != null)
+        {
+            ChoicePanel.SetActive(false);
+        }
+
+        if (ChoiceButton != null)
+        {
+            ChoiceButton.interactable = false;
+        }
+
+        // 슬롯을 기본적으로 잠금 상태로 설정
+        SetLocked(true);
     }
 
+    
     private void OnClick()
     {
         OnSlotClick?.Invoke(this);

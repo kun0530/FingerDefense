@@ -12,6 +12,11 @@ public enum StageState
 
 public class StageManager : MonoBehaviour
 {
+    [Header("Castle")]
+    public List<GameObject> castleImages;
+    public Transform castleRightTopPos;
+    public Transform castleLeftBottomPos;
+
     public float CastleMaxHp { get; private set; } = 500f; // To-Do: 추후 변경
     private float castleHp;
     private float CastleHp
@@ -21,6 +26,16 @@ public class StageManager : MonoBehaviour
         {
             castleHp = value;
             gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+
+            if (castleImages.Count != 0)
+            {
+                int castleIndex = Mathf.FloorToInt(castleHp / (CastleMaxHp / castleImages.Count));
+                castleIndex = Mathf.Clamp(castleIndex, 0, castleImages.Count - 1);
+                for(int i = 0; i < castleImages.Count; i++)
+                {
+                    castleImages[i].SetActive(i == castleIndex);
+                }
+            }
         }
     }
     private float castleShield;
@@ -31,8 +46,13 @@ public class StageManager : MonoBehaviour
         {
             castleShield = value;
             gameUiManager.UpdateShieldBar(castleShield, CastleMaxHp);
+            if (castleShield > 0f)
+                shieldEffect?.gameObject.SetActive(true);
+            else
+                shieldEffect?.gameObject.SetActive(false);
         }
     }
+    [SerializeField] private EffectController shieldEffect;
 
     private int monsterCount;
     public int MonsterCount
@@ -71,6 +91,15 @@ public class StageManager : MonoBehaviour
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
             TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
+            
+            if (currentState == StageState.GameClear &&
+                Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
+            {
+                //GetGold(earnedGold);
+                GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+                DataManager.SaveFile(GameManager.instance.GameData);
+                Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
+            }
         }
     }
 

@@ -6,9 +6,11 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(menuName = "Item/Active Create BlackHole", fileName = "Item.asset")]
 public class ItemActiveCreateBlackHole : ActiveItem
 {
+    [Header("블랙홀 프리팹")]
     public BlackHole blackHolePrefab;
 
-    public float radius;
+    public float scale;
+    public Rect blackHoleRange;
 
     private bool isDragging;
     private InputManager inputManager;
@@ -51,11 +53,20 @@ public class ItemActiveCreateBlackHole : ActiveItem
     private void PutBlackHole(InputAction.CallbackContext context)
     {
         isDragging = false;
-        base.UseItem();
-        var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
-        pos.z = 0;
-        activeBlackHole = GameObject.Instantiate(blackHolePrefab, pos, Quaternion.identity);
         if (inputManager)
             inputManager.OnClick -= PutBlackHole;
+
+        var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
+        if (pos.x < blackHoleRange.x || pos.x > blackHoleRange.x + blackHoleRange.width
+            || pos.y < blackHoleRange.y || pos.y > blackHoleRange.y + blackHoleRange.height)
+            return;
+
+        pos.y = blackHoleRange.y + blackHoleRange.height / 2f;
+        pos.z = pos.y;
+        activeBlackHole = GameObject.Instantiate(blackHolePrefab, pos, Quaternion.identity);
+        activeBlackHole.transform.localScale = Vector3.one * scale;
+        activeBlackHole.LifeTime = duration;
+
+        base.UseItem();
     }
 }

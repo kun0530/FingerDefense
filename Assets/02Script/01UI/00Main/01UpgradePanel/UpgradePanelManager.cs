@@ -1,8 +1,9 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UpgradePanelManager : MonoBehaviour
+public class UpgradePanelManager : MonoBehaviour,IResourceObserver
 {
     public MonsterDragPanel monsterUpgradePanelPrefab;
     public MonsterGimmickPanel monsterGimmickPanelPrefab;
@@ -11,6 +12,15 @@ public class UpgradePanelManager : MonoBehaviour
     
     public Button[] upgradePanelButtons; // 버튼 배열 (0: 몬스터 업그레이드, 1: 몬스터 기믹, 2: 캐릭터 업그레이드, 3: 캐릭터 기믹)
     public TextMeshProUGUI[] costTexts; //재화 관련
+    public TextMeshProUGUI[] shopTexts; //상점 관련
+    public TextMeshProUGUI[] ChapterText;
+    private StringTable stringTable;
+    private GameManager gameManager;
+    
+    private void Awake()
+    {
+        stringTable ??= DataTableManager.Get<StringTable>(DataTableIds.String);
+    }
     
     private void Start()
     {
@@ -20,9 +30,28 @@ public class UpgradePanelManager : MonoBehaviour
         upgradePanelButtons[3].onClick.AddListener(() => ShowPanel(characterGimmickPanelPrefab));
         
         ShowPanel(monsterUpgradePanelPrefab);
-        costTexts[0].text = GameManager.instance.ResourceManager.Diamond.ToString();
-        costTexts[1].text = GameManager.instance.ResourceManager.Gold.ToString();
-        costTexts[2].text = GameManager.instance.ResourceManager.Ticket.ToString();
+        gameManager = GameManager.instance;
+        gameManager.GameData.RegisterObserver(this);
+        
+        shopTexts[0].text = stringTable.Get("99802");
+        shopTexts[1].text = stringTable.Get("99812");
+        shopTexts[2].text = stringTable.Get("99822");
+        shopTexts[3].text = stringTable.Get("99832");
+        shopTexts[4].text = stringTable.Get("99842");
+        
+        ChapterText[0].text = stringTable.Get("99852");
+        ChapterText[1].text = stringTable.Get("99862");
+        ChapterText[2].text = stringTable.Get("99872");
+        ChapterText[3].text = stringTable.Get("99882");
+        
+    }
+
+    private void OnDestroy()
+    {
+        if (gameManager != null && gameManager.GameData != null)
+        {
+            gameManager.GameData.RemoveObserver(this);
+        }
     }
 
     private void ShowPanel(MonoBehaviour selectedPanel)
@@ -32,5 +61,21 @@ public class UpgradePanelManager : MonoBehaviour
         characterUpgradePanelPrefab.gameObject.SetActive(false);
         characterGimmickPanelPrefab.gameObject.SetActive(false);
         selectedPanel.gameObject.SetActive(true);
+    }
+
+    public void OnResourceUpdate(ResourceType resourceType, int newValue)
+    {
+        switch (resourceType)
+        {
+            case ResourceType.Gold:
+                costTexts[1].text = newValue.ToString();
+                break;
+            case ResourceType.Diamond:
+                costTexts[0].text = newValue.ToString();
+                break;
+            case ResourceType.Ticket:
+                costTexts[2].text = newValue.ToString();
+                break;
+        }
     }
 }

@@ -59,16 +59,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initPosOption: 0
-  targetPosOption: 0
+  targetPosOption: 1
   moveOption: 0
   skillTarget: 0
   caster: {fileID: 0}
   casterOffsetPos: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   targetOffsetPos: {x: 0, y: 0, z: 0}
+  endEffect: {fileID: 0}
   speed: 8
   acceleration: 9.8
   isBuffApplied: 0
+  impactEffects:
+  - {fileID: 6002612636095783793, guid: 037fedcfd24725d4fa1e6c4f9fc0cdb4, type: 3}
+  impactEffectLifeTime: 1
 --- !u!1001 &6707529979571989279
 PrefabInstance:
   m_ObjectHideFlags: 0

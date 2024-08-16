@@ -24,6 +24,7 @@ public class PlayerCharacterData
     public int Power { get; set; } // 전투력
 
     public int SkillIcon { get; set; } // TO-DO: 삭제해야 함
+    public int Base { get; set; } 
 }
 
 public class PlayerCharacterTable : DataTable

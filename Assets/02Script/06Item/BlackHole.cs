@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class BlackHole : MonoBehaviour
 {
-    private float lifeTime = 5f;
-    private float timer = 0f;
+    private bool isLifeTimeSet;
+    private float timer;
+    private float lifeTime;
+    public float LifeTime
+    {
+        set
+        {
+            lifeTime = value;
+            isLifeTimeSet = true;
+        }
+    }
 
     public float pullSpeed = 10f;  // 블랙홀로 빨아들이는 속도
     public float rotateSpeed = 200f;  // 오브젝트가 블랙홀 주위를 회전하는 속도 deg/sec
@@ -16,8 +25,8 @@ public class BlackHole : MonoBehaviour
 
     private void OnEnable()
     {
-        // var targeting = new FindingTargetInCircle(gameObject.transform, 5f, Defines.Layers.MONSTER_LAYER);
-        // monsters = targeting.FindTargets();
+        isLifeTimeSet = false;
+        timer = 0f;
     }
 
     private void OnDisable()
@@ -34,6 +43,7 @@ public class BlackHole : MonoBehaviour
 
     private void Update()
     {
+        TimerUpdate();
         UpdateTargetMonsters();
         UpdateNonTargetMonsters();
     }
@@ -55,6 +65,18 @@ public class BlackHole : MonoBehaviour
 
         if (nonTargetMonsters.Contains(monster))
             nonTargetMonsters.Remove(monster);
+    }
+
+    private void TimerUpdate()
+    {
+        if (!isLifeTimeSet)
+            return;
+
+        timer += Time.deltaTime;
+        if (timer > lifeTime)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void UpdateTargetMonsters()

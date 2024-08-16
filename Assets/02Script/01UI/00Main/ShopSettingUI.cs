@@ -48,15 +48,15 @@ public class ShopSettingUI : MonoBehaviour,IResourceObserver
             Logger.LogError("GameManager is not initialized.");
             return;
         }
-        gameManager.ResourceManager.RegisterObserver(this);
+        gameManager.GameData.RegisterObserver(this);
         UpdatePlayerInfo();
     }
 
     private void UpdatePlayerInfo()
     {
-        goldText.text = gameManager.ResourceManager.Gold.ToString();
-        diamondText.text = gameManager.ResourceManager.Diamond.ToString();
-        ticketText.text = gameManager.ResourceManager.Ticket.ToString();
+        goldText.text = gameManager.GameData.Gold.ToString();
+        diamondText.text = gameManager.GameData.Diamond.ToString();
+        ticketText.text = gameManager.GameData.Ticket.ToString();
         
         UpdateTicketOrMileageText();
     }
@@ -64,7 +64,7 @@ public class ShopSettingUI : MonoBehaviour,IResourceObserver
     {
         if (gameManager != null)
         {
-            gameManager.ResourceManager.RemoveObserver(this);
+            gameManager.GameData.RemoveObserver(this);
         }
     }
 
@@ -87,7 +87,7 @@ public class ShopSettingUI : MonoBehaviour,IResourceObserver
 
     private void UpdateTicketOrMileageText()
     {
-        ticketText.text = MileageWindow.activeSelf ? gameManager.ResourceManager.Mileage.ToString() : gameManager.ResourceManager.Ticket.ToString();
+        ticketText.text = MileageWindow.activeSelf ? gameManager.GameData.Mileage.ToString() : gameManager.GameData.Ticket.ToString();
         
     }
 
