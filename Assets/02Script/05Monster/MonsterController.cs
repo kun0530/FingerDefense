@@ -44,6 +44,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
             if (IsDead)
                 return false;
 
+            if (stageManager && stageManager.DragCount <= 0)
+                return false;
+
             var currentState = stateMachine.CurrentState.GetType();
             if (currentState == typeof(FallState) || currentState == typeof(DragState))
                 return false;

@@ -68,6 +68,21 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    private int maxDragCount;
+    private int dragCount;
+    public int DragCount
+    {
+        get => dragCount;
+        set
+        {
+            if (value < 0)
+                return;
+
+            dragCount = value;
+            gameUiManager.UpdateMonsterDragCount(dragCount);
+        }
+    }
+
     private int earnedGold;
     public int EarnedGold
     {
@@ -118,22 +133,30 @@ public class StageManager : MonoBehaviour
     {
         var upgradesData = GameManager.instance.GameData.PlayerUpgradeLevel;
         var castleMaxHpLevel = 0;
+        var monsterMaxDragCountLevel = 0;
         foreach (var upgradeData in upgradesData)
         {
-            if (upgradeData.playerUpgrade == (int)GameData.PlayerUpgrade.PLAYER_HEALTH)
+            switch ((GameData.PlayerUpgrade)upgradeData.playerUpgrade)
             {
-                castleMaxHpLevel = upgradeData.level;
-                break;
+                case GameData.PlayerUpgrade.PLAYER_HEALTH:
+                    castleMaxHpLevel = upgradeData.level;
+                    break;
+                case GameData.PlayerUpgrade.INCREASE_DRAG:
+                    monsterMaxDragCountLevel = upgradeData.level;
+                    break;
             }
         }
 
         var upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
+
         castleMaxHp = upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.PLAYER_HEALTH, castleMaxHpLevel).UpStatValue;
+        maxDragCount = (int)upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.INCREASE_DRAG, monsterMaxDragCountLevel).UpStatValue;
     }
 
     private void Start()
     {
         CastleHp = castleMaxHp;
+        DragCount = maxDragCount;
         CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;

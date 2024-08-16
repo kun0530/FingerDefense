@@ -16,6 +16,7 @@ public class GameUiManager : MonoBehaviour
 
     public TextMeshProUGUI eranedGoldText;
     public TextMeshProUGUI monsterCountText;
+    public TextMeshProUGUI monsterDragCountText;
 
     public Slider castleHpBar;
     public Image castleShieldBar;
@@ -63,5 +64,10 @@ public class GameUiManager : MonoBehaviour
     public void UpdateEarnedGold(int gold)
     {
         eranedGoldText.text = $"{gold}";
+    }
+
+    public void UpdateMonsterDragCount(int dragCount)
+    {
+        monsterDragCountText.text = $"{dragCount}";
     }
 }
