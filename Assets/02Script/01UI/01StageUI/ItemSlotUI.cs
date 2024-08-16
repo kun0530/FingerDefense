@@ -81,7 +81,9 @@ public class ItemSlotUI : MonoBehaviour
 
     public void UpdateItemCount(int currentCount)
     {
+        Logger.Log($"Updating item count to: {currentCount} for Item ID: {ItemId}");
         itemCount.text = currentCount.ToString();
+        
     }
     
 }
