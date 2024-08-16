@@ -72,7 +72,6 @@ public class MainUiManager : MonoBehaviour
                         {
                             gameManager.GameData.MonsterGimmickLevel.Add(((int)GameData.MonsterGimmick.ATTACKRANGE, 0));
                             Logger.Log($"MonsterGimmickLevel added: {GameData.MonsterGimmick.ATTACKRANGE}, 0");
-                            
                         }
 
                         break;
