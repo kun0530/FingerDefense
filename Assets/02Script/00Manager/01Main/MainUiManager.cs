@@ -52,11 +52,10 @@ public class MainUiManager : MonoBehaviour
         {
             if (upgradeData.Type == 0)
             {
-                if (!GameManager.instance.GameData.MonsterDragLevel.Exists(x =>
-                        x.monsterId == upgradeData.UpgradeResultId))
+                if (!GameManager.instance.GameData.MonsterDragLevel.ContainsKey(upgradeData.UpgradeResultId))
                 {
-                    GameManager.instance.GameData.MonsterDragLevel.Add((upgradeData.UpgradeResultId,
-                        (int)GameData.MonsterDrag.LOCK));
+                    GameManager.instance.GameData.MonsterDragLevel.Add(upgradeData.UpgradeResultId,
+                        (int)GameData.MonsterDrag.LOCK);
                     DataManager.SaveFile(GameManager.instance.GameData);
                     Logger.Log($"MonsterDragLevel added: {upgradeData.UpgradeResultId}, {GameData.MonsterDrag.LOCK}");
                 }

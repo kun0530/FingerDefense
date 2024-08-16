@@ -57,7 +57,7 @@ public class DragInfoSlot : MonoBehaviour
                 .AddButton("확인", () =>
                 {
                     GameManager.instance.GameData.Gold -= cost;
-                    GameManager.instance.GameData.UpdateMonsterDragLevel(upgradeResultId, (int)GameData.MonsterDrag.ACTIVE);
+                    GameManager.instance.GameData.MonsterDragLevel[upgradeResultId] = (int)GameData.MonsterDrag.ACTIVE;
                     UpdateInteractive();
                 })
                 .AddButton("취소", () => { })
