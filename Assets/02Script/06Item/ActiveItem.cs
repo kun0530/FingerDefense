@@ -6,6 +6,7 @@ public abstract class ActiveItem : BaseItem
 {
     public override bool IsPassive { get => false; }
 
+    [Header("액티브 아이템")]
     public float duration;
     private bool isItemUsed = false;
     private float durationTimer = 0f;
@@ -13,6 +14,16 @@ public abstract class ActiveItem : BaseItem
     public float coolDown;
     private bool isCooledDown = true;
     private float coolDownTimer = 0f;
+
+    public override void Init()
+    {
+        base.Init();
+        
+        isItemUsed = false;
+        durationTimer = 0f;
+        isCooledDown = true;
+        coolDownTimer = 0f;
+    }
 
     public override void UseItem()
     {

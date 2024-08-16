@@ -10,9 +10,15 @@ public enum StageState
     None, Playing, GameOver, GameClear
 }
 
+[DefaultExecutionOrder(-1)]
 public class StageManager : MonoBehaviour
 {
-    public float CastleMaxHp { get; private set; } = 100f;
+    [Header("Castle")]
+    public List<GameObject> castleImages;
+    public Transform castleRightTopPos;
+    public Transform castleLeftBottomPos;
+
+    private float castleMaxHp;
     private float castleHp;
     private float CastleHp
     {
@@ -20,7 +26,17 @@ public class StageManager : MonoBehaviour
         set
         {
             castleHp = value;
-            gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+            gameUiManager.UpdateHpBar(castleHp, castleMaxHp);
+
+            if (castleImages.Count != 0)
+            {
+                int castleIndex = Mathf.FloorToInt(castleHp / (castleMaxHp / castleImages.Count));
+                castleIndex = Mathf.Clamp(castleIndex, 0, castleImages.Count - 1);
+                for(int i = 0; i < castleImages.Count; i++)
+                {
+                    castleImages[i].SetActive(i == castleIndex);
+                }
+            }
         }
     }
     private float castleShield;
@@ -30,9 +46,14 @@ public class StageManager : MonoBehaviour
         set
         {
             castleShield = value;
-            gameUiManager.UpdateShieldBar(castleShield, CastleMaxHp);
+            gameUiManager.UpdateShieldBar(castleShield, castleMaxHp);
+            if (castleShield > 0f)
+                shieldEffect?.gameObject.SetActive(true);
+            else
+                shieldEffect?.gameObject.SetActive(false);
         }
     }
+    [SerializeField] private EffectController shieldEffect;
 
     private int monsterCount;
     public int MonsterCount
@@ -44,6 +65,21 @@ public class StageManager : MonoBehaviour
             gameUiManager.UpdateMonsterCount(monsterCount);
             if (monsterCount <= 0 && CastleHp > 0f)
                 CurrentState = StageState.GameClear;
+        }
+    }
+
+    private int maxDragCount;
+    private int dragCount;
+    public int DragCount
+    {
+        get => dragCount;
+        set
+        {
+            if (value < 0)
+                return;
+
+            dragCount = value;
+            gameUiManager.UpdateMonsterDragCount(dragCount);
         }
     }
 
@@ -71,6 +107,19 @@ public class StageManager : MonoBehaviour
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
             TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
+            
+            if (currentState == StageState.GameClear &&
+                Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
+            {
+                GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+                Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
+            }
+
+            if (currentState == StageState.GameClear || currentState == StageState.GameOver)
+            {
+                GameManager.instance.GameData.Gold += EarnedGold;
+                DataManager.SaveFile(GameManager.instance.GameData);
+            }
         }
     }
 
@@ -78,9 +127,36 @@ public class StageManager : MonoBehaviour
     public PlayerCharacterSpawner playerCharacterSpawner;
     public GameUiManager gameUiManager;
 
+    [HideInInspector] public bool isPlayerElementAdvantage = false;
+
+    private void Awake()
+    {
+        var upgradesData = GameManager.instance.GameData.PlayerUpgradeLevel;
+        var castleMaxHpLevel = 0;
+        var monsterMaxDragCountLevel = 0;
+        foreach (var upgradeData in upgradesData)
+        {
+            switch ((GameData.PlayerUpgrade)upgradeData.playerUpgrade)
+            {
+                case GameData.PlayerUpgrade.PLAYER_HEALTH:
+                    castleMaxHpLevel = upgradeData.level;
+                    break;
+                case GameData.PlayerUpgrade.INCREASE_DRAG:
+                    monsterMaxDragCountLevel = upgradeData.level;
+                    break;
+            }
+        }
+
+        var upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
+
+        castleMaxHp = upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.PLAYER_HEALTH, castleMaxHpLevel).UpStatValue;
+        maxDragCount = (int)upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.INCREASE_DRAG, monsterMaxDragCountLevel).UpStatValue;
+    }
+
     private void Start()
     {
-        CastleHp = CastleMaxHp;
+        CastleHp = castleMaxHp;
+        DragCount = maxDragCount;
         CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
@@ -118,11 +194,11 @@ public class StageManager : MonoBehaviour
             return;
 
         if (isPercentage)
-            heal *= CastleMaxHp;
+            heal *= castleMaxHp;
         CastleHp += heal;
 
-        if (CastleHp >= CastleMaxHp)
-            CastleHp = CastleMaxHp;
+        if (CastleHp >= castleMaxHp)
+            CastleHp = castleMaxHp;
     }
 
     public void GetShield(float shield, bool isPercentage = false)
@@ -131,7 +207,7 @@ public class StageManager : MonoBehaviour
             return;
 
         if (isPercentage)
-            shield *= CastleMaxHp;
+            shield *= castleMaxHp;
         CastleShield += shield;
     }
 

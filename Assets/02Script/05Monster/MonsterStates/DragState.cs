@@ -12,6 +12,8 @@ public class DragState : IState
 
     private bool isReachHeight;
 
+    private float limitX;
+
     public DragState(MonsterController controller)
     {
         this.controller = controller;
@@ -25,6 +27,16 @@ public class DragState : IState
         controller.targetFallY = controller.transform.position.y;
         isReachHeight = false;
 
+        var stageManager = controller.stageManager;
+        if (stageManager)
+        {
+            limitX = Utils.GetXFromLinear(stageManager.castleRightTopPos.position, stageManager.castleLeftBottomPos.position, controller.transform.position.y);
+        }
+        else
+        {
+            limitX = controller.moveTargetPos.x;
+        }
+
         if (controller.attackTarget)
             controller.attackTarget.TryRemoveMonster(controller);
 
@@ -32,6 +44,7 @@ public class DragState : IState
 
         collider.enabled = false;
         renderer.sortingOrder = 1;
+        controller.shadowImage?.gameObject.SetActive(false);
 
         controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
         TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
@@ -46,9 +59,11 @@ public class DragState : IState
         if (dragAndDrop.IsDragging)
         {
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
-            pos.z = 0f;
             if (pos.y <= controller.targetFallY)
                 pos.y = controller.targetFallY;
+            if (pos.x <= limitX)
+                pos.x = limitX;
+            pos.z = pos.y;
             controller.transform.position = pos;
 
             if (!isReachHeight && pos.y > controller.Status.Data.Height + controller.targetFallY)
@@ -78,6 +93,13 @@ public class DragState : IState
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
             cameraController.ResetCamera();
+        }
+
+        if (controller.transform.position.x <= limitX)
+        {
+            var pos = controller.transform.position;
+            pos.x = limitX;
+            controller.transform.position = pos;
         }
     }
 }

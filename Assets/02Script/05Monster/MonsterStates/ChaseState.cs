@@ -30,15 +30,14 @@ public class ChaseState : IState
             return;
         }
 
-        var direction = (controller.attackMoveTarget.position - controller.transform.position).normalized;
-        direction *= controller.directionMultiplier;
-        controller.transform.position += direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
+        var direction = ((Vector2)(controller.attackMoveTarget.position - controller.transform.position)).normalized;
+        controller.transform.position += (Vector3)direction * controller.Status.CurrentMoveSpeed * Time.deltaTime;
         if (moveTrackEntry != null)
             moveTrackEntry.TimeScale = controller.Status.CurrentMoveSpeed;
         controller.SetFlip(direction.x > 0);
         if (Vector2.Distance(controller.transform.position, controller.attackMoveTarget.position) < 0.1)
         {
-            controller.transform.position = controller.attackMoveTarget.position;
+            controller.transform.position = (Vector2)controller.attackMoveTarget.position;
             controller.TryTransitionState<AttackState>();
             return;
         }

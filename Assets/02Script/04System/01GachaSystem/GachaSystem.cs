@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class GachaSystem : MonoBehaviour
    private GachaTable gachaTable;
    private AssetListTable aasetListTable;
    private StringTable stringTable;
+   private UpgradeTable upgradeTable;
    
    public Button closeButton;
    private List<GachaResultSlot> spawnedSlots = new List<GachaResultSlot>();
@@ -29,49 +31,71 @@ public class GachaSystem : MonoBehaviour
       gachaTable = DataTableManager.Get<GachaTable>(DataTableIds.Gacha);
       aasetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
       stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
+      upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
       if (closeButton != null)
       {
          closeButton.onClick.AddListener(ClearGachaResults);
       }
    }
-
-
    public void PerformGacha(int times)
-   {
-      for (int i = 0; i < times; i++)
-      {
-         GachaData result = GetRandomGachaResult();
-         if (result != null)
-         {
-            bool isNew = !GameManager.instance.ObtainedGachaIDs.Contains(result.Id);
-                
+{
+    for (int i = 0; i < times; i++)
+    {
+        GachaData result = GetRandomGachaResult();
+        if (result != null)
+        {
+            bool isNew = true;
+            foreach (var id in GameManager.instance.GameData.ObtainedGachaIDs)
+            {
+                var upgradedVersion = upgradeTable.upgradeTable.Values.FirstOrDefault(x => x.UpgradeResultId == result.Id);
+                if (id == result.Id || (upgradedVersion != null && id == upgradedVersion.NeedCharId))
+                {
+                    isNew = false;
+                    break;
+                }
+            }
+
             if (isNew)
             {
-               GameManager.instance.ObtainedGachaIDs.Add(result.Id);
-               Logger.Log($"Obtained Gacha ID: {result.Id}");
-               GameManager.instance.SaveGameData();
+                GameManager.instance.GameData.ObtainedGachaIDs.Add(result.Id);
+                Logger.Log($"Obtained Gacha ID: {result.Id}");
+                DataManager.SaveFile(GameManager.instance.GameData);
+                
+                CharacterUpgradePanel upgradePanel = FindObjectOfType<CharacterUpgradePanel>();
+                if (upgradePanel != null)
+                {
+                    upgradePanel.RefreshPanel();
+                }
+                
+                DeckSlotController deckSlotController = FindObjectOfType<DeckSlotController>();
+                if (deckSlotController != null)
+                {
+                    deckSlotController.RefreshCharacterSlots();
+                }
             }
             else
             {
-               switch (gachaTable.table[result.Id].Grade)
-               {
-                  case 0:
-                     GameManager.instance.Mileage += 100;
-                     break;
-                  case 1:
-                     GameManager.instance.Mileage += 300;
-                     break;
-                  case 2:
-                     GameManager.instance.Mileage += 500;
-                     break;   
-               }
-               GameManager.instance.SaveGameData();
+                // 중복 처리
+                switch (gachaTable.table[result.Id].Grade)
+                {
+                    case 0:
+                        GameManager.instance.GameData.Mileage += 100;
+                        break;
+                    case 1:
+                        GameManager.instance.GameData.Mileage += 300;
+                        break;
+                    case 2:
+                        GameManager.instance.GameData.Mileage += 500;
+                        break;   
+                }
             }
-            SpawnResultSlot(result,isNew);
-         }
-      }
-   }
-   
+
+            SpawnResultSlot(result, isNew);
+        }
+    }
+}
+
+
    private GachaData GetRandomGachaResult()
    {
       float rand = UnityEngine.Random.value * 100f;
@@ -108,6 +132,7 @@ public class GachaSystem : MonoBehaviour
       var slot = Instantiate(resultSlot, gachaSlotParent);
       slot.Setup(data, aasetListTable, stringTable,isNew);
       spawnedSlots.Add(slot);
+      DataManager.SaveFile(GameManager.instance.GameData);
    }
    private void ClearGachaResults()
    {

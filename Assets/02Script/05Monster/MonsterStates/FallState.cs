@@ -22,6 +22,12 @@ public class FallState : IState
 
         if (!controller.IsDead)
             controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
+
+        if (controller.Status.Data.Height <= startY - controller.targetFallY)
+        {
+            if (controller.stageManager)
+                controller.stageManager.DragCount--;
+        }
     }
 
     public void Update()
@@ -48,5 +54,6 @@ public class FallState : IState
     public void Exit()
     {
         collider.enabled = true;
+        controller.shadowImage?.gameObject.SetActive(true);
     }
 }

@@ -2,19 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using Spine;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerAttackBehavior : MonoBehaviour
 {
     public BaseSkill normalAttack;
-    public BaseSkill skillAttack;
+    private BaseSkill skillAttack;
+    public BaseSkill SkillAttack
+    {
+        get => skillAttack;
+        set
+        {
+            skillAttack = value;
+            if (skillAttack != null)
+                skillAttack.coolTimeBar = skillAttackCoolTimeBar;
+        }
+    }
 
     private BaseSkill currentAttack;
 
     private CharacterSpineAni characterAni;
     private bool isAnimationEnded = true;
 
-    private TrackEntry attactTrackEntry;
+    private TrackEntry attackTrackEntry;
     private PlayerCharacterController controller;
+
+    public Image skillAttackCoolTimeBar;
 
     private void Awake()
     {
@@ -37,7 +50,7 @@ public class PlayerAttackBehavior : MonoBehaviour
             UpdateSkill(normalAttack, controller.BuffHandler.buffValues[BuffType.ATK_SPEED], true);
         else
             UpdateSkill(normalAttack);
-        UpdateSkill(skillAttack);
+        UpdateSkill(SkillAttack);
     }
 
     private void UpdateSkill(BaseSkill skill, float coolTimeBuff = 0f, bool isBuffApplied = false)
@@ -62,18 +75,18 @@ public class PlayerAttackBehavior : MonoBehaviour
 
     private void SkillStart()
     {
-        attactTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
-        if (attactTrackEntry != null)
-            attactTrackEntry.Complete += SkillEnd;
+        attackTrackEntry = characterAni.SetAnimation(CharacterSpineAni.CharacterState.ATTACK, false, 1f);
+        if (attackTrackEntry != null)
+            attackTrackEntry.Complete += SkillEnd;
         isAnimationEnded = false;
     }
 
     private void SkillEnd(TrackEntry entry)
     {
-        if (attactTrackEntry != null)
-            attactTrackEntry.Complete -= SkillEnd;
+        if (attackTrackEntry != null)
+            attackTrackEntry.Complete -= SkillEnd;
 
-        if (attactTrackEntry == characterAni.CurrentTrackEntry)
+        if (attackTrackEntry == characterAni.CurrentTrackEntry)
             characterAni.SetAnimation(CharacterSpineAni.CharacterState.IDLE, true, 1f);
 
         isAnimationEnded = true;

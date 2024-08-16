@@ -65,10 +65,15 @@ MonoBehaviour:
   caster: {fileID: 0}
   casterOffsetPos: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
-  targetOffsetPos: {x: -0.46, y: 0.39, z: 0}
+  targetOffsetPos: {x: 0, y: 0.39, z: 0}
+  endEffect: {fileID: 0}
   speed: 5
   acceleration: 1
   isBuffApplied: 0
+  impactEffects:
+  - {fileID: 8392109616443442060, guid: dd17f2f18199bcf439c089c047e7f294, type: 3}
+  - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
+  impactEffectLifeTime: 1
 --- !u!1001 &1621634284655783678
 PrefabInstance:
   m_ObjectHideFlags: 0

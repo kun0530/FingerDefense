@@ -19,15 +19,15 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
-    [SerializeField] private float bottomY = -5f;
+    public float bottomY = -5f;
     [SerializeField] private float zoomOutWidth = 25f;
     [SerializeField] private float zoomTime = 0.25f;
 
-    [SerializeField] private GameObject letterBoxGameObject;
-    private RectTransform letterBoxCanvasRect;
-    private Image[] letterBoxes;
+    [Tooltip("Left, Right, Bottom, Top 순으로 넣어주세요.")]
+    [SerializeField] private List<Image> letterBoxes;
+    [SerializeField] private RectTransform letterBoxCanvasRect;
 
-    private float currentWidth;
+    public float currentWidth { get; private set; }
 
     private float startWidth;
     private float endWidth;
@@ -45,9 +45,6 @@ public class CameraController : MonoBehaviour
             Debug.LogError("Main Camera is not found");
             return;
         }
-        
-        letterBoxCanvasRect = letterBoxGameObject.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
-        letterBoxes = letterBoxGameObject.GetComponentsInChildren<Image>();
 
         ChangeResolution();
     }
@@ -122,7 +119,8 @@ public class CameraController : MonoBehaviour
             float viewportWidth = targetAspectRatio / screenAspectRatio;
             var adjustedRect = new Rect((1f - viewportWidth) / 2f, 0f, viewportWidth, 1f);
             mainCamera.rect = adjustedRect;
-            SetLetterBoxSize((1f - viewportWidth) / 2f, 1f);
+            // SetLetterBoxSize((1f - viewportWidth) / 2f, 1f, true);
+            SetLetterBoxSize(adjustedRect);
         }
         else
         {
@@ -130,7 +128,8 @@ public class CameraController : MonoBehaviour
             float viewportHeight = screenAspectRatio / targetAspectRatio;
             var adjustedRect = new Rect(0f, (1f - viewportHeight) / 2f, 1f, viewportHeight);
             mainCamera.rect = adjustedRect;
-            SetLetterBoxSize(1f, (1f - viewportHeight) / 2f);
+            // SetLetterBoxSize(1f, (1f - viewportHeight) / 2f, false);
+            SetLetterBoxSize(adjustedRect);
         }
 
         var orthographicSize = targetHeight / 2f;
@@ -139,15 +138,21 @@ public class CameraController : MonoBehaviour
         mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
-    private void SetLetterBoxSize(float widthPercentage, float heightPercentage)
+    private void SetLetterBoxSize(float widthPercentage, float heightPercentage, bool isLeftRight)
     {
         float newWidth = letterBoxCanvasRect.rect.width * widthPercentage;
         float newHeight = letterBoxCanvasRect.rect.height * heightPercentage;
 
         foreach (var letterBox in letterBoxes)
         {
-            letterBox.gameObject.SetActive(true);
-            letterBox.rectTransform.sizeDelta = new Vector2(newWidth, newHeight);
+            letterBox.gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            var index = isLeftRight ? i : i + 2;
+            letterBoxes[index].gameObject.SetActive(true);
+            letterBoxes[index].rectTransform.sizeDelta = new Vector2(newWidth, newHeight);
         }
     }
 
@@ -163,6 +168,11 @@ public class CameraController : MonoBehaviour
         letterBoxes[0].rectTransform.sizeDelta = new Vector2(newLeftWidth, letterBoxCanvasRect.rect.height);
         letterBoxes[1].gameObject.SetActive(true);
         letterBoxes[1].rectTransform.sizeDelta = new Vector2(newRightWidth, letterBoxCanvasRect.rect.height);
+
+        letterBoxes[2].gameObject.SetActive(true);
+        letterBoxes[2].rectTransform.sizeDelta = new Vector2(letterBoxCanvasRect.rect.width, newBottomHeight);
+        letterBoxes[3].gameObject.SetActive(true);
+        letterBoxes[3].rectTransform.sizeDelta = new Vector2(letterBoxCanvasRect.rect.width, newTopHeight);
     }
 
     private void SetLetterBoxInactive()

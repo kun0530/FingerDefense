@@ -33,11 +33,10 @@ public class MoveState : IState
     
     public void Update()
     {
-        if (controller.moveTarget != null)
+        if (controller.moveTargetPos != null)
         {
-            direction.x = controller.moveTarget.transform.position.x
+            direction.x = controller.moveTargetPos.x
             > controller.transform.position.x ? 1f : -1f;
-            direction.x *= controller.directionMultiplier;
         }
         controller.SetFlip(direction.x > 0);
 

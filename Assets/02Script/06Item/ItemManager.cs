@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
-    private List<(int itemId, int itemCount)> itemIds = new();
-
     private ItemTable itemTable;
 
     public int maxItemCount = 2;
@@ -19,7 +17,7 @@ public class ItemManager : MonoBehaviour
     private void Awake()
     {
         itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
-        itemIds = Variables.LoadTable.ItemId;
+        var itemIds = Variables.LoadTable.ItemId;
 
         foreach (var itemId in itemIds)
         {
@@ -39,12 +37,15 @@ public class ItemManager : MonoBehaviour
             item.count = itemId.itemCount;
             items.Add(item);
         }
+
+        itemIds.Clear();
     }
 
     private void OnEnable()
     {
         foreach (var item in items)
         {
+            item.Init();
             if (item && item.IsPassive)
                 item.UseItem();
         }
@@ -89,6 +90,7 @@ public class ItemManager : MonoBehaviour
 
             items[i].button = itemButton;
             int index = i;
+
             itemButton.button.onClick.AddListener(items[index].UseItem);
             itemButton.ActiveButton(true);
         }

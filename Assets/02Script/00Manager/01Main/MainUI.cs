@@ -1,53 +1,68 @@
 using System;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using Cysharp.Threading.Tasks; 
 
-public class MainUI : MonoBehaviour
+public class MainUI : MonoBehaviour, IResourceObserver
 {
     public TextMeshProUGUI playerNameText;
     private GameManager gameManager;
-    
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI diamondText;
     public TextMeshProUGUI ticketText;
 
-    private void Awake()
+    private void Start()
     {
-        gameManager = GameObject.FindWithTag("Manager").TryGetComponent(out GameManager manager) ? manager : null;
-    }
-
-    private void Update()
-    {
+        gameManager = GameManager.instance;
+        
+        gameManager.GameData.RegisterObserver(this);
         UpdatePlayerInfo();
     }
-    
+
+    private void OnDestroy()
+    {
+        if (gameManager != null && gameManager.GameData != null)
+        {
+            gameManager.GameData.RemoveObserver(this);
+        }
+    }
+
+    public void OnResourceUpdate(ResourceType resourceType, int newValue)
+    {
+        switch (resourceType)
+        {
+            case ResourceType.Gold:
+                goldText.text = newValue.ToString();
+                break;
+            case ResourceType.Diamond:
+                diamondText.text = newValue.ToString();
+                break;
+            case ResourceType.Ticket:
+                ticketText.text = newValue.ToString();
+                break;
+        }
+    }
+
     public void UpdatePlayerInfo()
     {
-        if (!gameManager)
-        {
-            Logger.LogError("GameManager is not initialized.");
-            return;
-        }
-        
         if (playerNameText)
         {
-            playerNameText.text = gameManager.PlayerName;
+            playerNameText.text = gameManager.GameData.PlayerName;
         }
         
-        if(goldText)
+        if (goldText)
         {
-            goldText.text = gameManager.Gold.ToString();
+            goldText.text = gameManager.GameData!.Gold.ToString();
         }
-        
-        if(diamondText)
+
+        if (diamondText)
         {
-            diamondText.text = gameManager.Diamond.ToString();
+            diamondText.text = gameManager.GameData!.Diamond.ToString();
         }
-        
-        if(ticketText)
+
+        if (ticketText)
         {
-            ticketText.text = gameManager.Ticket.ToString();
+            ticketText.text = gameManager.GameData!.Ticket.ToString();
         }
-        
     }
 }

@@ -35,10 +35,7 @@ public class StringTable : DataTable
         foreach (var record in records)
         {
             string processedText = record.Text.Replace("\\n", "\n");
-            table.TryAdd(record.Id, processedText);  // 변경: int에서 string으로 변경
+            table.TryAdd(record.Id, processedText); // 변경: int에서 string으로 변경
         }
     }
-
-   
-    
 }

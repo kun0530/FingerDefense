@@ -17,6 +17,8 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     private CharacterSpineAni anim;
     private TrackEntry deathTrackEntry;
 
+    public Image elementImage;
+
     private int MonsterCount
     {
         get
@@ -34,6 +36,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void Awake()
     {
         base.Awake();
+        entityType = EntityType.PLAYER_CHARACTER;
 
         anim = GetComponent<CharacterSpineAni>();
     }
@@ -51,6 +54,12 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void OnDisable()
     {
         base.OnDisable();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        elementImage.gameObject.SetActive(false);
     }
 
     protected override void Update()
@@ -134,7 +143,11 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
 
     private void Die(TrackEntry trackEntry)
     {
-        spawner?.RemoveActiveCharacter(this);
+        if (spawner)
+            spawner.RemoveActiveCharacter(this);
+        else
+            Destroy(gameObject);
+            
         if (deathTrackEntry != null)
             deathTrackEntry.Complete -= Die;
     }

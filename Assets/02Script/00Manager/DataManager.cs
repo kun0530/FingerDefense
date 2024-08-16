@@ -1,54 +1,21 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography;
 using UnityEngine;
 using Newtonsoft.Json;
 
-[Serializable]
-public class GameData
+
+public static class DataManager
 {
-    public string PlayerName = "";
-    public int Gold;
-    public int Diamond;
-    public int Ticket;
-    public int Mileage;
-    public bool NicknameCheck;
-    public bool StageChoiceTutorialCheck;
-    public bool DeckUITutorialCheck;
-    public bool Game1TutorialCheck;
-    public bool Game2TutorialCheck;
-    public bool Game3TutorialCheck;
-    public bool Game4TutorialCheck;
+    private static readonly string saveFileName = "SaveData.json";
     
-    public List<int> ObtainedGachaIDs = new List<int>();
-    public List<Tuple<int,int>> ItemList = new List<Tuple<int, int>>();
-}
+    private static readonly string keyFileName = "encryptionKey.dat";
+    private static readonly string ivFileName = "encryptionIV.dat";
+    private static byte[] encryptionKey;
+    private static byte[] encryptionIV;
 
-public class DataManager : MonoBehaviour
-{
-    private static DataManager instance;
-    
-    private readonly string keyFileName = "encryptionKey.dat";
-    private readonly string ivFileName = "encryptionIV.dat";
-    private byte[] encryptionKey;
-    private byte[] encryptionIV;
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            LoadEncryptionKeyAndIv();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void LoadEncryptionKeyAndIv()
+    public static void LoadEncryptionKeyAndIv()
     {
         string keyPath = Path.Combine(Application.persistentDataPath, keyFileName);
         string ivPath = Path.Combine(Application.persistentDataPath, ivFileName);
@@ -73,26 +40,33 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void SaveFile<T>(string fileName, T data)
+    public static void SaveFile(GameData data)
     {
         string json = JsonConvert.SerializeObject(data);
-        string encrypt = Encrypt(json);
-        File.WriteAllText(Application.persistentDataPath + "/" + fileName, encrypt);
+        // string encrypt = Encrypt(json);
+
+        // To-Do: 임시  변경
+        // File.WriteAllText(Path.Combine(Application.persistentDataPath, saveFileName), encrypt);
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, saveFileName), json);
     }
 
-    public T LoadFile<T>(string fileName)
+    public static GameData LoadFile()
     {
-        string path = Application.persistentDataPath + "/" + fileName;
+        string path = Path.Combine(Application.persistentDataPath, saveFileName);
         if (!File.Exists(path))
         {
-            return default(T);
+            return null;
         }
-        string encrypt = File.ReadAllText(path);
-        string decrypt = Decrypt(encrypt);
-        return JsonConvert.DeserializeObject<T>(decrypt);
+
+        // string encrypt = File.ReadAllText(path);
+        // string decrypt = Decrypt(encrypt);
+
+        // To-Do: 임시  변경
+        // return JsonConvert.DeserializeObject<GameData>(decrypt);
+        return JsonConvert.DeserializeObject<GameData>(File.ReadAllText(path));
     }
 
-    private string Encrypt(string plainText)
+    private static string Encrypt(string plainText)
     {
         using Aes aes = Aes.Create();
         aes.Key = encryptionKey;
@@ -108,7 +82,7 @@ public class DataManager : MonoBehaviour
         return Convert.ToBase64String(ms.ToArray());
     }
 
-    private string Decrypt(string cipherText)
+    private static string Decrypt(string cipherText)
     {
         byte[] buffer = Convert.FromBase64String(cipherText);
         using Aes aes = Aes.Create();

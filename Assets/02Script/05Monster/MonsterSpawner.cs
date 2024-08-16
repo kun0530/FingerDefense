@@ -16,8 +16,6 @@ public class MonsterSpawner : MonoBehaviour
     private MonsterTable monsterTable;
     private WaveTable waveTable;
 
-    public Transform moveTarget;
-
     private int stageId = Variables.LoadTable.StageId;
     private int waveId = 1;
     public int MonsterCount { get; private set; }
@@ -79,7 +77,7 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Start()
     {
-        stageManager=GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+        stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
         
         factory.poolTransform = poolTransform; // To-Do: 추후 삭제
         spawnPosition = new Vector2(spawnTransform.position.x, spawnTransform.position.y);
@@ -118,8 +116,8 @@ public class MonsterSpawner : MonoBehaviour
             if (stageManager)
             {
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
-                monsterGo.moveTarget = moveTarget;
-                monsterGo.ResetMonsterData();    
+                monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+                monsterGo.ResetMonsterData();
             }
             
             while (Time.timeScale == 0)

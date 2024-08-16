@@ -21,7 +21,8 @@ public class DeckSlotController : MonoBehaviour
     public Button startButton;
     public Button closeButton;
     
-    
+    private GameManager gameManager;
+    private int maxCharacterSlots = 3;
     
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class DeckSlotController : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameManager.instance;
         RefreshCharacterSlots();
         
         startButton.onClick.AddListener(() =>
@@ -48,14 +50,30 @@ public class DeckSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (characterSlots.Count == 0 && filterSlots.Count == 0)
+        LoadCharacterSelection();
+        if (filterringSlotParent != null)
         {
             RefreshCharacterSlots();
-        }  
+        }
+        else
+        {
+            Logger.LogError("CharacterPanel is not assigned in DeckSlotController.");
+        }
+
     }
 
-    private void RefreshCharacterSlots()
+    private void OnDisable()
     {
+        SaveCharacterSelection();
+    }
+
+    public void RefreshCharacterSlots()
+    {
+        // 업그레이드 상태에 따라 최대 캐릭터 슬롯 개수 설정
+        int arrangementLevel = GameManager.instance.GameData.PlayerUpgradeLevel
+            .Find(x => x.playerUpgrade == (int)GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT).level;
+        maxCharacterSlots = 3 + arrangementLevel; // 기본 3개 + 업그레이드 레벨
+    
         foreach (var slot in filterSlots)
         {
             Destroy(slot.gameObject);
@@ -80,15 +98,26 @@ public class DeckSlotController : MonoBehaviour
     {
         for (var i = 0; i < 8; i++)
         {
-            AddEmptyCharacterSlot();
+            var slot = Instantiate(characterSlotPrefab, characterSlotParent);
+
+            if (i < maxCharacterSlots)
+            {
+                slot.SetLocked(false);
+                slot.ChoicePanel.SetActive(false);
+                slot.OnSlotClick = HandleCharacterSlotClick;
+            }
+            else
+            {
+                slot.SetLocked(true); 
+            }
+
+            characterSlots.Add(slot);
         }
     }
 
     private void CreateFilteringSlots()
     {
-        if (GameManager.instance == null) return;
-        
-        var obtainedGachaIds = GameManager.instance.ObtainedGachaIDs;
+        var obtainedGachaIds = GameManager.instance.GameData.ObtainedGachaIDs;
         Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
         foreach (var characterId in obtainedGachaIds)
         {
@@ -99,11 +128,9 @@ public class DeckSlotController : MonoBehaviour
                 characterSlot.SetCharacterSlot(characterData);
                 characterSlot.OnSlotClick = HandleCharacterSlotClick;
                 filterSlots.Add(characterSlot);
-                Logger.Log($"Created slot for Character ID: {characterId}");
             }
             else
             {
-                Logger.Log($"Character data not found for ID: {characterId}");
             }
         }
     }
@@ -118,6 +145,13 @@ public class DeckSlotController : MonoBehaviour
 
     private void HandleCharacterSlotClick(CharacterSlotUI clickedSlot)
     {
+        // 슬롯이 잠겨있는지 확인
+        if (clickedSlot.LockImage.gameObject.activeSelf)
+        {
+            Logger.Log("이 슬롯은 잠겨있어 캐릭터를 배치할 수 없습니다.");
+            return; // 슬롯이 잠겨있다면 아무 동작도 하지 않음
+        }
+
         if (clickedSlot.transform.parent == filterringSlotParent)
         {
             if (addedCharacters.Contains(clickedSlot.characterData.Id))
@@ -125,7 +159,7 @@ public class DeckSlotController : MonoBehaviour
                 Logger.Log("이미 추가된 캐릭터입니다.");
                 return;
             }
-            
+
             if (addedCharacters.Count >= 8)
             {
                 Logger.Log("최대 8개까지만 추가 가능합니다.");
@@ -134,7 +168,8 @@ public class DeckSlotController : MonoBehaviour
 
             foreach (var slot in characterSlots)
             {
-                if (slot.characterData == null)
+                // 빈 슬롯에 캐릭터를 배치
+                if (slot.characterData == null && !slot.LockImage.gameObject.activeSelf)
                 {
                     slot.SetCharacterSlot(clickedSlot.characterData);
                     slot.ChoicePanel.SetActive(false);
@@ -142,14 +177,13 @@ public class DeckSlotController : MonoBehaviour
                     addedCharacters.Add(clickedSlot.characterData.Id);
                     activeChoicePanelSlots.Add(clickedSlot);
                     UpdateChoicePanels();
-                    
                     break;
                 }
             }
-            SortCharacterSlots();
         }
         else if (clickedSlot.transform.parent == characterSlotParent)
         {
+            // 선택 해제 시, 해당 슬롯을 초기화하여 재사용
             var originalSlot = activeChoicePanelSlots.Find(slot => slot.characterData == clickedSlot.characterData);
             if (originalSlot != null)
             {
@@ -160,20 +194,19 @@ public class DeckSlotController : MonoBehaviour
                 UpdateChoicePanels();
             }
 
-            clickedSlot.ClearSlot();
-            characterSlots.Remove(clickedSlot);
-            Destroy(clickedSlot.gameObject);
-            AddEmptyCharacterSlot();
-            
-            SortCharacterSlots();
+            clickedSlot.ClearSlot();  // 데이터를 초기화하고 슬롯을 재사용 가능 상태로 만듭니다.
         }
 
         UpdateCharacterIds();
     }
 
+
+
+
+
+
     private void UpdateCharacterIds()
     {
-        // Ensure the array is large enough
         if (Variables.LoadTable.characterIds.Length < characterSlots.Count)
         {
             Array.Resize(ref Variables.LoadTable.characterIds, characterSlots.Count);
@@ -211,22 +244,22 @@ public class DeckSlotController : MonoBehaviour
 
     private void SortCharacterSlots()
     {
-        characterSlots = characterSlots
+        var unlockedSlots = characterSlots
+            .Where(slot => !slot.LockImage.gameObject.activeSelf) 
             .OrderBy(slot => slot.characterData?.Class ?? int.MaxValue)
             .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
             .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
             .ToList();
-    
-        foreach (var slot in characterSlots)
+
+        
+        int index = 0;
+        foreach (var t in characterSlots)
         {
-            Logger.Log(slot.characterData != null
-                ? $"Priority: {slot.characterData.Class}, Grade: {slot.characterData.Grade}, Element: {slot.characterData.Element}"
-                : "빈 슬롯");
-        }
-    
-        for (var i = 0; i < characterSlots.Count; i++)
-        {
-            characterSlots[i].transform.SetSiblingIndex(i);
+            if (!t.LockImage.gameObject.activeSelf) 
+            {
+                t.transform.SetSiblingIndex(index);
+                index++;
+            }
         }
     }
 
@@ -254,27 +287,39 @@ public class DeckSlotController : MonoBehaviour
 
     private void LoadCharacterSelection()
     {
-        for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
-        {
-            Variables.LoadTable.characterIds[i] = PlayerPrefs.GetInt($"CharacterId_{i}", 0);
-        }
-
-        // 불러온 캐릭터 ID를 슬롯에 설정
+        // 캐릭터 ID를 불러와 슬롯에 설정
         for (int i = 0; i < Variables.LoadTable.characterIds.Length; i++)
         {
             int characterId = Variables.LoadTable.characterIds[i];
             if (characterId != 0)
             {
                 var characterData = playerCharacterTable.Get(characterId);
-                var slot = characterSlots[i];
-                slot.SetCharacterSlot(characterData);
-                slot.ChoicePanel.SetActive(false);
-                addedCharacters.Add(characterId);
-                var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
-                if (originalSlot != null)
+        
+                // 필터링 슬롯에 없는 캐릭터는 내려지게 함
+                if (!filterSlots.Any(s => s.characterData != null && s.characterData.Id == characterId))
                 {
-                    originalSlot.ChoiceButton.interactable = false;
-                    activeChoicePanelSlots.Add(originalSlot);
+                    Logger.Log($"Character ID {characterId} is not in filter slots, removing from character slots.");
+                    Variables.LoadTable.characterIds[i] = 0; // 캐릭터 ID 초기화
+                    continue;
+                }
+
+                // Index 체크 추가
+                if (i < characterSlots.Count)
+                {
+                    var slot = characterSlots[i];
+                    slot.SetCharacterSlot(characterData);
+                    slot.ChoicePanel.SetActive(false);
+                    addedCharacters.Add(characterId);
+                    var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
+                    if (originalSlot != null)
+                    {
+                        originalSlot.ChoiceButton.interactable = false;
+                        activeChoicePanelSlots.Add(originalSlot);
+                    }
+                }
+                else
+                {
+                    Logger.LogWarning($"Character slot index {i} is out of range. Skipping slot assignment.");
                 }
             }
         }
@@ -282,4 +327,5 @@ public class DeckSlotController : MonoBehaviour
         UpdateChoicePanels();
         SortCharacterSlots();
     }
+
 }
