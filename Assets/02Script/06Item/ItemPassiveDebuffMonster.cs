@@ -7,6 +7,7 @@ public class ItemPassiveDebuffMonster : BaseItem
 {
     [Header("이펙트")]
     public EffectController effectPrefab;
+    public FullScreenPassRendererFeature fullScreenPassRenderer;
     [Header("몬스터 디버프")]
     [SerializeField] public ItemDebuffMonster debuff;
 
@@ -21,12 +22,16 @@ public class ItemPassiveDebuffMonster : BaseItem
         monsterSpawner.onResetMonster += debuff.GiveBuff;
         if (effectPrefab)
             activeEffect = Instantiate(effectPrefab);
+
+        fullScreenPassRenderer?.SetActive(true);
     }
 
     public override void CancelItem()
     {
         if (activeEffect)
             Destroy(activeEffect.gameObject);
+
+        fullScreenPassRenderer?.SetActive(false);
 
         var stageManager = GameObject.FindGameObjectWithTag(Defines.Tags.STAGE_MANAGER_TAG)?.GetComponent<StageManager>();
         var monsterSpawner = stageManager?.monsterSpawner;
