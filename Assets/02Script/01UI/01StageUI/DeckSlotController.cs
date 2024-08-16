@@ -168,7 +168,7 @@ public class DeckSlotController : MonoBehaviour
 
             foreach (var slot in characterSlots)
             {
-                // 이미 캐릭터가 추가된 슬롯에만 캐릭터 배치 가능
+                // 빈 슬롯에 캐릭터를 배치
                 if (slot.characterData == null && !slot.LockImage.gameObject.activeSelf)
                 {
                     slot.SetCharacterSlot(clickedSlot.characterData);
@@ -183,6 +183,7 @@ public class DeckSlotController : MonoBehaviour
         }
         else if (clickedSlot.transform.parent == characterSlotParent)
         {
+            // 선택 해제 시, 해당 슬롯을 초기화하여 재사용
             var originalSlot = activeChoicePanelSlots.Find(slot => slot.characterData == clickedSlot.characterData);
             if (originalSlot != null)
             {
@@ -193,17 +194,14 @@ public class DeckSlotController : MonoBehaviour
                 UpdateChoicePanels();
             }
 
-            clickedSlot.ClearSlot();
-            characterSlots.Remove(clickedSlot);
-            Destroy(clickedSlot.gameObject);
-
-            AddEmptyCharacterSlot();
-
-            SortCharacterSlots();
+            clickedSlot.ClearSlot();  // 데이터를 초기화하고 슬롯을 재사용 가능 상태로 만듭니다.
         }
 
         UpdateCharacterIds();
     }
+
+
+
 
 
 

@@ -58,6 +58,8 @@ public class DragInfoSlot : MonoBehaviour
                 {
                     GameManager.instance.GameData.Gold -= cost;
                     GameManager.instance.GameData.MonsterDragLevel[upgradeResultId] = (int)GameData.MonsterDrag.ACTIVE;
+                    DataManager.SaveFile(GameManager.instance.GameData);
+
                     UpdateInteractive();
                 })
                 .AddButton("취소", () => { })

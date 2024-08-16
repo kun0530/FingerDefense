@@ -201,7 +201,8 @@ public class ItemSlotController : MonoBehaviour
 
                 // 사용한 아이템을 LoadTable에서 업데이트
                 UpdateItemInLoadTable(emptySlot.ItemId, usedCount);
-
+                DataManager.SaveFile(GameManager.instance.GameData);
+                
                 // UI에서 아이템 개수를 업데이트
                 emptySlot.UpdateItemCount(0);
                 emptySlot.ClearSlot(); // 사용 후 슬롯 초기화
