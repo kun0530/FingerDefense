@@ -131,53 +131,36 @@ public class CharacterSlotUI : MonoBehaviour
     {
         characterData = null;
 
-        foreach (Transform child in classParent)
-        {
-            if (child != null)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-
         foreach (Transform child in gradeParent)
         {
-            if (child != null)
-            {
-                Destroy(child.gameObject);
-            }
+            child.gameObject.SetActive(false);
         }
 
-        if (elementParent != null)
+        foreach (Transform child in classParent)
         {
-            var elementImage = elementParent.GetComponent<Image>();
-            if (elementImage != null)
-            {
-                elementImage.gameObject.SetActive(false);
-            }
+            child.gameObject.SetActive(false);
         }
 
-        if (skillParent != null)
+        var elementImage = elementParent.GetComponent<Image>();
+        if (elementImage != null)
         {
-            var skillImage = skillParent.GetComponent<Image>();
-            if (skillImage != null)
-            {
-                skillImage.gameObject.SetActive(false);
-            }
+            elementImage.sprite = null;
+            elementImage.gameObject.SetActive(false);
         }
 
-        if (ChoicePanel != null)
+        var skillImage = skillParent.GetComponent<Image>();
+        if (skillImage != null)
         {
-            ChoicePanel.SetActive(false);
+            skillImage.sprite = null;
+            skillImage.gameObject.SetActive(false);
         }
-
-        if (ChoiceButton != null)
-        {
-            ChoiceButton.interactable = false;
-        }
-
-        // 슬롯을 기본적으로 잠금 상태로 설정
-        SetLocked(true);
+        upgradeLevelText.text = "";
+        ChoicePanel.SetActive(false);
+        ChoiceButton.interactable = true; 
+        ChoiceButton.onClick.RemoveAllListeners(); 
+        gameObject.SetActive(true);
     }
+
 
     
     private void OnClick()
