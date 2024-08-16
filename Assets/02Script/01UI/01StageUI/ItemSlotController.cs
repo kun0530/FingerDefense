@@ -26,7 +26,7 @@ public class ItemSlotController : MonoBehaviour
         RefreshItemSlots();
     }
 
-    private void RefreshItemSlots()
+    public void RefreshItemSlots()
     {
         foreach (var slot in emptySlots)
         {
@@ -36,7 +36,7 @@ public class ItemSlotController : MonoBehaviour
         emptySlots.Clear();
         itemSlots.Clear();
         addedItems.Clear();
-
+        
         var activeItemSlots = itemSelectParent.GetComponentsInChildren<ItemSlotUI>();
         foreach (var slot in activeItemSlots)
         {
@@ -50,6 +50,7 @@ public class ItemSlotController : MonoBehaviour
         CreateEmptySlots();
         CreateItemSlots();
     }
+
 
     private void CreateEmptySlots()
     {
@@ -71,13 +72,17 @@ public class ItemSlotController : MonoBehaviour
         {
             Logger.Log($"Item ID: {purchasedItem.itemId}, Count: {purchasedItem.itemCount}");
 
-            if (!addedItems.Contains(purchasedItem.itemId) &&
-                itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
+            if (itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
             {
-                var itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
+                var itemSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == purchasedItem.itemId);
 
-                if (assetListTable.table.TryGetValue(itemData.IconNo, out var assetPath))
+                if (itemSlot != null)
                 {
+                    itemSlot.UpdateItemCount(purchasedItem.itemCount);
+                }
+                else if (assetListTable.table.TryGetValue(itemData.IconNo, out var assetPath))
+                {
+                    itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
                     itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
                     itemSlot.onClickItemSlot = HandleItemSlotClick;
                     itemSlots.Add(itemSlot);
@@ -159,10 +164,16 @@ public class ItemSlotController : MonoBehaviour
         RemoveItemFromLoadTable(clickedSlot.ItemId);
     }
 
-    private void SaveItemToLoadTable(int itemId, int limit)
+    private void SaveItemToLoadTable(int itemId, int addCount)
     {
-        Variables.LoadTable.ItemId.Add((itemId, limit));
-        Logger.Log($"Saved item {itemId} with limit {limit} to LoadTable");
+        var existingItem = Variables.LoadTable.ItemId.FirstOrDefault(item => item.itemId == itemId);
+        if (existingItem != default)
+        {
+            Variables.LoadTable.ItemId.Remove(existingItem);
+            addCount += existingItem.itemCount;
+        }
+        Variables.LoadTable.ItemId.Add((itemId, addCount));
+        Logger.Log($"Saved item {itemId} with limit {addCount} to LoadTable");
     }
 
     private void RemoveItemFromLoadTable(int itemId)
