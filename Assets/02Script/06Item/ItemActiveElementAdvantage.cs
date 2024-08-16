@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "Item/Active Element Advantage", fileName = "Item.asset")]
 public class ItemActiveElementAdvantage : ActiveItem
 {
-    public SpriteRenderer sprite; 
+    public Sprite sprite;
     private List<SpriteRenderer> activeSprites = new();
 
     public override void Init()
@@ -29,9 +29,8 @@ public class ItemActiveElementAdvantage : ActiveItem
         {
             if (character.TryGetComponent<PlayerCharacterController>(out var controller))
             {
-                var elementSprite = Instantiate(sprite, controller.transform.position, Quaternion.identity);
-                elementSprite.transform.SetParent(controller.transform);
-                activeSprites.Add(elementSprite);
+                // controller.elementImage.sprite = sprite;
+                controller.elementImage?.gameObject.SetActive(true);
             }
         }
     }
@@ -43,10 +42,13 @@ public class ItemActiveElementAdvantage : ActiveItem
         if (StageMgr)
             StageMgr.isPlayerElementAdvantage = false;
 
-        foreach (var sprite in activeSprites)
+        var characters = GameObject.FindGameObjectsWithTag(Defines.Tags.PLAYER_TAG);
+        foreach (var character in characters)
         {
-            Destroy(sprite);
+            if (character.TryGetComponent<PlayerCharacterController>(out var controller))
+            {
+                controller.elementImage?.gameObject.SetActive(false);
+            }
         }
-        activeSprites.Clear();
     }
 }
