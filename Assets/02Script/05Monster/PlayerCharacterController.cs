@@ -59,6 +59,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void Start()
     {
         base.Start();
+        elementImage.gameObject.SetActive(false);
     }
 
     protected override void Update()
