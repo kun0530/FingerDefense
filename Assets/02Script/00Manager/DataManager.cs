@@ -43,7 +43,7 @@ public static class DataManager
     public static void SaveFile(GameData data)
     {
         string json = JsonConvert.SerializeObject(data);
-        string encrypt = Encrypt(json);
+        // string encrypt = Encrypt(json);
 
         // To-Do: 임시  변경
         // File.WriteAllText(Path.Combine(Application.persistentDataPath, saveFileName), encrypt);
@@ -58,8 +58,8 @@ public static class DataManager
             return null;
         }
 
-        string encrypt = File.ReadAllText(path);
-        string decrypt = Decrypt(encrypt);
+        // string encrypt = File.ReadAllText(path);
+        // string decrypt = Decrypt(encrypt);
 
         // To-Do: 임시  변경
         // return JsonConvert.DeserializeObject<GameData>(decrypt);
