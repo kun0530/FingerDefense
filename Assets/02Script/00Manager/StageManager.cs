@@ -17,7 +17,7 @@ public class StageManager : MonoBehaviour
     public Transform castleRightTopPos;
     public Transform castleLeftBottomPos;
 
-    public float CastleMaxHp { get; private set; } = 500f; // To-Do: 추후 변경
+    private float castleMaxHp;
     private float castleHp;
     private float CastleHp
     {
@@ -25,11 +25,11 @@ public class StageManager : MonoBehaviour
         set
         {
             castleHp = value;
-            gameUiManager.UpdateHpBar(castleHp, CastleMaxHp);
+            gameUiManager.UpdateHpBar(castleHp, castleMaxHp);
 
             if (castleImages.Count != 0)
             {
-                int castleIndex = Mathf.FloorToInt(castleHp / (CastleMaxHp / castleImages.Count));
+                int castleIndex = Mathf.FloorToInt(castleHp / (castleMaxHp / castleImages.Count));
                 castleIndex = Mathf.Clamp(castleIndex, 0, castleImages.Count - 1);
                 for(int i = 0; i < castleImages.Count; i++)
                 {
@@ -45,7 +45,7 @@ public class StageManager : MonoBehaviour
         set
         {
             castleShield = value;
-            gameUiManager.UpdateShieldBar(castleShield, CastleMaxHp);
+            gameUiManager.UpdateShieldBar(castleShield, castleMaxHp);
             if (castleShield > 0f)
                 shieldEffect?.gameObject.SetActive(true);
             else
@@ -113,9 +113,33 @@ public class StageManager : MonoBehaviour
 
     [HideInInspector] public bool isPlayerElementAdvantage = false;
 
+    private void Awake()
+    {
+        var upgradesData = GameManager.instance.GameData.PlayerUpgradeLevel;
+        var castleMaxHpLevel = 0;
+        foreach (var upgradeData in upgradesData)
+        {
+            if (upgradeData.playerUpgrade == (int)GameData.PlayerUpgrade.PLAYER_HEALTH)
+            {
+                castleMaxHpLevel = upgradeData.level;
+                break;
+            }
+        }
+
+        var upgradeTableDic = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade).upgradeTable;
+        foreach (var upgradeData in upgradeTableDic)
+        {
+            if (upgradeData.Value.UpStatType == (int)GameData.PlayerUpgrade.PLAYER_HEALTH
+                && upgradeData.Value.Level == castleMaxHpLevel)
+            {
+                castleMaxHp = upgradeData.Value.UpStatValue;
+            }
+        }
+    }
+
     private void Start()
     {
-        CastleHp = CastleMaxHp;
+        CastleHp = castleMaxHp;
         CurrentState = StageState.Playing;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
@@ -153,11 +177,11 @@ public class StageManager : MonoBehaviour
             return;
 
         if (isPercentage)
-            heal *= CastleMaxHp;
+            heal *= castleMaxHp;
         CastleHp += heal;
 
-        if (CastleHp >= CastleMaxHp)
-            CastleHp = CastleMaxHp;
+        if (CastleHp >= castleMaxHp)
+            CastleHp = castleMaxHp;
     }
 
     public void GetShield(float shield, bool isPercentage = false)
@@ -166,7 +190,7 @@ public class StageManager : MonoBehaviour
             return;
 
         if (isPercentage)
-            shield *= CastleMaxHp;
+            shield *= castleMaxHp;
         CastleShield += shield;
     }
 
