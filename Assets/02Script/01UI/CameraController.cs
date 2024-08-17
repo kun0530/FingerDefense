@@ -82,6 +82,12 @@ public class CameraController : MonoBehaviour
 
     private void ChangeResolution()
     {
+        if (Screen.height > Screen.width) // 강제 세로모드에 대한 대응
+        {
+            AdjustCameraUsingLetterBox();
+            return;
+        }
+
         switch (currentScreenMode)
         {
             case ScreenMode.FULL_SCREEN_FIXED_WIDTH:
