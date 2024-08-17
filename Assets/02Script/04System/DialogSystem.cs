@@ -1,7 +1,7 @@
+using Coffee.UIExtensions;
 using UnityEngine;
 using Spine.Unity;
 using TMPro;
-using DG.Tweening;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 
@@ -22,13 +22,16 @@ public struct DialogData
     [TextArea(3, 5)]
     public int? dialogId;
     public string dialog;
+    
+    public GameObject[] objectsToActivate;
+    public GameObject[] objectsToDeactivate;
+    
 }
 
 public class DialogSystem : MonoBehaviour
 {
     private StringTable stringTable;
-    [SerializeField] 
-    private SystemDialog[] systemDialog;
+    [SerializeField] internal SystemDialog[] systemDialog;
     [SerializeField] 
     private DialogData[] dialogData;
 
@@ -49,8 +52,8 @@ public class DialogSystem : MonoBehaviour
     private bool isTyping = false; 
     private bool skipToNext = false; 
     private string fullText; 
-    private TextMeshProUGUI currentTextMesh; 
-
+    private TextMeshProUGUI currentTextMesh;
+    
     private void Awake()
     {
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String); 
@@ -68,7 +71,7 @@ public class DialogSystem : MonoBehaviour
         currentDialogIndex = -1;
         for (var i = 0; i < systemDialog.Length; i++)
         {
-            SetActiveObjects(systemDialog[i], false);
+            //SetActiveObjects(systemDialog[i], false);
             if (systemDialog[i].skeletonGraphic)
             {
                 systemDialog[i].skeletonGraphic.AnimationState.SetAnimation(0, "idle", true);
@@ -125,8 +128,9 @@ public class DialogSystem : MonoBehaviour
             isTyping = false;
             skipToNext = true;
         }
-        else
+        else if (!isDialogComplete)
         {
+            // 타이핑이 완료된 후, 다음 대화를 시작
             await SetNextDialogAsync();
         }
     }
@@ -153,10 +157,26 @@ public class DialogSystem : MonoBehaviour
 
         SetActiveObjects(systemDialog[currentSpeakerIndex], true);
         systemDialog[currentSpeakerIndex].nameText.text = dialogData[currentDialogIndex].name;
+        
+        var gameObj = dialogData[currentDialogIndex];
+                SetObjectsActive(gameObj.objectsToActivate, true);
+                SetObjectsActive(gameObj.objectsToDeactivate, false);
+        
+        var dialogText = dialogData[currentDialogIndex].dialogId.HasValue 
+            ? stringTable.Get(dialogData[currentDialogIndex].dialogId.Value.ToString())
+            : GetDialogText(dialogData[currentDialogIndex].dialog);
 
-        var dialogText = dialogData[currentDialogIndex].dialogId.HasValue ? stringTable.Get(dialogData[currentDialogIndex].dialogId.Value.ToString()) : dialogData[currentDialogIndex].dialog;
 
         await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogText);  // 수정된 부분
+    }
+
+    private string GetDialogText(string dialog)
+    {
+        return int.TryParse(dialog, out int dialogId) ?
+            // 숫자로 변환 가능하면 StringTable에서 가져옴
+            stringTable.Get(dialogId.ToString()) :
+            // 그렇지 않으면 그대로 반환
+            dialog;
     }
 
 
@@ -177,5 +197,25 @@ public class DialogSystem : MonoBehaviour
             await UniTask.Delay(50);
         }
         isTyping = false;
+    }
+    
+    private void SetObjectsActive(GameObject[] targetObjects, bool isActive)
+    {
+        if (targetObjects != null)
+        {
+            foreach (var obj in targetObjects)
+            {
+                if (obj)
+                {
+                    obj.SetActive(isActive);
+                    if (isActive)
+                    {
+                        // 오브젝트를 부모의 맨 뒤에서 두 번째로 이동
+                        int lastSiblingIndex = obj.transform.parent.childCount - 1;
+                        obj.transform.SetSiblingIndex(lastSiblingIndex - 1);
+                    }
+                }
+            }
+        }
     }
 }

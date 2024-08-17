@@ -11,7 +11,11 @@ public class TutorialController : MonoBehaviour
     private GameManager gameManager;
     
     private void Start()
-    {
+    {     
+        foreach (var tutorial in tutorials)
+        {
+            tutorial.gameObject.SetActive(false);
+        }
         SetNextTutorial();
         gameManager = GameManager.instance;
     }
@@ -28,7 +32,8 @@ public class TutorialController : MonoBehaviour
     {
         if (currentTutorial)
         {
-            currentTutorial.Exit();    
+            currentTutorial.Exit();
+            currentTutorial.gameObject.SetActive(false);
         }    
         
         if(currentTutorialIndex >= tutorials.Count - 1)
@@ -40,6 +45,14 @@ public class TutorialController : MonoBehaviour
         currentTutorialIndex++;
         currentTutorial = tutorials[currentTutorialIndex];
         
+        var dialogSystem = currentTutorial.GetComponent<DialogSystem>();
+        if (dialogSystem != null)
+        {
+            dialogSystem.DialogSetting();  // 대화 초기화
+            dialogSystem.isFirstDialog = true;
+        }
+        
+        currentTutorial.gameObject.SetActive(true);
         currentTutorial.Enter();
     }
 
