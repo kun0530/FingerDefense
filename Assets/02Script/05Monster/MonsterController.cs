@@ -142,10 +142,16 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
     private void CrossResetLine()
     {
-        stageManager?.monsterSpawner?.TriggerMonsterReset(this);
+        if (!stageManager)
+            return;
+
+        stageManager.monsterSpawner.TriggerMonsterReset(this);
         if (Status.Data.DragType == (int)MonsterData.DragTypes.SPECIAL && 
             GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] == (int)GameData.MonsterDrag.LOCK)
         {
+            stageManager.CurrentState = StageState.MONSTER_INFO;
+            var monsterInfoUi = stageManager.gameUiManager.monsterInfoUi.GetComponent<UiMonsterInfo>();
+            monsterInfoUi.SetMonsterInfoText(Status.Data);
             GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] = (int)GameData.MonsterDrag.UNLOCK;
         }
     }
