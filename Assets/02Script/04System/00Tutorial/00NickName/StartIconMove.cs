@@ -5,7 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 
-public class IconMove : MonoBehaviour
+public class StartIconMove : MonoBehaviour
 {
     public Image icon;
 
