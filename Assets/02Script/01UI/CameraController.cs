@@ -24,9 +24,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
     public float bottomY = -5f;
+    [Header("몬스터 드래그 줌 아웃 / 줌 인")]
     [SerializeField] private float zoomOutWidth = 25f;
     [SerializeField] private float zoomTime = 0.25f;
 
+    [Header("레터박스")]
     [Tooltip("Left, Right, Bottom, Top 순으로 넣어주세요.")]
     [SerializeField] private List<Image> letterBoxes;
     [SerializeField] private RectTransform letterBoxCanvasRect;
@@ -47,9 +49,7 @@ public class CameraController : MonoBehaviour
             || currentScreenWidth != Screen.width;
     }
 
-    public event Action onCameraAdjusted;
-
-    private void Start()
+    private void Awake()
     {
         mainCamera = Camera.main;
         currentWidth = targetWidth;
@@ -59,7 +59,6 @@ public class CameraController : MonoBehaviour
         currentScreenWidth = Screen.width;
 
         ChangeResolution();
-        onCameraAdjusted?.Invoke();
     }
 
     private void Update()
