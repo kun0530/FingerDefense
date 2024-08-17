@@ -11,7 +11,7 @@ public class UiPanelRect : MonoBehaviour
 
     private RectTransform canvasRect;
 
-    private void Start()
+    private void Awake()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
         var canvas = GetComponentInParent<Canvas>();
@@ -19,10 +19,24 @@ public class UiPanelRect : MonoBehaviour
         uiPanel = GetComponent<RectTransform>();
     }
 
-    void Update()
+    private void OnEnable()
     {
-        worldPoint = new Vector2(cameraController.currentWidth / 2f, cameraController.bottomY + yRange);
-        Vector2 viewportPoint = Camera.main.WorldToViewportPoint(worldPoint);
-        uiPanel.sizeDelta = new Vector2(uiPanel.sizeDelta.x, canvasRect.rect.height * viewportPoint.y);
+        cameraController.onCameraAdjusted += AdjustPanelSize;
+    }
+
+    private void OnDisable()
+    {
+        cameraController.onCameraAdjusted -= AdjustPanelSize;
+    }
+
+    private void AdjustPanelSize()
+    {
+        // worldPoint = new Vector2(cameraController.currentWidth / 2f, cameraController.bottomY + yRange);
+        // Vector2 viewportPoint = Camera.main.WorldToViewportPoint(worldPoint);
+        // uiPanel.sizeDelta = new Vector2(uiPanel.sizeDelta.x, canvasRect.rect.height * viewportPoint.y);
+
+        float aspectRatio = Camera.main.aspect;
+        float currentHeight = cameraController.currentWidth / aspectRatio;
+        uiPanel.sizeDelta = new Vector2(uiPanel.sizeDelta.x, canvasRect.rect.height * yRange / currentHeight);
     }
 }

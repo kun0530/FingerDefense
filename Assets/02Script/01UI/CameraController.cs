@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +14,12 @@ public class CameraController : MonoBehaviour
     }
     private Camera mainCamera;
 
-    [SerializeField] private ScreenMode screenMode;
-    // private float screenWidth;
-    // private float screenHeight;
+    [SerializeField] private ScreenMode currentScreenMode;
+    private ScreenMode prevScreenMode;
+    public bool IsScreenModeChange
+    {
+        get => prevScreenMode != currentScreenMode;
+    }
 
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
@@ -35,31 +39,50 @@ public class CameraController : MonoBehaviour
     private float timer = 0f;
     private bool isWidthChange = false;
 
+    private float currentScreenWidth;
+    private float currentScreenHeight;
+    public bool IsResolutionChange
+    {
+        get => currentScreenHeight != Screen.height
+            || currentScreenWidth != Screen.width;
+    }
+
+    public event Action onCameraAdjusted;
+
     private void Start()
     {
         mainCamera = Camera.main;
         currentWidth = targetWidth;
         
-        if(mainCamera == null)
-        {
-            Debug.LogError("Main Camera is not found");
-            return;
-        }
+        prevScreenMode = currentScreenMode;
+        currentScreenHeight = Screen.height;
+        currentScreenWidth = Screen.width;
 
         ChangeResolution();
+        onCameraAdjusted?.Invoke();
     }
 
     private void Update()
     {
-        ChangeResolution();
-
         if (isWidthChange)
             ChangeTargetWidth();
+
+        if (IsResolutionChange || IsScreenModeChange)
+        {
+            ChangeResolution();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        prevScreenMode = currentScreenMode;
+        currentScreenHeight = Screen.height;
+        currentScreenWidth = Screen.width;
     }
 
     private void ChangeResolution()
     {
-        switch (screenMode)
+        switch (currentScreenMode)
         {
             case ScreenMode.FULL_SCREEN_FIXED_WIDTH:
                 AdjustCamera();
@@ -232,5 +255,7 @@ public class CameraController : MonoBehaviour
             currentWidth = endWidth;
             isWidthChange = false;
         }
+
+        ChangeResolution();
     }
 }
