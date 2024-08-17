@@ -12,7 +12,7 @@ public class StageSlotCreate : MonoBehaviour
     private StringTable stringTable;
     private GameManager gameManager;
     private bool slotsCreated = false;
-    public TutorialController DeckTutorialController;
+    public GameObject stageMask;
     
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class StageSlotCreate : MonoBehaviour
     
     private void OnEnable()
     {
-        if (stageTable == null)
+        if (stageTable == null)                     
         {
             stageTable = DataTableManager.Get<StageTable>(DataTableIds.Stage);
             assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
@@ -70,6 +70,8 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetAssetListTable(assetListTable);
             slot.Configure(stageData);
             slot.SetDeckUI(deckUI);
+            slot.SetStageMask(stageMask);
+            slot.GameManager(gameManager);
         }
     }
     

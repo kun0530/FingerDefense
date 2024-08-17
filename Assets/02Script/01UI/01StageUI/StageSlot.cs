@@ -3,6 +3,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
+
 
 public class StageSlot : MonoBehaviour
 {
@@ -18,6 +20,8 @@ public class StageSlot : MonoBehaviour
 
     private int StageId;
     private AssetListTable assetListTable;
+    private GameObject stageMask;
+    private GameManager gameManager;
     
     [SerializeField]private GameObject deckUI;
     
@@ -32,6 +36,14 @@ public class StageSlot : MonoBehaviour
     public void SetAssetListTable(AssetListTable assetListTable)
     {
         this.assetListTable = assetListTable;
+    }
+    public void SetStageMask(GameObject stageMask)
+    {
+        this.stageMask = stageMask;
+    }
+    public void GameManager(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
     }
     
     public void Configure(StageData stageData)
@@ -178,10 +190,18 @@ public class StageSlot : MonoBehaviour
     
     public void OnClick()
     {
-        deckUI.SetActive(true);
-        GameManager.instance.GameData.StageChoiceTutorialCheck = true;
-        Variables.LoadTable.StageId = StageId;
-        deckUI.transform.SetAsLastSibling();
-        Logger.Log($"스테이지 {StageId} 선택");
+        if (stageMask.gameObject.activeSelf)
+        {
+            Variables.LoadTable.StageId = StageId;
+            SceneManager.LoadScene(2);
+            gameManager.GameData.StageChoiceTutorialCheck = true;
+        }
+        else
+        {
+            deckUI.SetActive(true);
+            Variables.LoadTable.StageId = StageId;
+            deckUI.transform.SetAsLastSibling();
+            Logger.Log($"스테이지 {StageId} 선택");    
+        }
     }
 }

@@ -65,14 +65,13 @@ public class MonsterDragPanel : MonoBehaviour
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
                 if (!string.IsNullOrEmpty(assetName))
                 {
-                    string assetPath = $"Prefab/01MonsterUI/{assetName}";
+                    string assetPath = $"Prefab/10UpgradeUI/{assetName}";
                     GameObject assetObject = Resources.Load<GameObject>(assetPath);
 
                     if (assetObject != null)
                     {
-                        var instantiatedObject = Instantiate(assetObject, slot.transform);
-                        instantiatedObject.transform.localPosition = Vector3.zero;
-                        instantiatedObject.transform.localScale = new Vector3(2, 2, 2);
+                        var monster=Instantiate(assetObject, slot.transform);
+                        monster.transform.SetAsFirstSibling();
                     }
                     else
                     {

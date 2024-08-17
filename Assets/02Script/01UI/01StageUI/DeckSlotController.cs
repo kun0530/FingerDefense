@@ -22,6 +22,7 @@ public class DeckSlotController : MonoBehaviour
     public Button closeButton;
     
     private GameManager gameManager;
+    public TutorialController DeckTutorialController;
     private int maxCharacterSlots = 3;
     
     private void Awake()
