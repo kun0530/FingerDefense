@@ -9,8 +9,7 @@ public class TutorialActiveTrigger : TutorialBase
     public GameObject panelToShow;
     public Button targetButton;
     public bool includeChildren = false; // 자식 오브젝트만 검사할지 여부
-
-    private bool wasActive = false;
+    
     private Button[] childButtons;
 
     public override void Enter()

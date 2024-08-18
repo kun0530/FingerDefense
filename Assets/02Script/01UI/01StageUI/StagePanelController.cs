@@ -14,12 +14,14 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private Vector2 dragStartPosition;
     private HorizontalLayoutGroup layoutGroup;
 
+    public TutorialController stageTutorial;
+    
     private void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
         
         UpdatePadding(true); 
-        UpdateStageSlots(true); 
+        UpdateStageSlots(true);    
     }
     
     public void OnBeginDrag(PointerEventData eventData)

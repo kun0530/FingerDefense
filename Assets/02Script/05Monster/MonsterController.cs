@@ -37,6 +37,10 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill dragDeathSkill;
 
     private bool isTargetReset=false;
+    
+    //튜토리얼용 변수
+    public bool IsTutorialMonster { get; set; }
+    
     public bool IsDraggable
     {
         get
