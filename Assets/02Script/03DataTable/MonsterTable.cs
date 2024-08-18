@@ -41,6 +41,8 @@ public class MonsterData
     public int DragSkill { get; set; }
     public int DropGold { get; set; }
     public int AssetNo { get; set; }
+    public string Name { get; set; }
+    public string Info { get; set; }
 
     public override string ToString()
     {

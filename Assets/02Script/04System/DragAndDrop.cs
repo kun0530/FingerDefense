@@ -109,10 +109,11 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-        if (EventSystem.current.IsPointerOverGameObject() || (stageManager != null && stageManager.CurrentState == StageState.GameOver))
+        if (EventSystem.current.IsPointerOverGameObject()
+            || (stageManager != null && stageManager.CurrentState != StageState.PLAYING))
         {
             return;
-        } 
+        }
         
         if (context.control.device is Mouse or Touchscreen)
         {

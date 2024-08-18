@@ -37,8 +37,6 @@ public class ItemManager : MonoBehaviour
             item.count = itemId.itemCount;
             items.Add(item);
         }
-
-        itemIds.Clear();
     }
 
     private void OnEnable()

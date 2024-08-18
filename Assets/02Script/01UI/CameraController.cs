@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,16 +14,21 @@ public class CameraController : MonoBehaviour
     }
     private Camera mainCamera;
 
-    [SerializeField] private ScreenMode screenMode;
-    // private float screenWidth;
-    // private float screenHeight;
+    [SerializeField] private ScreenMode currentScreenMode;
+    private ScreenMode prevScreenMode;
+    public bool IsScreenModeChange
+    {
+        get => prevScreenMode != currentScreenMode;
+    }
 
     [SerializeField] private float targetWidth = 20f;
     [SerializeField] private float targetHeight = 10f;
     public float bottomY = -5f;
+    [Header("몬스터 드래그 줌 아웃 / 줌 인")]
     [SerializeField] private float zoomOutWidth = 25f;
     [SerializeField] private float zoomTime = 0.25f;
 
+    [Header("레터박스")]
     [Tooltip("Left, Right, Bottom, Top 순으로 넣어주세요.")]
     [SerializeField] private List<Image> letterBoxes;
     [SerializeField] private RectTransform letterBoxCanvasRect;
@@ -35,31 +41,53 @@ public class CameraController : MonoBehaviour
     private float timer = 0f;
     private bool isWidthChange = false;
 
-    private void Start()
+    private float currentScreenWidth;
+    private float currentScreenHeight;
+    public bool IsResolutionChange
+    {
+        get => currentScreenHeight != Screen.height
+            || currentScreenWidth != Screen.width;
+    }
+
+    private void Awake()
     {
         mainCamera = Camera.main;
         currentWidth = targetWidth;
         
-        if(mainCamera == null)
-        {
-            Debug.LogError("Main Camera is not found");
-            return;
-        }
+        prevScreenMode = currentScreenMode;
+        currentScreenHeight = Screen.height;
+        currentScreenWidth = Screen.width;
 
         ChangeResolution();
     }
 
     private void Update()
     {
-        ChangeResolution();
-
         if (isWidthChange)
             ChangeTargetWidth();
+
+        if (IsResolutionChange || IsScreenModeChange)
+        {
+            ChangeResolution();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        prevScreenMode = currentScreenMode;
+        currentScreenHeight = Screen.height;
+        currentScreenWidth = Screen.width;
     }
 
     private void ChangeResolution()
     {
-        switch (screenMode)
+        if (Screen.height > Screen.width) // 강제 세로모드에 대한 대응
+        {
+            AdjustCameraUsingLetterBox();
+            return;
+        }
+
+        switch (currentScreenMode)
         {
             case ScreenMode.FULL_SCREEN_FIXED_WIDTH:
                 AdjustCamera();
@@ -232,5 +260,7 @@ public class CameraController : MonoBehaviour
             currentWidth = endWidth;
             isWidthChange = false;
         }
+
+        ChangeResolution();
     }
 }

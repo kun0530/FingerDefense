@@ -13,6 +13,7 @@ public class GameUiManager : MonoBehaviour
     public GameObject gameOverUi;
     public GameObject gameClearUi;
     public GameObject pauseUi; // To-Do: Pause UI 추가(일단은 종료UI창이랑 같이 쓸거임)
+    public GameObject monsterInfoUi;
 
     public TextMeshProUGUI eranedGoldText;
     public TextMeshProUGUI monsterCountText;
@@ -25,9 +26,10 @@ public class GameUiManager : MonoBehaviour
     {
         stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
 
-        stageStatesUi.Add(StageState.Playing, gameUi);
-        stageStatesUi.Add(StageState.GameOver, gameOverUi);
-        stageStatesUi.Add(StageState.GameClear, gameClearUi);
+        stageStatesUi.Add(StageState.PLAYING, gameUi);
+        stageStatesUi.Add(StageState.MONSTER_INFO, monsterInfoUi);
+        stageStatesUi.Add(StageState.GAME_OVER, gameOverUi);
+        stageStatesUi.Add(StageState.GAME_CLEAR, gameClearUi);
     }
 
     public void SetStageStateUi(StageState state)
@@ -36,8 +38,6 @@ public class GameUiManager : MonoBehaviour
         {
             stageStateUi.Value.SetActive(state == stageStateUi.Key);
         }
-
-        
     }
 
     public void UpdateHpBar(float currentHp, float maxHp)

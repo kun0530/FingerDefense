@@ -110,6 +110,9 @@ public class MonsterSpawner : MonoBehaviour
         
         while (repeatCount++ < currentWaveData.Repeat)
         {
+            if ((stageManager?.CurrentState ?? StageState.NONE) == StageState.GAME_OVER)
+                break;
+
             var spwanMonsterId = Utils.WeightedRandomPick(monsters);
             var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
             

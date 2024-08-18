@@ -6,7 +6,6 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "Item/Active Element Advantage", fileName = "Item.asset")]
 public class ItemActiveElementAdvantage : ActiveItem
 {
-    public Sprite sprite;
     private List<SpriteRenderer> activeSprites = new();
 
     public override void Init()

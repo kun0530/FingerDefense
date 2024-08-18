@@ -93,7 +93,7 @@ public class InputManager : MonoBehaviour
         QuitPanel.SetActive(!QuitPanel.activeSelf);
         QuitPanel.transform.SetAsLastSibling();
         
-        if(stageManager.CurrentState==StageState.GameOver)
+        if(stageManager.CurrentState==StageState.GAME_OVER)
         {
             TimeScaleController.SetTimeScale(0f);
         }
