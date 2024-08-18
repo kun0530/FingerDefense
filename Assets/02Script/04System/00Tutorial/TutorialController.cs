@@ -48,8 +48,8 @@ public class TutorialController : MonoBehaviour
         var dialogSystem = currentTutorial.GetComponent<DialogSystem>();
         if (dialogSystem != null)
         {
-            dialogSystem.DialogSetting();  // 대화 초기화
             dialogSystem.isFirstDialog = true;
+            dialogSystem.DialogSetting();  // 대화 초기화
         }
         
         currentTutorial.gameObject.SetActive(true);

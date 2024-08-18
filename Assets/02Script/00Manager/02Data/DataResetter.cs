@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 public class DataResetter : MonoBehaviour
 {
@@ -40,6 +42,29 @@ public class DataResetter : MonoBehaviour
         if (increaseTestResources || Input.GetKey(KeyCode.F1))
         {
             IncreaseTestResources();
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.F2))
+        {
+            // 스테이지 클리어 수를 13020으로 설정
+            GameManager.instance.GameData.stageClearNum = 13020;
+            Variables.LoadTable.StageId = 13020;
+
+            // MonsterDragLevel의 상태를 확인하여 0 (LOCK)인 경우 1 (UNLOCK)으로 변경
+            foreach (var key in GameManager.instance.GameData.MonsterDragLevel.Keys.ToList())
+            {
+                if (GameManager.instance.GameData.MonsterDragLevel[key] == (int)GameData.MonsterDrag.LOCK)
+                {
+                    GameManager.instance.GameData.MonsterDragLevel[key] = (int)GameData.MonsterDrag.UNLOCK;
+                }
+            }
+
+            // 변경된 데이터를 저장
+            DataManager.SaveFile(GameManager.instance.GameData);
+            Logger.Log("스테이지 클리어 ID를 13020으로 설정하고 MonsterDragLevel을 업데이트했습니다.");
         }
     }
 
