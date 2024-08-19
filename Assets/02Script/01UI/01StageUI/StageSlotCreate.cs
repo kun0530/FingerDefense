@@ -13,7 +13,7 @@ public class StageSlotCreate : MonoBehaviour
     private GameManager gameManager;
     private bool slotsCreated = false;
     public GameObject stageMask;
-    
+    public TutorialController stagePanelController;
     private void Awake()
     {
         gameManager = GameManager.instance;
@@ -72,6 +72,7 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetDeckUI(deckUI);
             slot.SetStageMask(stageMask);
             slot.GameManager(gameManager);
+            slot.SetStagePanelController(stagePanelController);
         }
     }
     

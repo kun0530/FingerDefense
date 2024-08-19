@@ -19,9 +19,11 @@ public class GameTutorialManager : MonoBehaviour
         {
             game2Tutorial.gameObject.SetActive(true);
         }
-        else if (DataManager.LoadFile().Game3TutorialCheck==false && Variables.LoadTable.StageId==13003)
+        else if (DataManager.LoadFile().Game3TutorialCheck == false && Variables.LoadTable.StageId == 13003)
         {
             game3Tutorial.gameObject.SetActive(true);
         }
+        else
+            return;
     }
 }

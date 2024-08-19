@@ -9,17 +9,17 @@ public class TutorialStageMask : TutorialBase
     {
         mask.SetActive(true);
         mask.transform.SetAsLastSibling();
-        stagePanelController.enabled = false;
+        stagePanelController.enabled = true;
     }
 
     public override void Execute(TutorialController controller)
     {
+        stagePanelController.enabled = false;
         controller.SetNextTutorial();
-        
     }
 
     public override void Exit()
     {
-        
+ 
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MainUiManager : MonoBehaviour
@@ -13,7 +14,7 @@ public class MainUiManager : MonoBehaviour
     private GameManager gameManager;
     public UpgradePanelManager upgradePanelManager;
     
-    public TutorialController tutorialController;
+    public TutorialController NicknameTutorialController;
     public TutorialController stageTutorialController;
     public TutorialController deckTutorialController;
     
@@ -29,7 +30,7 @@ public class MainUiManager : MonoBehaviour
     {
         if (!gameManager.GameData.NicknameCheck)
         {
-            tutorialController.gameObject.SetActive(true);
+            NicknameTutorialController.gameObject.SetActive(true);
             MainUI.gameObject.SetActive(false);
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
@@ -41,7 +42,7 @@ public class MainUiManager : MonoBehaviour
         else
         {
             NicknameUI.SetActive(false);
-            tutorialController.gameObject.SetActive(false);
+            NicknameTutorialController.gameObject.SetActive(false);
             MainUI.gameObject.SetActive(true);
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
@@ -49,12 +50,7 @@ public class MainUiManager : MonoBehaviour
             GachaSystem.gameObject.SetActive(false);
             upgradePanelManager.gameObject.SetActive(false);
         }
-
-        if (gameManager.GameData.Game1TutorialCheck && !gameManager.GameData.DeckUITutorialCheck)
-        {
-            deckTutorialController.gameObject.SetActive(true);
-        }
-
+        
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
         {
             if (upgradeData.Type == 0)
@@ -155,5 +151,17 @@ public class MainUiManager : MonoBehaviour
             }
         }
     }
-    
+
+    private void Update()
+    {
+        if(gameManager.GameData.NicknameCheck && !gameManager.GameData.Game1TutorialCheck)
+        {
+            stageTutorialController.gameObject.SetActive(true);
+        }
+        
+        if (gameManager.GameData.Game1TutorialCheck && !gameManager.GameData.DeckUITutorialCheck)
+        {
+            deckTutorialController.gameObject.SetActive(true);
+        }
+    }
 }

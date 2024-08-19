@@ -137,6 +137,10 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.ResetMonsterData();
             }    
         }
+        if (DataManager.LoadFile().Game2TutorialCheck == false)
+        {
+            
+        }
         else
         {
             Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,26 +22,31 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
+
         if(GameManager.instance.GameData.stageClearNum == 0 && stageTutorial.gameObject.activeSelf)
         {
             currentIndex = 0;           
         }
-        else if(GameManager.instance.GameData.stageClearNum == 13001 && DeckTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 1;   
-        }
-        else if(GameManager.instance.GameData.stageClearNum == 13002 && SpecialDragTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 2;
-        }
+        
+        
         UpdatePadding(true); 
         UpdateStageSlots(true);   
         
-        
-        
-        
     }
-    
+
+    private void OnEnable()
+    {
+        if(DeckTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 1;   
+        }
+        
+        if(SpecialDragTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 2;
+        }    
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragStartPosition = eventData.position;
