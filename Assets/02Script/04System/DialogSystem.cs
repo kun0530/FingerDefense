@@ -40,7 +40,7 @@ public class DialogSystem : MonoBehaviour
 
     public bool isFirstDialog = true;
     
-    private int currentDialogIndex = -1;
+    public int currentDialogIndex = 0;
     private int currentSpeakerIndex = 0;
     
     public Button nextButton;
@@ -68,15 +68,15 @@ public class DialogSystem : MonoBehaviour
     public void DialogSetting()
     {
         isDialogComplete = false;
-        currentDialogIndex = -1;
+        currentDialogIndex = 0;
         for (var i = 0; i < systemDialog.Length; i++)
         {
-            //SetActiveObjects(systemDialog[i], false);
             if (systemDialog[i].skeletonGraphic)
             {
                 systemDialog[i].skeletonGraphic.AnimationState.SetAnimation(0, "idle", true);
                 systemDialog[i].skeletonGraphic.canvasRenderer.SetAlpha(1);
             }
+            //SetActiveObjects(systemDialog[i], false);
         }
     }
 
@@ -104,12 +104,8 @@ public class DialogSystem : MonoBehaviour
         if (isFirstDialog)
         {
             DialogSetting();
-
-            if (isAutoStart)
-            {
-                isFirstDialog = false;
-                SetNextDialogAsync().Forget();
-            }
+            isFirstDialog = false; // 첫 대화 시작 후 이 값을 false로 설정
+            SetNextDialogAsync().Forget();
         }
 
         return isDialogComplete;
@@ -143,31 +139,32 @@ public class DialogSystem : MonoBehaviour
             dialog.nameText.text = "";
             SetActiveObjects(dialog, false);
         }
-
-        currentDialogIndex++;
-    
+        
         if (currentDialogIndex >= dialogData.Length)
         {
             isDialogComplete = true;
             dialogCanvasGroup.gameObject.SetActive(false);
             return;
         }
+        // 현재 대화 데이터 가져오기
+        var dialogInfo = dialogData[currentDialogIndex];
+        currentSpeakerIndex = dialogInfo.speakerIndex;
 
-        currentSpeakerIndex = dialogData[currentDialogIndex].speakerIndex;
-
+        // 현재 스피커의 UI를 활성화하고 대화 시작
         SetActiveObjects(systemDialog[currentSpeakerIndex], true);
-        systemDialog[currentSpeakerIndex].nameText.text = dialogData[currentDialogIndex].name;
-        
-        var gameObj = dialogData[currentDialogIndex];
-                SetObjectsActive(gameObj.objectsToActivate, true);
-                SetObjectsActive(gameObj.objectsToDeactivate, false);
-        
-        var dialogText = dialogData[currentDialogIndex].dialogId.HasValue 
-            ? stringTable.Get(dialogData[currentDialogIndex].dialogId.Value.ToString())
-            : GetDialogText(dialogData[currentDialogIndex].dialog);
+        systemDialog[currentSpeakerIndex].nameText.text = dialogInfo.name;
 
+        // 대화에 해당하는 오브젝트 활성화/비활성화 처리
+        SetObjectsActive(dialogInfo.objectsToActivate, true);
+        SetObjectsActive(dialogInfo.objectsToDeactivate, false);
 
-        await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogText);  // 수정된 부분
+        var dialogText = dialogInfo.dialogId.HasValue 
+            ? stringTable.Get(dialogInfo.dialogId.Value.ToString())
+            : GetDialogText(dialogInfo.dialog);
+
+        await TypeText(systemDialog[currentSpeakerIndex].dialogText, dialogText);
+
+        currentDialogIndex++;  // 대화가 출력된 후 인덱스를 증가시킴
     }
 
     private string GetDialogText(string dialog)

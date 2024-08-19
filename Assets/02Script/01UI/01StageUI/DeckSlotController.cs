@@ -13,7 +13,7 @@ public class DeckSlotController : MonoBehaviour
     private PlayerCharacterTable playerCharacterTable;
     public CharacterSlotUI characterSlotPrefab; // 캐릭터 UI를 생성하기 위한 프리팹
 
-    private List<CharacterSlotUI> characterSlots = new List<CharacterSlotUI>();
+    [HideInInspector]public List<CharacterSlotUI> characterSlots = new List<CharacterSlotUI>();
     private List<CharacterSlotUI> filterSlots = new List<CharacterSlotUI>();
     private HashSet<int> addedCharacters = new HashSet<int>();
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();

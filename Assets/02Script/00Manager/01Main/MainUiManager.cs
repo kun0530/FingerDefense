@@ -15,6 +15,8 @@ public class MainUiManager : MonoBehaviour
     
     public TutorialController tutorialController;
     public TutorialController stageTutorialController;
+    public TutorialController deckTutorialController;
+    
     
     private UpgradeTable upgradeTable;
     private void Awake()
@@ -48,14 +50,17 @@ public class MainUiManager : MonoBehaviour
             upgradePanelManager.gameObject.SetActive(false);
         }
 
+        if (gameManager.GameData.Game1TutorialCheck && !gameManager.GameData.DeckUITutorialCheck)
+        {
+            deckTutorialController.gameObject.SetActive(true);
+        }
+
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
         {
             if (upgradeData.Type == 0)
             {
-                if (!GameManager.instance.GameData.MonsterDragLevel.ContainsKey(upgradeData.UpgradeResultId))
+                if (GameManager.instance.GameData.MonsterDragLevel.TryAdd(upgradeData.UpgradeResultId, (int)GameData.MonsterDrag.LOCK))
                 {
-                    GameManager.instance.GameData.MonsterDragLevel.Add(upgradeData.UpgradeResultId,
-                        (int)GameData.MonsterDrag.LOCK);
                     DataManager.SaveFile(GameManager.instance.GameData);
                     Logger.Log($"MonsterDragLevel added: {upgradeData.UpgradeResultId}, {GameData.MonsterDrag.LOCK}");
                 }

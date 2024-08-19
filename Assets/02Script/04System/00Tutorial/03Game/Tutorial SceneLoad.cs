@@ -7,7 +7,9 @@ public class TutorialSceneLoad : TutorialBase
         if(Variables.LoadTable.StageId == 13001)
         {
             GameManager.instance.GameData.Game1TutorialCheck = true;
+            GameManager.instance.GameData.StageChoiceTutorialCheck = true;
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300470);
+            DataManager.SaveFile(GameManager.instance.GameData);
         }
 
         if(Variables.LoadTable.StageId == 13002)

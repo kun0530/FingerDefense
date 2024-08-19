@@ -194,9 +194,6 @@ public class StageSlot : MonoBehaviour
         {
             Variables.LoadTable.StageId = StageId;
             SceneManager.LoadScene(2);
-            
-            gameManager.GameData.StageChoiceTutorialCheck = true;
-            DataManager.SaveFile(gameManager.GameData);
         }
         else
         {
