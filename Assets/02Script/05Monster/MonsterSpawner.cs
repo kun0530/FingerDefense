@@ -120,14 +120,12 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                 monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
 
-                var tutorialTrigger = monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
-                
-                // TutorialObserver를 직접 찾아서 AddMonster 호출 (수정 예정)
                 if (tutorialObserver != null)
                 {
-                    tutorialObserver.AddMonster(tutorialTrigger);
-                }
-
+                    monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
+                } 
+                
+                
                 var monsterController = monsterGo.GetComponent<MonsterController>();
                 if (monsterController != null)
                 {
@@ -137,8 +135,33 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.ResetMonsterData();
             }    
         }
-        if (DataManager.LoadFile().Game2TutorialCheck == false)
+        else if (DataManager.LoadFile().Game2TutorialCheck == false)
         {
+            //게임2 튜토리얼
+            for(int i=0; i<2; i++)
+            {
+                var monsterGo = factory.GetMonster(monsterTable.Get(11001));
+                if (stageManager)
+                {
+                    monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                    monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+                    
+                    // TutorialObserver를 직접 찾아서 AddMonster 호출 (수정 예정)
+                    if (gameTutorial2.gameObject.activeSelf)
+                    {
+                        monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
+                    }
+                   
+
+                    var monsterController = monsterGo.GetComponent<MonsterController>();
+                    if (monsterController != null)
+                    {
+                        monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+                    }
+
+                    monsterGo.ResetMonsterData();
+                }        
+            }
             
         }
         else

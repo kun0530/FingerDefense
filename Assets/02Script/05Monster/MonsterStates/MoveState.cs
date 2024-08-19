@@ -43,16 +43,10 @@ public class MoveState : IState
     
     public void Update()
     {
-        //튜토리얼 용 몬스터 이동 상태 추가
-        if (isPaused)
-        {
-            return; // 이동이 멈춘 상태에서는 아무것도 하지 않음
-        }
         if (controller.IsTutorialMonster)
         {
             float distanceMoved = Vector3.Distance(startPosition, controller.transform.position);
             float totalDistance = accumulatedDistance + distanceMoved;
-            Logger.Log($"Total Distance Moved: {totalDistance} / Max Distance: {maxDistance}");
 
             if (totalDistance >= maxDistance)
             {
@@ -63,7 +57,6 @@ public class MoveState : IState
                 return;
             }
         }
-        //
         
         if (controller.moveTargetPos != null)
         {
@@ -88,13 +81,5 @@ public class MoveState : IState
     {
     }
     
-    //튜토리얼 몬스터 이동 상태 추가
-    public void ResumeMovement()
-    {
-        if (isPaused)
-        {
-            isPaused = false; // 이동을 다시 시작할 수 있게 플래그 해제
-            Debug.Log("Tutorial monster has resumed moving.");
-        }
-    }
+    
 }

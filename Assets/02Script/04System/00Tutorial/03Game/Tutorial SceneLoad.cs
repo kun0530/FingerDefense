@@ -15,7 +15,9 @@ public class TutorialSceneLoad : TutorialBase
         if(Variables.LoadTable.StageId == 13002)
         {
             GameManager.instance.GameData.Game2TutorialCheck = true;
+            GameManager.instance.GameData.DeckUITutorialCheck = true;
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300596);
+            DataManager.SaveFile(GameManager.instance.GameData);
         }
         
         if(Variables.LoadTable.StageId == 13003)

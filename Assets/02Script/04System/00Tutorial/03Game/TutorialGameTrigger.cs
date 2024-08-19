@@ -40,4 +40,16 @@ public class TutorialGameTrigger : MonoBehaviour
         Logger.Log($"{gameObject.name} is being disabled.");
         OnDisabled();
     }
+    private void OnEnable()
+    {
+        // 오브젝트가 활성화될 때 Observer에 알림
+        if (observer != null)
+        {
+            observer.AddMonster(this); // 오브젝트가 활성화되면 목록에 추가
+        }
+        else
+        {
+            Logger.LogWarning($"{gameObject.name} has no observer assigned.");
+        }
+    }
 }

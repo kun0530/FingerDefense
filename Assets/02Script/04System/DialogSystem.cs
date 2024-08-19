@@ -34,10 +34,7 @@ public class DialogSystem : MonoBehaviour
     [SerializeField] internal SystemDialog[] systemDialog;
     [SerializeField] 
     private DialogData[] dialogData;
-
-    [SerializeField]
-    private bool isAutoStart = false;
-
+    
     public bool isFirstDialog = true;
     
     public int currentDialogIndex = 0;
