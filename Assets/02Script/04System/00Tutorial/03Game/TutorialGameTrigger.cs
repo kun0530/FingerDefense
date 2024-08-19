@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TutorialGameTrigger : MonoBehaviour
@@ -13,28 +11,28 @@ public class TutorialGameTrigger : MonoBehaviour
 
     public void OnDragStarted()
     {
-        observer?.OnMonsterDragStarted(this);
+        observer.OnMonsterDragStarted(this);
     }
 
     public void OnDropped()
     {
-        observer?.OnMonsterDropped(this);
+        observer.OnMonsterDropped(this);
     }
 
     public void OnFallSurvived()
     {
-        observer?.OnMonsterSurvived(this);
+        observer.OnMonsterSurvived(this);
     }
 
-    public void OnDisabled()
+    private void OnDisabled()
     {
-        observer?.OnTargetDisabled(this);
+        observer.OnTargetDisabled(this);
     }
     
     // 이 메서드는 몬스터가 드래그 후 실패한 후 살아남았을 때 호출됩니다.
     public void OnFailButSurvived()
     {
-        observer?.OnMonsterSurvived(this);
+        observer.OnMonsterSurvived(this);
     }
     private void OnDisable()
     {

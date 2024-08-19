@@ -69,7 +69,7 @@ public class TutorialObserver : TutorialBase
         {
             Logger.Log("몬스터가 모두 제거되었습니다.");
             var controller = GetComponentInParent<TutorialController>();
-            controller?.SetNextTutorial();
+            controller.SetNextTutorial();
         }
         else
         {
