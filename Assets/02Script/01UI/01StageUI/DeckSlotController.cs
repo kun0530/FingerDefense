@@ -200,12 +200,7 @@ public class DeckSlotController : MonoBehaviour
 
         UpdateCharacterIds();
     }
-
-
-
-
-
-
+    
     private void UpdateCharacterIds()
     {
         if (Variables.LoadTable.characterIds.Length < characterSlots.Count)
