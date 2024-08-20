@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerCharacterSpawner : MonoBehaviour
 {
     public Transform poolTransform;
-    public Transform[] spawnPositions;
+    public GameObject[] spawnPositions;
 
     private PlayerCharacterTable playerCharacterTable;
     private SkillTable skillTable;
@@ -87,8 +87,8 @@ public class PlayerCharacterSpawner : MonoBehaviour
             // 검출한 오브젝트의 위치로 캐릭터 소환
             for (var i = 0; i < spawnPositions.Length; i++)
             {
-                if (Mathf.Abs(spawnPositions[i].position.x - hit.point.x) 
-                    <= 1f && Mathf.Abs(spawnPositions[i].position.y - hit.point.y) <= 1f)
+                if (Mathf.Abs(spawnPositions[i].transform.position.x - hit.point.x) 
+                    <= 1f && Mathf.Abs(spawnPositions[i].transform.position.y - hit.point.y) <= 1f)
                 {
                     Debug.Log($"Spawning character at position index {i}");
                     SpawnPlayerCharacter(i);
@@ -191,6 +191,10 @@ public class PlayerCharacterSpawner : MonoBehaviour
         {
             selectedCharacterIndex = -1;
             uiButtonEffect.ButtonRectTransform = null;
+            foreach (var spawnPos in spawnPositions)
+            {
+                spawnPos.SetActive(false);
+            }
             return;
         }
 
@@ -199,6 +203,10 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
         selectedCharacterIndex = index;
         uiButtonEffect.ButtonRectTransform = characterButtons[selectedCharacterIndex].GetComponent<RectTransform>();
+        for (int i = 0; i < spawnPositions.Length; i++)
+        {
+            spawnPositions[i].SetActive(activePlayerCharacters[i] == null);
+        }
         Logger.Log($"Selected character at index {index} for spawning.");
     }
     
@@ -216,7 +224,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
             return;
         }
 
-        playerCharacter.transform.position = spawnPositions[positionIndex].position;
+        playerCharacter.transform.position = spawnPositions[positionIndex].transform.position;
 
         activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.Status.Init();
@@ -236,6 +244,10 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
         selectedCharacterIndex = -1;
         uiButtonEffect.ButtonRectTransform = null;
+        foreach (var spawnPos in spawnPositions)
+        {
+            spawnPos.SetActive(false);
+        }
     }
 
     public void RemoveActiveCharacter(PlayerCharacterController character)
