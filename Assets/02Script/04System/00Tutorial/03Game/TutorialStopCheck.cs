@@ -5,18 +5,21 @@ using UnityEngine;
 public class TutorialStopCheck : TutorialBase
 {
     public TutorialObserver tutorialObserver;
-    [SerializeField]private MonsterController monster;
+    [SerializeField]private MonsterController[] monster;
+    
+    private bool isNext = false;
     public override void Enter()
     {
-        monster=tutorialObserver.GetComponent<MonsterController>();
+        
+        
     }
 
     public override void Execute(TutorialController controller)
     {
-        if(monster.isPaused)
+        if (isNext)
         {
             controller.SetNextTutorial();
-        }
+        }   
     }
 
     public override void Exit()

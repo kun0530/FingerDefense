@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class TutorialStageMask : TutorialBase
@@ -7,10 +8,14 @@ public class TutorialStageMask : TutorialBase
     
     public override void Enter()
     {
-        stagePanelController.enabled = false;
         mask.SetActive(true);
         mask.transform.SetAsLastSibling();
-        
+        DOTween.Sequence()
+            .AppendInterval(stagePanelController.animationDuration) // 애니메이션 지속 시간만큼 대기
+            .AppendCallback(() =>
+            {
+                stagePanelController.enabled = false;
+            });
     }
 
     public override void Execute(TutorialController controller)

@@ -16,6 +16,7 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Game1TutorialCheck = true;
             GameManager.instance.GameData.StageChoiceTutorialCheck = true;
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300470);
+            //GameManager.insstance.GameData.StageClear[13001]=true;
             DataManager.SaveFile(GameManager.instance.GameData);
         }
 
@@ -32,6 +33,7 @@ public class TutorialSceneLoad : TutorialBase
         
         if(Variables.LoadTable.StageId == 13003)
         {
+            GameManager.instance.GameData.ShopDragTutorialCheck = true;
             GameManager.instance.GameData.Game3TutorialCheck = true; 
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300530);
             DataManager.SaveFile(GameManager.instance.GameData);

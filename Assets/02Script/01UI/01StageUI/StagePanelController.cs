@@ -23,30 +23,24 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
 
-        if(GameManager.instance.GameData.stageClearNum == 0 && stageTutorial.gameObject.activeSelf)
+        if (stageTutorial.gameObject.activeSelf)
         {
             currentIndex = 0;           
         }
-        
+        else if (SpecialDragTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 2;
+        }
+        else if (DeckTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 1;
+        }    
         
         UpdatePadding(true); 
         UpdateStageSlots(true);   
         
     }
-
-    private void OnEnable()
-    {
-        if(DeckTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 1;   
-        }
-        
-        if(SpecialDragTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 2;
-        }    
-    }
-
+    
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragStartPosition = eventData.position;
