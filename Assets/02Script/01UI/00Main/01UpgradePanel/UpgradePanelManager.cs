@@ -44,6 +44,9 @@ public class UpgradePanelManager : MonoBehaviour,IResourceObserver
         ChapterText[2].text = stringTable.Get("99872");
         ChapterText[3].text = stringTable.Get("99882");
         
+        costTexts[0].text = gameManager.GameData.Diamond.ToString();
+        costTexts[1].text = gameManager.GameData.Gold.ToString();
+        costTexts[2].text = gameManager.GameData.Ticket.ToString();
     }
 
     private void OnDestroy()
@@ -68,13 +71,13 @@ public class UpgradePanelManager : MonoBehaviour,IResourceObserver
         switch (resourceType)
         {
             case ResourceType.Gold:
-                costTexts[1].text = newValue.ToString();
+                costTexts[1].text = gameManager.GameData.Gold.ToString();
                 break;
             case ResourceType.Diamond:
-                costTexts[0].text = newValue.ToString();
+                costTexts[0].text = gameManager.GameData.Diamond.ToString();
                 break;
             case ResourceType.Ticket:
-                costTexts[2].text = newValue.ToString();
+                costTexts[2].text = gameManager.GameData.Ticket.ToString();
                 break;
         }
     }

@@ -73,6 +73,13 @@ public class CharacterUpgradePanel : MonoBehaviour
         var selectedSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotParent);
         selectedSlot.SetCharacterSlot(characterData);
 
+        // 앵커 값을 중앙으로 설정하고, 스케일을 2로 조정
+        RectTransform selectedSlotRect = selectedSlot.GetComponent<RectTransform>();
+        selectedSlotRect.anchorMin = new Vector2(0.5f, 0.5f); // 중앙 앵커
+        selectedSlotRect.anchorMax = new Vector2(0.5f, 0.5f); // 중앙 앵커
+        selectedSlotRect.pivot = new Vector2(0.5f, 0.5f); // 피벗도 중앙으로 설정
+        selectedSlotRect.localScale = new Vector3(2f, 2f, 2f); // 스케일을 2로 설정
+        
         // UpgradeResultId를 기반으로 업그레이드 결과 표시
         ClearSlot(characterUpgradeResultSlotContent); // 기존 결과 슬롯 비우기
         var resultCharacterData = playerCharacterTable.Get(upgradeData.UpgradeResultId);
@@ -80,7 +87,15 @@ public class CharacterUpgradePanel : MonoBehaviour
         {
             var resultSlot = Instantiate(characterUpgradeSlot, characterUpgradeResultSlotContent);
             resultSlot.SetCharacterSlot(resultCharacterData);
-            characterUpgradeResultText.text = stringTable.Get(upgradeData.UpgradeInfoId.ToString()); // 업그레이드 설명 표시
+            
+            // 앵커 값과 스케일을 동일하게 설정
+            RectTransform resultSlotRect = resultSlot.GetComponent<RectTransform>();
+            resultSlotRect.anchorMin = new Vector2(0.5f, 0.5f); 
+            resultSlotRect.anchorMax = new Vector2(0.5f, 0.5f);
+            resultSlotRect.pivot = new Vector2(0.5f, 0.5f);
+            resultSlotRect.localScale = new Vector3(2f, 2f, 2f);
+            
+            characterUpgradeResultText.text = stringTable.Get(upgradeData.Name.ToString()); // 업그레이드 설명 표시
         }
 
         // 업그레이드 가격 표시

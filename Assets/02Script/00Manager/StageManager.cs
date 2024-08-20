@@ -7,9 +7,16 @@ using UnityEngine.UI;
 
 public enum StageState
 {
-    None, Playing, GameOver, GameClear
+    NONE,
+    TUTORIAL,
+    PLAYING,
+    PAUSE,
+    MONSTER_INFO,
+    GAME_OVER,
+    GAME_CLEAR
 }
 
+[DefaultExecutionOrder(-1)]
 public class StageManager : MonoBehaviour
 {
     [Header("Castle")]
@@ -63,7 +70,22 @@ public class StageManager : MonoBehaviour
             monsterCount = value;
             gameUiManager.UpdateMonsterCount(monsterCount);
             if (monsterCount <= 0 && CastleHp > 0f)
-                CurrentState = StageState.GameClear;
+                CurrentState = StageState.GAME_CLEAR;
+        }
+    }
+
+    private int maxDragCount;
+    private int dragCount;
+    public int DragCount
+    {
+        get => dragCount;
+        set
+        {
+            if (value < 0)
+                return;
+
+            dragCount = value;
+            gameUiManager.UpdateMonsterDragCount(dragCount);
         }
     }
 
@@ -83,23 +105,24 @@ public class StageManager : MonoBehaviour
     public StageState CurrentState
     {
         get => currentState;
-        private set
+        set
         {
-            if (currentState == value || value == StageState.None)
+            if (currentState == value || value == StageState.NONE)
                 return;
 
             currentState = value;
             gameUiManager.SetStageStateUi(currentState);
-            TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
+
+            TimeScaleController.SetTimeScale(currentState == StageState.PLAYING ? 1f : 0f);
             
-            if (currentState == StageState.GameClear &&
+            if (currentState == StageState.GAME_CLEAR &&
                 Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
             {
                 GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
                 Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
             }
 
-            if (currentState == StageState.GameClear || currentState == StageState.GameOver)
+            if (currentState == StageState.GAME_CLEAR || currentState == StageState.GAME_OVER)
             {
                 GameManager.instance.GameData.Gold += EarnedGold;
                 DataManager.SaveFile(GameManager.instance.GameData);
@@ -117,30 +140,31 @@ public class StageManager : MonoBehaviour
     {
         var upgradesData = GameManager.instance.GameData.PlayerUpgradeLevel;
         var castleMaxHpLevel = 0;
+        var monsterMaxDragCountLevel = 0;
         foreach (var upgradeData in upgradesData)
         {
-            if (upgradeData.playerUpgrade == (int)GameData.PlayerUpgrade.PLAYER_HEALTH)
+            switch ((GameData.PlayerUpgrade)upgradeData.playerUpgrade)
             {
-                castleMaxHpLevel = upgradeData.level;
-                break;
+                case GameData.PlayerUpgrade.PLAYER_HEALTH:
+                    castleMaxHpLevel = upgradeData.level;
+                    break;
+                case GameData.PlayerUpgrade.INCREASE_DRAG:
+                    monsterMaxDragCountLevel = upgradeData.level;
+                    break;
             }
         }
 
-        var upgradeTableDic = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade).upgradeTable;
-        foreach (var upgradeData in upgradeTableDic)
-        {
-            if (upgradeData.Value.UpStatType == (int)GameData.PlayerUpgrade.PLAYER_HEALTH
-                && upgradeData.Value.Level == castleMaxHpLevel)
-            {
-                castleMaxHp = upgradeData.Value.UpStatValue;
-            }
-        }
+        var upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
+
+        castleMaxHp = upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.PLAYER_HEALTH, castleMaxHpLevel).UpStatValue;
+        maxDragCount = (int)upgradeTable.GetPlayerUpgrade((int)GameData.PlayerUpgrade.INCREASE_DRAG, monsterMaxDragCountLevel).UpStatValue;
     }
 
     private void Start()
     {
         CastleHp = castleMaxHp;
-        CurrentState = StageState.Playing;
+        DragCount = maxDragCount;
+        CurrentState = StageState.PLAYING;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
     }
@@ -168,7 +192,7 @@ public class StageManager : MonoBehaviour
         CastleHp -= damage;
 
         if (CastleHp <= 0f)
-            CurrentState = StageState.GameOver;
+            CurrentState = StageState.GAME_OVER;
     }
 
     public void RestoreCastle(float heal, bool isPercentage = false)
@@ -210,5 +234,6 @@ public class StageManager : MonoBehaviour
     {
         SceneManager.LoadScene(1);
         TimeScaleController.SetTimeScale(1f);
+        Variables.LoadTable.ItemId.Clear();
     }
 }

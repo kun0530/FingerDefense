@@ -26,6 +26,10 @@ public class EffectController : MonoBehaviour
     private void Update()
     {
         AutoDestroy();
+        
+        var pos = transform.position;
+        pos.z = pos.y;
+        transform.position = pos;
     }
 
     private void AutoDestroy()

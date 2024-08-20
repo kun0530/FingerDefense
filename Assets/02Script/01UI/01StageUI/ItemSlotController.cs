@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,8 +24,14 @@ public class ItemSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-        RefreshItemSlots();
+        
     }
+
+    private void Start()
+    {
+        RefreshItemSlots();   
+    }
+
 
     public void RefreshItemSlots()
     {
@@ -66,6 +73,16 @@ public class ItemSlotController : MonoBehaviour
 
     private void CreateItemSlots()
     {
+        if (itemTable == null || itemTable.table == null)
+        {
+            return;
+        }
+
+        if (assetListTable == null || assetListTable.table == null)
+        {
+            return;
+        }
+
         var purchasedItems = GameManager.instance.GameData.Items;
 
         foreach (var purchasedItem in purchasedItems)
@@ -88,8 +105,41 @@ public class ItemSlotController : MonoBehaviour
                     itemSlots.Add(itemSlot);
                     addedItems.Add(purchasedItem.itemId);
                 }
+                else
+                {
+                    Logger.LogError($"Item ID {purchasedItem.itemId}에 대한 아이콘 경로를 찾을 수 없습니다.");
+                }
+            }
+            else
+            {
+                Logger.LogError($"Item ID {purchasedItem.itemId}에 대한 데이터를 itemTable에서 찾을 수 없습니다.");
             }
         }
+        
+        // var purchasedItems = GameManager.instance.GameData.Items;
+        //
+        // foreach (var purchasedItem in purchasedItems)
+        // {
+        //     Logger.Log($"Item ID: {purchasedItem.itemId}, Count: {purchasedItem.itemCount}");
+        //
+        //     if (itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
+        //     {
+        //         var itemSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == purchasedItem.itemId);
+        //
+        //         if (itemSlot != null)
+        //         {
+        //             itemSlot.UpdateItemCount(purchasedItem.itemCount);
+        //         }
+        //         else if (assetListTable.table.TryGetValue(itemData.IconNo, out var assetPath))
+        //         {
+        //             itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
+        //             itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
+        //             itemSlot.onClickItemSlot = HandleItemSlotClick;
+        //             itemSlots.Add(itemSlot);
+        //             addedItems.Add(purchasedItem.itemId);
+        //         }
+        //     }
+        // }
     }
 
     private void HandleItemSlotClick(ItemSlotUI clickedSlot)

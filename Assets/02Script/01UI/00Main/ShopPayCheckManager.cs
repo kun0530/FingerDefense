@@ -24,6 +24,7 @@ public class ShopPayCheckManager : MonoBehaviour
     };
     
     public GameObject checkUIPanel;
+    public GameObject backgroundBlocker;
     
     [Header("처음에 클릭하면 나오는 확인 패널")]
     public Button confirmButton;
@@ -68,7 +69,7 @@ public class ShopPayCheckManager : MonoBehaviour
         cancelButton.onClick.AddListener(OnCancelButtonClicked);
         extraCancelButton.onClick.AddListener(OnExtraCancelButtonClicked);
         extraConfirmButton.onClick.AddListener(OnExtraConfirmButtonClicked);
-        
+        backgroundBlocker.GetComponent<Button>().onClick.AddListener(OnBackgroundBlockerClicked);
         itemSlider.onValueChanged.AddListener(OnItemSliderValueChanged);
         itemConfirmButton.onClick.AddListener(OnItemConfirmButtonClicked);
         
@@ -77,6 +78,15 @@ public class ShopPayCheckManager : MonoBehaviour
 
         gameManager = GameManager.instance;
     }
+
+    private void OnBackgroundBlockerClicked()
+    {
+        itemConfirmPanel.SetActive(false);
+        checkUIPanel.SetActive(false);
+        backgroundBlocker.SetActive(false);
+        ResetPanelState();  
+    }
+
     private void OnItemSliderValueChanged(float value)
     {
         var itemCount = (int)value;
@@ -134,6 +144,7 @@ public class ShopPayCheckManager : MonoBehaviour
                     ShowPurchaseResult("골드가 부족하여 아이템을 구매할 수 없습니다.");
                 }
                 itemConfirmPanel.SetActive(false);
+                backgroundBlocker.SetActive(false);
             }
             else
             {
@@ -167,6 +178,7 @@ public class ShopPayCheckManager : MonoBehaviour
 
                     checkUIPanel.SetActive(true);
                     itemConfirmPanel.SetActive(true);
+                    backgroundBlocker.SetActive(true);
                     
                     ItemSlotController.RefreshItemSlots();
                 }
@@ -648,6 +660,7 @@ public class ShopPayCheckManager : MonoBehaviour
         extraConfirmPanel.SetActive(false);
         confirmPanel.SetActive(false);
         checkUIPanel.SetActive(false);
+        backgroundBlocker.SetActive(false);
         ResetPanelState();
     }
 

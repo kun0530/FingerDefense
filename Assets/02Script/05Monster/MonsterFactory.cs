@@ -12,16 +12,17 @@ public class MonsterFactory
     public Transform poolTransform;
     private AssetListTable assetList;
     private MonsterTable monsterTable;
+    private SkillTable skillTable;
     
     private Dictionary<int,IObjectPool<MonsterController>> monsterPool =
         new Dictionary<int, IObjectPool<MonsterController>>();
-    private StageManager stageManager;
+        
     public void Init(HashSet<int> ids)
     {
         assetList = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         monsterTable = DataTableManager.Get<MonsterTable>(DataTableIds.Monster);
+        skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
         
-        stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
         foreach (var id in ids)
         {
             monsterPool[id] = new ObjectPool<MonsterController>(
@@ -69,8 +70,40 @@ public class MonsterFactory
 
         var deathSkill = SkillFactory.CreateSkill(monsterData.Skill, instantiatedMonster.gameObject);
         instantiatedMonster.deathSkill = deathSkill;
-        var dragDeathSkill = SkillFactory.CreateSkill(monsterData.DragSkill, instantiatedMonster.gameObject);
-        instantiatedMonster.dragDeathSkill = dragDeathSkill;
+
+        var dragSkillData = skillTable.Get(monsterData.DragSkill);
+        if (dragSkillData != null)
+        {
+            var newDragSkillData = dragSkillData.CreateNewSkillData();
+            var upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
+            var monsterGimmick = GameManager.instance.GameData.MonsterGimmickLevel;
+
+            foreach (var gimmick in monsterGimmick)
+            {
+                if (gimmick.level <= 0)
+                    continue;
+
+                var upgradeData = upgradeTable.GetMonsterGimmickUpgrade(gimmick.monsterGimmick, gimmick.level);
+                if (upgradeData == null)
+                    continue;
+
+                switch ((GameData.MonsterGimmick)gimmick.monsterGimmick)
+                {
+                    case GameData.MonsterGimmick.ATTACKRANGE:
+                        newDragSkillData.Range += upgradeData.UpStatValue;
+                        break;
+                    case GameData.MonsterGimmick.ATTACKDAMAGE:
+                        newDragSkillData.Damage += upgradeData.UpStatValue;
+                        break;
+                    case GameData.MonsterGimmick.ATTACKDURATION:
+                        newDragSkillData.Duration += upgradeData.UpStatValue;
+                        break;
+                }
+            }
+
+            var dragDeathSkill = SkillFactory.CreateSkill(newDragSkillData, instantiatedMonster.gameObject);
+            instantiatedMonster.dragDeathSkill = dragDeathSkill;
+        }
 
         instantiatedMonster.pool = monsterPool[id];
         return instantiatedMonster;
@@ -92,18 +125,12 @@ public class MonsterFactory
 
     public MonsterController GetMonster(MonsterData data)
     {
-        var id = data.Id; 
-        if (!monsterPool.ContainsKey(id))
-        {
-            throw new InvalidOperationException($"몬스터 ID에 대한 풀을 찾을 수 없습니다. {id}");
-        }
-        if(stageManager.CurrentState==StageState.GameOver)
-        {
-            return null;
-        }
-        var monster = monsterPool[id].Get();
-        // monster.Status.Data = data;
+        if (data == null)
+            throw new NullReferenceException("해당 데이터에 대한 정보가 없습니다");
 
-        return monster;
+        if (!monsterPool.ContainsKey(data.Id))
+            throw new InvalidOperationException($"몬스터 ID에 대한 풀을 찾을 수 없습니다: {data.Id}");
+
+        return monsterPool[data.Id].Get();
     }
 }

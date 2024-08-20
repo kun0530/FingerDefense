@@ -13,7 +13,7 @@ public class DeckSlotController : MonoBehaviour
     private PlayerCharacterTable playerCharacterTable;
     public CharacterSlotUI characterSlotPrefab; // 캐릭터 UI를 생성하기 위한 프리팹
 
-    private List<CharacterSlotUI> characterSlots = new List<CharacterSlotUI>();
+    [HideInInspector]public List<CharacterSlotUI> characterSlots = new List<CharacterSlotUI>();
     private List<CharacterSlotUI> filterSlots = new List<CharacterSlotUI>();
     private HashSet<int> addedCharacters = new HashSet<int>();
     private List<CharacterSlotUI> activeChoicePanelSlots = new List<CharacterSlotUI>();
@@ -22,6 +22,7 @@ public class DeckSlotController : MonoBehaviour
     public Button closeButton;
     
     private GameManager gameManager;
+    public TutorialController DeckTutorialController;
     private int maxCharacterSlots = 3;
     
     private void Awake()
@@ -199,12 +200,7 @@ public class DeckSlotController : MonoBehaviour
 
         UpdateCharacterIds();
     }
-
-
-
-
-
-
+    
     private void UpdateCharacterIds()
     {
         if (Variables.LoadTable.characterIds.Length < characterSlots.Count)

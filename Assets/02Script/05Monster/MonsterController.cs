@@ -37,11 +37,18 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill dragDeathSkill;
 
     private bool isTargetReset=false;
+    
+    //튜토리얼용 변수
+    public bool IsTutorialMonster { get; set; }
+    
     public bool IsDraggable
     {
         get
         {
             if (IsDead)
+                return false;
+
+            if (stageManager && stageManager.DragCount <= 0)
                 return false;
 
             var currentState = stateMachine.CurrentState.GetType();
@@ -55,7 +62,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
                 case (int)MonsterData.DragTypes.NORMAL:
                     return true;
                 case (int)MonsterData.DragTypes.SPECIAL:
-                    return true; // To-Do: 세이브 데이터로부터 해당 몬스터를 들 수 있는지, 조건문을 더 걸어야 합니다.
+                    {
+                        return GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] == (int)GameData.MonsterDrag.ACTIVE;
+                    }
                 default:
                     return false;
             }
@@ -137,7 +146,18 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
 
     private void CrossResetLine()
     {
-        stageManager?.monsterSpawner?.TriggerMonsterReset(this);
+        if (!stageManager)
+            return;
+
+        stageManager.monsterSpawner.TriggerMonsterReset(this);
+        if (Status.Data.DragType == (int)MonsterData.DragTypes.SPECIAL && 
+            GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] == (int)GameData.MonsterDrag.LOCK)
+        {
+            stageManager.CurrentState = StageState.MONSTER_INFO;
+            var monsterInfoUi = stageManager.gameUiManager.monsterInfoUi.GetComponent<UiMonsterInfo>();
+            monsterInfoUi.SetMonsterInfoText(Status.Data);
+            GameManager.instance.GameData.MonsterDragLevel[Status.Data.Id] = (int)GameData.MonsterDrag.UNLOCK;
+        }
     }
 
     protected override void Update()

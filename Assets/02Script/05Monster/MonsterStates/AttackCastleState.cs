@@ -31,7 +31,7 @@ public class AttackCastleState : IState
 
     public void Update()
     {
-        if ((controller.stageManager?.CurrentState ?? StageState.None) != StageState.Playing)
+        if ((controller.stageManager?.CurrentState ?? StageState.NONE) != StageState.PLAYING)
             return;
 
         if (Vector2.Distance(controller.transform.position, controller.moveTargetPos) > 0.1)

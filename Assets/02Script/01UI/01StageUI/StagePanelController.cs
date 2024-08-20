@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,14 +15,38 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private Vector2 dragStartPosition;
     private HorizontalLayoutGroup layoutGroup;
 
+    public TutorialController stageTutorial;
+    public TutorialController DeckTutorial;
+    public TutorialController SpecialDragTutorial;
+    
     private void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
+
+        if(GameManager.instance.GameData.stageClearNum == 0 && stageTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 0;           
+        }
+        
         
         UpdatePadding(true); 
-        UpdateStageSlots(true); 
+        UpdateStageSlots(true);   
+        
     }
-    
+
+    private void OnEnable()
+    {
+        if(DeckTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 1;   
+        }
+        
+        if(SpecialDragTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 2;
+        }    
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragStartPosition = eventData.position;
@@ -81,13 +106,49 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
         }
     }
 
+    // private void UpdateStageSlots(bool instant = false)
+    // {
+    //     for (var i = 0; i < stagePanel.childCount; i++)
+    //     {
+    //         var rect = stagePanel.GetChild(i).GetComponent<RectTransform>();
+    //         float distanceFromCenter = Mathf.Abs(i - currentIndex);
+    //         var scale = Mathf.Lerp(1.0f, scaleFactor, distanceFromCenter);
+    //
+    //         if (instant)
+    //         {
+    //             rect.localScale = new Vector3(scale, scale, 1);
+    //         }
+    //         else
+    //         {
+    //             rect.DOScale(new Vector3(scale, scale, 1), animationDuration).SetEase(Ease.InOutQuad);
+    //         }
+    //         var isInteractable = (distanceFromCenter < 1.0f);
+    //         SetButtonsInteractable(rect, isInteractable);
+    //         
+    //         rect.anchorMin = new Vector2(0.5f, 0.5f);
+    //         rect.anchorMax = new Vector2(0.5f, 0.5f);
+    //         rect.pivot = new Vector2(0.5f, 0.5f);
+    //         rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0); 
+    //     }
+    //
+    //     return;
+    //
+    //     void SetButtonsInteractable(Transform slot, bool isInteractable)
+    //     {
+    //         var buttons = slot.GetComponentsInChildren<Button>();
+    //         foreach (var button in buttons)
+    //         {
+    //             button.interactable = isInteractable;
+    //         }
+    //     }
+    // }
     private void UpdateStageSlots(bool instant = false)
     {
         for (var i = 0; i < stagePanel.childCount; i++)
         {
             var rect = stagePanel.GetChild(i).GetComponent<RectTransform>();
-            float distanceFromCenter = Mathf.Abs(i - currentIndex);
-            var scale = Mathf.Lerp(1.0f, scaleFactor, distanceFromCenter);
+            float distanceFromCenter = Mathf.Abs(i - currentIndex); // 현재 인덱스와 각 슬롯의 인덱스 간의 거리 계산
+            var scale = Mathf.Lerp(scaleFactor, 1.0f, 1.0f - Mathf.Clamp01(distanceFromCenter)); // 거리 기반 스케일 계산
 
             if (instant)
             {
@@ -97,9 +158,11 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
             {
                 rect.DOScale(new Vector3(scale, scale, 1), animationDuration).SetEase(Ease.InOutQuad);
             }
+
             var isInteractable = (distanceFromCenter < 1.0f);
             SetButtonsInteractable(rect, isInteractable);
-            
+
+            // 앵커와 피벗을 중앙으로 설정
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
@@ -117,4 +180,5 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
             }
         }
     }
+
 }

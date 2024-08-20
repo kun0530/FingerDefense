@@ -122,26 +122,9 @@ public class GameData : IResourceSubject
         set => StageClearNum = value;
     }
     
-    
     public List<int> ObtainedGachaIDs = new List<int>();
     
-    
-    
-    
     public List<(int stage, int clear)> StageClear = new List<(int, int)>();
-    
-    public int StageClearCount; 
-    enum TutorialCheck
-    {
-        NONE =-1,
-        NICK = 0,
-        STAGE,
-        DECK,
-        GAME1,
-        GAME2,
-        GAME3,
-        GAME4
-    }
 
     public enum MonsterDrag
     {
@@ -151,18 +134,7 @@ public class GameData : IResourceSubject
         ACTIVE=2,
     }
     MonsterDrag monsterDrag;
-    public List<(int monsterId, int monsterDrag)> MonsterDragLevel = new List<(int, int)>();
-    public void UpdateMonsterDragLevel(int monsterId, int newDragLevel)
-    {
-        for (var i = 0; i < MonsterDragLevel.Count; i++)
-        {
-            if (MonsterDragLevel[i].monsterId == monsterId)
-            {
-                MonsterDragLevel[i] = (monsterId, newDragLevel);
-                return;
-            }
-        }
-    }
+    public Dictionary<int, int> MonsterDragLevel = new ();
     
     public enum MonsterGimmick
     {

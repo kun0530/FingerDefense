@@ -58,22 +58,20 @@ public class MonsterDragPanel : MonoBehaviour
                 var slot = Instantiate(dragInfoSlotPrefab, dragInfoParent[parentIndex]);
 
                 // 현재 UpgradeResultId에 대한 MonsterDragLevel을 가져옵니다.
-                var dragLevel = GameManager.instance.GameData.MonsterDragLevel
-                    .Find(x => x.monsterId == upgradeData.UpgradeResultId).monsterDrag;
+                var dragLevel = GameManager.instance.GameData.MonsterDragLevel[upgradeData.UpgradeResultId];
 
                 slot.SetupSlot(upgradeData.UpgradePrice, dragLevel, upgradeData.UpgradeResultId);
 
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
                 if (!string.IsNullOrEmpty(assetName))
                 {
-                    string assetPath = $"Prefab/01MonsterUI/{assetName}";
+                    string assetPath = $"Prefab/10UpgradeUI/{assetName}";
                     GameObject assetObject = Resources.Load<GameObject>(assetPath);
 
                     if (assetObject != null)
                     {
-                        var instantiatedObject = Instantiate(assetObject, slot.transform);
-                        instantiatedObject.transform.localPosition = Vector3.zero;
-                        instantiatedObject.transform.localScale = new Vector3(2, 2, 2);
+                        var monster=Instantiate(assetObject, slot.transform);
+                        monster.transform.SetAsFirstSibling();
                     }
                     else
                     {

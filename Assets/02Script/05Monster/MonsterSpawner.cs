@@ -29,7 +29,12 @@ public class MonsterSpawner : MonoBehaviour
     public HashSet<int> monsters { get; private set; } = new();
     
     private StageManager stageManager;
-
+    
+    //튜토리얼 용 변수
+    public TutorialController gameTutorial;
+    public TutorialController gameTutorial2;
+    public TutorialController gameTutorial3;
+    public TutorialObserver tutorialObserver;
     public event Action<MonsterController> onResetMonster;
     
     private void Awake()
@@ -86,7 +91,7 @@ public class MonsterSpawner : MonoBehaviour
     private void Update()
     {
         //To-Do:Prototype 이후 !isTutorialCompleted 삭제
-        if (MonsterCount <= 0 || !isWaveTerm || isWaveEnd)
+        if (MonsterCount <= 0 || !isWaveTerm || isWaveEnd )
             return;
 
         spawnWaveTimer += Time.deltaTime;
@@ -104,44 +109,112 @@ public class MonsterSpawner : MonoBehaviour
 
     private async UniTask SpawnRandomMonster()
     {
-        Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
-        var repeatCount = 0;
-        var monsters = currentWaveData.monsters;
-        
-        while (repeatCount++ < currentWaveData.Repeat)
+        //각 게임 튜토리얼에 맞춰서 몬스터를 소환한다. 
+        if (DataManager.LoadFile().Game1TutorialCheck==false)
         {
-            var spwanMonsterId = Utils.WeightedRandomPick(monsters);
-            var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
-            
+            //게임1 튜토리얼
+            //11001번에 해당하는 몬스터 한마리만 뽑는다.
+            var monsterGo = factory.GetMonster(monsterTable.Get(11001));
             if (stageManager)
             {
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                 monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+
+                if (tutorialObserver != null)
+                {
+                    monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
+                } 
+                
+                
+                var monsterController = monsterGo.GetComponent<MonsterController>();
+                if (monsterController != null)
+                {
+                    monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+                }
+
                 monsterGo.ResetMonsterData();
+            }    
+        }
+        else if (DataManager.LoadFile().Game2TutorialCheck == false)
+        {
+            //게임2 튜토리얼
+            for(int i=0; i<2; i++)
+            {
+                var monsterGo = factory.GetMonster(monsterTable.Get(11001));
+                if (stageManager)
+                {
+                    monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                    monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+                    
+                    // TutorialObserver를 직접 찾아서 AddMonster 호출 (수정 예정)
+                    if (gameTutorial2.gameObject.activeSelf)
+                    {
+                        monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
+                    }
+                   
+
+                    var monsterController = monsterGo.GetComponent<MonsterController>();
+                    if (monsterController != null)
+                    {
+                        monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+                    }
+
+                    monsterGo.ResetMonsterData();
+                }        
             }
             
-            while (Time.timeScale == 0)
+        }
+        else
+        {
+            Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
+            var repeatCount = 0;
+            var monsters = currentWaveData.monsters;
+        
+            while (repeatCount++ < currentWaveData.Repeat)
             {
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                if ((stageManager?.CurrentState ?? StageState.NONE) == StageState.GAME_OVER)
+                    break;
+
+                var spwanMonsterId = Utils.WeightedRandomPick(monsters);
+                var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
+            
+                if (stageManager)
+                {
+                    monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                    monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+                    monsterGo.ResetMonsterData();
+                }
+            
+                while (Time.timeScale == 0)
+                {
+                    await UniTask.Yield(PlayerLoopTiming.Update);
+                }
+
+                await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm));
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm));
-        }
+            isWaveTerm = true;
+            waveTerm = currentWaveData.WaveTerm;
 
-        isWaveTerm = true;
-        waveTerm = currentWaveData.WaveTerm;
-
-        currentWaveData = waveTable.Get(stageId, ++waveId);
-        if (currentWaveData == null)
-        {
-            isWaveTerm = false;
-            isWaveEnd = true;
-            Logger.Log("모든 몬스터가 소환되었습니다.");
+            currentWaveData = waveTable.Get(stageId, ++waveId);
+            if (currentWaveData == null)
+            {
+                isWaveTerm = false;
+                isWaveEnd = true;
+                Logger.Log("모든 몬스터가 소환되었습니다.");
+            }    
         }
+        
+        
+        
+        
     }
 
     public void TriggerMonsterReset(MonsterController monster)
     {
         onResetMonster?.Invoke(monster);
     }
+    
+    //튜토리얼 몬스터 이동 상태 추가
+    
 }

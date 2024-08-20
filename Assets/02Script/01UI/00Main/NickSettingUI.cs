@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
 public class NickSettingUI : MonoBehaviour
@@ -15,8 +14,7 @@ public class NickSettingUI : MonoBehaviour
     public Button cancelButton;
     public Button confirmNickButton;
 
-    [HideInInspector]
-    public bool isComplete = false;
+    
     public MainUI mainUI;
     private GameManager gameManager;
     private readonly Regex koreanFullSyllablesRegex = new("^[가-힣a-zA-Z0-9]*$");
@@ -24,6 +22,7 @@ public class NickSettingUI : MonoBehaviour
 
     public TextMeshProUGUI noticeText;
     private Vector3 noticeTextInitialPosition;
+    public bool isComplete=false;
 
     private void Start()
     {
@@ -85,10 +84,8 @@ public class NickSettingUI : MonoBehaviour
     private void OnClickConfirmNick()
     {
         gameObject.SetActive(false);
-        isComplete = true;
-        gameManager.GameData.NicknameCheck = true;
-        
         Logger.Log("닉네임 설정이 완료되었습니다.");
+        isComplete = true;
     }
     
     private void ShowNotice(string message)

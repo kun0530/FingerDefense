@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using UnityEngine.AddressableAssets;
+using System;
 
 public class UpgradeData
 {
@@ -25,11 +26,32 @@ public class UpgradeData
 
 public class UpgradeTable : DataTable
 {
+    public enum UpgradeType
+    {
+        MONSTER_DRAG,
+        MONSTER_GIMMICK,
+        CHARACTER,
+        PLAYER
+    }
+
     public Dictionary<int,UpgradeData> upgradeTable = new Dictionary<int, UpgradeData>();
+
+    private Dictionary<(int UpStatType, int Level), UpgradeData> monsterGimmickUpgradeTable = new();
+    private Dictionary<(int UpStatType, int Level), UpgradeData> playerUpgradeTable = new();
     
     public UpgradeData Get(int id)
     {
         return upgradeTable.GetValueOrDefault(id);
+    }
+    
+    public UpgradeData GetMonsterGimmickUpgrade(int statType, int level)
+    {
+        return monsterGimmickUpgradeTable.GetValueOrDefault((statType, level));
+    }
+
+    public UpgradeData GetPlayerUpgrade(int statType, int level)
+    {
+        return playerUpgradeTable.GetValueOrDefault((statType, level));
     }
     
     public override void Load(string path)
@@ -43,7 +65,27 @@ public class UpgradeTable : DataTable
         foreach (var record in records)
         {
             upgradeTable.TryAdd(record.Id, record);
+
+            switch ((UpgradeType)record.Type)
+            {
+                case UpgradeType.MONSTER_DRAG:
+                    break;
+                case UpgradeType.MONSTER_GIMMICK:
+                    {
+                        var key = (record.UpStatType, record.Level);
+                        monsterGimmickUpgradeTable.Add(key, record);
+                    }
+                    break;
+                case UpgradeType.CHARACTER:
+                    break;
+                case UpgradeType.PLAYER:
+                    {
+                        var key = (record.UpStatType, record.Level);
+                        playerUpgradeTable.Add(key, record);
+                    }
+                    break;
+            }
         }
     }
-    
+
 }
