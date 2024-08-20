@@ -56,7 +56,7 @@ public class DragState : IState
 
         controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.LAYDOWN_AFTER, true, 1f);
         TimeScaleController.ChangeTimeSclae(0.1f, 0.25f);
-        if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
+        if (Camera.main != null && Camera.main.TryGetComponent<GameCameraController>(out var cameraController))
         {
             cameraController.ZoomOutCamera();
         }
@@ -104,7 +104,7 @@ public class DragState : IState
             return;
 
         TimeScaleController.SetTimeScale(1f);
-        if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
+        if (Camera.main != null && Camera.main.TryGetComponent<GameCameraController>(out var cameraController))
         {
             cameraController.ResetCamera();
         }
