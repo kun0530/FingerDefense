@@ -7,7 +7,7 @@ public class TutorialStageMask : TutorialBase
     
     public override void Enter()
     {
-        stagePanelController.enabled = true;
+        stagePanelController.enabled = false;
         mask.SetActive(true);
         mask.transform.SetAsLastSibling();
         
