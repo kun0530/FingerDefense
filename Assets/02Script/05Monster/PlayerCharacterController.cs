@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Spine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     private TrackEntry deathTrackEntry;
 
     public Image elementImage;
+    public TextMeshProUGUI monsterCountText;
 
     private int MonsterCount
     {
@@ -65,6 +67,9 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void Update()
     {
         base.Update();
+
+        if (monsterCountText)
+            monsterCountText.text = $"{MonsterCount} / 2";
     }
 
     public bool TryAddMonster(MonsterController monster)

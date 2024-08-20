@@ -13,6 +13,8 @@ public class StageSlotCreate : MonoBehaviour
     private GameManager gameManager;
     private bool slotsCreated = false;
     public GameObject stageMask;
+    public GameObject dragMask;
+    public GameObject deckMask;
     public TutorialController stagePanelController;
     private void Awake()
     {
@@ -73,6 +75,8 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetStageMask(stageMask);
             slot.GameManager(gameManager);
             slot.SetStagePanelController(stagePanelController);
+            slot.SetDragMask(dragMask);
+            slot.SetDeckMask(deckMask);
         }
     }
     

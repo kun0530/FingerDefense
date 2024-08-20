@@ -14,7 +14,7 @@ public class MoveState : IState
     private Vector3 startPosition; // 시작 위치를 저장하는 변수
     private float maxDistance = 10f;// 이동할 최대 거리
     private float accumulatedDistance = 0f;// 이동한 거리를 누적하는 변수
-    private bool isPaused = false; // 이동을 멈추는 플래그
+    public bool isPaused = false; // 이동을 멈추는 플래그
 
     public MoveState(MonsterController controller)
     {
@@ -53,6 +53,7 @@ public class MoveState : IState
                 // 이동을 멈추고 대기 상태로 전환
                 controller.monsterAni.SetAnimation(MonsterSpineAni.MonsterState.IDLE, true, 1f);
                 isPaused = true; // 이동을 멈추는 플래그 설정
+                
                 accumulatedDistance = maxDistance; // 거리를 최대값으로 설정하여 더 이상 이동하지 않게 함
                 return;
             }

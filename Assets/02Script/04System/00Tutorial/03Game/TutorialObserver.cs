@@ -1,14 +1,17 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class TutorialObserver : TutorialBase
 {
     public List<TutorialGameTrigger> observedMonsters = new List<TutorialGameTrigger>();
 
     public TextMeshProUGUI tutorialText;
+    public Image tutorialImage;
     private StringTable stringTable;
 
     public GameObject monsterSpawnParent;
@@ -80,8 +83,6 @@ public class TutorialObserver : TutorialBase
         {
             controller.SetNextTutorial();
         }
-
-        
     }
 
     public override void Exit()
@@ -96,21 +97,12 @@ public class TutorialObserver : TutorialBase
             observedMonsters.Remove(monsterTrigger);
         }
         
-        if (observedMonsters.Count == 0)
-        {
-            if (isRemove)
-            {
-                var controller = GetComponentInParent<TutorialController>();
-                controller.SetNextTutorial();    
-            }
-        }
-       
-
+        var controller = GetComponentInParent<TutorialController>();
+        controller.SetNextTutorial();
     }
 
     public void OnMonsterDragStarted(TutorialGameTrigger tutorialGameTrigger)
     {
-    
     }
 
     public void OnMonsterDropped(TutorialGameTrigger tutorialGameTrigger)
@@ -128,6 +120,9 @@ public class TutorialObserver : TutorialBase
         tutorialText.text = message;
         tutorialText.gameObject.SetActive(true);
         tutorialText.DOFade(1, 0.5f).From(0); // 텍스트가 서서히 나타나도록 애니메이션 추가
+        tutorialImage.gameObject.SetActive(true);
+        tutorialImage.DOFade(1, 0.5f).From(0); // 이미지가 서서히 나타나도록 애니메이션 추가
+        
     }
 
     private void ControlMonsterStates()
