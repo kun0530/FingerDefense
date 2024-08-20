@@ -20,9 +20,9 @@ public class StageSlot : MonoBehaviour
 
     private int StageId;
     private AssetListTable assetListTable;
-    private GameObject stageMask;
-    private GameObject dragMask;
+    private GameObject stageMask;//스테이지 패널 마스크
     private GameObject deckMask;
+    private GameObject dragMask;
     private GameManager gameManager;
     
     [SerializeField]private GameObject deckUI;
@@ -212,13 +212,12 @@ public class StageSlot : MonoBehaviour
         }
         else if(dragMask.gameObject.activeSelf)
         {
-            stagePanelController.enabled = false;
+            //stagePanelController.enabled = false;
             Variables.LoadTable.StageId = StageId;
             SceneManager.LoadScene(2);
         }
         else if(deckMask.gameObject.activeSelf)
         {
-            stagePanelController.enabled = false;
             deckUI.SetActive(true);
             Variables.LoadTable.StageId = StageId;
             deckUI.transform.SetAsLastSibling();
