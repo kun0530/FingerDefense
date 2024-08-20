@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
 
         DataManager.LoadEncryptionKeyAndIv();
-        GameData = DataManager.LoadFile() ?? new GameData();
+        GameData = DataManager.LoadFile();
+        if (GameData == null)
+        {
+            GameData = new GameData();
+            GameData.Init();
+        }
     }
 }
