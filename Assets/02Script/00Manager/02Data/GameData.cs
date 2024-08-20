@@ -150,17 +150,6 @@ public class GameData : IResourceSubject
     }
     
     
-    private bool dragTutorialCheck;
-    public bool DragTutorialCheck
-    {
-        get => dragTutorialCheck;
-        set
-        {
-            dragTutorialCheck = value;
-            NotifyObservers(ResourceType.DragTutorialCheck, dragTutorialCheck ? 1 : 0);
-        }
-    }
-    
     public int StageClearNum; //스테이지 클리어 한 최종 ID
     public int stageClearNum
     {

@@ -171,8 +171,8 @@ public class MainUiManager : MonoBehaviour
         {
             shopTutorialController.gameObject.SetActive(true);
         }
-        //상점 드래그 튜토리얼은 했지만 드래그 튜토리얼은 안했을 때
-        if(gameManager.GameData.ShopDragTutorialCheck && !gameManager.GameData.DragTutorialCheck)
+        //상점 드래그 튜토리얼은 했지만 게임3 튜토리얼은 안했을 때
+        if(gameManager.GameData.ShopDragTutorialCheck && !gameManager.GameData.Game3TutorialCheck)
         {
             dragTutorialController.gameObject.SetActive(true);
         }
