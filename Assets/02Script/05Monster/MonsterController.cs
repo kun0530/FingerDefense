@@ -40,7 +40,9 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     
     //튜토리얼용 변수
     public bool IsTutorialMonster { get; set; }
-    
+
+    public bool isPaused => stateMachine.CurrentState.GetType() == typeof(MoveState) && ((MoveState)stateMachine.CurrentState).isPaused;
+
     public bool IsDraggable
     {
         get
