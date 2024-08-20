@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UiPanelRect : MonoBehaviour
 {
-    private CameraController cameraController;
+    private GameCameraController cameraController;
     private RectTransform uiPanel;
     private Vector2 worldPoint;
     public float yRange = 2f;
@@ -13,7 +13,7 @@ public class UiPanelRect : MonoBehaviour
 
     private void Start()
     {
-        cameraController = Camera.main.GetComponent<CameraController>();
+        cameraController = Camera.main.GetComponent<GameCameraController>();
         var canvas = GetComponentInParent<Canvas>();
         canvasRect = canvas.GetComponent<RectTransform>();
         uiPanel = GetComponent<RectTransform>();

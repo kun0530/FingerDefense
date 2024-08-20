@@ -5,36 +5,55 @@ using UnityEngine;
 public class UiButtonEffect : MonoBehaviour
 {
     public Vector2 initalSize;
-
-    public ParticleSystem particle;
-    public RectTransform rectTransform;
+    private RectTransform buttonRectTransform;
+    public RectTransform ButtonRectTransform
+    {
+        get => buttonRectTransform;
+        set
+        {
+            buttonRectTransform = value;
+            if (buttonRectTransform != null)
+            {
+                isButtonSet = true;
+                gameObject.SetActive(true);
+                transform.SetParent(buttonRectTransform);
+                transform.localPosition = Vector3.zero;
+                ResizeParticleSystem();
+            }
+            else
+            {
+                isButtonSet = false;
+                gameObject.SetActive(false);
+            }
+        }
+    }
+    private bool isButtonSet = false;
 
     private Vector2 previousSize;
     private Vector2 intialScale;
 
-    void Start()
+    void Awake()
     {
-        previousSize = new Vector2(initalSize.x, initalSize.y);
         intialScale = transform.localScale;
-
-        ResizeParticleSystem();
     }
 
     void Update()
     {
-        if (GetWorldSize(rectTransform) != previousSize)
+        if (!isButtonSet)
+            return;
+
+        if (GetWorldSize(ButtonRectTransform) != previousSize)
         {
-            Logger.Log("Rect Transform Change!");
             ResizeParticleSystem();
-            previousSize = GetWorldSize(rectTransform);
         }
     }
 
     private void ResizeParticleSystem()
     {
-        Vector2 size = GetWorldSize(rectTransform);
+        Vector2 size = GetWorldSize(ButtonRectTransform);
 
         transform.localScale = new Vector3(intialScale.x * size.x / initalSize.x, intialScale.y * size.y / initalSize.y, 1f);
+        previousSize = size;
     }
 
     private Vector2 GetWorldSize(RectTransform rt)
