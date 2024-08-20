@@ -142,7 +142,7 @@ public class Projectile : MonoBehaviour
         //     Destroy(gameObject);
         // }
 
-        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
+        if (Vector2.Distance(transform.position, targetPos) < 0.1f)
         {
             switch (skillTarget)
             {
@@ -159,6 +159,10 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
             CreateImpactEffect();
         }
+
+        var pos = transform.position;
+        pos.z = pos.y;
+        transform.position = pos;
     }
 
     public void CreateImpactEffect()
