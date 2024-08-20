@@ -18,7 +18,7 @@ public class UiPanelRect : MonoBehaviour
         canvasRect = canvas.GetComponent<RectTransform>();
         uiPanel = GetComponent<RectTransform>();
 
-        AdjustPanelSize();
+        // AdjustPanelSize();
     }
 
     private void AdjustPanelSize()
