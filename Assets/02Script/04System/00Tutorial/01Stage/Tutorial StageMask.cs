@@ -7,19 +7,19 @@ public class TutorialStageMask : TutorialBase
     
     public override void Enter()
     {
+        stagePanelController.enabled = true;
         mask.SetActive(true);
         mask.transform.SetAsLastSibling();
-        stagePanelController.enabled = true;
+        
     }
 
     public override void Execute(TutorialController controller)
     {
-        stagePanelController.enabled = false;
         controller.SetNextTutorial();
     }
 
     public override void Exit()
     {
- 
+           
     }
 }

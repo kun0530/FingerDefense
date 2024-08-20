@@ -105,16 +105,62 @@ public class GameData : IResourceSubject
             NotifyObservers(ResourceType.Game3TutorialCheck, game3TutorialCheck ? 1 : 0);
         }
     }
-    private bool game4TutorialCheck;
-    public bool Game4TutorialCheck
+    private bool shopDragTutorialCheck;
+    public bool ShopDragTutorialCheck
     {
-        get => game4TutorialCheck;
+        get => shopDragTutorialCheck;
         set
         {
-            game4TutorialCheck = value;
-            NotifyObservers(ResourceType.Game4TutorialCheck, game4TutorialCheck ? 1 : 0);
+            shopDragTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopDragTutorialCheck ? 1 : 0);
         }
     }
+    
+    private bool shopGimmickTutorialCheck;
+    public bool ShopGimmickTutorialCheck
+    {
+        get => shopGimmickTutorialCheck;
+        set
+        {
+            shopGimmickTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopGimmickTutorialCheck ? 1 : 0);
+        }
+    }
+    
+    private bool shopCharacterTutorialCheck;
+    public bool ShopCharacterTutorialCheck
+    {
+        get => shopCharacterTutorialCheck;
+        set
+        {
+            shopCharacterTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopCharacterTutorialCheck ? 1 : 0);
+        }
+    }
+    
+    private bool shopFeatureTutorialCheck;
+    public bool ShopFeatureTutorialCheck
+    {
+        get => shopFeatureTutorialCheck;
+        set
+        {
+            shopFeatureTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopFeatureTutorialCheck ? 1 : 0);
+        }
+    }
+    
+    
+    private bool dragTutorialCheck;
+    public bool DragTutorialCheck
+    {
+        get => dragTutorialCheck;
+        set
+        {
+            dragTutorialCheck = value;
+            NotifyObservers(ResourceType.DragTutorialCheck, dragTutorialCheck ? 1 : 0);
+        }
+    }
+    
     public int StageClearNum; //스테이지 클리어 한 최종 ID
     public int stageClearNum
     {
