@@ -52,7 +52,6 @@ public class MonsterSpawner : MonoBehaviour
         stageId = Variables.LoadTable.StageId; 
         int wave = 1;
         MonsterCount = 0;
-
         
         while (waveTable.Get(stageId, wave++) is { } waveData)
         {
@@ -90,7 +89,6 @@ public class MonsterSpawner : MonoBehaviour
 
     private void Update()
     {
-        //To-Do:Prototype 이후 !isTutorialCompleted 삭제
         if (MonsterCount <= 0 || !isWaveTerm || isWaveEnd )
             return;
 
@@ -164,6 +162,48 @@ public class MonsterSpawner : MonoBehaviour
             }
             
         }
+        else if (DataManager.LoadFile().Game3TutorialCheck == false)
+        {
+            var monsterGo = factory.GetMonster(monsterTable.Get(12031));
+            if (stageManager)
+            {
+                monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+
+                if (tutorialObserver != null)
+                {
+                    monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
+                } 
+                
+                var monsterController = monsterGo.GetComponent<MonsterController>();
+                if (monsterController != null)
+                {
+                    monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+                }
+
+                monsterGo.ResetMonsterData();
+            }    
+            
+            for (int i = 0; i < 2; i++)
+            {
+                var monsterGo2 = factory.GetMonster(monsterTable.Get(11001));
+                monsterGo2.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                monsterGo2.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+
+                if (tutorialObserver != null)
+                {
+                    monsterGo2.gameObject.AddComponent<TutorialGameTrigger>();
+                } 
+                
+                var monsterController = monsterGo2.GetComponent<MonsterController>();
+                if (monsterController != null)
+                {
+                    monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+                }
+
+                monsterGo.ResetMonsterData();
+            }
+        }
         else
         {
             Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
@@ -204,10 +244,6 @@ public class MonsterSpawner : MonoBehaviour
                 Logger.Log("모든 몬스터가 소환되었습니다.");
             }    
         }
-        
-        
-        
-        
     }
 
     public void TriggerMonsterReset(MonsterController monster)

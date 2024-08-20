@@ -634,6 +634,15 @@ MonoBehaviour:
   - skeletonGraphic: {fileID: 0}
     nameText: {fileID: 5947291290492634370}
     dialogText: {fileID: 8792727332735717445}
+  - skeletonGraphic: {fileID: 0}
+    nameText: {fileID: 5947291290492634370}
+    dialogText: {fileID: 8792727332735717445}
+  - skeletonGraphic: {fileID: 0}
+    nameText: {fileID: 5947291290492634370}
+    dialogText: {fileID: 8792727332735717445}
+  - skeletonGraphic: {fileID: 0}
+    nameText: {fileID: 5947291290492634370}
+    dialogText: {fileID: 8792727332735717445}
   dialogData:
   - speakerIndex: 0
     name: "\uC2DC\uC2A4\uD15C"
@@ -643,12 +652,17 @@ MonoBehaviour:
     objectsToDeactivate: []
   - speakerIndex: 1
     name: "\uC2DC\uC2A4\uD15C"
-    dialog: 95002
+    dialog: 95042
     objectsToActivate: []
     objectsToDeactivate: []
   - speakerIndex: 2
     name: "\uC2DC\uC2A4\uD15C"
-    dialog: 95022
+    dialog: 95052
+    objectsToActivate: []
+    objectsToDeactivate: []
+  - speakerIndex: 3
+    name: "\uC2DC\uC2A4\uD15C"
+    dialog: 95062
     objectsToActivate: []
     objectsToDeactivate: []
   isFirstDialog: 0
@@ -2954,6 +2968,8 @@ MonoBehaviour:
   - {fileID: 1354471502}
   - {fileID: 1577279524}
   - {fileID: 205933966}
+  - {fileID: 1895731883}
+  - {fileID: 1321153668}
 --- !u!4 &648396254
 Transform:
   m_ObjectHideFlags: 0
@@ -2970,6 +2986,8 @@ Transform:
   - {fileID: 1354471503}
   - {fileID: 1577279525}
   - {fileID: 205933968}
+  - {fileID: 1895731882}
+  - {fileID: 1321153667}
   m_Father: {fileID: 1540714290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &649121839
@@ -5660,6 +5678,51 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1321153666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1321153667}
+  - component: {fileID: 1321153668}
+  m_Layer: 0
+  m_Name: 03. Tutorial Stop Check
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1321153667
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321153666}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 648396254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321153668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321153666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91f8e3ba942325249bbb6a9fe9353b39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialObserver: {fileID: 1895731883}
 --- !u!1001 &1321583917
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6820,7 +6883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeEffect: {fileID: 6178526770960340653}
-  isFadeIn: 1
+  isFadeIn: 0
 --- !u!4 &1577279525
 Transform:
   m_ObjectHideFlags: 0
@@ -7271,6 +7334,57 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1895731881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1895731882}
+  - component: {fileID: 1895731883}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1895731882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895731881}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 648396254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1895731883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895731881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedMonsters: []
+  tutorialText: {fileID: 653720208}
+  monsterSpawnParent: {fileID: 1327133109483166374}
+  isRemove: 0
+  isAdd: 1
+  isDragLock: 0
+  isState: 0
 --- !u!1 &1980049850
 GameObject:
   m_ObjectHideFlags: 0
