@@ -13,6 +13,8 @@ public class DragState : IState
     private bool isReachHeight;
 
     private float limitX;
+    
+    private TutorialGameTrigger tutorialGameTrigger;
 
     public DragState(MonsterController controller)
     {
@@ -20,6 +22,12 @@ public class DragState : IState
 
         renderer = controller.GetComponentInChildren<MeshRenderer>();
         collider = controller.GetComponent<Collider2D>();
+       
+        //To-Do Tutorial 몬스터 이동 상태 추가
+        if (controller.IsTutorialMonster)
+        {
+            tutorialGameTrigger = controller.GetComponent<TutorialGameTrigger>();
+        }
     }
 
     public void Enter()
@@ -51,6 +59,12 @@ public class DragState : IState
         if (Camera.main != null && Camera.main.TryGetComponent<CameraController>(out var cameraController))
         {
             cameraController.ZoomOutCamera();
+        }
+        
+        // 드래그 시작 시점에서 튜토리얼 몬스터인 경우에만 OnDragStarted 호출
+        if (controller.IsTutorialMonster && tutorialGameTrigger != null)
+        {
+            tutorialGameTrigger.OnDragStarted();
         }
     }
 

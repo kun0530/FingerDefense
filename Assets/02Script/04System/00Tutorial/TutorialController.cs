@@ -4,7 +4,7 @@ using UnityEngine;
 public class TutorialController : MonoBehaviour
 {
     [SerializeField]
-    private List<TutorialBase> tutorials;
+    public List<TutorialBase> tutorials;
     
     private TutorialBase currentTutorial=null;
     private int currentTutorialIndex = -1;

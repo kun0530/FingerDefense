@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public enum StageState
 {
     NONE,
+    TUTORIAL,
     PLAYING,
     PAUSE,
     MONSTER_INFO,

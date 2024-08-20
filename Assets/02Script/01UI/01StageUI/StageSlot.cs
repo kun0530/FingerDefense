@@ -24,7 +24,7 @@ public class StageSlot : MonoBehaviour
     private GameManager gameManager;
     
     [SerializeField]private GameObject deckUI;
-    
+    public TutorialController stagePanelController;
     public void Start()
     { 
         DeckButton.onClick.AddListener(OnClick);
@@ -44,6 +44,10 @@ public class StageSlot : MonoBehaviour
     public void GameManager(GameManager gameManager)
     {
         this.gameManager = gameManager;
+    }
+    public void SetStagePanelController(TutorialController stagePanelController)
+    {
+        this.stagePanelController = stagePanelController;
     }
     
     public void Configure(StageData stageData)
@@ -192,9 +196,9 @@ public class StageSlot : MonoBehaviour
     {
         if (stageMask.gameObject.activeSelf)
         {
+            stagePanelController.enabled = true;   
             Variables.LoadTable.StageId = StageId;
             SceneManager.LoadScene(2);
-            gameManager.GameData.StageChoiceTutorialCheck = true;
         }
         else
         {

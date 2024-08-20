@@ -24,7 +24,8 @@ public class PlayerCharacterSpawner : MonoBehaviour
     private int selectedCharacterIndex = -1;
     
     private InputManager inputManager;
-
+    public TutorialController tutorial; 
+    
     private void Awake()
     {
         // 데이터 테이블 로드
@@ -221,6 +222,11 @@ public class PlayerCharacterSpawner : MonoBehaviour
         playerCharacter.Status.Init();
         playerCharacter.gameObject.SetActive(true);
 
+        if (tutorial.gameObject.activeSelf)
+        {
+            playerCharacter.gameObject.AddComponent<TutorialGameTrigger>();    
+        }
+        
         if (characterButtons[selectedCharacterIndex] != null)
         {
             // characterButtons[selectedCharacterIndex].interactable = false;

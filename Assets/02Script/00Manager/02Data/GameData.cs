@@ -122,26 +122,9 @@ public class GameData : IResourceSubject
         set => StageClearNum = value;
     }
     
-    
     public List<int> ObtainedGachaIDs = new List<int>();
     
-    
-    
-    
     public List<(int stage, int clear)> StageClear = new List<(int, int)>();
-    
-    public int StageClearCount; 
-    enum TutorialCheck
-    {
-        NONE =-1,
-        NICK = 0,
-        STAGE,
-        DECK,
-        GAME1,
-        GAME2,
-        GAME3,
-        GAME4
-    }
 
     public enum MonsterDrag
     {
