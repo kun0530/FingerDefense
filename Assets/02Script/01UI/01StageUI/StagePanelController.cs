@@ -1,4 +1,5 @@
 using System;
+using Coffee.UIExtensions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,33 +16,27 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     private Vector2 dragStartPosition;
     private HorizontalLayoutGroup layoutGroup;
 
-    public TutorialController stageTutorial;
-    public TutorialController DeckTutorial;
-    public TutorialController SpecialDragTutorial;
+    public GameObject stage1Tutorial;
+    public GameObject stage2Tutorial;
+    public GameObject stage3Tutorial;
     
     private void Start()
     {
         layoutGroup = stagePanel.GetComponent<HorizontalLayoutGroup>();
-
-        if (stageTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 0;           
-        }
-        else if (DeckTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 1;
-        }  
-        else if (SpecialDragTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 2;
-        }
-          
-        
+       
         UpdatePadding(true); 
         UpdateStageSlots(true);   
         
+        Logger.Log($"해당 스테이지 인덱스 : {currentIndex}");
     }
-    
+
+    private void OnEnable()
+    {
+       
+        Logger.Log($"해당 스테이지 인덱스 : {currentIndex}");
+        
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragStartPosition = eventData.position;
@@ -50,7 +45,9 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     public void OnDrag(PointerEventData eventData)
     {
     }
-
+    
+    
+    
     public void OnEndDrag(PointerEventData eventData)
     {
         if (stagePanel.childCount <= 1)
@@ -81,7 +78,18 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
             LayoutRebuilder.ForceRebuildLayoutImmediate(stagePanel);
             return;
         }
-        
+        if (stage1Tutorial.gameObject.activeSelf)
+        {
+            currentIndex = 0;
+        }
+        else if (stage2Tutorial.gameObject.activeSelf)
+        {
+            currentIndex = 1;
+        }  
+        else if (stage3Tutorial.gameObject.activeSelf)
+        {
+            currentIndex = 2;
+        }
         if (currentIndex < leftPaddings.Length)
         {
             if (instant)
@@ -175,5 +183,6 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
             }
         }
     }
+
 
 }
