@@ -169,6 +169,8 @@ public class GameData : IResourceSubject
         ACTIVE=2,
     }
     MonsterDrag monsterDrag;
+    
+    
     public Dictionary<int, int> MonsterDragLevel = new ();
     
     public enum MonsterGimmick

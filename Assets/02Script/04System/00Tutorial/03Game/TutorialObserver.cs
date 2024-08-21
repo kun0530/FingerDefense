@@ -21,9 +21,12 @@ public class TutorialObserver : TutorialBase
 
     public bool isDragLock = false;
     public bool isState = false;
+    public bool isDebuff = false;
     
     private bool isTutorialComplete = false;
     
+
+    [SerializeField] private ItemDebuffMonster stop;
     public void Awake()
     {
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
@@ -96,6 +99,11 @@ public class TutorialObserver : TutorialBase
         {
             controller.SetNextTutorial();
         }
+        
+        if(isDebuff)
+        {
+            controller.SetNextTutorial();
+        }
     }
 
     public override void Exit()
@@ -105,7 +113,7 @@ public class TutorialObserver : TutorialBase
 
     public void OnTargetDisabled(TutorialGameTrigger monsterTrigger)
     {
-        if (observedMonsters.Contains(monsterTrigger))
+        if(observedMonsters.Contains(monsterTrigger))
         {
             observedMonsters.Remove(monsterTrigger);
 
@@ -114,6 +122,7 @@ public class TutorialObserver : TutorialBase
                 isTutorialComplete = true;
                 NextTutorial();
             }
+            
         }
     }
     
@@ -152,17 +161,31 @@ public class TutorialObserver : TutorialBase
         foreach (var monsterTrigger in observedMonsters)
         {
             var monsterController = monsterTrigger.gameObject.GetComponent<MonsterController>();
+            var monsterID = monsterController.Status.Data.Id;
             if (monsterController != null)
             {
                 // isDragLock가 true이면 드래그 유형을 보스로 설정
                 if (isDragLock)
                 {
                     monsterController.Status.Data.DragType = (int)MonsterData.DragTypes.BOSS;
+                    if (monsterID == 12031)
+                    {
+                        monsterController.Status.Data.DragType = (int)MonsterData.DragTypes.SPECIAL;    
+                    }
                 }
                 // isState가 true이면 상태를 특정 상태로 전환 (예: PatrolState)
                 if (isState)
                 {
                     monsterController.IsTutorialMonster = false;
+                }
+                
+                if(isDebuff)
+                {
+                    stop.GiveBuff(monsterController);
+                    if(monsterController== null)
+                    {
+                        return;
+                    }
                 }
                 
             }

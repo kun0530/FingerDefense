@@ -1106,6 +1106,67 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &280607148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 280607149}
+  - component: {fileID: 280607150}
+  m_Layer: 0
+  m_Name: 06. Tutorial Trigger (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &280607149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280607148}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 648396254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &280607150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedMonsters: []
+  tutorialText: {fileID: 653720208}
+  tutorialImage: {fileID: 0}
+  monsterSpawnParent: {fileID: 1327133109483166374}
+  isRemove: 0
+  isAdd: 0
+  isDragLock: 1
+  isState: 1
+  isDebuff: 0
+  stop:
+    buffType: 1
+    damageTerm: 0
+    isPercentage: 1
+    buffValue: -1
+    isPermanent: 1
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &327626849
 GameObject:
   m_ObjectHideFlags: 0
@@ -3218,7 +3279,10 @@ MonoBehaviour:
   tutorials:
   - {fileID: 1354471502}
   - {fileID: 1577279524}
+  - {fileID: 1996180936}
   - {fileID: 205933966}
+  - {fileID: 1405201950}
+  - {fileID: 280607150}
   - {fileID: 1895731883}
   - {fileID: 1843066738}
   - {fileID: 548341833}
@@ -3239,7 +3303,10 @@ Transform:
   m_Children:
   - {fileID: 1354471503}
   - {fileID: 1577279525}
+  - {fileID: 1996180935}
   - {fileID: 205933968}
+  - {fileID: 1405201949}
+  - {fileID: 280607149}
   - {fileID: 1895731882}
   - {fileID: 1843066737}
   - {fileID: 548341834}
@@ -3891,7 +3958,7 @@ GameObject:
   - component: {fileID: 826054012}
   - component: {fileID: 826054013}
   m_Layer: 0
-  m_Name: 06. Tutorial Trigger (1)
+  m_Name: 06. Tutorial Monster Stop Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3932,6 +3999,15 @@ MonoBehaviour:
   isAdd: 1
   isDragLock: 0
   isState: 0
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &872099139
 GameObject:
   m_ObjectHideFlags: 0
@@ -4324,7 +4400,7 @@ GameObject:
   - component: {fileID: 1000919088}
   - component: {fileID: 1000919089}
   m_Layer: 0
-  m_Name: 06. Tutorial Trigger
+  m_Name: 07. Tutorial Monster DragLock Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4365,6 +4441,15 @@ MonoBehaviour:
   isAdd: 0
   isDragLock: 1
   isState: 1
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &1002259783
 GameObject:
   m_ObjectHideFlags: 0
@@ -4456,7 +4541,7 @@ GameObject:
   - component: {fileID: 1007393462}
   - component: {fileID: 1007393461}
   m_Layer: 0
-  m_Name: 10. Tutorial Touch Check
+  m_Name: 12. Tutorial Touch Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5001,6 +5086,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeEffect: {fileID: 6178526770960340653}
   isFadeIn: 0
+--- !u!1 &1134215871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1134215872}
+  - component: {fileID: 1134215873}
+  m_Layer: 0
+  m_Name: 09. Tutorial Monster Stop Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1134215872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134215871}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430129138}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1134215873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134215871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedMonsters: []
+  tutorialText: {fileID: 653720208}
+  tutorialImage: {fileID: 0}
+  monsterSpawnParent: {fileID: 3606417200051115221}
+  isRemove: 0
+  isAdd: 0
+  isDragLock: 0
+  isState: 0
+  isDebuff: 1
+  stop:
+    buffType: 1
+    damageTerm: 0
+    isPercentage: 1
+    buffValue: -1
+    isPermanent: 1
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &1141308894
 GameObject:
   m_ObjectHideFlags: 0
@@ -5088,7 +5234,7 @@ GameObject:
   - component: {fileID: 1145687398}
   - component: {fileID: 1145687399}
   m_Layer: 0
-  m_Name: 07. Tutorial Trigger
+  m_Name: 08. Tutorial Character Disable Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5129,6 +5275,15 @@ MonoBehaviour:
   isAdd: 0
   isDragLock: 0
   isState: 0
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &1147530911
 GameObject:
   m_ObjectHideFlags: 0
@@ -5263,7 +5418,7 @@ GameObject:
   - component: {fileID: 1171662409}
   - component: {fileID: 1171662408}
   m_Layer: 0
-  m_Name: 08. Tutorial Dialog
+  m_Name: 10. Tutorial Dialog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6119,7 +6274,7 @@ GameObject:
   - component: {fileID: 1369895632}
   - component: {fileID: 1369895631}
   m_Layer: 0
-  m_Name: 09. Tutorial Clear Active
+  m_Name: 11. Tutorial Clear Active
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6187,6 +6342,67 @@ Transform:
   - {fileID: 1118180132}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1405201948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1405201949}
+  - component: {fileID: 1405201950}
+  m_Layer: 0
+  m_Name: 06. Tutorial Trigger (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1405201949
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405201948}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 648396254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1405201950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405201948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedMonsters: []
+  tutorialText: {fileID: 653720208}
+  tutorialImage: {fileID: 0}
+  monsterSpawnParent: {fileID: 1327133109483166374}
+  isRemove: 0
+  isAdd: 0
+  isDragLock: 0
+  isState: 0
+  isDebuff: 1
+  stop:
+    buffType: 1
+    damageTerm: 0
+    isPercentage: 1
+    buffValue: -1
+    isPermanent: 1
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &1430129136
 GameObject:
   m_ObjectHideFlags: 0
@@ -6249,6 +6465,7 @@ Transform:
   - {fileID: 826054012}
   - {fileID: 1000919088}
   - {fileID: 1145687398}
+  - {fileID: 1134215872}
   - {fileID: 1171662407}
   - {fileID: 1369895632}
   - {fileID: 1007393462}
@@ -6606,7 +6823,7 @@ GameObject:
   - component: {fileID: 1513270933}
   - component: {fileID: 1513270934}
   m_Layer: 0
-  m_Name: 11. Tutorial SceneLoad
+  m_Name: 13. Tutorial SceneLoad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7165,7 +7382,7 @@ GameObject:
   - component: {fileID: 1691646969}
   - component: {fileID: 1691646970}
   m_Layer: 0
-  m_Name: 05. Tutorial Monster List
+  m_Name: '05. Tutorial Character List Check '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7333,6 +7550,15 @@ MonoBehaviour:
   isAdd: 0
   isDragLock: 0
   isState: 0
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &1980049850
 GameObject:
   m_ObjectHideFlags: 0
@@ -7385,6 +7611,76 @@ MonoBehaviour:
   isAdd: 0
   isDragLock: 0
   isState: 0
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
+--- !u!1 &1996180934
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1996180935}
+  - component: {fileID: 1996180936}
+  m_Layer: 0
+  m_Name: 06. Tutorial Trigger (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1996180935
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996180934}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 648396254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1996180936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996180934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedMonsters: []
+  tutorialText: {fileID: 653720208}
+  tutorialImage: {fileID: 0}
+  monsterSpawnParent: {fileID: 1327133109483166374}
+  isRemove: 0
+  isAdd: 1
+  isDragLock: 0
+  isState: 0
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
 --- !u!1 &2001537994
 GameObject:
   m_ObjectHideFlags: 0
