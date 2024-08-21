@@ -104,7 +104,7 @@ public class CharacterUpgradePanel : MonoBehaviour
         // 업그레이드 버튼 활성화 또는 비활성화
         upgradeButton.onClick.RemoveAllListeners();
         upgradeButton.onClick.AddListener(TryUpgradeCharacter);
-        upgradeButton.interactable = GameManager.instance.GameData.stageClearNum >= upgradeData.NeedClearStage;
+        Logger.Log($"Upgrade button added listener for {upgradeData.Name}");
     }
 
     private void TryUpgradeCharacter()

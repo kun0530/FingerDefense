@@ -26,9 +26,10 @@ public class StageSlot : MonoBehaviour
     private GameManager gameManager;
     
     [SerializeField]private GameObject deckUI;
-    public TutorialController stagePanelController;
+    private StagePanelController stagePanelController;
     public void Start()
     { 
+        stagePanelController=gameObject.GetComponentInParent<StagePanelController>();
         DeckButton.onClick.AddListener(OnClick);
     }
     public void SetDeckUI(GameObject deckUI)
@@ -55,10 +56,6 @@ public class StageSlot : MonoBehaviour
     {
         this.gameManager = gameManager;
     }
-    public void SetStagePanelController(TutorialController stagePanelController)
-    {
-        this.stagePanelController = stagePanelController;
-    }
     
     public void Configure(StageData stageData)
     {
@@ -74,7 +71,7 @@ public class StageSlot : MonoBehaviour
         if (stageData.Monster4Id != 0) AddMonsterSlot(stageData.Monster4Id);
 
         if (stageData.Reward1Id != 0 && stageData.Reward1Value != 0) AddRewardSlot(stageData.Reward1Id, stageData.Reward1Value);
-        //if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0) AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
+        if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0) AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
     }
 
     private void AddMonsterSlot(int monsterId)
@@ -206,13 +203,11 @@ public class StageSlot : MonoBehaviour
     {
         if (stageMask.gameObject.activeSelf)
         {
-            stagePanelController.enabled = false;   
             Variables.LoadTable.StageId = StageId;
             SceneManager.LoadScene(2);
         }
         else if(dragMask.gameObject.activeSelf)
         {
-            //stagePanelController.enabled = false;
             Variables.LoadTable.StageId = StageId;
             SceneManager.LoadScene(2);
         }

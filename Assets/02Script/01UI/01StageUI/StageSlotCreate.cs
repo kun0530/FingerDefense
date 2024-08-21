@@ -15,8 +15,7 @@ public class StageSlotCreate : MonoBehaviour
     public GameObject stageMask;
     public GameObject deckMask;
     public GameObject dragMask;
-    
-    public TutorialController stagePanelController;
+
     private void Awake()
     {
         gameManager = GameManager.instance;
@@ -75,7 +74,6 @@ public class StageSlotCreate : MonoBehaviour
             slot.SetDeckUI(deckUI);
             slot.SetStageMask(stageMask);
             slot.GameManager(gameManager);
-            slot.SetStagePanelController(stagePanelController);
             slot.SetDragMask(dragMask);
             slot.SetDeckMask(deckMask);
         }
