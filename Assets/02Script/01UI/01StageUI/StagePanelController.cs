@@ -27,14 +27,15 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             currentIndex = 0;           
         }
+        else if (DeckTutorial.gameObject.activeSelf)
+        {
+            currentIndex = 1;
+        }  
         else if (SpecialDragTutorial.gameObject.activeSelf)
         {
             currentIndex = 2;
         }
-        else if (DeckTutorial.gameObject.activeSelf)
-        {
-            currentIndex = 1;
-        }    
+          
         
         UpdatePadding(true); 
         UpdateStageSlots(true);   
