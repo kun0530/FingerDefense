@@ -27,8 +27,8 @@ public class TutorialGameTrigger : MonoBehaviour
     private void OnDisabled()
     {
         observer.OnTargetDisabled(this);
-    }
 
+    }
     public void OnFailButSurvived()
     {
         observer.OnMonsterSurvived(this);
