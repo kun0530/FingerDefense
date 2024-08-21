@@ -47,7 +47,8 @@ public class DragAndDrop : MonoBehaviour
 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject()
+        || (stageManager != null && stageManager.CurrentState != StageState.PLAYING))
         {
             return;
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UiButtonEffect : MonoBehaviour
 {
@@ -15,7 +16,6 @@ public class UiButtonEffect : MonoBehaviour
             if (buttonRectTransform != null)
             {
                 isButtonSet = true;
-                gameObject.SetActive(true);
                 transform.SetParent(buttonRectTransform);
                 transform.localPosition = Vector3.zero;
                 ResizeParticleSystem();
@@ -30,14 +30,14 @@ public class UiButtonEffect : MonoBehaviour
     private bool isButtonSet = false;
 
     private Vector2 previousSize;
-    private Vector2 intialScale;
+    public Vector2 intialScale;
 
-    void Awake()
+    private void Awake()
     {
-        intialScale = transform.localScale;
+        // intialScale = transform.localScale;
     }
 
-    void Update()
+    private void Update()
     {
         if (!isButtonSet)
             return;

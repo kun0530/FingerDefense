@@ -267,6 +267,10 @@ public class StageManager : MonoBehaviour
             GameManager.instance.GameData.Diamond += stageData.Reward2Value;
         }
 
+        if (gameUiManager.gameClearUi.TryGetComponent<UiGameClearPanel>(out var clearPanel))
+        {
+            clearPanel.ActiveRewardGetText(!isFirstClear);
+        }
         DataManager.SaveFile(GameManager.instance.GameData);
     }
 }
