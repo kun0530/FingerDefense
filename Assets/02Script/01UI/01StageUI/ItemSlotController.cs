@@ -208,10 +208,9 @@ public class ItemSlotController : MonoBehaviour
                 Logger.LogError($"ItemData for ItemId {clickedSlot.ItemId} not found.");
             }
         }
-
-        clickedSlot.ClearSlot();
-    
+        
         RemoveItemFromLoadTable(clickedSlot.ItemId);
+        clickedSlot.ClearSlot();
     }
 
     private void SaveItemToLoadTable(int itemId, int addCount)

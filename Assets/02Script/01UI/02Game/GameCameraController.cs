@@ -15,6 +15,9 @@ public class GameCameraController : MonoBehaviour
     }
     private Camera mainCamera;
 
+    [Header("스크린 모드")]
+    [SerializeField] private ScreenMode defaultLandScapeMode; // 가로
+    [SerializeField] private ScreenMode defaultPortraitMode; // 세로
     [SerializeField] private ScreenMode currentScreenMode;
     private ScreenMode prevScreenMode;
     public bool IsScreenModeChange
@@ -22,6 +25,7 @@ public class GameCameraController : MonoBehaviour
         get => prevScreenMode != currentScreenMode;
     }
 
+    [Header("타켓 값")]
     public float targetWidth = 20f;
     [SerializeField] private float targetHeight = 20f;
     public float bottomY;
@@ -49,6 +53,20 @@ public class GameCameraController : MonoBehaviour
             || currentScreenWidth != Screen.width;
     }
 
+    public event Action onScreenChange;
+
+    private void Awake()
+    {
+        mainCamera = Camera.main;
+        currentWidth = targetWidth;
+        
+        prevScreenMode = currentScreenMode;
+        currentScreenHeight = Screen.height;
+        currentScreenWidth = Screen.width;
+
+        ChangeResolution();
+    }
+
     void OnEnable()
     {
 #if !UNITY_EDITOR
@@ -64,7 +82,7 @@ public class GameCameraController : MonoBehaviour
 #endif
     }
 
-    private void OnEndCameraRendering(ScriptableRenderContext context, Camera[] camera)
+    private void OnBeginCameraRendering(ScriptableRenderContext context, Camera[] camera)
     {
         GL.Clear(true, true, letterBoxColor);
     }
@@ -84,26 +102,17 @@ public class GameCameraController : MonoBehaviour
     //     Logger.Log("OnPostRender");
     // }
 
-    private void Start()
-    {
-        mainCamera = Camera.main;
-        currentWidth = targetWidth;
-        
-        prevScreenMode = currentScreenMode;
-        currentScreenHeight = Screen.height;
-        currentScreenWidth = Screen.width;
-
-        ChangeResolution();
-    }
-
     private void Update()
     {
         if (isWidthChange)
+        {
             ChangeTargetWidth();
+        }
 
         if (IsResolutionChange || IsScreenModeChange)
         {
             ChangeResolution();
+            onScreenChange?.Invoke();
         }
     }
 
@@ -116,10 +125,16 @@ public class GameCameraController : MonoBehaviour
 
     private void ChangeResolution()
     {
-        if (Screen.height > Screen.width) // 강제 세로모드에 대한 대응
+        if (IsResolutionChange)
         {
-            AdjustCameraUsingLetterBox();
-            return;
+            if (Screen.height > Screen.width) // 강제 세로모드에 대한 대응
+            {
+                currentScreenMode = defaultPortraitMode;
+            }
+            else // 가로모드에 대한 대응
+            {
+                currentScreenMode = defaultLandScapeMode;
+            }
         }
 
         switch (currentScreenMode)
@@ -134,6 +149,8 @@ public class GameCameraController : MonoBehaviour
                 AdjustCameraForSafeArea();
                 break;
         }
+
+        ResizeAndRepositionCamera();
     }
 
     private void AdjustCamera()
@@ -141,12 +158,12 @@ public class GameCameraController : MonoBehaviour
         var normalRect = new Rect(0f, 0f, 1f, 1f);
         mainCamera.rect = normalRect;
 
-        var aspectRatio = (float)Screen.width / (float)Screen.height;
-        var orthographicSize = currentWidth / (aspectRatio * 2f);
-        mainCamera.orthographicSize = orthographicSize;
+        // var aspectRatio = (float)Screen.width / (float)Screen.height;
+        // var orthographicSize = currentWidth / (aspectRatio * 2f);
+        // mainCamera.orthographicSize = orthographicSize;
 
-        var cameraPositionY = bottomY + orthographicSize;
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
+        // var cameraPositionY = bottomY + orthographicSize;
+        // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
     private void AdjustCameraForSafeArea()
@@ -160,12 +177,12 @@ public class GameCameraController : MonoBehaviour
 
         mainCamera.rect = cameraRect;
 
-        var aspectRatio = (float)safeAreaRect.width / (float)safeAreaRect.height;
-        var orthographicSize = currentWidth / (aspectRatio * 2f);
-        mainCamera.orthographicSize = orthographicSize;
+        // var aspectRatio = (float)safeAreaRect.width / (float)safeAreaRect.height;
+        // var orthographicSize = currentWidth / (aspectRatio * 2f);
+        // mainCamera.orthographicSize = orthographicSize;
 
-        var cameraPositionY = bottomY + orthographicSize;
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
+        // var cameraPositionY = bottomY + orthographicSize;
+        // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
     private void AdjustCameraUsingLetterBox()
@@ -188,10 +205,10 @@ public class GameCameraController : MonoBehaviour
             mainCamera.rect = adjustedRect;
         }
 
-        var orthographicSize = targetHeight / 2f;
-        mainCamera.orthographicSize = orthographicSize;
-        var cameraPositionY = bottomY + orthographicSize;
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
+        // var orthographicSize = targetHeight / 2f;
+        // mainCamera.orthographicSize = orthographicSize;
+        // var cameraPositionY = bottomY + orthographicSize;
+        // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
     private void SetRect(RectTransform rectTransform, Rect rect)
@@ -244,6 +261,15 @@ public class GameCameraController : MonoBehaviour
             isWidthChange = false;
         }
 
-        ChangeResolution();
+        ResizeAndRepositionCamera();
+    }
+
+    private void ResizeAndRepositionCamera()
+    {
+        var aspectRatio = mainCamera.aspect;
+        var orthographicSize = currentWidth / (aspectRatio * 2f);
+        mainCamera.orthographicSize = orthographicSize;
+        var cameraPositionY = bottomY + orthographicSize;
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 }
