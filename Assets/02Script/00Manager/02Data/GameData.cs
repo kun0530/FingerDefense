@@ -105,16 +105,51 @@ public class GameData : IResourceSubject
             NotifyObservers(ResourceType.Game3TutorialCheck, game3TutorialCheck ? 1 : 0);
         }
     }
-    private bool game4TutorialCheck;
-    public bool Game4TutorialCheck
+    private bool shopDragTutorialCheck;
+    public bool ShopDragTutorialCheck
     {
-        get => game4TutorialCheck;
+        get => shopDragTutorialCheck;
         set
         {
-            game4TutorialCheck = value;
-            NotifyObservers(ResourceType.Game4TutorialCheck, game4TutorialCheck ? 1 : 0);
+            shopDragTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopDragTutorialCheck ? 1 : 0);
         }
     }
+    
+    private bool shopGimmickTutorialCheck;
+    public bool ShopGimmickTutorialCheck
+    {
+        get => shopGimmickTutorialCheck;
+        set
+        {
+            shopGimmickTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopGimmickTutorialCheck ? 1 : 0);
+        }
+    }
+    
+    private bool shopCharacterTutorialCheck;
+    public bool ShopCharacterTutorialCheck
+    {
+        get => shopCharacterTutorialCheck;
+        set
+        {
+            shopCharacterTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopCharacterTutorialCheck ? 1 : 0);
+        }
+    }
+    
+    private bool shopFeatureTutorialCheck;
+    public bool ShopFeatureTutorialCheck
+    {
+        get => shopFeatureTutorialCheck;
+        set
+        {
+            shopFeatureTutorialCheck = value;
+            NotifyObservers(ResourceType.ShopTutorialCheck, shopFeatureTutorialCheck ? 1 : 0);
+        }
+    }
+    
+    
     public int StageClearNum; //스테이지 클리어 한 최종 ID
     public int stageClearNum
     {
@@ -124,7 +159,7 @@ public class GameData : IResourceSubject
     
     public List<int> ObtainedGachaIDs = new List<int>();
     
-    public List<(int stage, int clear)> StageClear = new List<(int, int)>();
+    public Dictionary<int, bool> StageClear = new();
 
     public enum MonsterDrag
     {
@@ -241,6 +276,16 @@ public class GameData : IResourceSubject
         foreach (var observer in observers)
         {
             observer.OnResourceUpdate(resourceType, newValue);
+        }
+    }
+
+    public void Init()
+    {
+        var stageManager = DataTableManager.Get<StageTable>(DataTableIds.Stage);
+        var stageIds = stageManager.GetKeys();
+        foreach (var stageId in stageIds)
+        {
+            StageClear.Add(stageId, false);
         }
     }
 }

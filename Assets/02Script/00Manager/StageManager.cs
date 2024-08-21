@@ -114,18 +114,15 @@ public class StageManager : MonoBehaviour
             gameUiManager.SetStageStateUi(currentState);
 
             TimeScaleController.SetTimeScale(currentState == StageState.PLAYING ? 1f : 0f);
-            
-            if (currentState == StageState.GAME_CLEAR &&
-                Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
-            {
-                GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
-                Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
-            }
 
-            if (currentState == StageState.GAME_CLEAR || currentState == StageState.GAME_OVER)
+            switch (currentState)
             {
-                GameManager.instance.GameData.Gold += EarnedGold;
-                DataManager.SaveFile(GameManager.instance.GameData);
+                case StageState.GAME_CLEAR:
+                    StageClear();
+                    break;
+                case StageState.GAME_OVER:
+                    GetClearRewards();
+                    break;
             }
         }
     }
@@ -235,5 +232,41 @@ public class StageManager : MonoBehaviour
         SceneManager.LoadScene(1);
         TimeScaleController.SetTimeScale(1f);
         Variables.LoadTable.ItemId.Clear();
+    }
+
+    private void StageClear()
+    {
+        if (Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
+        {
+            GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+            Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
+        }
+
+        var stageClear = GameManager.instance.GameData.StageClear;
+        if (!stageClear[Variables.LoadTable.StageId]) // 최초 클리어
+        {
+            stageClear[Variables.LoadTable.StageId] = true;
+            GetClearRewards(true);
+        }
+        else
+            GetClearRewards();
+    }
+
+    private void GetClearRewards(bool isFirstClear = false)
+    {
+        // 게임 클리어 및 게임 오버 보상
+        GameManager.instance.GameData.Gold += EarnedGold;
+
+        // 최초 클리어 보상
+        if (isFirstClear)
+        {
+            var stageTable = DataTableManager.Get<StageTable>(DataTableIds.Stage);
+            var stageData = stageTable.Get(Variables.LoadTable.StageId);
+
+            GameManager.instance.GameData.Ticket += stageData.Reward1Value;
+            GameManager.instance.GameData.Diamond += stageData.Reward2Value;
+        }
+
+        DataManager.SaveFile(GameManager.instance.GameData);
     }
 }

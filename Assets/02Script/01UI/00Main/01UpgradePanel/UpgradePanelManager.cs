@@ -17,6 +17,10 @@ public class UpgradePanelManager : MonoBehaviour,IResourceObserver
     private StringTable stringTable;
     private GameManager gameManager;
     
+    public TutorialController GimmickTutorialController;
+    public TutorialController CharacterUpgradeTutorialController;
+    public TutorialController PlayerUpgradeTutorialController;
+    
     private void Awake()
     {
         stringTable ??= DataTableManager.Get<StringTable>(DataTableIds.String);
@@ -54,6 +58,24 @@ public class UpgradePanelManager : MonoBehaviour,IResourceObserver
         if (gameManager != null && gameManager.GameData != null)
         {
             gameManager.GameData.RemoveObserver(this);
+        }
+    }
+
+    public void LateUpdate()
+    {
+        if(monsterGimmickPanelPrefab.gameObject.activeSelf && !GameManager.instance.GameData.ShopGimmickTutorialCheck)
+        {
+            GimmickTutorialController.gameObject.SetActive(true);   
+        }
+        
+        if(characterUpgradePanelPrefab.gameObject.activeSelf && !GameManager.instance.GameData.ShopCharacterTutorialCheck)
+        {
+            CharacterUpgradeTutorialController.gameObject.SetActive(true);   
+        }
+        
+        if(characterGimmickPanelPrefab.gameObject.activeSelf && !GameManager.instance.GameData.ShopFeatureTutorialCheck)
+        {
+            PlayerUpgradeTutorialController.gameObject.SetActive(true);   
         }
     }
 

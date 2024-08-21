@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using CsvHelper;
 using UnityEngine.AddressableAssets;
+using System.Linq;
 
 
 
@@ -18,8 +19,8 @@ public class StageData
     public int AssetNo { get; set; }
     public int Reward1Id { get; set; }
     public int Reward1Value { get; set; }
-    // public int Reward2Id { get; set; }
-    // public int Reward2Value { get; set; }
+    public int Reward2Id { get; set; }
+    public int Reward2Value { get; set; }
     
 
 }
@@ -31,6 +32,11 @@ public class StageTable : DataTable
     public StageData Get(int id)
     {
         return table.GetValueOrDefault(id);
+    }
+
+    public List<int> GetKeys()
+    {
+        return table.Keys.ToList();
     }
     
     public IEnumerable<StageData> GetAll()

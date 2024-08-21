@@ -28,8 +28,7 @@ public class TutorialGameTrigger : MonoBehaviour
     {
         observer.OnTargetDisabled(this);
     }
-    
-    // 이 메서드는 몬스터가 드래그 후 실패한 후 살아남았을 때 호출됩니다.
+
     public void OnFailButSurvived()
     {
         observer.OnMonsterSurvived(this);
