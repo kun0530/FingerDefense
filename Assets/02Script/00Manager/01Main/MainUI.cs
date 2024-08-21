@@ -43,7 +43,7 @@ public class MainUI : MonoBehaviour, IResourceObserver
         }
     }
 
-    public void UpdatePlayerInfo()
+    private void UpdatePlayerInfo()
     {
         if (playerNameText)
         {

@@ -22,6 +22,8 @@ public class TutorialObserver : TutorialBase
     public bool isDragLock = false;
     public bool isState = false;
     
+    private bool isTutorialComplete = false;
+    
     public void Awake()
     {
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
@@ -39,14 +41,28 @@ public class TutorialObserver : TutorialBase
     {
         while (true) // 계속 반복
         {
-            CheckAndAddMonsters();
-            ControlMonsterStates();
+            // monsterSpawnParent가 null인지 확인
+            if (monsterSpawnParent != null)
+            {
+                CheckAndAddMonsters();
+                ControlMonsterStates();
+            }
+            else
+            {
+                Logger.LogWarning("monsterSpawnParent가 null입니다. MonitorMonstersAsync가 중지됩니다.");
+                break; // monsterSpawnParent가 파괴되었으면 반복 중지
+            }
             await UniTask.Delay(100); 
         }
     }
 
     private void CheckAndAddMonsters()
     {
+        if(monsterSpawnParent == null)
+        {
+            return;
+        }
+        
         var monsterTriggers = monsterSpawnParent.GetComponentsInChildren<TutorialGameTrigger>();
         foreach (var monsterTrigger in monsterTriggers)
         {
@@ -62,13 +78,10 @@ public class TutorialObserver : TutorialBase
             monsterTrigger.SetObserver(this);
         }
 
-        if (observedMonsters.Count == 1)
+        if (observedMonsters.Count == 1 && isAdd)
         {
-            if (isAdd)
-            {
-                var controller = GetComponentInParent<TutorialController>();
-                controller.SetNextTutorial();    
-            }
+           var controller = GetComponentInParent<TutorialController>();
+           controller.SetNextTutorial();
         }
     }
 
@@ -95,8 +108,17 @@ public class TutorialObserver : TutorialBase
         if (observedMonsters.Contains(monsterTrigger))
         {
             observedMonsters.Remove(monsterTrigger);
+
+            if (!isTutorialComplete)
+            {
+                isTutorialComplete = true;
+                NextTutorial();
+            }
         }
-        
+    }
+    
+    public void NextTutorial()
+    {
         var controller = GetComponentInParent<TutorialController>();
         controller.SetNextTutorial();
     }
