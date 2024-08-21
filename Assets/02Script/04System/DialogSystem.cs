@@ -123,8 +123,10 @@ public class DialogSystem : MonoBehaviour
         }
         else if (!isDialogComplete)
         {
-            // 타이핑이 완료된 후, 다음 대화를 시작
+            // 텍스트 타이핑이 완료된 후에만 다음 대화를 진행
+            nextButton.interactable = false; // 다음 버튼을 임시로 비활성화
             await SetNextDialogAsync();
+            nextButton.interactable = true; // 대화 설정 후 버튼 다시 활성화
         }
     }
 
