@@ -15,7 +15,7 @@ public class ShopData
 
 public class ShopTable : DataTable
 {
-    public Dictionary<int,string> table = new Dictionary<int, string>();
+    private Dictionary<int,string> table = new Dictionary<int, string>();
     
     public bool IsExist(int id)
     {

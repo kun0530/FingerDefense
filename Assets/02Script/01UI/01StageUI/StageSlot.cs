@@ -27,6 +27,7 @@ public class StageSlot : MonoBehaviour
     
     [SerializeField]private GameObject deckUI;
     private StagePanelController stagePanelController;
+    
     public void Start()
     { 
         stagePanelController=gameObject.GetComponentInParent<StagePanelController>();
@@ -201,29 +202,53 @@ public class StageSlot : MonoBehaviour
     
     public void OnClick()
     {
-        if (stageMask.gameObject.activeSelf)
+        // 스테이지 클리어 여부 확인
+        bool isStageCleared = gameManager.GameData.StageClear.TryGetValue(StageId, out bool isCleared) && isCleared;
+
+        // 이전 스테이지가 클리어되었는지 확인 (첫 번째 스테이지는 예외 처리)
+        bool isPreviousStageCleared = true;
+        if (StageId > 1)
         {
-            Variables.LoadTable.StageId = StageId;
-            SceneManager.LoadScene(2);
+            isPreviousStageCleared = gameManager.GameData.StageClear.TryGetValue(StageId - 1, out bool previousCleared) && previousCleared;
         }
-        else if(dragMask.gameObject.activeSelf)
+
+        if (isStageCleared || isPreviousStageCleared)
         {
-            Variables.LoadTable.StageId = StageId;
-            SceneManager.LoadScene(2);
-        }
-        else if(deckMask.gameObject.activeSelf)
-        {
-            deckUI.SetActive(true);
-            Variables.LoadTable.StageId = StageId;
-            deckUI.transform.SetAsLastSibling();
-            Logger.Log($"스테이지 {StageId} 선택");    
+            // 스테이지가 클리어되었을 때의 동작
+            if (stageMask.gameObject.activeSelf)
+            {
+                Variables.LoadTable.StageId = StageId;
+                SceneManager.LoadScene(2);
+            }
+            else if (dragMask.gameObject.activeSelf)
+            {
+                Variables.LoadTable.StageId = StageId;
+                SceneManager.LoadScene(2);
+            }
+            else if (deckMask.gameObject.activeSelf)
+            {
+                deckUI.SetActive(true);
+                Variables.LoadTable.StageId = StageId;
+                deckUI.transform.SetAsLastSibling();
+                Logger.Log($"스테이지 {StageId} 선택");    
+            }
+            else
+            {
+                deckUI.SetActive(true);
+                Variables.LoadTable.StageId = StageId;
+                deckUI.transform.SetAsLastSibling();
+                Logger.Log($"스테이지 {StageId} 선택");    
+            }
         }
         else
         {
-            deckUI.SetActive(true);
-            Variables.LoadTable.StageId = StageId;
-            deckUI.transform.SetAsLastSibling();
-            Logger.Log($"스테이지 {StageId} 선택");    
+            // 스테이지가 클리어되지 않았을 때 모달 창 띄우기
+            ModalWindow.Create()
+                .SetHeader("스테이지 잠금")
+                .SetBody("이전 스테이지를 클리어해야 이용할 수 있습니다.")
+                .AddButton("확인", () => { })
+                .Show();
         }
     }
+
 }
