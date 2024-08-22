@@ -38,12 +38,14 @@ public class EffectController : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayAudioClip(enableAudioClip);
+        if (isAutoPlay)
+            PlayAudioClip(enableAudioClip);
     }
 
     private void OnDisable()
     {
-        PlayAudioClip(disableAudioClip);
+        if (isAutoPlay)
+            PlayAudioClip(disableAudioClip);
     }
 
     private void Update()
