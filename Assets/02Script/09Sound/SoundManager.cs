@@ -9,6 +9,10 @@ public class SoundManager : MonoBehaviour
     [Header("오디오 믹서")]
     public AudioMixer masterMixer;
 
+    [Header("오디오 소스")]
+    public AudioSource bgmAudioSource;
+    public AudioSource sfxAudioSource;
+
     [Header("음량 조절 슬라이더")]
     public Slider masterSlider;
     public Slider bgmSlider;

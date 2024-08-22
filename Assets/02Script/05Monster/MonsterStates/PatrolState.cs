@@ -72,15 +72,35 @@ public class PatrolState : IState
 
     private void FindTarget()
     {
-        var nearCollider = findBehavior.FindTarget();
-        if (nearCollider == null)
-            return;
+        var nearColliders = findBehavior.FindTargets();
+
+        PlayerCharacterController nearCharacter = null;
+        float nearDistance = float.MaxValue;
+
+        foreach (var nearCollider in nearColliders)
+        {
+            if (nearCollider.TryGetComponent<PlayerCharacterController>(out var target)
+            && target != controller.attackTarget)
+            {
+                if (target == controller.attackTarget)
+                    continue;
+
+                if (target.MonsterCount == 2)
+                    continue;
+            }
+
+            float distance = Vector2.Distance(target.transform.position, controller.transform.position);
+            if (distance < nearDistance)
+            {
+                nearCharacter = target;
+                nearDistance = distance;
+            }
+        }
         
-        if (nearCollider.TryGetComponent<PlayerCharacterController>(out var target)
-        && target != controller.attackTarget)
+        if (nearCharacter != null)
         {
             controller.attackTarget?.TryRemoveMonster(controller);
-            target.TryAddMonster(controller);
+            nearCharacter.TryAddMonster(controller);
         }
     }
 }

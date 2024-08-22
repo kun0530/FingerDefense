@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class EffectController : MonoBehaviour
 {
@@ -22,6 +23,29 @@ public class EffectController : MonoBehaviour
     private float timer = 0f;
 
     public IEffectGettable target;
+
+    [Header("사운드")]
+    public AudioClip enableAudioClip;
+    public AudioClip disableAudioClip;
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        var soundManager = GameObject.FindWithTag(Defines.Tags.SOUND_MANAGER_TAG)?.GetComponent<SoundManager>();
+        audioSource = soundManager?.sfxAudioSource;
+    }
+
+    private void OnEnable()
+    {
+        if (audioSource && enableAudioClip)
+            audioSource.PlayOneShot(enableAudioClip);
+    }
+
+    private void OnDisable()
+    {
+        if (audioSource && disableAudioClip)
+            audioSource.PlayOneShot(disableAudioClip);
+    }
 
     private void Update()
     {
