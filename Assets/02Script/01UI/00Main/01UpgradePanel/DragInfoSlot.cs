@@ -98,6 +98,7 @@ public class DragInfoSlot : MonoBehaviour
             // 정수로 변환할 수 없는 경우, 기본 색상 설정
             monsterCost.color = Color.red;
         }
+        GameManager.instance.GameData.NotifyObservers(ResourceType.Gold, GameManager.instance.GameData.Gold);
     }
 
     private void UpdateInteractive()
