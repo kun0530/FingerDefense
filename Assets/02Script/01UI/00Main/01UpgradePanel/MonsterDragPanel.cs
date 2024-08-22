@@ -47,59 +47,73 @@ public class MonsterDragPanel : MonoBehaviour
     }
 
     private void CreateSlots()
+{
+    var parentIndex = 0;
+    var slotCount = 0;
+
+    foreach (var upgradeData in upgradeTable.upgradeTable.Values)
     {
-        var parentIndex = 0;
-        var slotCount = 0;
-
-        foreach (var upgradeData in upgradeTable.upgradeTable.Values)
+        if (upgradeData.Type == 0)
         {
-            if (upgradeData.Type == 0)
+            var slot = Instantiate(dragInfoSlotPrefab, dragInfoParent[parentIndex]);
+
+            // 현재 UpgradeResultId에 대한 MonsterDragLevel을 가져옵니다.
+            var dragLevel = GameManager.instance.GameData.MonsterDragLevel[upgradeData.UpgradeResultId];
+
+            slot.SetupSlot(upgradeData.UpgradePrice, dragLevel, upgradeData.UpgradeResultId);
+
+            string assetName = assetListTable.Get(upgradeData.AssetNo);
+            if (!string.IsNullOrEmpty(assetName))
             {
-                var slot = Instantiate(dragInfoSlotPrefab, dragInfoParent[parentIndex]);
+                string assetPath = $"Prefab/10UpgradeUI/{assetName}";
+                GameObject assetObject = Resources.Load<GameObject>(assetPath);
 
-                // 현재 UpgradeResultId에 대한 MonsterDragLevel을 가져옵니다.
-                var dragLevel = GameManager.instance.GameData.MonsterDragLevel[upgradeData.UpgradeResultId];
-
-                slot.SetupSlot(upgradeData.UpgradePrice, dragLevel, upgradeData.UpgradeResultId);
-
-                string assetName = assetListTable.Get(upgradeData.AssetNo);
-                if (!string.IsNullOrEmpty(assetName))
+                if (assetObject != null)
                 {
-                    string assetPath = $"Prefab/10UpgradeUI/{assetName}";
-                    GameObject assetObject = Resources.Load<GameObject>(assetPath);
-
-                    if (assetObject != null)
-                    {
-                        var monster=Instantiate(assetObject, slot.transform);
-                        monster.transform.SetAsFirstSibling();
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"AssetName {assetName}에 해당하는 오브젝트를 찾을 수 없습니다.");
-                    }
+                    var monster = Instantiate(assetObject, slot.transform);
+                    monster.transform.SetAsFirstSibling();
                 }
                 else
                 {
-                    Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 AssetName을 찾을 수 없습니다.");
+                    Debug.LogWarning($"AssetName {assetName}에 해당하는 오브젝트를 찾을 수 없습니다.");
                 }
+            }
+            else
+            {
+                Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 AssetName을 찾을 수 없습니다.");
+            }
 
-                slot.UpdateLockState(dragLevel == (int)GameData.MonsterDrag.LOCK);
-                slot.UpdateCostColor();
-                slot.transform.SetParent(dragInfoParent[parentIndex], false);
+            // dragLevel 값에 따라 상태 업데이트
+            if (dragLevel == (int)GameData.MonsterDrag.LOCK)
+            {
+                slot.UpdateLockState(true);
+            }
+            else if (dragLevel == (int)GameData.MonsterDrag.ACTIVE) // dragLevel이 2일 때 "구매 불가" 상태 설정
+            {
+                slot.UpdateUnavailableState(true);
+            }
+            else
+            {
+                slot.UpdateLockState(false);
+                slot.UpdateUnavailableState(false); // 초기화
+            }
 
-                slotCount++;
-                if (slotCount % 2 == 0)
-                {
-                    parentIndex++;
-                }
+            slot.UpdateCostColor();
+            slot.transform.SetParent(dragInfoParent[parentIndex], false);
 
-                if (parentIndex >= dragInfoParent.Length)
-                {
-                    break;
-                }
+            slotCount++;
+            if (slotCount % 2 == 0)
+            {
+                parentIndex++;
+            }
+
+            if (parentIndex >= dragInfoParent.Length)
+            {
+                break;
             }
         }
     }
+}
 
 
 }
