@@ -21,7 +21,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     public Image elementImage;
     public TextMeshProUGUI monsterCountText;
 
-    private int MonsterCount
+    public int MonsterCount
     {
         get
         {
@@ -33,7 +33,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
             return count;
         }
     }
-    public bool IsTargetable => !IsDead && MonsterCount != 2;
+    public bool IsTargetable => !IsDead;
 
     protected override void Awake()
     {
