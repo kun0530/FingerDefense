@@ -11,6 +11,7 @@ public enum StageState
     TUTORIAL,
     PLAYING,
     PAUSE,
+    OPTION,
     MONSTER_INFO,
     GAME_OVER,
     GAME_CLEAR
@@ -105,26 +106,7 @@ public class StageManager : MonoBehaviour
     public StageState CurrentState
     {
         get => currentState;
-        set
-        {
-            if (currentState == value || value == StageState.NONE)
-                return;
-
-            currentState = value;
-            gameUiManager.SetStageStateUi(currentState);
-
-            TimeScaleController.SetTimeScale(currentState == StageState.PLAYING ? 1f : 0f);
-
-            switch (currentState)
-            {
-                case StageState.GAME_CLEAR:
-                    StageClear();
-                    break;
-                case StageState.GAME_OVER:
-                    GetClearRewards();
-                    break;
-            }
-        }
+        set => SetStageState((int)value);
     }
 
     public MonsterSpawner monsterSpawner;
@@ -219,6 +201,28 @@ public class StageManager : MonoBehaviour
     {
         EarnedGold += Mathf.CeilToInt(gold * goldMultiplier);
         gameUiManager.UpdateEarnedGold(earnedGold);
+    }
+
+    [VisibleEnum(typeof(StageState))]
+    public void SetStageState(int state)
+    {
+        if (currentState == (StageState)state || (StageState)state == StageState.NONE)
+            return;
+
+        currentState = (StageState)state;
+        gameUiManager.SetStageStateUi(currentState);
+
+        TimeScaleController.SetTimeScale(currentState == StageState.PLAYING ? 1f : 0f);
+
+        switch (currentState)
+        {
+            case StageState.GAME_CLEAR:
+                StageClear();
+                break;
+            case StageState.GAME_OVER:
+                GetClearRewards();
+                break;
+        }
     }
 
     public void RestartScene()
