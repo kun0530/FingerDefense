@@ -11,7 +11,6 @@ public class GachaPanel : MonoBehaviour
 
     public void Start()
     {
-        
         gameManager = GameManager.instance;
         
         for (var i = 0; i < gachaButtons.Length; i++)
