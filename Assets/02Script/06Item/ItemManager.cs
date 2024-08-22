@@ -53,9 +53,9 @@ public class ItemManager : MonoBehaviour
     {
         itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
         var itemIds = Variables.LoadTable.ItemId;
-
-        foreach (var itemId in itemIds)
+        for (int i = 0; i < maxItemCount && i < itemIds.Count; i++)
         {
+            var itemId = itemIds[i];
             var itemData = itemTable.Get(itemId.itemId);
             if (itemData == null)
             {

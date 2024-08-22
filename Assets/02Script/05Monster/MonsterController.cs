@@ -36,7 +36,12 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
 
-    private bool isTargetReset=false;
+    [Header("사운드")]
+    [HideInInspector] public AudioSource sfxAudioSource;
+    public AudioClip moveAudioClip;
+    public AudioClip attackAudioClip;
+
+    private bool isTargetReset = false;
     
     //튜토리얼용 변수
     public bool IsTutorialMonster { get; set; }
@@ -132,6 +137,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         base.Start();
 
+        sfxAudioSource = GameObject.FindWithTag(Defines.Tags.SOUND_MANAGER_TAG)?.GetComponent<SoundManager>()?.sfxAudioSource;
         stateMachine.Initialize<MoveState>();
     }
 
@@ -177,7 +183,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
             CanPatrol = true;
         }
 
-        if (other.CompareTag("ResetLine")) // To-Do: Defines에서 정의
+        if (other.CompareTag(Defines.Tags.RESET_LINE_TAG))
         {
             if (!isTargetReset)
             {
@@ -240,7 +246,6 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public void SetFlip(bool isRight)
     {
         var newScaleX = isRight ? defaultRightScale : defaultRightScale * -1f;
-        // var transform1 = transform;
         var newScale = new Vector3(newScaleX, transform.localScale.y, transform.localScale.z);
 
         transform.localScale = newScale;

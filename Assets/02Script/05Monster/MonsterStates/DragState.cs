@@ -86,7 +86,7 @@ public class DragState : IState
 
             if (!isReachHeight && pos.y > controller.Status.Data.Height + controller.targetFallY)
             {
-                Handheld.Vibrate();
+                AudioManager.Vibration();
                 isReachHeight = true;
             }
             else if (isReachHeight && pos.y < controller.Status.Data.Height + controller.targetFallY)

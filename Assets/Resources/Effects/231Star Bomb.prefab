@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAudioClip: {fileID: 8300000, guid: c80830eb02afe624abca20ac804fd12a, type: 3}
+  disableAudioClip: {fileID: 0}
+  isAutoPlay: 1
 --- !u!114 &2812220540912324637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,10 +61,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94680e3a4c47245519f98c71aa88ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosOffset: {x: 1, y: 1, z: 0}
+  initPosOption: 0
+  targetPosOption: 0
+  moveOption: 0
+  skillTarget: 0
+  caster: {fileID: 0}
+  casterOffsetPos: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  targetOffsetPos: {x: 0, y: 0, z: 0}
+  endEffect: {fileID: 0}
   speed: 1
+  acceleration: 9.8
   isBuffApplied: 0
-  skillType: 0
+  impactEffects: []
+  impactEffectLifeTime: 0
 --- !u!1001 &3499007637492187329
 PrefabInstance:
   m_ObjectHideFlags: 0
