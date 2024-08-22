@@ -9,18 +9,21 @@ using UnityEngine.UI;
 public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
     public Sprite gradeImage; // gradeParent의 자식으로 추가할 이미지
-    public Sprite[] skillImages; // Priority 값을 기준으로 추가할 이미지 배열
     public Sprite[] elementImages; // Element 값을 기준으로 추가할 이미지 배열
 
     public RectTransform elementParent;
-    public RectTransform skillParent;
+    public Image SkillIcon;
     public RectTransform gradeParent;
     public RectTransform classParent;
     public TextMeshProUGUI upgradeText;
+    public TextMeshProUGUI powerText;
 
     public GameObject ChoicePanel;
 
     public Image LockImage;
+    public Image PanelImage;
+    public Image PowerImage;
+
     public delegate void SlotClickDelegate(CharacterSlotUI slot);
     public SlotClickDelegate OnSlotClick;
     public SlotClickDelegate OnLongPress;
@@ -30,14 +33,17 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
     private Dictionary<int, int> skillIndexMapping = new Dictionary<int, int>();
     private AssetListTable assetListTable;
+    private StringTable stringTable;
     public TextMeshProUGUI upgradeLevelText;
     
     private bool isPressed = false;
     public bool isLongPress = false;
     
+    private GameObject spineInstance;
+    
     private void Awake()
     {
-        MapSkillsToIndices();
+        
     }
 
     public void SetLocked(bool isLocked)
@@ -50,21 +56,8 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     
     private void OnEnable()
     {
-        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);  
-    }
-
-    private void MapSkillsToIndices()
-    {
-        int[] skillValues = { 1000, 1001, 1002 }; // Example skill values
-        for (var i = 0; i < skillValues.Length; i++)
-        {
-            skillIndexMapping[skillValues[i]] = i;
-        }
-    }
-
-    private int GetSkillIndex(int skillValue)
-    {
-        return skillIndexMapping.GetValueOrDefault(skillValue, -1);
+        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset); 
+        stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
     }
 
     public void SetCharacterSlot(PlayerCharacterData characterData)
@@ -87,7 +80,13 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             GameObject prefab = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetName}");
             if (prefab != null)
             {
-                var spineInstance = Instantiate(prefab, classParent);
+                // 기존 인스턴스가 존재하면 제거
+                if (spineInstance != null)
+                {
+                    Destroy(spineInstance);
+                }
+
+                spineInstance = Instantiate(prefab, classParent);
                 spineInstance.transform.localPosition = Vector3.zero; 
             }
         }
@@ -107,54 +106,66 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             elementImage.gameObject.SetActive(true);
         }
 
-        var skillImage = skillParent.GetComponent<Image>();
-        if (skillImage != null)
+        var skillImage = SkillIcon.GetComponent<Image>();
+        var skillId = assetListTable.Get(characterData.SkillIcon);
+        if (skillImage != null && !string.IsNullOrEmpty(skillId))
         {
-            int skillIndex = GetSkillIndex(characterData.SkillIcon);
-            if (skillIndex >= 0 && skillIndex < skillImages.Length)
-            {
-                skillImage.sprite = skillImages[skillIndex];
-                skillImage.gameObject.SetActive(true);
-            }
-            else
-            {
-                skillImage.gameObject.SetActive(false);
-            }
+            skillImage.sprite = Resources.Load<Sprite>($"Prefab/09SkillIcon/{skillId}");
+            skillImage.gameObject.SetActive(true);
+           
         }
 
-        upgradeLevelText.text = $"+ {characterData.Plus}";
+        if (PowerImage != null)
+        {
+            PowerImage.gameObject.SetActive(true);
+        }
+        powerText.text = $"+{characterData.Power}";
+        powerText.gameObject.transform.SetAsLastSibling();
+        
+
+        upgradeLevelText.text = $"+{characterData.Plus}";
         ChoicePanel.transform.SetAsLastSibling();
     }
 
     public void ClearSlot()
     {
+        // 캐릭터 데이터 초기화
         characterData = null;
 
-        foreach (Transform child in gradeParent)
+        // 캐릭터 이름, 레벨 등 텍스트 초기화
+        if (upgradeLevelText != null)
         {
-            child.gameObject.SetActive(false);
+            upgradeLevelText.text = "";
         }
-
-        foreach (Transform child in classParent)
+        if(powerText != null)
         {
-            child.gameObject.SetActive(false);
+            powerText.text = "";
         }
-
+        // 스파인 인스턴스 삭제
+        if (spineInstance != null)
+        {
+            Destroy(spineInstance);
+            spineInstance = null;
+        }
+        
         var elementImage = elementParent.GetComponent<Image>();
         if (elementImage != null)
         {
-            elementImage.sprite = null;
             elementImage.gameObject.SetActive(false);
         }
 
-        var skillImage = skillParent.GetComponent<Image>();
+        var skillImage = GetComponent<Image>();
         if (skillImage != null)
         {
-            skillImage.sprite = null;
             skillImage.gameObject.SetActive(false);
         }
-        upgradeLevelText.text = "";
-        ChoicePanel.SetActive(false);
+        if (PowerImage != null)
+        {
+            PowerImage.gameObject.SetActive(false);
+        }
+        
+        // 슬롯 재활용 가능 상태로 설정
+        ChoicePanel.gameObject.SetActive(false);
         gameObject.SetActive(true);
     }
 
