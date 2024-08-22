@@ -19,6 +19,7 @@ namespace Defines
 
         public static readonly string CASTLE_TAG = "Castle";
         public static readonly string PATROL_LINE_TAG = "PatrolStartLine";
+        public static readonly string RESET_LINE_TAG = "ResetLine";
     }
 
     
