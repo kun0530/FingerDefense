@@ -37,6 +37,9 @@ public class GameCameraController : MonoBehaviour
     [Header("레터박스")]
     [SerializeField] private Color letterBoxColor;
 
+    [Header("UI 카메라")]
+    [SerializeField] private List<Camera> uiCameras;
+
     public float currentWidth { get; private set; }
 
     private float startWidth;
@@ -151,6 +154,7 @@ public class GameCameraController : MonoBehaviour
         }
 
         ResizeAndRepositionCamera();
+        AdjustUiCamera();
     }
 
     private void AdjustCamera()
@@ -271,5 +275,14 @@ public class GameCameraController : MonoBehaviour
         mainCamera.orthographicSize = orthographicSize;
         var cameraPositionY = bottomY + orthographicSize;
         mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
+    }
+
+    private void AdjustUiCamera()
+    {
+        foreach (var uiCamera in uiCameras)
+        {
+            uiCamera.rect = mainCamera.rect;
+            uiCamera.orthographicSize = mainCamera.orthographicSize;
+        }
     }
 }
