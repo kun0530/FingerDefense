@@ -26,7 +26,7 @@ public class EffectController : MonoBehaviour
 
     [Header("사운드")]
     public AudioClip audioClip;
-    public AudioSource audioSource;
+    private AudioSource audioSource;
 
     private void Awake()
     {
