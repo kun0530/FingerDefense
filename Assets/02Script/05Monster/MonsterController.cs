@@ -36,7 +36,11 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill deathSkill;
     public BaseSkill dragDeathSkill;
 
-    private bool isTargetReset=false;
+    [Header("사운드")]
+    public AudioClip moveAudioClip;
+    public AudioClip attackAudioClip;
+
+    private bool isTargetReset = false;
     
     //튜토리얼용 변수
     public bool IsTutorialMonster { get; set; }

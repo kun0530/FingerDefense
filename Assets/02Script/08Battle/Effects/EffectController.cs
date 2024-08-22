@@ -27,6 +27,7 @@ public class EffectController : MonoBehaviour
     [Header("사운드")]
     public AudioClip enableAudioClip;
     public AudioClip disableAudioClip;
+    public bool isAutoPlay = true;
     private AudioSource audioSource;
 
     private void Awake()
@@ -37,14 +38,14 @@ public class EffectController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (audioSource && enableAudioClip)
-            audioSource.PlayOneShot(enableAudioClip);
+        if (isAutoPlay)
+            PlayAudioClip(enableAudioClip);
     }
 
     private void OnDisable()
     {
-        if (audioSource && disableAudioClip)
-            audioSource.PlayOneShot(disableAudioClip);
+        if (isAutoPlay)
+            PlayAudioClip(disableAudioClip);
     }
 
     private void Update()
@@ -74,5 +75,11 @@ public class EffectController : MonoBehaviour
             target.RemoveEffect(this);
 
         Destroy(gameObject);
+    }
+
+    public void PlayAudioClip(AudioClip clip)
+    {
+        if (audioSource && clip)
+            audioSource.PlayOneShot(clip);
     }
 }
