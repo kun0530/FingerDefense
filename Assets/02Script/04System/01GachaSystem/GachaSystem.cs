@@ -47,6 +47,8 @@ public class GachaSystem : MonoBehaviour
     public void PerformGacha(int times)
     {
         gachaResultPanel.SetActive(false);
+        GachaData lastResult = null;
+
         for (int i = 0; i < times; i++)
         {
             GachaData result = GetRandomGachaResult();
@@ -98,17 +100,23 @@ public class GachaSystem : MonoBehaviour
                             break;
                     }
                 }
-                
-                if(result.Grade == 2)
-                {
-                    gachaSuccessDirector.Play();
-                }
-                else
-                {
-                    gachaFailDirector.Play();
-                }
 
+                lastResult = result;
+
+                // 결과 슬롯 생성 (결과는 모든 뽑기마다 생성)
                 SpawnResultSlot(result, isNew);
+            }
+        }
+        // 마지막 뽑기의 결과에 따라 컷신 재생
+        if (lastResult != null)
+        {
+            if (lastResult.Grade == 2)
+            {
+                gachaSuccessDirector.Play();
+            }
+            else
+            {
+                gachaFailDirector.Play();
             }
         }
     }

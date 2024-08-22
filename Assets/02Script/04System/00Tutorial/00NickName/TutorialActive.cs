@@ -16,6 +16,11 @@ public class TutorialActive : TutorialBase
         foreach (var obj in tutorialObject)
         {
             obj.SetActive(!obj.activeSelf);
+            
+            if(obj.activeSelf)
+                obj.transform.SetAsLastSibling();
+            else 
+                obj.transform.SetAsFirstSibling();
         }
     }
 
@@ -28,5 +33,6 @@ public class TutorialActive : TutorialBase
     {
     }
     
-   
+    
+    
 }

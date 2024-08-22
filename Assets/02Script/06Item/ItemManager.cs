@@ -16,11 +16,46 @@ public class ItemManager : MonoBehaviour
 
     private void Awake()
     {
+        SetItemList();
+        CreateItemButton();
+    }
+
+    private void OnEnable()
+    {
+        foreach (var item in items)
+        {
+            item.Init();
+            if (item && item.IsPassive)
+            {
+                item.UseItem();
+                item.button.buttonEffect.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (var item in items)
+        {
+            item?.CancelItem();
+        }
+    }
+
+    private void Update()
+    {
+        foreach (var item in items)
+        {
+            item?.UpdateItem();
+        }
+    }
+
+    private void SetItemList()
+    {
         itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
         var itemIds = Variables.LoadTable.ItemId;
-
-        foreach (var itemId in itemIds)
+        for (int i = 0; i < maxItemCount && i < itemIds.Count; i++)
         {
+            var itemId = itemIds[i];
             var itemData = itemTable.Get(itemId.itemId);
             if (itemData == null)
             {
@@ -39,25 +74,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        foreach (var item in items)
-        {
-            item.Init();
-            if (item && item.IsPassive)
-                item.UseItem();
-        }
-    }
-
-    private void OnDisable()
-    {
-        foreach (var item in items)
-        {
-            item?.CancelItem();
-        }
-    }
-
-    private void Start()
+    private void CreateItemButton()
     {
         var assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         var stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
@@ -79,6 +96,8 @@ public class ItemManager : MonoBehaviour
             var itemImage = Resources.Load<Sprite>($"Prefab/07GameItem/{itemFilePath}");
             if (itemImage)
                 itemButton.GetComponent<UiSlotButton>().slotImage.sprite = itemImage;
+            
+            items[i].button = itemButton;
 
             if (items[i].IsPassive || items[i].count <= 0)
             {
@@ -86,19 +105,9 @@ public class ItemManager : MonoBehaviour
                 continue;
             }
 
-            items[i].button = itemButton;
             int index = i;
-
             itemButton.button.onClick.AddListener(items[index].UseItem);
             itemButton.ActiveButton(true);
-        }
-    }
-
-    private void Update()
-    {
-        foreach (var item in items)
-        {
-            item?.UpdateItem();
         }
     }
 }

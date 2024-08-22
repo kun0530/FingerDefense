@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "Item/Active Create BlackHole", fileName = "Item.asset")]
 public class ItemActiveCreateBlackHole : ActiveItem
@@ -30,12 +31,15 @@ public class ItemActiveCreateBlackHole : ActiveItem
 
     public override void UseItem()
     {
-        if (isDragging)
+        if (!inputManager)
             return;
-
-        isDragging = true;
-        if (inputManager)
+        
+        isDragging = !isDragging;
+        button.buttonEffect.gameObject.SetActive(isDragging);
+        if (isDragging)
             inputManager.OnClick += PutBlackHole;
+        else
+            inputManager.OnClick -= PutBlackHole;
     }
 
     public override void CancelItem()
@@ -52,14 +56,15 @@ public class ItemActiveCreateBlackHole : ActiveItem
 
     private void PutBlackHole(InputAction.CallbackContext context)
     {
-        isDragging = false;
-        if (inputManager)
-            inputManager.OnClick -= PutBlackHole;
-
         var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
         if (pos.x < blackHoleRange.x || pos.x > blackHoleRange.x + blackHoleRange.width
             || pos.y < blackHoleRange.y || pos.y > blackHoleRange.y + blackHoleRange.height)
             return;
+
+        isDragging = false;
+        button.buttonEffect.gameObject.SetActive(false);
+        if (inputManager)
+            inputManager.OnClick -= PutBlackHole;
 
         pos.y = blackHoleRange.y + blackHoleRange.height / 2f;
         pos.z = pos.y;

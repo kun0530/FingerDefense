@@ -11,14 +11,28 @@ public class UiPanelRect : MonoBehaviour
 
     private RectTransform canvasRect;
 
-    private void Start()
+    private void Awake()
     {
         cameraController = Camera.main.GetComponent<GameCameraController>();
+    }
+
+    private void OnEnabel()
+    {
+        cameraController.onScreenChange += AdjustPanelSize;
+    }
+
+    private void OnDisable()
+    {
+        cameraController.onScreenChange -= AdjustPanelSize;
+    }
+
+    private void Start()
+    {
         var canvas = GetComponentInParent<Canvas>();
         canvasRect = canvas.GetComponent<RectTransform>();
         uiPanel = GetComponent<RectTransform>();
 
-        // AdjustPanelSize();
+        AdjustPanelSize();
     }
 
     private void AdjustPanelSize()

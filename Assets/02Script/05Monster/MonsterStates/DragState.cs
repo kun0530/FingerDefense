@@ -12,7 +12,8 @@ public class DragState : IState
 
     private bool isReachHeight;
 
-    private float limitX;
+    private float limitCastleX;
+    private float limitCameraX = 10f;
     
     private TutorialGameTrigger tutorialGameTrigger;
 
@@ -38,11 +39,11 @@ public class DragState : IState
         var stageManager = controller.stageManager;
         if (stageManager)
         {
-            limitX = Utils.GetXFromLinear(stageManager.castleRightTopPos.position, stageManager.castleLeftBottomPos.position, controller.transform.position.y);
+            limitCastleX = Utils.GetXFromLinear(stageManager.castleRightTopPos.position, stageManager.castleLeftBottomPos.position, controller.transform.position.y);
         }
         else
         {
-            limitX = controller.moveTargetPos.x;
+            limitCastleX = controller.moveTargetPos.x;
         }
 
         if (controller.attackTarget)
@@ -59,6 +60,7 @@ public class DragState : IState
         if (Camera.main != null && Camera.main.TryGetComponent<GameCameraController>(out var cameraController))
         {
             cameraController.ZoomOutCamera();
+            limitCameraX = cameraController.transform.position.x + cameraController.targetWidth / 2f;
         }
         
         // 드래그 시작 시점에서 튜토리얼 몬스터인 경우에만 OnDragStarted 호출
@@ -75,14 +77,16 @@ public class DragState : IState
             var pos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
             if (pos.y <= controller.targetFallY)
                 pos.y = controller.targetFallY;
-            if (pos.x <= limitX)
-                pos.x = limitX;
+            if (pos.x <= limitCastleX)
+                pos.x = limitCastleX;
+            if (pos.x >= limitCameraX)
+                pos.x = limitCameraX;
             pos.z = pos.y;
             controller.transform.position = pos;
 
             if (!isReachHeight && pos.y > controller.Status.Data.Height + controller.targetFallY)
             {
-                Handheld.Vibrate();
+                AudioManager.Vibration();
                 isReachHeight = true;
             }
             else if (isReachHeight && pos.y < controller.Status.Data.Height + controller.targetFallY)
@@ -109,11 +113,8 @@ public class DragState : IState
             cameraController.ResetCamera();
         }
 
-        if (controller.transform.position.x <= limitX)
-        {
-            var pos = controller.transform.position;
-            pos.x = limitX;
-            controller.transform.position = pos;
-        }
+        var pos = controller.transform.position;
+        pos.x = Mathf.Clamp(pos.x, limitCastleX, limitCameraX);
+        controller.transform.position = pos;
     }
 }
