@@ -25,7 +25,8 @@ public class EffectController : MonoBehaviour
     public IEffectGettable target;
 
     [Header("사운드")]
-    public AudioClip audioClip;
+    public AudioClip enableAudioClip;
+    public AudioClip disableAudioClip;
     private AudioSource audioSource;
 
     private void Awake()
@@ -36,8 +37,14 @@ public class EffectController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (audioSource && audioClip)
-            audioSource.PlayOneShot(audioClip);
+        if (audioSource && enableAudioClip)
+            audioSource.PlayOneShot(enableAudioClip);
+    }
+
+    private void OnDisable()
+    {
+        if (audioSource && disableAudioClip)
+            audioSource.PlayOneShot(disableAudioClip);
     }
 
     private void Update()
