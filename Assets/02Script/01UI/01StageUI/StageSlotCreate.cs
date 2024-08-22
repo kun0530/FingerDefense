@@ -66,29 +66,33 @@ public class StageSlotCreate : MonoBehaviour
         {
             parent.gameObject.SetActive(true);
         }
-
-        // 특정 스테이지가 클리어되었을 때 다음 패널 활성화
-        if (lastClearedStage == 13005)
+        //클리어한 최고 스테이지가 13001-13005에 해당하는 스테이지면
+        if (lastClearedStage >= 13001 && lastClearedStage <= 13005)
         {
-            ActivatePanel(1);  // stageButtons[1]과 대응하는 패널 활성화
-        }
-        else if (lastClearedStage == 13010)
-        {
-            ActivatePanel(2);  // stageButtons[2]과 대응하는 패널 활성화
-        }
-        else if (lastClearedStage == 13015)
-        {
-            ActivatePanel(3);  // stageButtons[3]과 대응하는 패널 활성화
-        }
-        else if (lastClearedStage == 13020)
-        {
-            ActivatePanel(4);  // stageButtons[4]과 대응하는 패널 활성화
-        }
-        else
-        {
-            // 기본으로 첫 번째 패널을 활성화
             ActivatePanel(0);
         }
+        //클리어한 최고 스테이지가 13006-13010에 해당하는 스테이지면
+        else if (lastClearedStage >= 13006 && lastClearedStage <= 13010)
+        {
+            ActivatePanel(1);
+        }
+        //클리어한 최고 스테이지가 13011-13015에 해당하는 스테이지면
+        else if (lastClearedStage >= 13011 && lastClearedStage <= 13015)
+        {
+            ActivatePanel(2);
+        }
+        //클리어한 최고 스테이지가 13016-13020에 해당하는 스테이지면
+        else if (lastClearedStage >= 13016 && lastClearedStage <= 13020)
+        {
+            ActivatePanel(3);
+        }
+        //클리어한 최고 스테이지가 13021-13025에 해당하는 스테이지면
+        else if (lastClearedStage >= 13021)
+        {
+            ActivatePanel(4);
+        }
+        
+        
     }
     private void ActivatePanel(int panelIndex)
     {
@@ -109,6 +113,9 @@ public class StageSlotCreate : MonoBehaviour
         {
             stageButtons[panelIndex].interactable = true;
         }
+
+        
+        
     }
     private void OnStageButtonClicked(int index)
     {
@@ -192,6 +199,8 @@ public class StageSlotCreate : MonoBehaviour
             CreateBatch(batch, slotParents[parentIndex]);
         }
     }
+    
+    
 
     private void CreateBatch(List<StageData> batch, RectTransform parent)
     {
