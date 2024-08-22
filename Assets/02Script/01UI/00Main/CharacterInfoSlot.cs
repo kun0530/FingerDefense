@@ -1,18 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CharacterInfoSlot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public TextMeshProUGUI characterName;
+    public TextMeshProUGUI characterHp;
+    public TextMeshProUGUI characterAtk;
+    public TextMeshProUGUI characterCoolTime;
+    public TextMeshProUGUI characterSkillName;
+    public TextMeshProUGUI characterSkillDescription;
+   
+    private StringTable stringTable;
+    private PlayerCharacterTable playerCharacterTable;
+    private AssetListTable assetListTable;
+    
+    private void OnEnable()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        stringTable ??= DataTableManager.Get<StringTable>(DataTableIds.String);
+        playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
+        assetListTable ??= DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
     }
 }
