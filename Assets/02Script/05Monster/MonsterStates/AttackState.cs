@@ -80,6 +80,8 @@ public class AttackState : IState
         if (attackTrackEntry != null)
             attackTrackEntry.Complete += AttackEnd;
         isAnimationEnded = false;
+        if (controller.audioSource && controller.attackAudioClip)
+            controller.audioSource.PlayOneShot(controller.attackAudioClip);
     }
 
     private void AttackEnd(TrackEntry entry)
