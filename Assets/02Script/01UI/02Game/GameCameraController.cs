@@ -11,6 +11,8 @@ public class GameCameraController : MonoBehaviour
     {
         FULL_SCREEN_FIXED_WIDTH,
         ASPECT_RATIO,
+        TOP_BOTTOM_LETTER_BOX,
+        LEFT_RIGHT_LETTER_BOX,
         SAFE_AREA_FIXED_WIDTH
     }
     private Camera mainCamera;
@@ -29,6 +31,7 @@ public class GameCameraController : MonoBehaviour
     public float targetWidth = 20f;
     [SerializeField] private float targetHeight = 20f;
     public float bottomY;
+    public float limitAspectRatio = 2f;
 
     [Header("몬스터 드래그 줌 아웃 / 줌 인")]
     [SerializeField] private float zoomOutWidth = 25f;
@@ -62,20 +65,13 @@ public class GameCameraController : MonoBehaviour
     {
         mainCamera = Camera.main;
         currentWidth = targetWidth;
-        
         prevScreenMode = currentScreenMode;
-        currentScreenHeight = Screen.height;
-        currentScreenWidth = Screen.width;
-
-        ChangeResolution();
     }
 
     void OnEnable()
     {
 #if !UNITY_EDITOR
         RenderPipelineManager.beginFrameRendering += OnEndCameraRendering;
-        // RenderPipelineManager.beginContextRendering += OnEndCameraRendering;
-        // RenderPipelineManager.beginCameraRendering
 #endif
     }
     void OnDisable()
@@ -89,21 +85,6 @@ public class GameCameraController : MonoBehaviour
     {
         GL.Clear(true, true, letterBoxColor);
     }
-
-    // private void OnPreCull()
-    // {
-    //     Logger.Log("OnPreCull");
-    // }
-
-    // private void OnPreRender()
-    // {
-    //     Logger.Log("OnPreRender");
-    // }
-
-    // private void OnPostRender()
-    // {
-    //     Logger.Log("OnPostRender");
-    // }
 
     private void Update()
     {
@@ -134,6 +115,10 @@ public class GameCameraController : MonoBehaviour
             {
                 currentScreenMode = defaultPortraitMode;
             }
+            else if (limitAspectRatio < (float)Screen.width / (float)Screen.height) // 한계 종횡비에 대한 대응
+            {
+                currentScreenMode = ScreenMode.LEFT_RIGHT_LETTER_BOX;
+            }
             else // 가로모드에 대한 대응
             {
                 currentScreenMode = defaultLandScapeMode;
@@ -148,6 +133,12 @@ public class GameCameraController : MonoBehaviour
             case ScreenMode.ASPECT_RATIO:
                 AdjustCameraUsingLetterBox();
                 break;
+            case ScreenMode.TOP_BOTTOM_LETTER_BOX:
+                ApplyTopBottomLetterBox();
+                break;
+            case ScreenMode.LEFT_RIGHT_LETTER_BOX:
+                ApplyLeftRightLetterBox();
+                break;
             case ScreenMode.SAFE_AREA_FIXED_WIDTH:
                 AdjustCameraForSafeArea();
                 break;
@@ -161,13 +152,6 @@ public class GameCameraController : MonoBehaviour
     {
         var normalRect = new Rect(0f, 0f, 1f, 1f);
         mainCamera.rect = normalRect;
-
-        // var aspectRatio = (float)Screen.width / (float)Screen.height;
-        // var orthographicSize = currentWidth / (aspectRatio * 2f);
-        // mainCamera.orthographicSize = orthographicSize;
-
-        // var cameraPositionY = bottomY + orthographicSize;
-        // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
     private void AdjustCameraForSafeArea()
@@ -180,13 +164,6 @@ public class GameCameraController : MonoBehaviour
         cameraRect.height /= Screen.height;
 
         mainCamera.rect = cameraRect;
-
-        // var aspectRatio = (float)safeAreaRect.width / (float)safeAreaRect.height;
-        // var orthographicSize = currentWidth / (aspectRatio * 2f);
-        // mainCamera.orthographicSize = orthographicSize;
-
-        // var cameraPositionY = bottomY + orthographicSize;
-        // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
     private void AdjustCameraUsingLetterBox()
@@ -208,25 +185,26 @@ public class GameCameraController : MonoBehaviour
             var adjustedRect = new Rect(0f, (1f - viewportHeight) / 2f, 1f, viewportHeight);
             mainCamera.rect = adjustedRect;
         }
-
-        // var orthographicSize = targetHeight / 2f;
-        // mainCamera.orthographicSize = orthographicSize;
-        // var cameraPositionY = bottomY + orthographicSize;
-        // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, cameraPositionY, mainCamera.transform.position.z);
     }
 
-    private void SetRect(RectTransform rectTransform, Rect rect)
+    private void ApplyTopBottomLetterBox()
     {
-        rectTransform.anchorMin = new Vector2(rect.x, rect.y);
-        rectTransform.anchorMax = new Vector2(rect.x + rect.width, rect.y + rect.height);
+        float screenAspectRatio = (float)Screen.width / (float)Screen.height;
+        float targetAspectRatio = currentWidth / targetHeight;
+        
+        float viewportHeight = screenAspectRatio / targetAspectRatio;
+        var adjustedRect = new Rect(0f, (1f - viewportHeight) / 2f, 1f, viewportHeight);
+        mainCamera.rect = adjustedRect;
     }
 
-    public static void SetLetterBoxRect(RectTransform rectTransform)
+    private void ApplyLeftRightLetterBox()
     {
-        var rect = Camera.main.rect;
+        float screenAspectRatio = (float)Screen.width / (float)Screen.height;
+        float targetAspectRatio = limitAspectRatio;
 
-        rectTransform.anchorMin = new Vector2(rect.x, rect.y);
-        rectTransform.anchorMax = new Vector2(rect.x + rect.width, rect.y + rect.height);
+        float viewportWidth = targetAspectRatio / screenAspectRatio;
+        var adjustedRect = new Rect((1f - viewportWidth) / 2f, 0f, viewportWidth, 1f);
+        mainCamera.rect = adjustedRect;
     }
 
     public void ZoomOutCamera()
