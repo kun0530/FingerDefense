@@ -37,7 +37,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     public BaseSkill dragDeathSkill;
 
     [Header("사운드")]
-    [HideInInspector] public AudioSource audioSource;
+    [HideInInspector] public AudioSource sfxAudioSource;
     public AudioClip moveAudioClip;
     public AudioClip attackAudioClip;
 
@@ -137,7 +137,7 @@ public class MonsterController : CombatEntity<MonsterStatus>, IControllable, ITa
     {
         base.Start();
 
-        audioSource = GameObject.FindWithTag(Defines.Tags.SOUND_MANAGER_TAG)?.GetComponent<SoundManager>()?.sfxAudioSource;
+        sfxAudioSource = GameObject.FindWithTag(Defines.Tags.SOUND_MANAGER_TAG)?.GetComponent<SoundManager>()?.sfxAudioSource;
         stateMachine.Initialize<MoveState>();
     }
 
