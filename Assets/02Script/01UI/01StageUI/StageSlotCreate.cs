@@ -113,10 +113,10 @@ public class StageSlotCreate : MonoBehaviour
     private void OnStageButtonClicked(int index)
     {
         // 특정 스테이지가 클리어되었는지 확인 (5, 10, 15, 20)
-        var isStage5Cleared = gameManager.GameData.StageClear.TryGetValue(5, out var stage5Cleared) && stage5Cleared;
-        var isStage10Cleared = gameManager.GameData.StageClear.TryGetValue(10, out var stage10Cleared) && stage10Cleared;
-        var isStage15Cleared = gameManager.GameData.StageClear.TryGetValue(15, out var stage15Cleared) && stage15Cleared;
-        var isStage20Cleared = gameManager.GameData.StageClear.TryGetValue(20, out var stage20Cleared) && stage20Cleared;
+        var isStage5Cleared = gameManager.GameData.StageClear.TryGetValue(13005, out var stage5Cleared) && stage5Cleared;
+        var isStage10Cleared = gameManager.GameData.StageClear.TryGetValue(13010, out var stage10Cleared) && stage10Cleared;
+        var isStage15Cleared = gameManager.GameData.StageClear.TryGetValue(13015, out var stage15Cleared) && stage15Cleared;
+        var isStage20Cleared = gameManager.GameData.StageClear.TryGetValue(13020, out var stage20Cleared) && stage20Cleared;
 
         // 해당 index에 맞는 slotParents를 활성화할 수 있는지 여부 확인
         bool canActivate = false;
