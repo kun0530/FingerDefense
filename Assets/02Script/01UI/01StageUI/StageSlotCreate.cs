@@ -68,19 +68,19 @@ public class StageSlotCreate : MonoBehaviour
         }
 
         // 특정 스테이지가 클리어되었을 때 다음 패널 활성화
-        if (lastClearedStage == 13005)
+        if (lastClearedStage is >= 13001 and <= 13005)
         {
             ActivatePanel(1);  // stageButtons[1]과 대응하는 패널 활성화
         }
-        else if (lastClearedStage == 13010)
+        else if (lastClearedStage is >= 13006 and <= 13010)
         {
             ActivatePanel(2);  // stageButtons[2]과 대응하는 패널 활성화
         }
-        else if (lastClearedStage == 13015)
+        else if (lastClearedStage is >= 13011 and <= 13015)
         {
             ActivatePanel(3);  // stageButtons[3]과 대응하는 패널 활성화
         }
-        else if (lastClearedStage == 13020)
+        else if (lastClearedStage is >= 13016 and <= 13021)
         {
             ActivatePanel(4);  // stageButtons[4]과 대응하는 패널 활성화
         }
