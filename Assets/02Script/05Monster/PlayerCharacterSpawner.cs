@@ -203,6 +203,7 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
         selectedCharacterIndex = index;
         uiButtonEffect.ButtonRectTransform = characterButtons[selectedCharacterIndex].GetComponent<RectTransform>();
+        uiButtonEffect.gameObject.SetActive(true);
         for (int i = 0; i < spawnPositions.Length; i++)
         {
             spawnPositions[i].SetActive(activePlayerCharacters[i] == null);

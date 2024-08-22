@@ -11,6 +11,18 @@ public class UiSlotButton : MonoBehaviour
     public Image slotImage;
     public TextMeshProUGUI text;
 
+    public UiButtonEffect buttonEffect;
+
+    private void Awake()
+    {
+        buttonEffect = GetComponentInChildren<UiButtonEffect>();
+        if (buttonEffect != null)
+        {
+            buttonEffect.ButtonRectTransform = GetComponent<RectTransform>();
+            buttonEffect.gameObject.SetActive(false);
+        }
+    }
+
     public void SetFillAmountBackground(float amount)
     {
         amount = Mathf.Clamp01(amount);

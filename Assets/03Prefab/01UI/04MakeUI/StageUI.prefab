@@ -133,9 +133,9 @@ MonoBehaviour:
   stagePanel: {fileID: 7813914680428380881}
   scaleFactor: 0.7
   animationDuration: 0.5
-  stageTutorial: {fileID: 0}
-  DeckTutorial: {fileID: 0}
-  SpecialDragTutorial: {fileID: 0}
+  stage1Tutorial: {fileID: 0}
+  stage2Tutorial: {fileID: 0}
+  stage3Tutorial: {fileID: 0}
 --- !u!1 &1388687988424895035
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -559,11 +559,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4598122962965835843}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -295.67593, y: 183.17123}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 22.599976, y: -20.84497}
   m_SizeDelta: {x: 39.048096, y: 40.710205}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!222 &2259794859194132152
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -646,9 +646,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: OptionUI, Assembly-CSharp
-        m_MethodName: OnClickIn
+      - m_Target: {fileID: 5525269783258740845}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4132719113737942235}
+        m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
+        m_MethodName: SetAsFirstSibling
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -764,7 +776,6 @@ MonoBehaviour:
   stageMask: {fileID: 0}
   deckMask: {fileID: 0}
   dragMask: {fileID: 0}
-  stagePanelController: {fileID: 0}
 --- !u!1 &4711337702652453708
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,7 +844,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 16360fa16ffa95a40a3bf0aa909a2a79, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a3e6ff786a0877d42bfb5a8405cc405b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -898,9 +909,9 @@ MonoBehaviour:
   stagePanel: {fileID: 5521378356489580964}
   scaleFactor: 0.7
   animationDuration: 0.5
-  stageTutorial: {fileID: 0}
-  DeckTutorial: {fileID: 0}
-  SpecialDragTutorial: {fileID: 0}
+  stage1Tutorial: {fileID: 0}
+  stage2Tutorial: {fileID: 0}
+  stage3Tutorial: {fileID: 0}
 --- !u!1 &4730742819847577042
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,7 +1419,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ec1ea414600e3b7449a87de58a9040c3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 16360fa16ffa95a40a3bf0aa909a2a79, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1473,9 +1484,9 @@ MonoBehaviour:
   stagePanel: {fileID: 1318309458480952549}
   scaleFactor: 0.7
   animationDuration: 0.5
-  stageTutorial: {fileID: 0}
-  DeckTutorial: {fileID: 0}
-  SpecialDragTutorial: {fileID: 0}
+  stage1Tutorial: {fileID: 0}
+  stage2Tutorial: {fileID: 0}
+  stage3Tutorial: {fileID: 0}
 --- !u!1 &6711507875523150870
 GameObject:
   m_ObjectHideFlags: 0
@@ -1493,7 +1504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6487932927371893621
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2373,9 +2384,9 @@ MonoBehaviour:
   stagePanel: {fileID: 5220668961105977699}
   scaleFactor: 0.7
   animationDuration: 0.5
-  stageTutorial: {fileID: 0}
-  DeckTutorial: {fileID: 0}
-  SpecialDragTutorial: {fileID: 0}
+  stage1Tutorial: {fileID: 0}
+  stage2Tutorial: {fileID: 0}
+  stage3Tutorial: {fileID: 0}
 --- !u!1 &7959183449974624692
 GameObject:
   m_ObjectHideFlags: 0
@@ -2551,7 +2562,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2783319e660dc9a478d51581395f432c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c162eadc9314e9a44828a0fd3d75d0ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2616,9 +2627,9 @@ MonoBehaviour:
   stagePanel: {fileID: 307417429905529465}
   scaleFactor: 0.7
   animationDuration: 0.5
-  stageTutorial: {fileID: 0}
-  DeckTutorial: {fileID: 0}
-  SpecialDragTutorial: {fileID: 0}
+  stage1Tutorial: {fileID: 0}
+  stage2Tutorial: {fileID: 0}
+  stage3Tutorial: {fileID: 0}
 --- !u!1 &8969661843894769653
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public class GameCameraController : MonoBehaviour
         get => prevScreenMode != currentScreenMode;
     }
 
-    [SerializeField] private float targetWidth = 20f;
+    public float targetWidth = 20f;
     [SerializeField] private float targetHeight = 20f;
     public float bottomY;
 

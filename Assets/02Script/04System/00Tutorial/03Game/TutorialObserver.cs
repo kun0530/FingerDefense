@@ -21,7 +21,12 @@ public class TutorialObserver : TutorialBase
 
     public bool isDragLock = false;
     public bool isState = false;
+    public bool isDebuff = false;
     
+    private bool isTutorialComplete = false;
+    
+
+    [SerializeField] private ItemDebuffMonster stop;
     public void Awake()
     {
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
@@ -39,14 +44,28 @@ public class TutorialObserver : TutorialBase
     {
         while (true) // 계속 반복
         {
-            CheckAndAddMonsters();
-            ControlMonsterStates();
+            // monsterSpawnParent가 null인지 확인
+            if (monsterSpawnParent != null)
+            {
+                CheckAndAddMonsters();
+                ControlMonsterStates();
+            }
+            else
+            {
+                Logger.LogWarning("monsterSpawnParent가 null입니다. MonitorMonstersAsync가 중지됩니다.");
+                break; // monsterSpawnParent가 파괴되었으면 반복 중지
+            }
             await UniTask.Delay(100); 
         }
     }
 
     private void CheckAndAddMonsters()
     {
+        if(monsterSpawnParent == null)
+        {
+            return;
+        }
+        
         var monsterTriggers = monsterSpawnParent.GetComponentsInChildren<TutorialGameTrigger>();
         foreach (var monsterTrigger in monsterTriggers)
         {
@@ -62,13 +81,10 @@ public class TutorialObserver : TutorialBase
             monsterTrigger.SetObserver(this);
         }
 
-        if (observedMonsters.Count == 1)
+        if (observedMonsters.Count == 1 && isAdd)
         {
-            if (isAdd)
-            {
-                var controller = GetComponentInParent<TutorialController>();
-                controller.SetNextTutorial();    
-            }
+           var controller = GetComponentInParent<TutorialController>();
+           controller.SetNextTutorial();
         }
     }
 
@@ -83,6 +99,11 @@ public class TutorialObserver : TutorialBase
         {
             controller.SetNextTutorial();
         }
+        
+        if(isDebuff)
+        {
+            controller.SetNextTutorial();
+        }
     }
 
     public override void Exit()
@@ -92,11 +113,21 @@ public class TutorialObserver : TutorialBase
 
     public void OnTargetDisabled(TutorialGameTrigger monsterTrigger)
     {
-        if (observedMonsters.Contains(monsterTrigger))
+        if(observedMonsters.Contains(monsterTrigger))
         {
             observedMonsters.Remove(monsterTrigger);
+
+            if (!isTutorialComplete)
+            {
+                isTutorialComplete = true;
+                NextTutorial();
+            }
+            
         }
-        
+    }
+    
+    public void NextTutorial()
+    {
         var controller = GetComponentInParent<TutorialController>();
         controller.SetNextTutorial();
     }
@@ -130,17 +161,31 @@ public class TutorialObserver : TutorialBase
         foreach (var monsterTrigger in observedMonsters)
         {
             var monsterController = monsterTrigger.gameObject.GetComponent<MonsterController>();
+            var monsterID = monsterController.Status.Data.Id;
             if (monsterController != null)
             {
                 // isDragLock가 true이면 드래그 유형을 보스로 설정
                 if (isDragLock)
                 {
                     monsterController.Status.Data.DragType = (int)MonsterData.DragTypes.BOSS;
+                    if (monsterID == 12031)
+                    {
+                        monsterController.Status.Data.DragType = (int)MonsterData.DragTypes.SPECIAL;    
+                    }
                 }
                 // isState가 true이면 상태를 특정 상태로 전환 (예: PatrolState)
                 if (isState)
                 {
                     monsterController.IsTutorialMonster = false;
+                }
+                
+                if(isDebuff)
+                {
+                    stop.GiveBuff(monsterController);
+                    if(monsterController== null)
+                    {
+                        return;
+                    }
                 }
                 
             }
