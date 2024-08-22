@@ -113,6 +113,9 @@ public class StageSlotCreate : MonoBehaviour
         {
             stageButtons[panelIndex].interactable = true;
         }
+
+        
+        
     }
     private void OnStageButtonClicked(int index)
     {
@@ -196,6 +199,8 @@ public class StageSlotCreate : MonoBehaviour
             CreateBatch(batch, slotParents[parentIndex]);
         }
     }
+    
+    
 
     private void CreateBatch(List<StageData> batch, RectTransform parent)
     {

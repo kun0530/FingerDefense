@@ -206,6 +206,7 @@ public class StageSlot : MonoBehaviour
         if (StageId == 13001)
         {
             LoadStage();
+            SetChapterId();
             return;
         }
 
@@ -218,6 +219,7 @@ public class StageSlot : MonoBehaviour
         if (isStageCleared || isPreviousStageCleared)
         {
             LoadStage();  // 스테이지를 로드하는 공통 메서드 호출
+            SetChapterId(); // 챕터 ID 설정
         }
         else
         {
@@ -228,6 +230,12 @@ public class StageSlot : MonoBehaviour
                 .AddButton("확인", () => { })
                 .Show();
         }
+    }
+
+    private void SetChapterId()
+    {
+        Variables.LoadTable.chapterId = (StageId - 13001) / 5;
+        Logger.Log($"챕터 {Variables.LoadTable.chapterId} 선택");
     }
 
     private void LoadStage()
