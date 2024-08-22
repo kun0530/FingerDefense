@@ -42,6 +42,7 @@ public class SkillArea : MonoBehaviour
 
         isInit = true;
 
+        var isSoundPlayed = false;
         for (int i = 0; i < effectCount; i++)
         {
             var effect = EffectFactory.CreateEffect(skill.AssetId);
@@ -49,6 +50,12 @@ public class SkillArea : MonoBehaviour
             {
                 effect.transform.position = Random.insideUnitCircle * skill.Radius + new Vector2(transform.position.x, transform.position.y);
                 effect.transform.SetParent(transform);
+
+                if (!isSoundPlayed && !effect.isAutoPlay)
+                {
+                    effect.PlayAudioClip(effect.enableAudioClip);
+                    isSoundPlayed = true;
+                }
 
                 effects.Add(effect);
             }
@@ -63,10 +70,17 @@ public class SkillArea : MonoBehaviour
         }
         Buffs.Clear();
 
+        var isSoundPlayed = false;
         foreach (var effect in effects)
         {
             if (effect != null)
                 Destroy(effect);
+
+            if (!isSoundPlayed && !effect.isAutoPlay)
+            {
+                effect.PlayAudioClip(effect.disableAudioClip);
+                isSoundPlayed = true;
+            }
         }
         effects.Clear();
     }
