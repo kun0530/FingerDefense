@@ -122,42 +122,42 @@ public class CrystalPanel : MonoBehaviour
             case 0:
                 ModalWindow.Create()
                     .SetHeader("구매 성공")
-                    .SetBody(90747)
+                    .SetBody(90734)
                     .AddButton("확인", () => { })
                     .Show();
                 break;
             case 1:
                 ModalWindow.Create()
                     .SetHeader("구매 성공")
-                    .SetBody(90748)
+                    .SetBody(90735)
                     .AddButton("확인", () => { })
                     .Show();
                 break;
             case 2:
                 ModalWindow.Create()
                     .SetHeader("구매 성공")
-                    .SetBody(90749)
+                    .SetBody(90736)
                     .AddButton("확인", () => { })
                     .Show();
                 break;
             case 3:
                 ModalWindow.Create()
                     .SetHeader("구매 성공")
-                    .SetBody(90750)
+                    .SetBody(90737)
                     .AddButton("확인", () => { })
                     .Show();
                 break;
             case 4:
                 ModalWindow.Create()
                     .SetHeader("구매 성공")
-                    .SetBody(90751)
+                    .SetBody(90738)
                     .AddButton("확인", () => { })
                     .Show();
                 break;
             case 5:
                 ModalWindow.Create()
                     .SetHeader("구매 성공")
-                    .SetBody(90752)
+                    .SetBody(90739)
                     .AddButton("확인", () => { })
                     .Show();
                 break;
