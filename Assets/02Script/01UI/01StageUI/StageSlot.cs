@@ -14,65 +14,74 @@ public class StageSlot : MonoBehaviour
     public RectTransform monsterSlotParent;
     public RectTransform rewardSlotParent;
 
-    public GameObject monsterSlotPrefab; 
+    public GameObject monsterSlotPrefab;
     public GameObject rewardSlotPrefab;
     public Button DeckButton;
 
     private int StageId;
     private AssetListTable assetListTable;
-    private GameObject stageMask;//스테이지 패널 마스크
+    private GameObject stageMask; //스테이지 패널 마스크
     private GameObject deckMask;
     private GameObject dragMask;
     private GameManager gameManager;
-    
-    [SerializeField]private GameObject deckUI;
+
+    [SerializeField] private GameObject deckUI;
     private StagePanelController stagePanelController;
-    
+
     public void Start()
-    { 
-        stagePanelController=gameObject.GetComponentInParent<StagePanelController>();
+    {
+        stagePanelController = gameObject.GetComponentInParent<StagePanelController>();
         DeckButton.onClick.AddListener(OnClick);
     }
+
     public void SetDeckUI(GameObject deckUI)
     {
         this.deckUI = deckUI;
     }
+
     public void SetAssetListTable(AssetListTable assetListTable)
     {
         this.assetListTable = assetListTable;
     }
+
     public void SetStageMask(GameObject stageMask)
     {
         this.stageMask = stageMask;
     }
+
     public void SetDragMask(GameObject dragMask)
     {
         this.dragMask = dragMask;
     }
+
     public void SetDeckMask(GameObject deckMask)
     {
         this.deckMask = deckMask;
     }
+
     public void GameManager(GameManager gameManager)
     {
         this.gameManager = gameManager;
     }
-    
+
     public void Configure(StageData stageData)
     {
         //해당 슬롯에 스테이지 이름 설정 =>stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 
-        stageNameText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(stageData.StageNameId.ToString());
+        stageNameText.text =
+            DataTableManager.Get<StringTable>(DataTableIds.String).Get(stageData.StageNameId.ToString());
         monsterText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(98921.ToString());
         rewardText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(98931.ToString());
-        
+
         StageId = stageData.StageId;
         if (stageData.Monster1Id != 0) AddMonsterSlot(stageData.Monster1Id);
         if (stageData.Monster2Id != 0) AddMonsterSlot(stageData.Monster2Id);
         if (stageData.Monster3Id != 0) AddMonsterSlot(stageData.Monster3Id);
         if (stageData.Monster4Id != 0) AddMonsterSlot(stageData.Monster4Id);
 
-        if (stageData.Reward1Id != 0 && stageData.Reward1Value != 0) AddRewardSlot(stageData.Reward1Id, stageData.Reward1Value);
-        if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0) AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
+        if (stageData.Reward1Id != 0 && stageData.Reward1Value != 0)
+            AddRewardSlot(stageData.Reward1Id, stageData.Reward1Value);
+        if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0)
+            AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
     }
 
     private void AddMonsterSlot(int monsterId)
@@ -93,7 +102,7 @@ public class StageSlot : MonoBehaviour
             {
                 var monsterSlot = Instantiate(monsterSlotPrefab, monsterSlotParent);
                 var monsterInstance = Instantiate(monsterPrefab, monsterSlot.transform); // monsterSlot의 자식으로 추가
-                monsterInstance.transform.localPosition = new Vector3(0,3,0); // 필요한 경우 위치 조정
+                monsterInstance.transform.localPosition = new Vector3(0, 3, 0); // 필요한 경우 위치 조정
                 monsterInstance.transform.localScale = Vector3.one; // 필요한 경우 스케일 조정
 
                 var monsterText = monsterSlot.GetComponentInChildren<TextMeshProUGUI>();
@@ -108,7 +117,7 @@ public class StageSlot : MonoBehaviour
         {
             Logger.LogWarning($"Prefab name not found for Monster ID: {monsterId}");
         }
-       
+
         // TO-DO: Addressable로 변경 예정 
         // if (assetListTable == null)
         // {
@@ -152,81 +161,62 @@ public class StageSlot : MonoBehaviour
         Image rewardImage = rewardSlot.transform.GetChild(0).GetComponent<Image>();
         TextMeshProUGUI rewardText = rewardSlot.GetComponentInChildren<TextMeshProUGUI>();
 
-        // To-Do 데이터 테이블로 불러올 수 있도록 수정 예정
-        string rewardSprite = assetListTable.Get(rewardId);
-        if(!string.IsNullOrEmpty(rewardSprite))
+        // AssetListTable에서 리워드에 해당하는 프리팹 경로 또는 스프라이트 이름 가져오기
+        string assetPath = assetListTable.Get(rewardId);
+
+        if (rewardId == 409 || rewardId == 410 || rewardId == 416)
+        {
+            // 이미지 비활성화
+            rewardImage.gameObject.SetActive(false);
+
+            // AssetListTable에서 경로를 가져와 게임 오브젝트 스폰
+            if (!string.IsNullOrEmpty(assetPath))
+            {
+                GameObject rewardPrefab = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetPath}");
+                if (rewardPrefab != null)
+                {
+                    // rewardSlot의 자식으로 오브젝트 인스턴스화
+                    var rewardInstance = Instantiate(rewardPrefab, rewardSlot.transform);
+                    var localPosition = Vector3.zero; // 부모의 중심에 배치
+                    rewardInstance.transform.localScale = Vector3.one; // 스케일을 기본값으로 설정
+
+                    // 필요하다면 추가적인 위치 조정
+                    localPosition += new Vector3(0, 3, 0); // 필요한 경우 위치 조정
+                    rewardInstance.transform.localPosition = localPosition;
+                }
+                else
+                {
+                    Logger.LogWarning($"Prefab not found for Reward ID: {rewardId} at path {assetPath}");
+                }
+            }
+            else
+            {
+                Logger.LogWarning($"Asset path not found for Reward ID: {rewardId} in AssetListTable");
+            }
+        }
+        else if (!string.IsNullOrEmpty(assetPath))
         {
             // Resources 폴더에서 스프라이트 로드하여 Image 컴포넌트에 할당
-            Sprite loadedSprite = Resources.Load<Sprite>($"Prefab/06ShopIcon/{rewardSprite}");
+            Sprite loadedSprite = Resources.Load<Sprite>($"Prefab/06ShopIcon/{assetPath}");
             if (loadedSprite != null)
             {
                 rewardImage.sprite = loadedSprite; // 이미지 할당
             }
             else
             {
-                Logger.LogWarning($"Sprite not found for Reward ID: {rewardId} at path Prefab/07GameItem/{rewardSprite}");
+                Logger.LogWarning($"Sprite not found for Reward ID: {rewardId} at path {assetPath}");
             }
         }
         else
         {
-            Logger.LogWarning($"Sprite name not found for Reward ID: {rewardId}");
-        }
-        //해당 RewardID가 409,410,416 이라면 이미지가 아니라 게임오브젝트를 생성 
-        if (rewardId is 409 or 410 or 416)
-        {
-            rewardImage.gameObject.SetActive(false);
-            GameObject rewardPrefab = Resources.Load<GameObject>($"Prefab/07GameItem/{rewardId}");
-            if (rewardPrefab != null)
-            {
-                var rewardInstance = Instantiate(rewardPrefab, rewardSlot.transform);
-                rewardInstance.transform.localPosition = new Vector3(0, 3, 0); // 필요한 경우 위치 조정
-                rewardInstance.transform.localScale = Vector3.one; // 필요한 경우 스케일 조정
-                rewardImage.gameObject.SetActive(false);
-            }
-            else
-            {
-                Logger.LogWarning($"Prefab not found for Reward ID: {rewardId}");
-            }
+            Logger.LogWarning($"Asset name not found for Reward ID: {rewardId}");
         }
 
-
+        // 리워드 값 텍스트 설정
         rewardText.text = $"{rewardValue}";
-        
-        //AssetListTable 업데이트되면 적용 예정 
-        // if (assetListTable == null)
-        // {
-        //     Logger.LogError("AssetListTable is not set.");
-        //     return;
-        // }
-        //
-        // // AssetListTable을 사용하여 프리팹 이름 가져오기
-        // string prefabName = assetListTable.Get(rewardId);
-        // if (!string.IsNullOrEmpty(prefabName))
-        // {
-        //     // Resources.Load를 사용하여 프리팹 로드 ,To-Do: Addressable로 변경 예정
-        //     GameObject rewardPrefab = Resources.Load<GameObject>($"Prefab/04RewardImage/{prefabName}");
-        //     if (rewardPrefab != null)
-        //     {
-        //         var rewardSlot = Instantiate(rewardSlotPrefab, rewardSlotParent);
-        //         var rewardInstance = Instantiate(rewardPrefab, rewardSlot.transform); 
-        //         rewardInstance.transform.localPosition = new Vector3(0,3,0); // 필요한 경우 위치 조정
-        //         rewardInstance.transform.localScale = Vector3.one; // 필요한 경우 스케일 조정
-        //
-        //         var rewardText = rewardSlot.GetComponentInChildren<TextMeshProUGUI>();
-        //         rewardText.text = rewardValue.ToString();
-        //     }
-        //     else
-        //     {
-        //         Logger.LogWarning($"Prefab not found for {prefabName}");
-        //     }
-        // }
-        // else
-        // {
-        //     Logger.LogWarning($"Prefab name not found for Reward ID: {rewardId}");
-        // }
-        
     }
-    
+
+
     public void OnClick()
     {
         // 첫 번째 스테이지인 경우 무조건 플레이 가능하게 처리
@@ -241,11 +231,12 @@ public class StageSlot : MonoBehaviour
         bool isStageCleared = gameManager.GameData.StageClear.TryGetValue(StageId, out bool isCleared) && isCleared;
 
         // 이전 스테이지가 클리어되었는지 확인 (첫 번째 스테이지는 예외 처리됨)
-        bool isPreviousStageCleared = gameManager.GameData.StageClear.TryGetValue(StageId - 1, out bool previousCleared) && previousCleared;
+        bool isPreviousStageCleared =
+            gameManager.GameData.StageClear.TryGetValue(StageId - 1, out bool previousCleared) && previousCleared;
 
         if (isStageCleared || isPreviousStageCleared)
         {
-            LoadStage();  // 스테이지를 로드하는 공통 메서드 호출
+            LoadStage(); // 스테이지를 로드하는 공통 메서드 호출
             SetChapterId(); // 챕터 ID 설정
         }
         else
@@ -292,6 +283,4 @@ public class StageSlot : MonoBehaviour
             Logger.Log($"스테이지 {StageId} 선택");
         }
     }
-
-
 }

@@ -225,12 +225,12 @@ public class MonsterSpawner : MonoBehaviour
                     monsterGo.ResetMonsterData();
                 }
             
-                while (Time.timeScale == 0)
-                {
-                    await UniTask.Yield(PlayerLoopTiming.Update);
-                }
+                // while (Time.timeScale == 0f)
+                // {
+                //     await UniTask.Yield(PlayerLoopTiming.Update);
+                // }
 
-                await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm));
+                await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm), ignoreTimeScale: false, cancellationToken: this.GetCancellationTokenOnDestroy());
             }
 
             isWaveTerm = true;

@@ -148,6 +148,14 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             spineInstance = null;
         }
         
+        if(gradeParent != null)
+        {
+            foreach (Transform child in gradeParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        
         var elementImage = elementParent.GetComponent<Image>();
         if (elementImage != null)
         {
@@ -163,6 +171,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             PowerImage.gameObject.SetActive(false);
         }
+       
         
         // 슬롯 재활용 가능 상태로 설정
         ChoicePanel.gameObject.SetActive(false);

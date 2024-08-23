@@ -244,8 +244,9 @@ public class StageManager : MonoBehaviour
         TimeScaleController.SetTimeScale(1f);
     }
     
-    public void LobbyScene()
+    public void LobbyScene(bool isNextStage)
     {
+        Variables.LoadTable.isNextStage = isNextStage;
         SceneManager.LoadScene(1);
         TimeScaleController.SetTimeScale(1f);
         Variables.LoadTable.ItemId.Clear();
