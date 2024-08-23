@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,11 @@ public class MonsterGimmickPanel : MonoBehaviour
     public Button[] GimmickRangeUpgradeButtons; // UpStatType = 0
     public Button[] GimmickDamageUpgradeButtons; // UpStatType = 1
     public Button[] GimmickDurationUpgradeButtons; // UpStatType = 2
-
+    
+    public TextMeshProUGUI GimmickRangeLevelText;
+    public TextMeshProUGUI GimmickDamageLevelText;
+    public TextMeshProUGUI GimmickDurationLevelText;
+    
     private void Awake()
     {
         upgradeTable ??= DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
@@ -21,6 +26,9 @@ public class MonsterGimmickPanel : MonoBehaviour
     private void Start()
     {
         SetupGimmickUpgradeButtons();
+        GimmickRangeLevelText.text = stringTable.Get(99942.ToString());
+        GimmickDamageLevelText.text = stringTable.Get(99952.ToString());
+        GimmickDurationLevelText.text = stringTable.Get(99962.ToString());
     }
 
     private void SetupGimmickUpgradeButtons()
