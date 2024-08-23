@@ -18,6 +18,8 @@ namespace Variables
         public static int[] characterIds = new int[8];
 
         public static int chapterId;
+
+        public static bool isNextStage = false;
     }
 
 }
