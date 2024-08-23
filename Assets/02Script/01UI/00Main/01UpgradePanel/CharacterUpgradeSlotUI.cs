@@ -76,6 +76,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         }
 
         powerText.text = $"{characterData.Power}";
+        powerText.gameObject.transform.SetAsLastSibling();
 
         ChoicePanel.transform.SetAsLastSibling();
         ChoiceButton.onClick.AddListener(OnClick);
