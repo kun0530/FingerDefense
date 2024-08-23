@@ -149,18 +149,27 @@ public class StageSlot : MonoBehaviour
     private void AddRewardSlot(int rewardId, int rewardValue)
     {
         GameObject rewardSlot = Instantiate(rewardSlotPrefab, rewardSlotParent);
-        Image rewardImage = rewardSlot.GetComponentInChildren<Image>();
+        Image rewardImage = rewardSlot.transform.GetChild(0).GetComponent<Image>();
         TextMeshProUGUI rewardText = rewardSlot.GetComponentInChildren<TextMeshProUGUI>();
 
         // To-Do 데이터 테이블로 불러올 수 있도록 수정 예정
         string rewardSprite = assetListTable.Get(rewardId);
         if(!string.IsNullOrEmpty(rewardSprite))
         {
-            rewardImage.sprite = Resources.Load<Sprite>($"Prefab/07GameItem/{rewardSprite}");
+            // Resources 폴더에서 스프라이트 로드하여 Image 컴포넌트에 할당
+            Sprite loadedSprite = Resources.Load<Sprite>($"Prefab/06ShopIcon/{rewardSprite}");
+            if (loadedSprite != null)
+            {
+                rewardImage.sprite = loadedSprite; // 이미지 할당
+            }
+            else
+            {
+                Logger.LogWarning($"Sprite not found for Reward ID: {rewardId} at path Prefab/07GameItem/{rewardSprite}");
+            }
         }
         else
         {
-            Logger.LogWarning($"Sprite not found for Reward ID: {rewardId}");
+            Logger.LogWarning($"Sprite name not found for Reward ID: {rewardId}");
         }
         
 
