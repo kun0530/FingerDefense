@@ -13,8 +13,7 @@ public class CharacterInfoSlot : MonoBehaviour
     
     //스킬이 있을때만 활성화 시킬 목록
     public TextMeshProUGUI characterSkillText;
-    public Image characterImage;
-    
+    public Image SkillImage;
     
     private StringTable stringTable;
     private PlayerCharacterTable playerCharacterTable;
@@ -42,13 +41,12 @@ public class CharacterInfoSlot : MonoBehaviour
         // 스킬 정보 설정
         string skillName = stringTable.Get(characterData.SkillName.ToString());
         string skillDescription = stringTable.Get(characterData.SkillText.ToString());
-
+        
         if (!string.IsNullOrEmpty(skillName) && !string.IsNullOrEmpty(skillDescription) && characterData.SkillName != 0 && characterData.SkillText != 0)
         {
             characterSkillName.text = skillName;
             characterSkillDescription.text = skillDescription;
             characterSkillText.gameObject.SetActive(true);
-            characterImage.gameObject.SetActive(true);
         }
         else
         {
@@ -56,7 +54,29 @@ public class CharacterInfoSlot : MonoBehaviour
             characterSkillName.text = "";
             characterSkillDescription.text = "";
             characterSkillText.gameObject.SetActive(false);
-            characterImage.gameObject.SetActive(false);
+        }
+        
+        var skillImage = SkillImage.GetComponent<Image>();
+        var skillId = assetListTable.Get(characterData.SkillIcon);
+
+        if (skillImage != null && !string.IsNullOrEmpty(skillId))
+        {
+            var skillSprite = Resources.Load<Sprite>($"Prefab/09SkillIcon/{skillId}");
+            if (skillSprite != null)
+            {
+                skillImage.sprite = skillSprite;
+                skillImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                Debug.LogError($"Skill sprite not found for skill ID: {skillId}");
+                skillImage.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Skill ID is empty or skillImage is null.");
+            skillImage.gameObject.SetActive(false);
         }
     }
 
