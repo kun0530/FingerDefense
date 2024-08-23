@@ -1,14 +1,12 @@
-using System;
-using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
+public class ItemSlotUI : MonoBehaviour
 {
     public Image itemIcon;
     public TextMeshProUGUI itemCount;
+    public Button itemButton;
     public RectTransform ChoicePanel;
 
     public delegate void OnClickItemSlot(ItemSlotUI itemSlot);
@@ -17,12 +15,7 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
     public int ItemId { get; private set; }
     public Sprite ItemSprite => itemIcon.sprite;
 
-    private int originalLimit;
-    private bool isPressed = false;
-    private bool isLongPress = false;
-
-    public Action<ItemSlotUI> OnLongPress;
-    public Action OnLongPressRelease;
+    private int originalLimit; 
 
     public void Setup(ItemData item, string assetPath, int count)
     {
@@ -35,9 +28,6 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
             if (sprite != null)
             {
                 itemIcon.sprite = sprite;
-                var color = itemIcon.color;
-                color.a = 1f; 
-                itemIcon.color = color;
             }
             originalLimit = item.Limit;
             itemCount.text = count.ToString();
@@ -47,7 +37,12 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
             itemIcon.sprite = null;
             itemCount.text = "";
         }
-        
+
+        itemButton.onClick.RemoveAllListeners();
+        itemButton.onClick.AddListener(() =>
+        {
+            onClickItemSlot?.Invoke(this);
+        });
     }
 
     public void SetItemSlot(int itemId, Sprite sprite, int count)
@@ -55,9 +50,7 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
         ItemId = itemId;
         itemIcon.sprite = sprite;
         itemCount.text = count.ToString();
-        var color = itemIcon.color;
-        color.a = 1f; 
-        itemIcon.color = color;
+        
         
         ChoicePanel.SetAsLastSibling();
     }
@@ -67,10 +60,13 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
         ItemId = 0;
         itemIcon.sprite = null;
         itemCount.text = "";
-        var color = itemIcon.color;
-        color.a = 0f;
-        itemIcon.color = color;
         ChoicePanel.gameObject.SetActive(false);
+        ToggleInteractable(true);
+    }
+
+    public void ToggleInteractable(bool isInteractable)
+    {
+        itemButton.interactable = isInteractable;
     }
 
     public int GetOriginalLimit()
@@ -89,39 +85,5 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
         itemCount.text = currentCount.ToString();
         
     }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        isPressed = false;
-
-        if (isLongPress)
-        {
-            OnLongPressRelease?.Invoke();
-        }
-        else
-        {
-            // 일반 터치 시 슬롯 클릭 처리
-            onClickItemSlot?.Invoke(this);
-        }
-
-        isLongPress = false;    
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        isPressed = true;
-        isLongPress = false;
-
-        PressRoutine().Forget(); // PressRoutine 메서드 비동기 실행    
-    }
     
-    private async UniTaskVoid PressRoutine()
-    {
-        await UniTask.Delay(500); // 500ms 이상 누르면 롱터치로 인식
-        if (isPressed)
-        {
-            isLongPress = true;
-            OnLongPress?.Invoke(this); // 롱터치 시 설명창만 활성화
-        }
-    }
 }

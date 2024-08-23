@@ -70,15 +70,15 @@ public class GameCameraController : MonoBehaviour
 
     void OnEnable()
     {
-
-        RenderPipelineManager.beginFrameRendering += OnBeginCameraRendering;
-
+#if !UNITY_EDITOR
+        RenderPipelineManager.beginFrameRendering += OnEndCameraRendering;
+#endif
     }
     void OnDisable()
     {
-
-        RenderPipelineManager.beginFrameRendering -= OnBeginCameraRendering;
-
+#if !UNITY_EDITOR
+        RenderPipelineManager.beginFrameRendering -= OnEndCameraRendering;
+#endif
     }
 
     private void OnBeginCameraRendering(ScriptableRenderContext context, Camera[] camera)

@@ -20,7 +20,6 @@ public class DragInfoSlot : MonoBehaviour
 
         // 드래그 레벨에 따라 잠금 상태를 업데이트합니다.
         UpdateLockState(dragLevel == (int)GameData.MonsterDrag.LOCK);
-        UpdateUnavailableState(dragLevel == (int)GameData.MonsterDrag.ACTIVE);
     }
 
     private void Start()
@@ -46,17 +45,7 @@ public class DragInfoSlot : MonoBehaviour
                 .Show();
             return;
         }
-
-        if (dragLevel == (int)GameData.MonsterDrag.ACTIVE)
-        {
-            ModalWindow.Create()
-                .SetHeader("구매불가")
-                .SetBody("이 몬스터의 드래그 기능은 이미 활성화되었습니다.")
-                .AddButton("확인", () => { })
-                .Show();
-            return;
-        }
-
+        
         var cost = int.Parse(monsterCost.text);
         var playerGold = GameManager.instance.GameData.Gold;
 
@@ -88,17 +77,10 @@ public class DragInfoSlot : MonoBehaviour
 
     public void UpdateCostColor()
     {
-        if (int.TryParse(monsterCost.text, out var cost))
-        {
-            var playerGold = GameManager.instance.GameData.Gold;
-            monsterCost.color = playerGold >= cost ? Color.black : Color.red;
-        }
-        else
-        {
-            // 정수로 변환할 수 없는 경우, 기본 색상 설정
-            monsterCost.color = Color.red;
-        }
-        GameManager.instance.GameData.NotifyObservers(ResourceType.Gold, GameManager.instance.GameData.Gold);
+        var cost = int.Parse(monsterCost.text);
+        var playerGold = GameManager.instance.GameData.Gold;
+
+        monsterCost.color = playerGold >= cost ? Color.black : Color.red;
     }
 
     private void UpdateInteractive()
@@ -109,15 +91,5 @@ public class DragInfoSlot : MonoBehaviour
         monsterCost.color = Color.black;
         buyImage.gameObject.SetActive(true);
         buyImage.gameObject.transform.SetAsFirstSibling();
-    }
-
-    public void UpdateUnavailableState(bool isUnavailable)
-    {
-        if (isUnavailable)
-        {
-            monsterCost.text = "구매 불가";
-            monsterCost.color = Color.red;
-            buyButton.interactable = false; // 버튼 비활성화
-        }
     }
 }

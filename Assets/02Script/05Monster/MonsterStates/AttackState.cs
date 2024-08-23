@@ -80,8 +80,6 @@ public class AttackState : IState
         if (attackTrackEntry != null)
             attackTrackEntry.Complete += AttackEnd;
         isAnimationEnded = false;
-        if (controller.sfxAudioSource && controller.attackAudioClip)
-            controller.sfxAudioSource.PlayOneShot(controller.attackAudioClip);
     }
 
     private void AttackEnd(TrackEntry entry)

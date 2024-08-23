@@ -25,8 +25,6 @@ public class DeckSlotController : MonoBehaviour
     public TutorialController DeckTutorialController;
     private int maxCharacterSlots = 3;
     
-    public CharacterInfoSlot characterInfoSlot;
-    
     private void Awake()
     {
         playerCharacterTable = DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
@@ -46,6 +44,7 @@ public class DeckSlotController : MonoBehaviour
         closeButton.onClick.AddListener(() =>
         {
             // 할당 되어있는 값을 초기화 시킨다.
+            Variables.LoadTable.StageId = 0;
             Logger.Log("스테이지 선택 화면으로 이동합니다.");
         });
     }
@@ -107,9 +106,6 @@ public class DeckSlotController : MonoBehaviour
                 slot.SetLocked(false);
                 slot.ChoicePanel.SetActive(false);
                 slot.OnSlotClick = HandleCharacterSlotClick;
-                slot.OnLongPress = HandleLongPressRelease;
-                slot.OnLongPressRelease = HandleLongPressReleaseComplete;
-                
             }
             else
             {
@@ -132,8 +128,6 @@ public class DeckSlotController : MonoBehaviour
                 var characterSlot = Instantiate(characterSlotPrefab, filterringSlotParent);
                 characterSlot.SetCharacterSlot(characterData);
                 characterSlot.OnSlotClick = HandleCharacterSlotClick;
-                characterSlot.OnLongPress = HandleLongPressRelease;
-                characterSlot.OnLongPressRelease = HandleLongPressReleaseComplete;
                 filterSlots.Add(characterSlot);
             }
             else
@@ -158,62 +152,52 @@ public class DeckSlotController : MonoBehaviour
             Logger.Log("이 슬롯은 잠겨있어 캐릭터를 배치할 수 없습니다.");
             return; // 슬롯이 잠겨있다면 아무 동작도 하지 않음
         }
-        
-        if (!clickedSlot.isLongPress) 
+
+        if (clickedSlot.transform.parent == filterringSlotParent)
         {
-            if (clickedSlot.transform.parent == filterringSlotParent)
+            if (addedCharacters.Contains(clickedSlot.characterData.Id))
             {
-                if (clickedSlot.characterData != null && addedCharacters.Contains(clickedSlot.characterData.Id))
-                {
-                    Logger.Log("이미 추가된 캐릭터입니다.");
-                    return;
-                }
-
-                if (addedCharacters.Count >= 8)
-                {
-                    Logger.Log("최대 8개까지만 추가 가능합니다.");
-                    return;
-                }
-
-                foreach (var slot in characterSlots)
-                {
-                    // 빈 슬롯에 캐릭터를 배치
-                    if (slot.characterData == null && !slot.LockImage.gameObject.activeSelf)
-                    {
-                        slot.SetCharacterSlot(clickedSlot.characterData);
-                        slot.ChoicePanel.SetActive(false);
-                        if (clickedSlot.characterData != null) addedCharacters.Add(clickedSlot.characterData.Id);
-                        activeChoicePanelSlots.Add(clickedSlot);
-                        UpdateChoicePanels();
-                        break;
-                    }
-                }
+                Logger.Log("이미 추가된 캐릭터입니다.");
+                return;
             }
-            else if (clickedSlot.transform.parent == characterSlotParent)
+
+            if (addedCharacters.Count >= 8)
             {
-                // 선택 해제 시, 해당 슬롯을 초기화하여 재사용
-                var originalSlot = activeChoicePanelSlots.Find(slot => slot.characterData == clickedSlot.characterData);
-                if (originalSlot != null)
+                Logger.Log("최대 8개까지만 추가 가능합니다.");
+                return;
+            }
+
+            foreach (var slot in characterSlots)
+            {
+                // 빈 슬롯에 캐릭터를 배치
+                if (slot.characterData == null && !slot.LockImage.gameObject.activeSelf)
                 {
-                    originalSlot.ChoicePanel.SetActive(true);
-                    activeChoicePanelSlots.Remove(originalSlot);
-                    addedCharacters.Remove(originalSlot.characterData.Id);
+                    slot.SetCharacterSlot(clickedSlot.characterData);
+                    slot.ChoicePanel.SetActive(false);
+                    clickedSlot.ChoiceButton.interactable = false;
+                    addedCharacters.Add(clickedSlot.characterData.Id);
+                    activeChoicePanelSlots.Add(clickedSlot);
                     UpdateChoicePanels();
+                    break;
                 }
-
-                clickedSlot.ClearSlot();  // 데이터를 초기화하고 슬롯을 재사용 가능 상태로 만듭니다.
-                characterInfoSlot.gameObject.SetActive(false);
             }
-    
         }
-        else
+        else if (clickedSlot.transform.parent == characterSlotParent)
         {
-            characterInfoSlot.gameObject.SetActive(true);
-            characterInfoSlot.SetCharacterInfo(clickedSlot.characterData);
+            // 선택 해제 시, 해당 슬롯을 초기화하여 재사용
+            var originalSlot = activeChoicePanelSlots.Find(slot => slot.characterData == clickedSlot.characterData);
+            if (originalSlot != null)
+            {
+                originalSlot.ChoicePanel.SetActive(true);
+                originalSlot.ChoiceButton.interactable = true;
+                activeChoicePanelSlots.Remove(originalSlot);
+                addedCharacters.Remove(originalSlot.characterData.Id);
+                UpdateChoicePanels();
+            }
+
+            clickedSlot.ClearSlot();  // 데이터를 초기화하고 슬롯을 재사용 가능 상태로 만듭니다.
         }
-        
-        
-        
+
         UpdateCharacterIds();
     }
     
@@ -325,6 +309,7 @@ public class DeckSlotController : MonoBehaviour
                     var originalSlot = filterSlots.FirstOrDefault(s => s.characterData.Id == characterId);
                     if (originalSlot != null)
                     {
+                        originalSlot.ChoiceButton.interactable = false;
                         activeChoicePanelSlots.Add(originalSlot);
                     }
                 }
@@ -338,15 +323,5 @@ public class DeckSlotController : MonoBehaviour
         UpdateChoicePanels();
         SortCharacterSlots();
     }
-    private void HandleLongPressRelease(CharacterSlotUI clickedSlot)
-    {
-        // 롱터치 후 상태창 활성화
-        characterInfoSlot.gameObject.SetActive(true);
-        characterInfoSlot.SetCharacterInfo(clickedSlot.characterData);
-    }
-    private void HandleLongPressReleaseComplete()
-    {
-        // 롱터치 해제 시 상태창 비활성화
-        characterInfoSlot.gameObject.SetActive(false);
-    }
+
 }

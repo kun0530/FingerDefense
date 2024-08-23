@@ -119,7 +119,7 @@ public class Projectile : MonoBehaviour
                         return;
                     }
                     targetPos = target.transform.position + targetOffsetPos;
-                    prevTargetPos = targetPos;
+                    prevTargetPos = target.transform.position;
                 }
                 break;
         }

@@ -123,7 +123,7 @@ public class SoundManager : MonoBehaviour
         if (isMute)
             AudioManager.SfxVolume = AudioManager.muteVolume;
         else
-            SetSfxVolume(sfxSlider.value);
+            SetBgmVolume(sfxSlider.value);
     }
 
     public void SaveAudioValue()

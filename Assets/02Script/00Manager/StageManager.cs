@@ -25,9 +25,6 @@ public class StageManager : MonoBehaviour
     public Transform castleRightTopPos;
     public Transform castleLeftBottomPos;
 
-    public SoundManager soundManager;
-    public AudioClip castleDamageAudioClip;
-
     private float castleMaxHp;
     private float castleHp;
     private float CastleHp
@@ -151,13 +148,11 @@ public class StageManager : MonoBehaviour
         EarnedGold = 0;
     }
     
+    
     public void DamageCastle(float damage)
     {
         if (damage <= 0f)
             return;
-
-        if (soundManager?.sfxAudioSource && castleDamageAudioClip)
-            soundManager.sfxAudioSource.PlayOneShot(castleDamageAudioClip);
 
         if (CastleShield > 0f)
         {
@@ -217,15 +212,7 @@ public class StageManager : MonoBehaviour
         currentState = (StageState)state;
         gameUiManager.SetStageStateUi(currentState);
 
-        if (currentState == StageState.PLAYING)
-        {
-            TimeScaleController.SetTimeScale(1f);
-        }
-        else
-        {
-            TimeScaleController.SetTimeScale(0f);
-            soundManager?.sfxAudioSource.Stop();
-        }
+        TimeScaleController.SetTimeScale(currentState == StageState.PLAYING ? 1f : 0f);
 
         switch (currentState)
         {

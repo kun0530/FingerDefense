@@ -12,12 +12,12 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
     public Sprite[] elementImages;
     
     public RectTransform elementParent;
+    public RectTransform skillParent;
     public RectTransform gradeParent;
     public RectTransform classParent;
     
     public GameObject ChoicePanel;
     public Button ChoiceButton;
-    public Image SkillIcon;
     
     public delegate void SlotClickDelegate(CharacterUpgradeSlotUI slot);
     public SlotClickDelegate OnSlotClick;
@@ -28,13 +28,10 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
     private SkillTable skillTable;
     public TextMeshProUGUI upgradeLevelText;
 
-    public TextMeshProUGUI powerText;
-    
     private void OnEnable()
     {
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
-        
     }
     
     public void SetCharacterSlot(PlayerCharacterData characterData)
@@ -67,17 +64,10 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         }
         upgradeLevelText.text = $"+ {characterData.Plus}";
         
-        var skillImage = SkillIcon.GetComponent<Image>();
-        var skillId = assetListTable.Get(characterData.SkillIcon);
-        if(skillImage != null && !string.IsNullOrEmpty(skillId))
-        {
-            skillImage.sprite = Resources.Load<Sprite>($"Prefab/09SkillIcon/{skillId}");
-            skillImage.gameObject.SetActive(true);
-        }
-
-        powerText.text = $"{characterData.Power}";
+        
 
         ChoicePanel.transform.SetAsLastSibling();
+
         ChoiceButton.onClick.AddListener(OnClick);
     }
     private void OnClick()
