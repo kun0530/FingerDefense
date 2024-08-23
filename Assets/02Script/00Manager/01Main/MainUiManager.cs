@@ -55,10 +55,10 @@ public class MainUiManager : MonoBehaviour
         
         if(Variables.LoadTable.isNextStage)
         {
-            StageUI.SetActive(true);
-            StageUI.transform.SetAsLastSibling();
-            Variables.LoadTable.isNextStage = false;
+            DeckUI.SetActive(true);
+            DeckUI.transform.SetAsLastSibling();
         }
+        
         
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
         {

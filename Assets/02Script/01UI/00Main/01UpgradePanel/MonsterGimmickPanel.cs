@@ -148,7 +148,7 @@ public class MonsterGimmickPanel : MonoBehaviour
                 .AddButton("확인", () => { })
                 .Show();
         }
-        else if (stageClearNum < upgradeData.NeedClearStage)
+        else if (Variables.LoadTable.StageId < upgradeData.NeedClearStage)
         {
             ModalWindow.Create()
                 .SetHeader("스테이지 클리어 필요")
