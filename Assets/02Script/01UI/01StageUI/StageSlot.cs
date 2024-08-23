@@ -153,15 +153,16 @@ public class StageSlot : MonoBehaviour
         TextMeshProUGUI rewardText = rewardSlot.GetComponentInChildren<TextMeshProUGUI>();
 
         // To-Do 데이터 테이블로 불러올 수 있도록 수정 예정
-        Sprite rewardSprite = Resources.Load<Sprite>($"Rewards/{rewardId}") ? Resources.Load<Sprite>($"Rewards/{rewardId}") : Resources.Load<Sprite>("PlaceholderImage");
-        if (rewardSprite != null)
+        string rewardSprite = assetListTable.Get(rewardId);
+        if(!string.IsNullOrEmpty(rewardSprite))
         {
-            rewardImage.sprite = rewardSprite;
+            rewardImage.sprite = Resources.Load<Sprite>($"Prefab/07GameIcon/{rewardSprite}");
         }
         else
         {
-            Logger.LogWarning($"Reward image not found for ID: {rewardId}");
+            Logger.LogWarning($"Sprite not found for Reward ID: {rewardId}");
         }
+        
 
         rewardText.text = $"{rewardValue}";
         
