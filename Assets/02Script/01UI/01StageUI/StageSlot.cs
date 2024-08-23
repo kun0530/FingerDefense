@@ -171,7 +171,24 @@ public class StageSlot : MonoBehaviour
         {
             Logger.LogWarning($"Sprite name not found for Reward ID: {rewardId}");
         }
-        
+        //해당 RewardID가 409,410,416 이라면 이미지가 아니라 게임오브젝트를 생성 
+        if (rewardId is 409 or 410 or 416)
+        {
+            rewardImage.gameObject.SetActive(false);
+            GameObject rewardPrefab = Resources.Load<GameObject>($"Prefab/07GameItem/{rewardId}");
+            if (rewardPrefab != null)
+            {
+                var rewardInstance = Instantiate(rewardPrefab, rewardSlot.transform);
+                rewardInstance.transform.localPosition = new Vector3(0, 3, 0); // 필요한 경우 위치 조정
+                rewardInstance.transform.localScale = Vector3.one; // 필요한 경우 스케일 조정
+                rewardImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                Logger.LogWarning($"Prefab not found for Reward ID: {rewardId}");
+            }
+        }
+
 
         rewardText.text = $"{rewardValue}";
         
