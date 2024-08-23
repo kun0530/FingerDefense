@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4680650936785128739}
   - component: {fileID: 2465198326945328255}
   - component: {fileID: 7498758046750913700}
+  - component: {fileID: 8075394378332285115}
   m_Layer: 0
   m_Name: 217Fire Ball
   m_TagString: Untagged
@@ -77,6 +78,41 @@ MonoBehaviour:
   - {fileID: 2002340249453518022, guid: e863594e2e3de69469fb91a4b84bb175, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &8075394378332285115
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314766441749769380}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.47281492}
+  serializedVersion: 2
+  m_Radius: 0.97281504
 --- !u!1001 &1297325756387583080
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -177,7 +213,8 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7638010996800019827, guid: 9bd54968354c16e44ae821e85e7f8bd8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

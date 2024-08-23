@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6618111472587765763}
   - component: {fileID: 1037515338939271729}
   - component: {fileID: 7775634332396616452}
+  - component: {fileID: 1762390730873233017}
   m_Layer: 0
   m_Name: 214Energy Ball
   m_TagString: Untagged
@@ -77,6 +78,41 @@ MonoBehaviour:
   - {fileID: 6002612636095783793, guid: 0f871c51b740ed240a346e743233b19b, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &1762390730873233017
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5369804645875794579}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.116024435, y: 0.52}
+  serializedVersion: 2
+  m_Radius: 0.87173414
 --- !u!1001 &1622173250546513168
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,7 +225,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6185780758814626538, guid: b23fce14ddd22254fadd9fe322e3643b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
