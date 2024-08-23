@@ -182,4 +182,25 @@ public class Projectile : MonoBehaviour
             }
         }
     }
+
+    // 블랙홀에 대한 대응
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (targetPosOption == TargetPosOption.INITIAL)
+            return;
+
+        if (!target && !target.activeSelf)
+            return;
+
+        if (other.TryGetComponent<BlackHole>(out var blackHole)
+            && target.TryGetComponent<MonsterController>(out var monster))
+        {
+            if (blackHole.targetMonsters.Contains(monster))
+            {
+                skill?.UseSkill(target, isBuffApplied);
+                Destroy(gameObject);
+                CreateImpactEffect();
+            }
+        }
+    }
 }
