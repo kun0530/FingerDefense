@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4175752133662860159}
   - component: {fileID: 2381467453188725483}
   - component: {fileID: 3610869265737495896}
+  - component: {fileID: 1037610530012028230}
   m_Layer: 0
   m_Name: 206Sonar
   m_TagString: Untagged
@@ -77,6 +78,41 @@ MonoBehaviour:
   - {fileID: 8392109616443442060, guid: dd17f2f18199bcf439c089c047e7f294, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &1037610530012028230
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2571822239935975186}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.39260402, y: -0.08637339}
+  serializedVersion: 2
+  m_Radius: 1.2459495
 --- !u!1001 &1621634284655783678
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -185,7 +221,8 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: -0.08520424
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7001291729576727694, guid: 7c0df69d2db493b429a5171a93bb49cf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
