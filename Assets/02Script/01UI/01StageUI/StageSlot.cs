@@ -156,7 +156,7 @@ public class StageSlot : MonoBehaviour
         string rewardSprite = assetListTable.Get(rewardId);
         if(!string.IsNullOrEmpty(rewardSprite))
         {
-            rewardImage.sprite = Resources.Load<Sprite>($"Prefab/07GameIcon/{rewardSprite}");
+            rewardImage.sprite = Resources.Load<Sprite>($"Prefab/07GameItem/{rewardSprite}");
         }
         else
         {
