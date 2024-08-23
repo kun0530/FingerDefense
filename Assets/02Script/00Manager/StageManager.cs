@@ -7,7 +7,14 @@ using UnityEngine.UI;
 
 public enum StageState
 {
-    None, Playing, GameOver, GameClear
+    NONE,
+    TUTORIAL,
+    PLAYING,
+    PAUSE,
+    OPTION,
+    MONSTER_INFO,
+    GAME_OVER,
+    GAME_CLEAR
 }
 
 [DefaultExecutionOrder(-1)]
@@ -17,6 +24,9 @@ public class StageManager : MonoBehaviour
     public List<GameObject> castleImages;
     public Transform castleRightTopPos;
     public Transform castleLeftBottomPos;
+
+    public SoundManager soundManager;
+    public AudioClip castleDamageAudioClip;
 
     private float castleMaxHp;
     private float castleHp;
@@ -64,7 +74,7 @@ public class StageManager : MonoBehaviour
             monsterCount = value;
             gameUiManager.UpdateMonsterCount(monsterCount);
             if (monsterCount <= 0 && CastleHp > 0f)
-                CurrentState = StageState.GameClear;
+                CurrentState = StageState.GAME_CLEAR;
         }
     }
 
@@ -99,28 +109,7 @@ public class StageManager : MonoBehaviour
     public StageState CurrentState
     {
         get => currentState;
-        private set
-        {
-            if (currentState == value || value == StageState.None)
-                return;
-
-            currentState = value;
-            gameUiManager.SetStageStateUi(currentState);
-            TimeScaleController.SetTimeScale(currentState is StageState.GameClear or StageState.GameOver ? 0f : 1f);
-            
-            if (currentState == StageState.GameClear &&
-                Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
-            {
-                GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
-                Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
-            }
-
-            if (currentState == StageState.GameClear || currentState == StageState.GameOver)
-            {
-                GameManager.instance.GameData.Gold += EarnedGold;
-                DataManager.SaveFile(GameManager.instance.GameData);
-            }
-        }
+        set => SetStageState((int)value);
     }
 
     public MonsterSpawner monsterSpawner;
@@ -157,16 +146,18 @@ public class StageManager : MonoBehaviour
     {
         CastleHp = castleMaxHp;
         DragCount = maxDragCount;
-        CurrentState = StageState.Playing;
+        CurrentState = StageState.PLAYING;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
     }
-    
     
     public void DamageCastle(float damage)
     {
         if (damage <= 0f)
             return;
+
+        if (soundManager?.sfxAudioSource && castleDamageAudioClip)
+            soundManager.sfxAudioSource.PlayOneShot(castleDamageAudioClip);
 
         if (CastleShield > 0f)
         {
@@ -185,7 +176,7 @@ public class StageManager : MonoBehaviour
         CastleHp -= damage;
 
         if (CastleHp <= 0f)
-            CurrentState = StageState.GameOver;
+            CurrentState = StageState.GAME_OVER;
     }
 
     public void RestoreCastle(float heal, bool isPercentage = false)
@@ -217,15 +208,87 @@ public class StageManager : MonoBehaviour
         gameUiManager.UpdateEarnedGold(earnedGold);
     }
 
+    [VisibleEnum(typeof(StageState))]
+    public void SetStageState(int state)
+    {
+        if (currentState == (StageState)state || (StageState)state == StageState.NONE)
+            return;
+
+        currentState = (StageState)state;
+        gameUiManager.SetStageStateUi(currentState);
+
+        if (currentState == StageState.PLAYING)
+        {
+            TimeScaleController.SetTimeScale(1f);
+        }
+        else
+        {
+            TimeScaleController.SetTimeScale(0f);
+            soundManager?.sfxAudioSource.Stop();
+        }
+
+        switch (currentState)
+        {
+            case StageState.GAME_CLEAR:
+                StageClear();
+                break;
+            case StageState.GAME_OVER:
+                GetClearRewards();
+                break;
+        }
+    }
+
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         TimeScaleController.SetTimeScale(1f);
     }
     
-    public void LobbyScene()
+    public void LobbyScene(bool isNextStage)
     {
+        Variables.LoadTable.isNextStage = isNextStage;
         SceneManager.LoadScene(1);
         TimeScaleController.SetTimeScale(1f);
+        Variables.LoadTable.ItemId.Clear();
+    }
+
+    private void StageClear()
+    {
+        if (Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
+        {
+            GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+            Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
+        }
+
+        var stageClear = GameManager.instance.GameData.StageClear;
+        if (!stageClear[Variables.LoadTable.StageId]) // 최초 클리어
+        {
+            stageClear[Variables.LoadTable.StageId] = true;
+            GetClearRewards(true);
+        }
+        else
+            GetClearRewards();
+    }
+
+    private void GetClearRewards(bool isFirstClear = false)
+    {
+        // 게임 클리어 및 게임 오버 보상
+        GameManager.instance.GameData.Gold += EarnedGold;
+
+        // 최초 클리어 보상
+        if (isFirstClear)
+        {
+            var stageTable = DataTableManager.Get<StageTable>(DataTableIds.Stage);
+            var stageData = stageTable.Get(Variables.LoadTable.StageId);
+
+            GameManager.instance.GameData.Ticket += stageData.Reward1Value;
+            GameManager.instance.GameData.Diamond += stageData.Reward2Value;
+        }
+
+        if (gameUiManager.gameClearUi.TryGetComponent<UiGameClearPanel>(out var clearPanel))
+        {
+            clearPanel.ActiveRewardGetText(!isFirstClear);
+        }
+        DataManager.SaveFile(GameManager.instance.GameData);
     }
 }

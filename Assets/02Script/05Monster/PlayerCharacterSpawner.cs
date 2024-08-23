@@ -6,23 +6,26 @@ using UnityEngine.InputSystem;
 public class PlayerCharacterSpawner : MonoBehaviour
 {
     public Transform poolTransform;
-    public Transform[] spawnPositions;
+    public GameObject[] spawnPositions;
 
     private PlayerCharacterTable playerCharacterTable;
     private SkillTable skillTable;
     private AssetListTable assetListTable;
 
-    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[10];
+    private PlayerCharacterController[] playerCharacters = new PlayerCharacterController[8];
     private PlayerCharacterController[] activePlayerCharacters = new PlayerCharacterController[6]; // 현재 활성화된 캐릭터 저장
 
     public GameObject playerUICharacterPrefab;
     public RectTransform playerUICharacterParent;
-    private Button[] characterButtons = new Button[10];
+    private Button[] characterButtons = new Button[8];
+
+    public UiButtonEffect uiButtonEffect;
 
     private int selectedCharacterIndex = -1;
     
     private InputManager inputManager;
-
+    public TutorialController tutorial; 
+    
     private void Awake()
     {
         // 데이터 테이블 로드
@@ -84,8 +87,8 @@ public class PlayerCharacterSpawner : MonoBehaviour
             // 검출한 오브젝트의 위치로 캐릭터 소환
             for (var i = 0; i < spawnPositions.Length; i++)
             {
-                if (Mathf.Abs(spawnPositions[i].position.x - hit.point.x) 
-                    <= 1f && Mathf.Abs(spawnPositions[i].position.y - hit.point.y) <= 1f)
+                if (Mathf.Abs(spawnPositions[i].transform.position.x - hit.point.x) 
+                    <= 1f && Mathf.Abs(spawnPositions[i].transform.position.y - hit.point.y) <= 1f)
                 {
                     Debug.Log($"Spawning character at position index {i}");
                     SpawnPlayerCharacter(i);
@@ -184,7 +187,27 @@ public class PlayerCharacterSpawner : MonoBehaviour
 
     private void SelectCharacterForSpawning(int index)
     {
+        if (selectedCharacterIndex == index)
+        {
+            selectedCharacterIndex = -1;
+            uiButtonEffect.ButtonRectTransform = null;
+            foreach (var spawnPos in spawnPositions)
+            {
+                spawnPos.SetActive(false);
+            }
+            return;
+        }
+
+        if (playerCharacters[index] == null)
+            return;
+
         selectedCharacterIndex = index;
+        uiButtonEffect.ButtonRectTransform = characterButtons[selectedCharacterIndex].GetComponent<RectTransform>();
+        uiButtonEffect.gameObject.SetActive(true);
+        for (int i = 0; i < spawnPositions.Length; i++)
+        {
+            spawnPositions[i].SetActive(activePlayerCharacters[i] == null);
+        }
         Logger.Log($"Selected character at index {index} for spawning.");
     }
     
@@ -202,12 +225,17 @@ public class PlayerCharacterSpawner : MonoBehaviour
             return;
         }
 
-        playerCharacter.transform.position = spawnPositions[positionIndex].position;
+        playerCharacter.transform.position = spawnPositions[positionIndex].transform.position;
 
         activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.Status.Init();
         playerCharacter.gameObject.SetActive(true);
 
+        if (tutorial.gameObject.activeSelf)
+        {
+            playerCharacter.gameObject.AddComponent<TutorialGameTrigger>();    
+        }
+        
         if (characterButtons[selectedCharacterIndex] != null)
         {
             // characterButtons[selectedCharacterIndex].interactable = false;
@@ -215,7 +243,12 @@ public class PlayerCharacterSpawner : MonoBehaviour
             slotButton?.ActiveButton(false);
         }
 
-        selectedCharacterIndex = -1; 
+        selectedCharacterIndex = -1;
+        uiButtonEffect.ButtonRectTransform = null;
+        foreach (var spawnPos in spawnPositions)
+        {
+            spawnPos.SetActive(false);
+        }
     }
 
     public void RemoveActiveCharacter(PlayerCharacterController character)

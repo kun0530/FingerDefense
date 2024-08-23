@@ -45,12 +45,15 @@ public class ItemActiveCreateDummy : ActiveItem
 
     public override void UseItem()
     {
-        if (isDragging)
+        if (!inputManager)
             return;
-
-        isDragging = true;
-        if (inputManager)
+        
+        isDragging = !isDragging;
+        button.buttonEffect.gameObject.SetActive(isDragging);
+        if (isDragging)
             inputManager.OnClick += CreateDummy;
+        else
+            inputManager.OnClick -= CreateDummy;
     }
 
     public override void CancelItem()
@@ -72,14 +75,15 @@ public class ItemActiveCreateDummy : ActiveItem
 
     private void CreateDummy(InputAction.CallbackContext context)
     {
-        isDragging = false;
-        if (inputManager)
-            inputManager.OnClick -= CreateDummy;
-
         var spawnPos = Camera.main!.ScreenToWorldPoint(dragAndDrop.GetPointerPosition());
         if (spawnPos.x < spawnRange.x || spawnPos.x > spawnRange.x + spawnRange.width
             || spawnPos.y < spawnRange.y || spawnPos.y > spawnRange.y + spawnRange.height)
             return;
+            
+        isDragging = false;
+        button.buttonEffect.gameObject.SetActive(false);
+        if (inputManager)
+            inputManager.OnClick -= CreateDummy;
             
         spawnPos.z = spawnPos.y;
         var instantiatedCharacter = Instantiate(characterPrefab, spawnPos, Quaternion.identity);
@@ -119,6 +123,7 @@ public class ItemActiveCreateDummy : ActiveItem
         entryEffect.LifeTime = 1f;
         activeAgent = instantiatedCharacter;
 
+        button.buttonEffect.gameObject.SetActive(false);
         base.UseItem();
     }
 }

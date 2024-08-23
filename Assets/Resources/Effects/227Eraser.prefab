@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -6402382275634736608}
   - component: {fileID: 7224877938122798216}
   - component: {fileID: 4205066189831196027}
+  - component: {fileID: 7057318564559317296}
   m_Layer: 0
   m_Name: 227Eraser
   m_TagString: Untagged
@@ -135,6 +136,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAudioClip: {fileID: 8300000, guid: 2372f3e3a6a996445ae7d29e12f42fc4, type: 3}
+  disableAudioClip: {fileID: 0}
+  isAutoPlay: 1
 --- !u!114 &4205066189831196027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +167,41 @@ MonoBehaviour:
   - {fileID: 1767841913861676, guid: 02519ad6e7f965644a5135309fb7e6a4, type: 3}
   - {fileID: 1840367976591474, guid: 98f8404dbd23f6743831a7d09580b0ef, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &7057318564559317296
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066843573042574}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.00738883, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.8989918
 --- !u!1 &1118662559492386
 GameObject:
   m_ObjectHideFlags: 0

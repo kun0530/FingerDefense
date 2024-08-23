@@ -10,7 +10,8 @@ public enum ResourceType
     Game1TutorialCheck,
     Game2TutorialCheck,
     Game3TutorialCheck,
-    Game4TutorialCheck,
+    ShopTutorialCheck,
+    DragTutorialCheck,
     ObtainedGachaIDs,
     ItemId,
     ItemCount

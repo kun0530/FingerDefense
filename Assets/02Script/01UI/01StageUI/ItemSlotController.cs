@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class ItemSlotController : MonoBehaviour
     private List<ItemSlotUI> emptySlots = new List<ItemSlotUI>(); // 빈 슬롯 리스트
     private HashSet<int> addedItems = new HashSet<int>(); // 추가된 아이템 ID를 관리
 
+    public ItemInfoSlot itemInfoSlot;
+    
     private void Awake()
     {
         itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
@@ -23,8 +26,14 @@ public class ItemSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-        RefreshItemSlots();
+                              
     }
+
+    private void Start()
+    {
+        RefreshItemSlots();   
+    }
+
 
     public void RefreshItemSlots()
     {
@@ -66,6 +75,16 @@ public class ItemSlotController : MonoBehaviour
 
     private void CreateItemSlots()
     {
+        if (itemTable == null || itemTable.table == null)
+        {
+            return;
+        }
+
+        if (assetListTable == null || assetListTable.table == null)
+        {
+            return;
+        }
+
         var purchasedItems = GameManager.instance.GameData.Items;
 
         foreach (var purchasedItem in purchasedItems)
@@ -85,9 +104,30 @@ public class ItemSlotController : MonoBehaviour
                     itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
                     itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
                     itemSlot.onClickItemSlot = HandleItemSlotClick;
+                    itemSlot.OnLongPress = slot =>
+                    {
+                        Logger.Log($"Long press detected on item ID: {itemData.Id}");
+                        itemInfoSlot.SetItemInfoSlot(itemData);
+                        itemInfoSlot.gameObject.SetActive(true);
+                    };
+
+                    itemSlot.OnLongPressRelease = () =>
+                    {
+                        Logger.Log($"Long press released on item ID: {itemData.Id}");
+                        itemInfoSlot?.gameObject.SetActive(false);
+                    };
+
                     itemSlots.Add(itemSlot);
                     addedItems.Add(purchasedItem.itemId);
                 }
+                else
+                {
+                    Logger.LogError($"Item ID {purchasedItem.itemId}에 대한 아이콘 경로를 찾을 수 없습니다.");
+                }
+            }
+            else
+            {
+                Logger.LogError($"Item ID {purchasedItem.itemId}에 대한 데이터를 itemTable에서 찾을 수 없습니다.");
             }
         }
     }
@@ -133,15 +173,13 @@ public class ItemSlotController : MonoBehaviour
     {
         if (clickedSlot == null || clickedSlot.ItemId == 0) return;
 
-        int removeCount = clickedSlot.GetItemCount();
+        var removeCount = clickedSlot.GetItemCount();
 
         var originalSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == clickedSlot.ItemId);
         if (originalSlot != null)
         {
-            int restoredCount = originalSlot.GetItemCount() + removeCount;
+            var restoredCount = originalSlot.GetItemCount() + removeCount;
             originalSlot.UpdateItemCount(restoredCount);
-
-            originalSlot.ToggleInteractable(true);
         }
         else
         {
@@ -150,6 +188,8 @@ public class ItemSlotController : MonoBehaviour
                 var newSlot = Instantiate(itemSlotPrefab, itemSelectParent);
                 newSlot.Setup(itemData, clickedSlot.ItemSprite.name, removeCount);
                 newSlot.onClickItemSlot = HandleItemSlotClick;
+                newSlot.OnLongPress = slot => itemInfoSlot.SetItemInfoSlot(itemData);
+                newSlot.OnLongPressRelease = () => itemInfoSlot.gameObject.SetActive(false);
                 itemSlots.Add(newSlot);
                 addedItems.Add(clickedSlot.ItemId);
             }
@@ -158,10 +198,9 @@ public class ItemSlotController : MonoBehaviour
                 Logger.LogError($"ItemData for ItemId {clickedSlot.ItemId} not found.");
             }
         }
-
-        clickedSlot.ClearSlot();
-    
+        
         RemoveItemFromLoadTable(clickedSlot.ItemId);
+        clickedSlot.ClearSlot();
     }
 
     private void SaveItemToLoadTable(int itemId, int addCount)

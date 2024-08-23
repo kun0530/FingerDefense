@@ -1,68 +1,63 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.AddressableAssets;
 
-public class CharacterSlotUI : MonoBehaviour
+public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
     public Sprite gradeImage; // gradeParent의 자식으로 추가할 이미지
-    public Sprite[] skillImages; // Priority 값을 기준으로 추가할 이미지 배열
     public Sprite[] elementImages; // Element 값을 기준으로 추가할 이미지 배열
 
     public RectTransform elementParent;
-    public RectTransform skillParent;
+    public Image SkillIcon;
     public RectTransform gradeParent;
     public RectTransform classParent;
     public TextMeshProUGUI upgradeText;
+    public TextMeshProUGUI powerText;
 
     public GameObject ChoicePanel;
-    public Button ChoiceButton;
 
     public Image LockImage;
+    public Image PanelImage;
+    public Image PowerImage;
+
     public delegate void SlotClickDelegate(CharacterSlotUI slot);
     public SlotClickDelegate OnSlotClick;
+    public SlotClickDelegate OnLongPress;
+    public Action OnLongPressRelease;
 
     public PlayerCharacterData characterData { get; private set; }
 
     private Dictionary<int, int> skillIndexMapping = new Dictionary<int, int>();
     private AssetListTable assetListTable;
+    private StringTable stringTable;
     public TextMeshProUGUI upgradeLevelText;
+    
+    private bool isPressed = false;
+    public bool isLongPress = false;
+    
+    private GameObject spineInstance;
     
     private void Awake()
     {
-        MapSkillsToIndices();
+        
     }
+
     public void SetLocked(bool isLocked)
     {
         if (LockImage != null)
         {
             LockImage.gameObject.SetActive(isLocked); 
         }
-        if (ChoiceButton != null)
-        {
-            ChoiceButton.interactable = !isLocked;  // 버튼의 상호작용 가능 여부 설정
-        }
     }
     
     private void OnEnable()
     {
-        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);  
-    }
-
-    private void MapSkillsToIndices()
-    {
-        int[] skillValues = { 1000, 1001, 1002 }; // Example skill values
-        for (var i = 0; i < skillValues.Length; i++)
-        {
-            skillIndexMapping[skillValues[i]] = i;
-        }
-    }
-
-    private int GetSkillIndex(int skillValue)
-    {
-        return skillIndexMapping.GetValueOrDefault(skillValue, -1);
+        assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset); 
+        stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
     }
 
     public void SetCharacterSlot(PlayerCharacterData characterData)
@@ -85,7 +80,13 @@ public class CharacterSlotUI : MonoBehaviour
             GameObject prefab = Resources.Load<GameObject>($"Prefab/00CharacterUI/{assetName}");
             if (prefab != null)
             {
-                var spineInstance = Instantiate(prefab, classParent);
+                // 기존 인스턴스가 존재하면 제거
+                if (spineInstance != null)
+                {
+                    Destroy(spineInstance);
+                }
+
+                spineInstance = Instantiate(prefab, classParent);
                 spineInstance.transform.localPosition = Vector3.zero; 
             }
         }
@@ -105,66 +106,113 @@ public class CharacterSlotUI : MonoBehaviour
             elementImage.gameObject.SetActive(true);
         }
 
-        var skillImage = skillParent.GetComponent<Image>();
-        if (skillImage != null)
+        var skillImage = SkillIcon.GetComponent<Image>();
+        var skillId = assetListTable.Get(characterData.SkillIcon);
+        if (skillImage != null && !string.IsNullOrEmpty(skillId))
         {
-            int skillIndex = GetSkillIndex(characterData.SkillIcon);
-            if (skillIndex >= 0 && skillIndex < skillImages.Length)
-            {
-                skillImage.sprite = skillImages[skillIndex];
-                skillImage.gameObject.SetActive(true);
-            }
-            else
-            {
-                skillImage.gameObject.SetActive(false);
-            }
+            skillImage.sprite = Resources.Load<Sprite>($"Prefab/09SkillIcon/{skillId}");
+            skillImage.gameObject.SetActive(true);
+           
         }
 
-        upgradeLevelText.text = $"+ {characterData.Plus}";
+        if (PowerImage != null)
+        {
+            PowerImage.gameObject.SetActive(true);
+        }
+        powerText.text = $"+{characterData.Power}";
+        powerText.gameObject.transform.SetAsLastSibling();
+        
+
+        upgradeLevelText.text = $"+{characterData.Plus}";
         ChoicePanel.transform.SetAsLastSibling();
-
-        ChoiceButton.onClick.AddListener(OnClick);
     }
-
 
     public void ClearSlot()
     {
+        // 캐릭터 데이터 초기화
         characterData = null;
 
-        foreach (Transform child in gradeParent)
+        // 캐릭터 이름, 레벨 등 텍스트 초기화
+        if (upgradeLevelText != null)
         {
-            child.gameObject.SetActive(false);
+            upgradeLevelText.text = "";
         }
-
-        foreach (Transform child in classParent)
+        if(powerText != null)
         {
-            child.gameObject.SetActive(false);
+            powerText.text = "";
         }
-
+        // 스파인 인스턴스 삭제
+        if (spineInstance != null)
+        {
+            Destroy(spineInstance);
+            spineInstance = null;
+        }
+        
+        if(gradeParent != null)
+        {
+            foreach (Transform child in gradeParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        
         var elementImage = elementParent.GetComponent<Image>();
         if (elementImage != null)
         {
-            elementImage.sprite = null;
             elementImage.gameObject.SetActive(false);
         }
 
-        var skillImage = skillParent.GetComponent<Image>();
+        var skillImage = GetComponent<Image>();
         if (skillImage != null)
         {
-            skillImage.sprite = null;
             skillImage.gameObject.SetActive(false);
         }
-        upgradeLevelText.text = "";
-        ChoicePanel.SetActive(false);
-        ChoiceButton.interactable = true; 
-        ChoiceButton.onClick.RemoveAllListeners(); 
+        if (PowerImage != null)
+        {
+            PowerImage.gameObject.SetActive(false);
+        }
+       
+        
+        // 슬롯 재활용 가능 상태로 설정
+        ChoicePanel.gameObject.SetActive(false);
         gameObject.SetActive(true);
     }
 
-
-    
-    private void OnClick()
+    public void OnPointerUp(PointerEventData eventData)
     {
-        OnSlotClick?.Invoke(this);
+        isPressed = false;
+
+        if (isLongPress)
+        {
+            // 롱터치 후 손을 뗐을 때 상태창을 비활성화
+            OnLongPressRelease?.Invoke();
+        }
+        else
+        {
+            // 일반 터치 시 캐릭터 편성 처리
+            OnSlotClick?.Invoke(this);
+        }
+
+
+        isLongPress = false;
     }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isPressed = true;
+        isLongPress = false;
+
+        PressRoutine().Forget();
+    }
+
+    private async UniTaskVoid PressRoutine()
+    {
+        await UniTask.Delay(500); // 500ms 이상 눌렀을 경우 롱터치로 판단
+        if (isPressed)
+        {
+            isLongPress = true;
+            OnLongPress?.Invoke(this); // 롱터치 시 설명창만 활성화
+        }
+    }
+
 }

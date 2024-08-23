@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 214081907531117328}
   - component: {fileID: 7280693830787857920}
   - component: {fileID: 2357423905388433807}
+  - component: {fileID: 645612911207313179}
   m_Layer: 0
   m_Name: 216Darklight Ball
   m_TagString: Untagged
@@ -46,6 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAudioClip: {fileID: 8300000, guid: 976b4f1b783f7774dbad1f9474c2bec4, type: 3}
+  disableAudioClip: {fileID: 8300000, guid: c4eea740f240bed47bcdea40d3e1d182, type: 3}
+  isAutoPlay: 1
 --- !u!114 &2357423905388433807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,6 +78,41 @@ MonoBehaviour:
   - {fileID: 2679847134835226103, guid: 37a04b202e10f5a458d693ebcd2952fd, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &645612911207313179
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8194571952446474192}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.51}
+  serializedVersion: 2
+  m_Radius: 1.2055486
 --- !u!1001 &5839732991848236870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -326,6 +365,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: 216
       objectReference: {fileID: 0}
+    - target: {fileID: 8244068942639997209, guid: 107f1fce190f06949bb38b1a352fb07f, type: 3}
+      propertyPath: m_Radius
+      value: 1.2055486
+      objectReference: {fileID: 0}
+    - target: {fileID: 8244068942639997209, guid: 107f1fce190f06949bb38b1a352fb07f, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.020158961
+      objectReference: {fileID: 0}
     - target: {fileID: 8244068942639997210, guid: 107f1fce190f06949bb38b1a352fb07f, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -338,7 +385,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8244068942639997209, guid: 107f1fce190f06949bb38b1a352fb07f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -73,6 +73,13 @@ public class CharacterUpgradePanel : MonoBehaviour
         var selectedSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotParent);
         selectedSlot.SetCharacterSlot(characterData);
 
+        // 앵커 값을 중앙으로 설정하고, 스케일을 2로 조정
+        RectTransform selectedSlotRect = selectedSlot.GetComponent<RectTransform>();
+        selectedSlotRect.anchorMin = new Vector2(0.5f, 0.5f); // 중앙 앵커
+        selectedSlotRect.anchorMax = new Vector2(0.5f, 0.5f); // 중앙 앵커
+        selectedSlotRect.pivot = new Vector2(0.5f, 0.5f); // 피벗도 중앙으로 설정
+        selectedSlotRect.localScale = new Vector3(2f, 2f, 2f); // 스케일을 2로 설정
+        
         // UpgradeResultId를 기반으로 업그레이드 결과 표시
         ClearSlot(characterUpgradeResultSlotContent); // 기존 결과 슬롯 비우기
         var resultCharacterData = playerCharacterTable.Get(upgradeData.UpgradeResultId);
@@ -80,7 +87,15 @@ public class CharacterUpgradePanel : MonoBehaviour
         {
             var resultSlot = Instantiate(characterUpgradeSlot, characterUpgradeResultSlotContent);
             resultSlot.SetCharacterSlot(resultCharacterData);
-            characterUpgradeResultText.text = stringTable.Get(upgradeData.UpgradeInfoId.ToString()); // 업그레이드 설명 표시
+            
+            // 앵커 값과 스케일을 동일하게 설정
+            RectTransform resultSlotRect = resultSlot.GetComponent<RectTransform>();
+            resultSlotRect.anchorMin = new Vector2(0.5f, 0.5f); 
+            resultSlotRect.anchorMax = new Vector2(0.5f, 0.5f);
+            resultSlotRect.pivot = new Vector2(0.5f, 0.5f);
+            resultSlotRect.localScale = new Vector3(2f, 2f, 2f);
+            
+            characterUpgradeResultText.text = stringTable.Get(upgradeData.Name.ToString()); // 업그레이드 설명 표시
         }
 
         // 업그레이드 가격 표시
@@ -89,7 +104,7 @@ public class CharacterUpgradePanel : MonoBehaviour
         // 업그레이드 버튼 활성화 또는 비활성화
         upgradeButton.onClick.RemoveAllListeners();
         upgradeButton.onClick.AddListener(TryUpgradeCharacter);
-        upgradeButton.interactable = GameManager.instance.GameData.stageClearNum >= upgradeData.NeedClearStage;
+        Logger.Log($"Upgrade button added listener for {upgradeData.Name}");
     }
 
     private void TryUpgradeCharacter()
@@ -134,10 +149,12 @@ public class CharacterUpgradePanel : MonoBehaviour
         OnCharacterUpgraded?.Invoke(upgradeData.NeedCharId, upgradeData.UpgradeResultId);
         // 데이터 저장
         DataManager.SaveFile(GameManager.instance.GameData);
-
+        upgradeButton.onClick.RemoveAllListeners(); // 업그레이드 버튼 리스너 제거
         // UI 갱신
         ClearSlot(characterUpgradeSlotParent);
         ClearSlot(characterUpgradeResultSlotContent);
+        characterUpgradeGoldText.text = "";
+        characterUpgradeResultText.text = "";
         LoadUpgradableCharacters();  // 업그레이드 가능한 캐릭터 목록 다시 로드
     }
 

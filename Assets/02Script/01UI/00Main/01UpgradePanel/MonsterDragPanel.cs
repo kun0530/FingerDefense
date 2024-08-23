@@ -65,14 +65,13 @@ public class MonsterDragPanel : MonoBehaviour
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
                 if (!string.IsNullOrEmpty(assetName))
                 {
-                    string assetPath = $"Prefab/01MonsterUI/{assetName}";
+                    string assetPath = $"Prefab/10UpgradeUI/{assetName}";
                     GameObject assetObject = Resources.Load<GameObject>(assetPath);
 
                     if (assetObject != null)
                     {
-                        var instantiatedObject = Instantiate(assetObject, slot.transform);
-                        instantiatedObject.transform.localPosition = Vector3.zero;
-                        instantiatedObject.transform.localScale = new Vector3(2, 2, 2);
+                        var monster = Instantiate(assetObject, slot.transform);
+                        monster.transform.SetAsFirstSibling();
                     }
                     else
                     {
@@ -84,7 +83,21 @@ public class MonsterDragPanel : MonoBehaviour
                     Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 AssetName을 찾을 수 없습니다.");
                 }
 
-                slot.UpdateLockState(dragLevel == (int)GameData.MonsterDrag.LOCK);
+                // dragLevel 값에 따라 상태 업데이트
+                if (dragLevel == (int)GameData.MonsterDrag.LOCK)
+                {
+                    slot.UpdateLockState(true);
+                }
+                else if (dragLevel == (int)GameData.MonsterDrag.ACTIVE) // dragLevel이 2일 때 "구매 불가" 상태 설정
+                {
+                    slot.UpdateUnavailableState(true);
+                }
+                else
+                {
+                    slot.UpdateLockState(false);
+                    slot.UpdateUnavailableState(false); // 초기화
+                }
+
                 slot.UpdateCostColor();
                 slot.transform.SetParent(dragInfoParent[parentIndex], false);
 
@@ -101,6 +114,4 @@ public class MonsterDragPanel : MonoBehaviour
             }
         }
     }
-
-
 }

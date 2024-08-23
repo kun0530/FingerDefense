@@ -12,7 +12,7 @@ public class QuitUI : MonoBehaviour
     
     public void ResumeGame()
     {
-        if (stageManager.CurrentState == StageState.GameOver)
+        if (stageManager.CurrentState == StageState.GAME_OVER)
         {
             return;
         }

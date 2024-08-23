@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4346505721077041809}
   - component: {fileID: 8443317132512086414}
   - component: {fileID: 3530737207268081118}
+  - component: {fileID: 9128571976968273060}
   m_Layer: 0
   m_Name: 230Wind Ball_2
   m_TagString: Untagged
@@ -46,6 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAudioClip: {fileID: 8300000, guid: 65db78814f10c8a4896b930f040fe764, type: 3}
+  disableAudioClip: {fileID: 0}
+  isAutoPlay: 1
 --- !u!114 &3530737207268081118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,6 +78,41 @@ MonoBehaviour:
   - {fileID: 2615503383577499702, guid: 69ef0e7c64dae0a408e15e0ea0e1936a, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 2
+--- !u!58 &9128571976968273060
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3368280320215440740}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.06645203, y: 0.5869943}
+  serializedVersion: 2
+  m_Radius: 2.881202
 --- !u!1001 &4714674582322893630
 PrefabInstance:
   m_ObjectHideFlags: 0

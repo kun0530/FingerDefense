@@ -36,6 +36,10 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
+        if (stageManager == null)
+        {
+            Logger.Log("StageManager is null");
+        }
         control.Enable();
         control.MonsterDrag.Click.performed += OnClickHandler;
         control.MonsterDrag.Release.performed += OnReleaseHandler;
@@ -93,7 +97,7 @@ public class InputManager : MonoBehaviour
         QuitPanel.SetActive(!QuitPanel.activeSelf);
         QuitPanel.transform.SetAsLastSibling();
         
-        if(stageManager.CurrentState==StageState.GameOver)
+        if(stageManager.CurrentState==StageState.GAME_OVER)
         {
             TimeScaleController.SetTimeScale(0f);
         }

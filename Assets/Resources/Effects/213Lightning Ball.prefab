@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3223666806070438110}
   - component: {fileID: 774173605582513299}
   - component: {fileID: 996504781966396400}
+  - component: {fileID: 8222697541230498992}
   m_Layer: 0
   m_Name: 213Lightning Ball
   m_TagString: Untagged
@@ -46,6 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAudioClip: {fileID: 8300000, guid: 723d055a27f99b54c99952421ed78f17, type: 3}
+  disableAudioClip: {fileID: 8300000, guid: 3fd3d4587099cdc46a258751279c4c4f, type: 3}
+  isAutoPlay: 1
 --- !u!114 &996504781966396400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,6 +78,41 @@ MonoBehaviour:
   - {fileID: 6737414557862666010, guid: fc4fb87ef30e1554c81bc917eb737f65, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &8222697541230498992
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4883418249170567852}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.5057896}
+  serializedVersion: 2
+  m_Radius: 0.8124551
 --- !u!1001 &1740670019548207533
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -154,6 +193,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7687011902468096300, guid: a4fc73bf63b36564eaecd678f4aedcbf, type: 3}
+      propertyPath: m_Radius
+      value: 3.1075952
+      objectReference: {fileID: 0}
+    - target: {fileID: 7687011902468096300, guid: a4fc73bf63b36564eaecd678f4aedcbf, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.0076007843
+      objectReference: {fileID: 0}
     - target: {fileID: 7687011902468096301, guid: a4fc73bf63b36564eaecd678f4aedcbf, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.3
@@ -214,7 +261,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: 213
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7687011902468096300, guid: a4fc73bf63b36564eaecd678f4aedcbf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

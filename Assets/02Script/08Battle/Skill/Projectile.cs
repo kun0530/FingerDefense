@@ -119,7 +119,7 @@ public class Projectile : MonoBehaviour
                         return;
                     }
                     targetPos = target.transform.position + targetOffsetPos;
-                    prevTargetPos = target.transform.position;
+                    prevTargetPos = targetPos;
                 }
                 break;
         }
@@ -142,7 +142,7 @@ public class Projectile : MonoBehaviour
         //     Destroy(gameObject);
         // }
 
-        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
+        if (Vector2.Distance(transform.position, targetPos) < 0.1f)
         {
             switch (skillTarget)
             {
@@ -159,6 +159,10 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
             CreateImpactEffect();
         }
+
+        var pos = transform.position;
+        pos.z = pos.y;
+        transform.position = pos;
     }
 
     public void CreateImpactEffect()
@@ -175,6 +179,27 @@ public class Projectile : MonoBehaviour
             {
                 var effect = GameObject.Instantiate(impactEffect, pos, Quaternion.identity);
                 effect.transform.SetParent(effectParent.transform);
+            }
+        }
+    }
+
+    // 블랙홀에 대한 대응
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (targetPosOption == TargetPosOption.INITIAL)
+            return;
+
+        if (!target && !target.activeSelf)
+            return;
+
+        if (other.TryGetComponent<BlackHole>(out var blackHole)
+            && target.TryGetComponent<MonsterController>(out var monster))
+        {
+            if (blackHole.targetMonsters.Contains(monster))
+            {
+                skill?.UseSkill(target, isBuffApplied);
+                Destroy(gameObject);
+                CreateImpactEffect();
             }
         }
     }

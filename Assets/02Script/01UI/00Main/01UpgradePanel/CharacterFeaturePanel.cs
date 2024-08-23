@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,10 @@ public class CharacterFeaturePanel : MonoBehaviour
     public Button[] characterHpUpgradeButtons; // UpStatType = 4
     public Button[] characterEnhancedGradeButtons; // UpStatType = 5
 
+    public TextMeshProUGUI characterArrangementLevelText;
+    public TextMeshProUGUI characterHpLevelText;
+    public TextMeshProUGUI characterEnhancedGradeLevelText;
+    
     private void Awake()
     {
         assetListTable ??= DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
@@ -21,6 +26,9 @@ public class CharacterFeaturePanel : MonoBehaviour
     private void Start()
     {
         SetupCharacterFeatureButtons();
+        characterArrangementLevelText.text = stringTable.Get(99972.ToString());
+        characterHpLevelText.text = stringTable.Get(99982.ToString());
+        characterEnhancedGradeLevelText.text = stringTable.Get(99992.ToString());
     }
 
     private void SetupCharacterFeatureButtons()

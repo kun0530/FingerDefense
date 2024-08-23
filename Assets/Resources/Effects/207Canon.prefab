@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5004599555775717648}
   - component: {fileID: 4513711447302137564}
   - component: {fileID: 2404684292360938119}
+  - component: {fileID: 350659926595200105}
   m_Layer: 0
   m_Name: 207Canon
   m_TagString: Untagged
@@ -46,6 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a574cf4cd3a4640b2ec999894c8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAudioClip: {fileID: 8300000, guid: cab32825b08298946b1e92c96a6800a9, type: 3}
+  disableAudioClip: {fileID: 8300000, guid: ae2bdb28e128b3e419c003e8d9f657ae, type: 3}
+  isAutoPlay: 1
 --- !u!114 &2404684292360938119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,6 +77,41 @@ MonoBehaviour:
   impactEffects:
   - {fileID: 6002612636095783793, guid: 037fedcfd24725d4fa1e6c4f9fc0cdb4, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &350659926595200105
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363460235191502120}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.019031107, y: 0.45999938}
+  serializedVersion: 2
+  m_Radius: 0.64590555
 --- !u!1001 &6707529979571989279
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84,6 +123,14 @@ PrefabInstance:
     - target: {fileID: 8168827185777978497, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8168827185777978499, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
+      propertyPath: m_Radius
+      value: 1.4975802
+      objectReference: {fileID: 0}
+    - target: {fileID: 8168827185777978499, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.041759014
       objectReference: {fileID: 0}
     - target: {fileID: 8168827185777978509, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
       propertyPath: m_LocalPosition.x
@@ -129,7 +176,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: 207
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8168827185777978499, guid: 08d4250e5e120904a9ad0fe50af26248, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MainUiManager : MonoBehaviour
@@ -13,10 +14,14 @@ public class MainUiManager : MonoBehaviour
     private GameManager gameManager;
     public UpgradePanelManager upgradePanelManager;
     
-    public TutorialController tutorialController;
-    public TutorialController stageTutorialController;
+    public TutorialController NicknameTutorialController;//닉네임 튜토리얼 
+    public TutorialController stageTutorialController;//게임1 튜토리얼
+    public TutorialController deckTutorialController;//덱UI 튜토리얼
+    public TutorialController shopTutorialController;//상점 드래그 튜토리얼
+    public TutorialController dragTutorialController;//드래그 튜토리얼
     
     private UpgradeTable upgradeTable;
+    
     private void Awake()
     {
         upgradeTable ??= DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
@@ -27,7 +32,7 @@ public class MainUiManager : MonoBehaviour
     {
         if (!gameManager.GameData.NicknameCheck)
         {
-            tutorialController.gameObject.SetActive(true);
+            NicknameTutorialController.gameObject.SetActive(true);
             MainUI.gameObject.SetActive(false);
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
@@ -39,7 +44,7 @@ public class MainUiManager : MonoBehaviour
         else
         {
             NicknameUI.SetActive(false);
-            tutorialController.gameObject.SetActive(false);
+            NicknameTutorialController.gameObject.SetActive(false);
             MainUI.gameObject.SetActive(true);
             DeckUI.SetActive(false);
             StageUI.SetActive(false);
@@ -47,15 +52,20 @@ public class MainUiManager : MonoBehaviour
             GachaSystem.gameObject.SetActive(false);
             upgradePanelManager.gameObject.SetActive(false);
         }
-
+        
+        if(Variables.LoadTable.isNextStage)
+        {
+            StageUI.SetActive(true);
+            StageUI.transform.SetAsLastSibling();
+        }
+        
+        
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
         {
             if (upgradeData.Type == 0)
             {
-                if (!GameManager.instance.GameData.MonsterDragLevel.ContainsKey(upgradeData.UpgradeResultId))
+                if (GameManager.instance.GameData.MonsterDragLevel.TryAdd(upgradeData.UpgradeResultId, (int)GameData.MonsterDrag.LOCK))
                 {
-                    GameManager.instance.GameData.MonsterDragLevel.Add(upgradeData.UpgradeResultId,
-                        (int)GameData.MonsterDrag.LOCK);
                     DataManager.SaveFile(GameManager.instance.GameData);
                     Logger.Log($"MonsterDragLevel added: {upgradeData.UpgradeResultId}, {GameData.MonsterDrag.LOCK}");
                 }
@@ -150,5 +160,28 @@ public class MainUiManager : MonoBehaviour
             }
         }
     }
-    
+
+    private void LateUpdate()
+    {
+        //닉네임 튜토리얼은 했지만 게임1 튜토리얼은 안했을 때
+        if(gameManager.GameData.NicknameCheck && !gameManager.GameData.Game1TutorialCheck)
+        {
+            stageTutorialController.gameObject.SetActive(true);
+        }
+        //게임1 튜토리얼은 했지만 덱UI 튜토리얼은 안했을 때
+        if (gameManager.GameData.Game1TutorialCheck && !gameManager.GameData.DeckUITutorialCheck)
+        {
+            deckTutorialController.gameObject.SetActive(true);
+        }
+        //덱UI 튜토리얼은 했지만 상점 드래그 튜토리얼은 안했을 때
+        if(gameManager.GameData.Game2TutorialCheck && !gameManager.GameData.ShopDragTutorialCheck)
+        {
+            shopTutorialController.gameObject.SetActive(true);
+        }
+        //상점 드래그 튜토리얼은 했지만 게임3 튜토리얼은 안했을 때
+        if(gameManager.GameData.ShopDragTutorialCheck && !gameManager.GameData.Game3TutorialCheck)
+        {
+            dragTutorialController.gameObject.SetActive(true);
+        }
+    }
 }

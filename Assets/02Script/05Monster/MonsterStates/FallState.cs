@@ -8,11 +8,19 @@ public class FallState : IState
     
     private float velocity;
     private float gravity = -9.8f;
+    
+    private TutorialGameTrigger tutorialGameTrigger;
 
     public FallState(MonsterController controller)
     {
         this.controller = controller;
         collider = controller.GetComponent<Collider2D>();
+        
+        //To-Do Tutorial 몬스터 이동 상태 추가
+        if (controller.IsTutorialMonster)
+        {
+            tutorialGameTrigger = controller.GetComponent<TutorialGameTrigger>();
+        }
     }
 
     public void Enter()
@@ -44,10 +52,24 @@ public class FallState : IState
                 controller.Die(DamageReason.FALL_DAMAGE);
             }
             
-            if (!controller.IsDead)
+            if (!controller.IsDead && !controller.IsTutorialMonster)
                 controller.TryTransitionState<PatrolState>();
+            else if (!controller.IsDead && controller.IsTutorialMonster)
+            {
+                // 튜토리얼 몬스터가 생존한 경우 OnFallSurvived 호출
+                if (tutorialGameTrigger != null)
+                {
+                    Logger.Log("Tutorial monster survived, calling OnFallSurvived.");
+                    tutorialGameTrigger.OnFallSurvived();
+                }
+                
+                controller.TryTransitionState<MoveState>();
+            }
             else
+            {
                 controller.TryTransitionState<IdleState<MonsterController>>();
+            }
+           
         }
     }
 

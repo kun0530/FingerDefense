@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Spine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +19,9 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     private TrackEntry deathTrackEntry;
 
     public Image elementImage;
+    public TextMeshProUGUI monsterCountText;
 
-    private int MonsterCount
+    public int MonsterCount
     {
         get
         {
@@ -31,7 +33,7 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
             return count;
         }
     }
-    public bool IsTargetable => !IsDead && MonsterCount != 2;
+    public bool IsTargetable => !IsDead;
 
     protected override void Awake()
     {
@@ -59,12 +61,15 @@ public class PlayerCharacterController : CombatEntity<CharacterStatus>, IControl
     protected override void Start()
     {
         base.Start();
-        elementImage.gameObject.SetActive(false);
+        elementImage?.gameObject.SetActive(false);
     }
 
     protected override void Update()
     {
         base.Update();
+
+        if (monsterCountText)
+            monsterCountText.text = $"{MonsterCount} / 2";
     }
 
     public bool TryAddMonster(MonsterController monster)
