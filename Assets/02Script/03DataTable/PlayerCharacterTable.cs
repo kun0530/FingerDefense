@@ -23,8 +23,10 @@ public class PlayerCharacterData
     public int AssetNo { get; set; }
     public int Power { get; set; } // 전투력
 
-    public int SkillIcon { get; set; } // TO-DO: 삭제해야 함
+    public int SkillIcon { get; set; } 
     public int Base { get; set; } 
+    public int SkillName { get; set; } 
+    public int SkillText { get; set; } 
 }
 
 public class PlayerCharacterTable : DataTable

@@ -291,5 +291,4 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
         }
     }
 
-
 }

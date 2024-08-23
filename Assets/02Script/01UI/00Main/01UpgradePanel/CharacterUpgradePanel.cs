@@ -149,10 +149,12 @@ public class CharacterUpgradePanel : MonoBehaviour
         OnCharacterUpgraded?.Invoke(upgradeData.NeedCharId, upgradeData.UpgradeResultId);
         // 데이터 저장
         DataManager.SaveFile(GameManager.instance.GameData);
-
+        upgradeButton.onClick.RemoveAllListeners(); // 업그레이드 버튼 리스너 제거
         // UI 갱신
         ClearSlot(characterUpgradeSlotParent);
         ClearSlot(characterUpgradeResultSlotContent);
+        characterUpgradeGoldText.text = "";
+        characterUpgradeResultText.text = "";
         LoadUpgradableCharacters();  // 업그레이드 가능한 캐릭터 목록 다시 로드
     }
 

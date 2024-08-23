@@ -91,6 +91,10 @@ public class StageSlotCreate : MonoBehaviour
         {
             ActivatePanel(4);
         }
+        else
+        {
+            ActivatePanel(0);
+        }
         
         
     }
