@@ -53,6 +53,13 @@ public class MainUiManager : MonoBehaviour
             upgradePanelManager.gameObject.SetActive(false);
         }
         
+        if(Variables.LoadTable.isNextStage)
+        {
+            StageUI.SetActive(true);
+            StageUI.transform.SetAsLastSibling();
+            Variables.LoadTable.isNextStage = false;
+        }
+        
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
         {
             if (upgradeData.Type == 0)
