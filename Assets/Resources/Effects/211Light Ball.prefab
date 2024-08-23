@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4346505721077041809}
   - component: {fileID: 8443317132512086414}
   - component: {fileID: 3530737207268081118}
+  - component: {fileID: 6740294029161240037}
   m_Layer: 0
   m_Name: 211Light Ball
   m_TagString: Untagged
@@ -77,6 +78,41 @@ MonoBehaviour:
   - {fileID: 1364070156239491832, guid: 04319bf2ad109d6468d4b05db7b5c54c, type: 3}
   - {fileID: 6857830465810521777, guid: f1c77a5af22461d49b1a07c7a63c5f6c, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &6740294029161240037
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3368280320215440740}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.51}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1001 &3218925036884803256
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -88,6 +124,14 @@ PrefabInstance:
     - target: {fileID: 6636304635825448877, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6636304635825448879, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
+      propertyPath: m_Radius
+      value: 1.5511087
+      objectReference: {fileID: 0}
+    - target: {fileID: 6636304635825448879, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.024443865
       objectReference: {fileID: 0}
     - target: {fileID: 6636304635825448880, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
       propertyPath: m_LocalPosition.x
@@ -133,7 +177,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: 211
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6636304635825448879, guid: 65b09a2f189430b4b80adb5e2f8d6a49, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

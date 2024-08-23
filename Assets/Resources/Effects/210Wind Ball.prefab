@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4346505721077041809}
   - component: {fileID: 8443317132512086414}
   - component: {fileID: 3530737207268081118}
+  - component: {fileID: 2794191233034214942}
   m_Layer: 0
   m_Name: 210Wind Ball
   m_TagString: Untagged
@@ -76,6 +77,41 @@ MonoBehaviour:
   impactEffects:
   - {fileID: 6017019445347752382, guid: 9c2383eba7801704a9971de508d56f3d, type: 3}
   impactEffectLifeTime: 1
+--- !u!58 &2794191233034214942
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3368280320215440740}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.019367678, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.255336
 --- !u!1001 &7919302120599047327
 PrefabInstance:
   m_ObjectHideFlags: 0

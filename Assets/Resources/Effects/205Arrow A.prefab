@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7352555657080594099}
   - component: {fileID: 7076301699152597044}
   - component: {fileID: 8889590669396433371}
+  - component: {fileID: 5134803362605021052}
   m_Layer: 0
   m_Name: 205Arrow A
   m_TagString: Untagged
@@ -77,6 +78,41 @@ MonoBehaviour:
   impactEffects:
   - {fileID: 5924332273818582724, guid: e86f414a141054044a8ac7fa0ac6a93d, type: 3}
   impactEffectLifeTime: 1
+--- !u!70 &5134803362605021052
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202281904806651563}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.34371114, y: 0.026667103}
+  m_Size: {x: 2.4104187, y: 1.0533522}
+  m_Direction: 1
 --- !u!1001 &2421258692581778679
 PrefabInstance:
   m_ObjectHideFlags: 0
