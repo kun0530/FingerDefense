@@ -20,7 +20,7 @@ public class BlackHole : MonoBehaviour
     public float rotateSpeed = 200f;  // 오브젝트가 블랙홀 주위를 회전하는 속도 deg/sec
     public float threshold = 0.1f;
 
-    private HashSet<MonsterController> targetMonsters = new();
+    [HideInInspector] public HashSet<MonsterController> targetMonsters = new();
     private HashSet<MonsterController> nonTargetMonsters = new();
 
     private void OnEnable()
