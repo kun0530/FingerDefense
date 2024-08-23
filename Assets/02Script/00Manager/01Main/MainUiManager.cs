@@ -55,8 +55,8 @@ public class MainUiManager : MonoBehaviour
         
         if(Variables.LoadTable.isNextStage)
         {
-            DeckUI.SetActive(true);
-            DeckUI.transform.SetAsLastSibling();
+            StageUI.SetActive(true);
+            StageUI.transform.SetAsLastSibling();
         }
         
         
