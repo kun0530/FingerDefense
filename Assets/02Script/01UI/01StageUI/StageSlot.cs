@@ -242,11 +242,13 @@ public class StageSlot : MonoBehaviour
         else
         {
             // 스테이지가 클리어되지 않았을 때 모달 창 띄우기
-            ModalWindow.Create()
-                .SetHeader("스테이지 잠금")
-                .SetBody("이전 스테이지를 클리어해야 이용할 수 있습니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("스테이지 잠금")
+                    .SetBody("이전 스테이지를 클리어해야 이용할 수 있습니다.")
+                    .AddButton("확인", () => { })
+                    .Show();
+            });
         }
     }
 

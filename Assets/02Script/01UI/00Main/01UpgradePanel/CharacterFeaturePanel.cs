@@ -87,19 +87,24 @@ public class CharacterFeaturePanel : MonoBehaviour
                     }
                     else if (upgradeData.Level <= currentLevel)
                     {
-                        ModalWindow.Create()
-                            .SetHeader("이미 업그레이드 완료")
-                            .SetBody("이 업그레이드는 이미 완료되었습니다.")
-                            .AddButton("확인", () => { })
-                            .Show();
+                        ModalWindow.Create(window =>
+                        {
+                            window.SetHeader("이미 업그레이드 완료")
+                                .SetBody("이 업그레이드는 이미 완료되었습니다.")
+                                .AddButton("확인", () => { })
+                                .Show();
+                        });
                     }
                     else
                     {
-                        ModalWindow.Create()
-                            .SetHeader("업그레이드 필요")
-                            .SetBody("이 업그레이드를 진행하려면 이전 업그레이드를 먼저 완료해 주세요.")
-                            .AddButton("확인", () => { })
-                            .Show();
+                        ModalWindow.Create(window =>
+                        {
+                            window.SetHeader("업그레이드 필요")
+                                .SetBody("이 업그레이드를 진행하려면 이전 업그레이드를 먼저 완료해 주세요.")
+                                .AddButton("확인", () => { })
+                                .Show();
+                        });
+
                     }
                 });
             }
@@ -126,32 +131,38 @@ public class CharacterFeaturePanel : MonoBehaviour
         // 현재 버튼에 해당하는 업그레이드 가격과 스테이지 조건을 검사
         if (playerGold >= upgradeData.UpgradePrice && stageClearNum >= upgradeData.NeedClearStage)
         {
-            ModalWindow.Create()
-                .SetHeader("구매 확인")
-                .SetBody($"{upgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
-                .AddButton("확인", () =>
-                {
-                    GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;
-                    ApplyUpgrade(upgradeData);
-                })
-                .AddButton("취소", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("구매 확인")
+                    .SetBody($"{upgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
+                    .AddButton("확인", () =>
+                    {
+                        GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;
+                        ApplyUpgrade(upgradeData);
+                    })
+                    .AddButton("취소", () => { })
+                    .Show();
+            });
         }
         else if (playerGold < upgradeData.UpgradePrice)
         {
-            ModalWindow.Create()
-                .SetHeader("구매 실패")
-                .SetBody("골드가 부족합니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("구매 실패")
+                    .SetBody("골드가 부족합니다.")
+                    .AddButton("확인", () => { })
+                    .Show();
+            });
         }
         else if (stageClearNum < upgradeData.NeedClearStage)
         {
-            ModalWindow.Create()
-                .SetHeader("스테이지 클리어 필요")
-                .SetBody($"이 업그레이드를 구매하려면 스테이지 {upgradeData.NeedClearStage}를 클리어해야 합니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("스테이지 클리어 필요")
+                    .SetBody($"이 업그레이드를 구매하려면 스테이지 {upgradeData.NeedClearStage}를 클리어해야 합니다.")
+                    .AddButton("확인", () => { })
+                    .Show();
+            });
         }
     }
 

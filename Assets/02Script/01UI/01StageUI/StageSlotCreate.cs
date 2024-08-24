@@ -66,37 +66,29 @@ public class StageSlotCreate : MonoBehaviour
         {
             parent.gameObject.SetActive(true);
         }
-        //클리어한 최고 스테이지가 13001-13005에 해당하는 스테이지면
-        if (lastClearedStage >= 13001 && lastClearedStage <= 13005)
+
+        switch (lastClearedStage)
         {
-            ActivatePanel(0);
+            // 클리어한 스테이지에 따라 다음 패널을 활성화
+            case >= 13021:
+                ActivatePanel(4);  // 5번째 패널 (13021-13025)
+                break;
+            case >= 13016:
+                ActivatePanel(3);  // 4번째 패널 (13016-13020)
+                break;
+            case >= 13011:
+                ActivatePanel(2);  // 3번째 패널 (13011-13015)
+                break;
+            case >= 13006:
+                ActivatePanel(1);  // 2번째 패널 (13006-13010)
+                break;
+            case >= 13001:
+                ActivatePanel(0);  // 1번째 패널 (13001-13005)
+                break;
+            default:
+                ActivatePanel(0);  // 기본값으로 첫 번째 패널 활성화
+                break;
         }
-        //클리어한 최고 스테이지가 13006-13010에 해당하는 스테이지면
-        else if (lastClearedStage >= 13006 && lastClearedStage <= 13010)
-        {
-            ActivatePanel(1);
-        }
-        //클리어한 최고 스테이지가 13011-13015에 해당하는 스테이지면
-        else if (lastClearedStage >= 13011 && lastClearedStage <= 13015)
-        {
-            ActivatePanel(2);
-        }
-        //클리어한 최고 스테이지가 13016-13020에 해당하는 스테이지면
-        else if (lastClearedStage >= 13016 && lastClearedStage <= 13020)
-        {
-            ActivatePanel(3);
-        }
-        //클리어한 최고 스테이지가 13021-13025에 해당하는 스테이지면
-        else if (lastClearedStage >= 13021)
-        {
-            ActivatePanel(4);
-        }
-        else
-        {
-            ActivatePanel(0);
-        }
-        
-        
     }
     private void ActivatePanel(int panelIndex)
     {
@@ -171,11 +163,13 @@ public class StageSlotCreate : MonoBehaviour
         else
         {
             // 조건을 만족하지 않는 경우, 모달 창을 띄우고 기존 패널을 유지
-            ModalWindow.Create()
-                .SetHeader("잠금")
-                .SetBody("해당 스테이지를 모두 클리어해야 합니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("잠금")
+                    .SetBody("해당 스테이지를 모두 클리어해야 합니다.")
+                    .AddButton("확인", () => { })
+                    .Show();
+            });
         }
     }
     

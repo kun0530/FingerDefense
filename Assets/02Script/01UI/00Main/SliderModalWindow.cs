@@ -5,6 +5,9 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 
 public class SliderModalWindow : MonoBehaviour
 {
@@ -19,6 +22,7 @@ public class SliderModalWindow : MonoBehaviour
     private GameObject modalMask;
     private int baseCost;
 
+    public Button CloseButton;
     
     private void OnEnable()
     {
@@ -26,7 +30,8 @@ public class SliderModalWindow : MonoBehaviour
         countSlider.onValueChanged.AddListener(OnSliderValueChanged);
         countSlider.minValue = 1;
         countSlider.maxValue = 99;
-        modalMask= GameObject.FindWithTag("ModalMask");    
+        modalMask= GameObject.FindWithTag("ModalMask");
+        CloseButton.onClick.AddListener(Close);
     }
 
     private void OnSliderValueChanged(float count)
@@ -36,19 +41,30 @@ public class SliderModalWindow : MonoBehaviour
         bodyText.text = $"{(int)count}개";
     }
 
-    public static SliderModalWindow Create()
+    public static void Create(Action<SliderModalWindow> onCreated)
     {
-        var window = Instantiate(Resources.Load<SliderModalWindow>("Prefab/08Main/SliderModalWindow"));
-        var canvas = FindObjectOfType<Canvas>();
-        if (canvas != null)
+        Addressables.LoadAssetAsync<GameObject>("Prefab/08Main/Slider Modal Window").Completed += handle =>
         {
-            window.transform.SetParent(canvas.transform, false);
-        }
-        else
-        {
-            Logger.LogError("Canvas not found in the scene. Make sure there is a Canvas in the scene.");
-        }
-        return window;   
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                var prefab = handle.Result;
+                var window = Instantiate(prefab).GetComponent<SliderModalWindow>();
+                var canvas = FindObjectOfType<Canvas>();
+                if (canvas != null)
+                {
+                    window.transform.SetParent(canvas.transform, false);
+                }
+                else
+                {
+                    Logger.LogError("Canvas not found in the scene. Make sure there is a Canvas in the scene.");
+                }
+                onCreated?.Invoke(window);
+            }
+            else
+            {
+                Logger.LogError("Failed to load Slider Modal Window prefab.");
+            }
+        };
     }
     
     public SliderModalWindow SetHeader(int headerId)
@@ -137,6 +153,11 @@ public class SliderModalWindow : MonoBehaviour
     public static float GetCurrentSliderValue()
     {
         return FindObjectOfType<SliderModalWindow>().countSlider.value;
+    }
+
+    private void Close()
+    {
+        Destroy(gameObject);
     }
     
 }

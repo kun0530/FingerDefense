@@ -116,24 +116,22 @@ public class CharacterUpgradePanel : MonoBehaviour
         // 현재 버튼에 해당하는 업그레이드 가격과 스테이지 조건을 검사
         if (playerGold >= selectedUpgradeData.UpgradePrice)
         {
-            ModalWindow.Create()
-                .SetHeader("구매 확인")
-                .SetBody($"{selectedUpgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
-                .AddButton("확인", () =>
-                {
-                    GameManager.instance.GameData.Gold -= selectedUpgradeData.UpgradePrice;
-                    ApplyUpgrade(selectedUpgradeData);
-                })
-                .AddButton("취소", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("업그레이드 확인")
+                    .SetBody("정말 업그레이드 하시겠습니까?")
+                    .AddButton("확인", () => ApplyUpgrade(selectedUpgradeData))
+                    .AddButton("취소", () => { });
+            });
         }
         else
         {
-            ModalWindow.Create()
-                .SetHeader("구매 실패")
-                .SetBody("골드가 부족합니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("업그레이드 실패")
+                    .SetBody("골드가 부족합니다.")
+                    .AddButton("확인", () => { });
+            });
         }
     }
 
