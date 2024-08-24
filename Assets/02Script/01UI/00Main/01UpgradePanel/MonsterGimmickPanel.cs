@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class MonsterGimmickPanel : MonoBehaviour
 {
@@ -38,28 +40,41 @@ public class MonsterGimmickPanel : MonoBehaviour
             if (upgradeData.Type == 1)
             {
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-                Sprite sprite = Resources.Load<Sprite>($"Prefab/10UpgradeUI/{assetName}");
 
-                if (sprite == null)
+                if (!string.IsNullOrEmpty(assetName))
                 {
-                    Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 이미지를 찾을 수 없습니다.");
-                    continue;
+                    string assetPath = $"Prefab/10UpgradeUI/{assetName}";
+                    Addressables.LoadAssetAsync<Sprite>(assetPath).Completed += (AsyncOperationHandle<Sprite> handle) =>
+                    {
+                        if (handle.Status == AsyncOperationStatus.Succeeded)
+                        {
+                            Sprite sprite = handle.Result;
+
+                            switch (upgradeData.UpStatType)
+                            {
+                                case 0:
+                                    SetupButtonGroup(GimmickRangeUpgradeButtons, upgradeData, sprite);
+                                    break;
+                                case 1:
+                                    SetupButtonGroup(GimmickDamageUpgradeButtons, upgradeData, sprite);
+                                    break;
+                                case 2:
+                                    SetupButtonGroup(GimmickDurationUpgradeButtons, upgradeData, sprite);
+                                    break;
+                                default:
+                                    Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 이미지를 Addressables에서 찾을 수 없습니다.");
+                        }
+                    };
                 }
-
-                switch (upgradeData.UpStatType)
+                else
                 {
-                    case 0:
-                        SetupButtonGroup(GimmickRangeUpgradeButtons, upgradeData, sprite);
-                        break;
-                    case 1:
-                        SetupButtonGroup(GimmickDamageUpgradeButtons, upgradeData, sprite);
-                        break;
-                    case 2:
-                        SetupButtonGroup(GimmickDurationUpgradeButtons, upgradeData, sprite);
-                        break;
-                    default:
-                        Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
-                        break;
+                    Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 AssetName을 찾을 수 없습니다.");
                 }
             }
         }

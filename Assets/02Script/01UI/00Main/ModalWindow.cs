@@ -31,6 +31,7 @@ public class ModalWindow : MonoBehaviour
                 if (canvas != null)
                 {
                     window.transform.SetParent(canvas.transform, false);
+                    window.gameObject.tag = "Modal";
                 }
                 else
                 {
@@ -102,5 +103,9 @@ public class ModalWindow : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+        // 부모의 자식 개수를 확인하여 맨 뒤에서 두 번째 위치로 설정
+        int siblingCount = transform.parent.childCount;
+        int targetIndex = Mathf.Max(0, siblingCount - 2); // 맨 뒤에서 두 번째로 설정
+        transform.SetSiblingIndex(targetIndex);
     }
 }

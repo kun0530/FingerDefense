@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
 {
@@ -23,20 +25,22 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
 
     public Action<ItemSlotUI> OnLongPress;
     public Action OnLongPressRelease;
-
-    public void Setup(ItemData item, string assetPath, int count)
+    
+    public async UniTaskVoid Setup(ItemData item, string assetPath, int count)
     {
         Logger.Log($"Setup called with Item ID: {item?.Id}, Count: {count}");
         ItemId = item?.Id ?? 0;
 
         if (item != null && !string.IsNullOrEmpty(assetPath))
         {
-            var sprite = Resources.Load<Sprite>($"Prefab/07GameItem/{assetPath}");
+            var handle = Addressables.LoadAssetAsync<Sprite>($"Prefab/07GameItem/{assetPath}");
+            Sprite sprite = await handle.ToUniTask(); // UniTask로 변환하여 await
+
             if (sprite != null)
             {
                 itemIcon.sprite = sprite;
                 var color = itemIcon.color;
-                color.a = 1f; 
+                color.a = 1f;
                 itemIcon.color = color;
             }
             originalLimit = item.Limit;
@@ -47,7 +51,6 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
             itemIcon.sprite = null;
             itemCount.text = "";
         }
-        
     }
 
     public void SetItemSlot(int itemId, Sprite sprite, int count)

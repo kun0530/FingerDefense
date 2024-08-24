@@ -217,10 +217,9 @@ public class StageSlotCreate : MonoBehaviour
             bool isStageCleared = gameManager.GameData.StageClear.TryGetValue(stageData.StageId, out bool isCleared) && isCleared;
 
             // 이전 스테이지가 클리어되었는지 확인
-            bool isPreviousStageCleared = true;
             if (stageData.StageId > 1)
             {
-                isPreviousStageCleared = gameManager.GameData.StageClear.TryGetValue(stageData.StageId - 1, out bool previousCleared) && previousCleared;
+                var isPreviousStageCleared = gameManager.GameData.StageClear.TryGetValue(stageData.StageId - 1, out bool previousCleared) && previousCleared;
             }
 
             // 슬롯 활성화 여부 설정

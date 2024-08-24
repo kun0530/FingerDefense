@@ -17,17 +17,16 @@ public class GachaSystem : MonoBehaviour
     private UpgradeTable upgradeTable;
 
     public Button closeButton;
-    private List<GachaResultSlot> spawnedSlots = new List<GachaResultSlot>();
+    private readonly List<GachaResultSlot> spawnedSlots = new List<GachaResultSlot>();
 
     [SerializeField, Range(0f, 10f), Tooltip("고급 등급 확률이 해당 값에 따라서 변경됩니다."), Header("고급 등급 확률")]
     private float highGradeProbability = 3f;
 
     [SerializeField, Range(0f, 30f), Tooltip("중급 등급 확률이 해당 값에 따라서 변경됩니다."), Header("중급 등급 확률")]
     private float midGradeProbability = 20f;
-    
+
     public GameObject gachaResultPanel;
-    private bool isCutscenePlaying = false;
-    
+
     private void Start()
     {
         gachaTable = DataTableManager.Get<GachaTable>(DataTableIds.Gacha);
@@ -38,16 +37,15 @@ public class GachaSystem : MonoBehaviour
         {
             closeButton.onClick.AddListener(ClearGachaResults);
         }
-        
+
         gachaFailDirector.stopped += OnTimelineFinished;
         gachaSuccessDirector.stopped += OnTimelineFinished;
-        
     }
 
     public void PerformGacha(int times)
     {
         gachaResultPanel.SetActive(false);
-        GachaData lastResult = null;
+        bool isSuccess = false; // 성공 여부를 추적하는 변수
 
         for (int i = 0; i < times; i++)
         {
@@ -69,7 +67,7 @@ public class GachaSystem : MonoBehaviour
                 if (isNew)
                 {
                     GameManager.instance.GameData.ObtainedGachaIDs.Add(result.Id);
-                    Logger.Log($"Obtained Gacha ID: {result.Id}");
+                    Logger.Log($"Obtained Gacha ID: {result.Id}, Grade: {result.Grade}");
                     DataManager.SaveFile(GameManager.instance.GameData);
 
                     CharacterUpgradePanel upgradePanel = FindObjectOfType<CharacterUpgradePanel>();
@@ -87,6 +85,7 @@ public class GachaSystem : MonoBehaviour
                 else
                 {
                     // 중복 처리
+                    Logger.Log($"Duplicate Gacha ID: {result.Id}, Grade: {result.Grade}");
                     switch (gachaTable.table[result.Id].Grade)
                     {
                         case 0:
@@ -101,30 +100,34 @@ public class GachaSystem : MonoBehaviour
                     }
                 }
 
-                lastResult = result;
+                // 3성(Grade 2) 결과가 있으면 성공으로 플래그 설정
+                if (result.Grade == 2)
+                {
+                    isSuccess = true;
+                    Logger.Log("3성 캐릭터 획득!");
+                }
 
                 // 결과 슬롯 생성 (결과는 모든 뽑기마다 생성)
                 SpawnResultSlot(result, isNew);
             }
         }
-        // 마지막 뽑기의 결과에 따라 컷신 재생
-        if (lastResult != null)
+
+        // 하나라도 3성(Grade 2) 결과가 있으면 성공 컷신, 아니면 실패 컷신
+        if (isSuccess)
         {
-            if (lastResult.Grade == 2)
-            {
-                gachaSuccessDirector.Play();
-            }
-            else
-            {
-                gachaFailDirector.Play();
-            }
+            Logger.Log("Playing Success Cutscene");
+            gachaSuccessDirector.Play();
+        }
+        else
+        {
+            Logger.Log("Playing Fail Cutscene");
+            gachaFailDirector.Play();
         }
     }
 
-
     private GachaData GetRandomGachaResult()
     {
-        float rand = UnityEngine.Random.value * 100f;
+        float rand = Random.value * 100f;
         int grade;
 
         if (rand <= highGradeProbability)
@@ -150,7 +153,7 @@ public class GachaSystem : MonoBehaviour
             }
         }
 
-        int index = UnityEngine.Random.Range(0, possibleResults.Count);
+        int index = Random.Range(0, possibleResults.Count);
         return possibleResults[index];
     }
 
@@ -162,6 +165,7 @@ public class GachaSystem : MonoBehaviour
         spawnedSlots.Add(slot);
         DataManager.SaveFile(GameManager.instance.GameData);
     }
+
     private void OnTimelineFinished(PlayableDirector director)
     {
         gachaResultPanel.SetActive(true);
@@ -172,7 +176,7 @@ public class GachaSystem : MonoBehaviour
     {
         foreach (var slot in spawnedSlots)
         {
-            slot.gameObject.SetActive(true); 
+            slot.gameObject.SetActive(true);
         }
     }
 

@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class CharacterFeaturePanel : MonoBehaviour
 {
@@ -38,13 +40,18 @@ public class CharacterFeaturePanel : MonoBehaviour
             if (upgradeData.Type == 3)
             {
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-                Sprite sprite = Resources.Load<Sprite>($"Prefab/10UpgradeUI/{assetName}");
+                LoadSpriteAsync(assetName, upgradeData);
+            }
+        }
+    }
 
-                if (sprite == null)
-                {
-                    Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 이미지를 찾을 수 없습니다.");
-                    continue;
-                }
+    private void LoadSpriteAsync(string assetName, UpgradeData upgradeData)
+    {
+        Addressables.LoadAssetAsync<Sprite>($"Prefab/10UpgradeUI/{assetName}").Completed += handle =>
+        {
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                Sprite sprite = handle.Result;
 
                 switch (upgradeData.UpStatType)
                 {
@@ -62,7 +69,11 @@ public class CharacterFeaturePanel : MonoBehaviour
                         break;
                 }
             }
-        }
+            else
+            {
+                Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 이미지를 Addressables에서 찾을 수 없습니다.");
+            }
+        };
     }
 
     private void AssignUpgradeDataToButton(Button[] buttons, UpgradeData upgradeData, Sprite sprite)
