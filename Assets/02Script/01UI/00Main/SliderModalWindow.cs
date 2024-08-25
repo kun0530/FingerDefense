@@ -149,6 +149,7 @@ public class SliderModalWindow : MonoBehaviour
     {
         gameObject.SetActive(true);
         
+        
     }
     public static float GetCurrentSliderValue()
     {
