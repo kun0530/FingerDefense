@@ -17,7 +17,11 @@ public class CharacterFeaturePanel : MonoBehaviour
     public TextMeshProUGUI characterArrangementLevelText;
     public TextMeshProUGUI characterHpLevelText;
     public TextMeshProUGUI characterEnhancedGradeLevelText;
-    
+
+    public GameObject[] characterArragementLockImages;
+    public GameObject[] characterHpLockImages;
+    public GameObject[] characterEnhancedGradeLockImages;
+
     private void Awake()
     {
         assetListTable ??= DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
@@ -43,6 +47,11 @@ public class CharacterFeaturePanel : MonoBehaviour
                 LoadSpriteAsync(assetName, upgradeData);
             }
         }
+
+        // 현재 업그레이드 레벨에 따른 잠금 이미지 처리
+        UpdateLockImages(characterArrangementButtons, characterArragementLockImages, 3);
+        UpdateLockImages(characterHpUpgradeButtons, characterHpLockImages, 4);
+        UpdateLockImages(characterEnhancedGradeButtons, characterEnhancedGradeLockImages, 5);
     }
 
     private void LoadSpriteAsync(string assetName, UpgradeData upgradeData)
@@ -78,7 +87,6 @@ public class CharacterFeaturePanel : MonoBehaviour
 
     private void AssignUpgradeDataToButton(Button[] buttons, UpgradeData upgradeData, Sprite sprite)
     {
-        // 정확한 레벨에 맞는 버튼에만 UpgradeData를 할당합니다.
         for (int i = 0; i < buttons.Length; i++)
         {
             if (upgradeData.Level == i + 1) // 버튼 레벨과 UpgradeData의 레벨이 일치하는지 확인
@@ -89,8 +97,10 @@ public class CharacterFeaturePanel : MonoBehaviour
                 button.onClick.RemoveAllListeners(); // 중복 이벤트 방지를 위해 기존 리스너 제거
                 button.onClick.AddListener(() =>
                 {
-                    int currentLevel = GameManager.instance.GameData.PlayerUpgradeLevel
-                        .Find(x => x.playerUpgrade == upgradeData.UpStatType).level;
+                    var playerUpgradeLevel = GameManager.instance.GameData.PlayerUpgradeLevel
+                        .Find(x => x.playerUpgrade == upgradeData.UpStatType);
+
+                    int currentLevel = playerUpgradeLevel.level;
 
                     if (upgradeData.Level == currentLevel + 1)
                     {
@@ -115,23 +125,25 @@ public class CharacterFeaturePanel : MonoBehaviour
                                 .AddButton("확인", () => { })
                                 .Show();
                         });
-
                     }
                 });
             }
         }
     }
 
-    private UpgradeData FindUpgradeDataByLevel(int upStatType, int targetLevel)
+    private void UpdateLockImages(Button[] buttons, GameObject[] lockImages, int upStatType)
     {
-        foreach (var upgradeData in upgradeTable.upgradeTable.Values)
+        var playerUpgradeLevel = GameManager.instance.GameData.PlayerUpgradeLevel
+            .Find(x => x.playerUpgrade == upStatType);
+
+        int currentLevel = playerUpgradeLevel.level;
+
+        for (int i = 0; i < lockImages.Length; i++)
         {
-            if (upgradeData.UpStatType == upStatType && upgradeData.Level == targetLevel)
-            {
-                return upgradeData;
-            }
+            // 현재 레벨 이하의 버튼들은 잠금 해제
+            lockImages[i].SetActive(i >= currentLevel);
+            // 현재 레벨을 초과하는 버튼들은 잠금 상태로 유지
         }
-        return null;
     }
 
     private void TryUpgradeFeature(UpgradeData upgradeData)
@@ -204,6 +216,25 @@ public class CharacterFeaturePanel : MonoBehaviour
 
     private void UpdateUIAfterUpgrade(UpgradeData upgradeData)
     {
-        // 이 메서드에서 UI를 갱신하는 로직을 추가합니다.
+        // 업그레이드 후 UI 갱신 로직 추가
+        UpdateLockImages(characterArrangementButtons, characterArragementLockImages, 3);
+        UpdateLockImages(characterHpUpgradeButtons, characterHpLockImages, 4);
+        UpdateLockImages(characterEnhancedGradeButtons, characterEnhancedGradeLockImages, 5);
+
+        switch (upgradeData.UpStatType)
+        {
+            case 3:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            case 4:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            case 5:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            default:
+                Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
+                break;
+        }
     }
 }

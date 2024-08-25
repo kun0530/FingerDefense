@@ -18,6 +18,10 @@ public class MonsterGimmickPanel : MonoBehaviour
     public TextMeshProUGUI GimmickDamageLevelText;
     public TextMeshProUGUI GimmickDurationLevelText;
     
+    public GameObject[] GimmickRangeLockImages;
+    public GameObject[] GimmickDamageLockImages;
+    public GameObject[] GimmickDurationLockImages;
+    
     private void Awake()
     {
         upgradeTable ??= DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
@@ -78,6 +82,11 @@ public class MonsterGimmickPanel : MonoBehaviour
                 }
             }
         }
+
+        // 현재 업그레이드 레벨에 따른 잠금 이미지 처리
+        UpdateLockImages(GimmickRangeUpgradeButtons, GimmickRangeLockImages, 0);
+        UpdateLockImages(GimmickDamageUpgradeButtons, GimmickDamageLockImages, 1);
+        UpdateLockImages(GimmickDurationUpgradeButtons, GimmickDurationLockImages, 2);
     }
 
     private void SetupButtonGroup(Button[] buttons, UpgradeData upgradeData, Sprite sprite)
@@ -128,6 +137,27 @@ public class MonsterGimmickPanel : MonoBehaviour
         }
     }
 
+    private void UpdateLockImages(Button[] buttons, GameObject[] lockImages, int upStatType)
+    {
+        var playerUpgradeLevel = GameManager.instance.GameData.MonsterGimmickLevel
+            .Find(x => x.monsterGimmick == upStatType);
+
+        int currentLevel = playerUpgradeLevel.level;
+
+        for (int i = 0; i < lockImages.Length; i++)
+        {
+            // 현재 레벨 이하의 버튼들은 잠금 해제
+            if (i < currentLevel)
+            {
+                lockImages[i].SetActive(false);
+            }
+            else
+            {
+                lockImages[i].SetActive(true);
+            }
+        }
+    }
+
     private UpgradeData FindUpgradeDataByLevel(int upStatType, int targetLevel)
     {
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
@@ -171,7 +201,7 @@ public class MonsterGimmickPanel : MonoBehaviour
                     .Show();
             });
         }
-        else if (Variables.LoadTable.StageId < upgradeData.NeedClearStage)
+        else if (stageClearNum < upgradeData.NeedClearStage)
         {
             ModalWindow.Create(window =>
             {
@@ -204,12 +234,31 @@ public class MonsterGimmickPanel : MonoBehaviour
         // 업그레이드 후 데이터 저장
         DataManager.SaveFile(GameManager.instance.GameData);
 
-        // UI 갱신 로직 추가 (예: 버튼 비활성화 등)
+        // UI 갱신 로직 추가
         UpdateUIAfterGimmickUpgrade(upgradeData);
     }
 
     private void UpdateUIAfterGimmickUpgrade(UpgradeData upgradeData)
     {
-        // 이 메서드에서 UI를 갱신하는 로직을 추가합니다.
+        // 업그레이드 후 UI 갱신
+        UpdateLockImages(GimmickRangeUpgradeButtons, GimmickRangeLockImages, 0);
+        UpdateLockImages(GimmickDamageUpgradeButtons, GimmickDamageLockImages, 1);
+        UpdateLockImages(GimmickDurationUpgradeButtons, GimmickDurationLockImages, 2);
+
+        switch (upgradeData.UpStatType)
+        {
+            case 0:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            case 1:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            case 2:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            default:
+                Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
+                break;
+        }
     }
 }
