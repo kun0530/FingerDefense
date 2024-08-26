@@ -227,6 +227,8 @@ public class ItemSlotController : MonoBehaviour
     }
     public void OnStartButtonClick()
     {
+        bool isTutorialCompleted = GameManager.instance.GameData.Game2TutorialCheck;
+
         // 빈 슬롯에서 아이템 사용 처리
         foreach (var emptySlot in emptySlots)
         {
@@ -235,14 +237,22 @@ public class ItemSlotController : MonoBehaviour
             int usedCount = emptySlot.GetItemCount(); // 실제 사용한 아이템 개수
             if (usedCount > 0)
             {
-                // 게임 데이터에서 아이템 사용 처리
-                ApplyItemUsage(emptySlot.ItemId, usedCount);
+                if (isTutorialCompleted)
+                {
+                    // 튜토리얼이 완료된 경우에만 실제로 아이템을 사용합니다.
+                    ApplyItemUsage(emptySlot.ItemId, usedCount);
 
-                // 사용한 아이템을 LoadTable에서 업데이트
-                UpdateItemInLoadTable(emptySlot.ItemId, usedCount);
-                DataManager.SaveFile(GameManager.instance.GameData);
-                
-                // UI에서 아이템 개수를 업데이트
+                    // 사용한 아이템을 LoadTable에서 업데이트
+                    UpdateItemInLoadTable(emptySlot.ItemId, usedCount);
+                    DataManager.SaveFile(GameManager.instance.GameData);
+                }
+                else
+                {
+                    // 튜토리얼 중에는 실제로 아이템 수량을 차감하지 않음.
+                    Logger.Log($"튜토리얼이 완료되지 않아 아이템 ID {emptySlot.ItemId}의 수량을 차감하지 않습니다.");
+                }
+
+                // UI에서 아이템 개수를 업데이트 및 슬롯 초기화
                 emptySlot.UpdateItemCount(0);
                 emptySlot.ClearSlot(); // 사용 후 슬롯 초기화
             }

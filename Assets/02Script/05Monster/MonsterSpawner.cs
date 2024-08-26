@@ -34,7 +34,6 @@ public class MonsterSpawner : MonoBehaviour
     public TutorialController gameTutorial;
     public TutorialController gameTutorial2;
     public TutorialController gameTutorial3;
-    public TutorialObserver tutorialObserver;
     
     public event Action<MonsterController> onResetMonster;
     
@@ -120,7 +119,7 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                 monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
 
-                if (tutorialObserver != null)
+                if (gameTutorial2.gameObject.activeSelf)
                 {
                     monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
                 } 
@@ -163,6 +162,7 @@ public class MonsterSpawner : MonoBehaviour
             }
             
         }
+        
         else if (DataManager.LoadFile().Game3TutorialCheck == false)
         {
             var monsterGo = factory.GetMonster(monsterTable.Get(12031));
@@ -171,7 +171,7 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                 monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
 
-                if (tutorialObserver != null)
+                if (gameTutorial3.gameObject.activeSelf)
                 {
                     monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
                 } 
@@ -188,23 +188,28 @@ public class MonsterSpawner : MonoBehaviour
             for (int i = 0; i < 2; i++)
             {
                 var monsterGo2 = factory.GetMonster(monsterTable.Get(11001));
-                monsterGo2.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
-                monsterGo2.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
-
-                if (tutorialObserver != null)
+                if (stageManager)
                 {
-                    monsterGo2.gameObject.AddComponent<TutorialGameTrigger>();
-                } 
+                    monsterGo2.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+                    monsterGo2.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+
+                    if (gameTutorial3.gameObject.activeSelf)
+                    {
+                        monsterGo2.gameObject.AddComponent<TutorialGameTrigger>();
+                    } 
                 
-                var monsterController = monsterGo2.GetComponent<MonsterController>();
-                if (monsterController != null)
-                {
-                    monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
-                }
+                    var monsterController = monsterGo2.GetComponent<MonsterController>();
+                    if (monsterController != null)
+                    {
+                        monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+                    }
 
-                monsterGo.ResetMonsterData();
+                    monsterGo.ResetMonsterData();    
+                }
+                
             }
         }
+        
         else
         {
             Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
@@ -249,5 +254,44 @@ public class MonsterSpawner : MonoBehaviour
     }
     
     //튜토리얼 몬스터 이동 상태 추가
-    
+    public void RespawnSpecificMonster(int targetMonsterId)
+    {
+        var monsterGo = factory.GetMonster(monsterTable.Get(targetMonsterId));
+        if (stageManager != null)
+        {
+            // 위치 설정
+            monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
+            monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
+
+            // `TutorialGameTrigger` 추가
+            var tutorialTrigger = monsterGo.GetComponent<TutorialGameTrigger>();
+            if (tutorialTrigger == null)
+            {
+                monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
+                Debug.Log($"TutorialGameTrigger 추가됨: {monsterGo.name}");
+            }
+            else
+            {
+                Debug.Log($"TutorialGameTrigger 이미 존재함: {monsterGo.name}");
+            }
+
+            // MonsterController 설정
+            var monsterController = monsterGo.GetComponent<MonsterController>();
+            if (monsterController != null)
+            {
+                monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
+
+                // 몬스터의 초기 상태 및 데이터 리셋
+                monsterController.ResetMonsterData();
+
+                // 이동 상태의 초기화
+                var moveState = new MoveState(monsterController);
+                moveState.accumulatedDistance = 0f;
+                moveState.isPaused = false;
+
+                // 몬스터를 활성화하고 움직임 시작
+                monsterController.gameObject.SetActive(true);
+            }
+        }    
+    }
 }
