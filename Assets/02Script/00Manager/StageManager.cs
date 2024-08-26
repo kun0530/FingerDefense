@@ -93,6 +93,8 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    [Header("골드")]
+    [SerializeField] private EffectController goldEffect;
     private int earnedGold;
     public int EarnedGold
     {
@@ -103,7 +105,23 @@ public class StageManager : MonoBehaviour
             gameUiManager.UpdateEarnedGold(earnedGold);
         }
     }
-    [HideInInspector] public float goldMultiplier = 1f;
+    private float goldMultiplier = 1f;
+    [HideInInspector] public float GoldMultiplier
+    {
+        get => goldMultiplier;
+        set
+        {
+            goldMultiplier = value;
+            if (goldMultiplier > 1f)
+            {
+                goldEffect?.gameObject?.SetActive(true);
+            }
+            else
+            {
+                goldEffect?.gameObject?.SetActive(false);
+            }
+        }
+    }
     
     private StageState currentState;
     public StageState CurrentState
@@ -149,6 +167,7 @@ public class StageManager : MonoBehaviour
         CurrentState = StageState.PLAYING;
         MonsterCount = monsterSpawner.MonsterCount;
         EarnedGold = 0;
+        GoldMultiplier = 1f;
     }
     
     public void DamageCastle(float damage)
@@ -204,7 +223,7 @@ public class StageManager : MonoBehaviour
 
     public void GetGold(int gold)
     {
-        EarnedGold += Mathf.CeilToInt(gold * goldMultiplier);
+        EarnedGold += Mathf.CeilToInt(gold * GoldMultiplier);
         gameUiManager.UpdateEarnedGold(earnedGold);
     }
 
