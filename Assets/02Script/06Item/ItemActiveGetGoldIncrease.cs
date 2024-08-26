@@ -26,6 +26,6 @@ public class ItemActiveGetGoldIncrease : ActiveItem
         if (!StageMgr)
             return;
 
-        StageMgr.goldMultiplier = multiplier;
+        StageMgr.GoldMultiplier = multiplier;
     }
 }

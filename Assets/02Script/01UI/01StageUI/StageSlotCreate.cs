@@ -123,26 +123,31 @@ public class StageSlotCreate : MonoBehaviour
 
         // 해당 index에 맞는 slotParents를 활성화할 수 있는지 여부 확인
         bool canActivate = false;
-    
+
         if (index == 0)
         {
             canActivate = true;
+            
         }
         else if (index == 1 && isStage5Cleared)
         {
             canActivate = true;
+            
         }
         else if (index == 2 && isStage10Cleared)
         {
             canActivate = true;
+            
         }
         else if (index == 3 && isStage15Cleared)
         {
             canActivate = true;
+            
         }
         else if (index == 4 && isStage20Cleared)
         {
             canActivate = true;
+            
         }
 
         // 패널을 비활성화하기 전에 조건을 체크
@@ -162,7 +167,7 @@ public class StageSlotCreate : MonoBehaviour
         }
         else
         {
-            // 조건을 만족하지 않는 경우, 모달 창을 띄우고 기존 패널을 유지
+            // 모달 창을 정확히 한 번만 띄우기 위해 로직을 개선
             ModalWindow.Create(window =>
             {
                 window.SetHeader("잠금")
@@ -172,6 +177,7 @@ public class StageSlotCreate : MonoBehaviour
             });
         }
     }
+
     
     private void CreateStageSlots()
     {
