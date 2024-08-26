@@ -32,61 +32,81 @@ public class ItemPanel : MonoBehaviour
         Logger.Log($"ItemBuyButton {index} Clicked");
         int cost = 0;
         int itemId = 0;
+        int stage = 0;
 
         switch (index)
         {
             case 0:
                 itemId = 8005;
                 cost = 5000;
+                stage = 13005;
                 break;
             case 1:
                 itemId = 8006;
                 cost = 5000;
+                stage = 13005;
                 break;
             case 2:
                 itemId = 8007;
                 cost = 10000;
+                stage = 13010;
                 break;
             case 3:
                 itemId = 8008;
                 cost = 10000;
+                stage = 13010;
                 break;
             case 4:
                 itemId = 8009;
                 cost = 10000;
+                stage = 13010;
                 break;
             case 5:
                 itemId = 8010;
                 cost = 20000;
+                stage = 13015;
                 break;
             case 6:
                 itemId = 8011;
                 cost = 20000;
+                stage = 13015;
                 break;
             case 7:
                 itemId = 8012;
                 cost = 20000;
+                stage = 13015;
                 break;
             case 8:
                 itemId = 8013;
                 cost = 20000;
+                stage = 13015;
                 break;
             case 9:
                 itemId = 8014;
                 cost = 20000;
+                stage = 13015;
                 break;
             case 10:
                 itemId = 8015;
                 cost = 20000;
+                stage = 13015;
                 break;
         }
 
         // 구매 확인 모달 창을 띄움
-        CheckPurchase(cost, itemId);
+        CheckPurchase(cost, itemId,stage);
     }
 
-    private void CheckPurchase(int costPerItem, int itemId)
+    private void CheckPurchase(int costPerItem, int itemId, int stageId)
     {
+        if(GameManager.instance.GameData.stageClearNum < stageId)
+        {
+            var stageNum = stageId - 13000;
+            // 스테이지 클리어 조건을 만족하지 못한 경우
+            ShowPurchaseResult("구매 실패", $"스테이지 {stageNum}를 클리어해야 구매할 수 있습니다.");
+            return;
+        }
+        
         SliderModalWindow.Create(window =>
         {
             window.SetHeader("구매 확인")

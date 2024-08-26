@@ -125,7 +125,7 @@ public class ShopSettingUI : MonoBehaviour, IResourceObserver
 
     private void SetTextElements()
     {
-        tapMenuTexts[0].text = shopTable.Get(90581.ToString());
+        tapMenuTexts[0].text = shopTable.Get(90331.ToString());
         tapMenuTexts[1].text = shopTable.Get(90591.ToString());
         tapMenuTexts[2].text = shopTable.Get(90601.ToString());
         tapMenuTexts[4].text = shopTable.Get(90611.ToString());

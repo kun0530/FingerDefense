@@ -181,18 +181,17 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             elementImage.gameObject.SetActive(false);
         }
-
-        var skillImage = GetComponent<Image>();
-        if (skillImage != null)
+        
+        if(SkillIcon != null)
         {
-            skillImage.gameObject.SetActive(false);
+            SkillIcon.gameObject.SetActive(false);
         }
 
         if (PowerImage != null)
         {
             PowerImage.gameObject.SetActive(false);
         }
-
+        
 
         // 슬롯 재활용 가능 상태로 설정
         ChoicePanel.gameObject.SetActive(false);

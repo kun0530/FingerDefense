@@ -16,7 +16,9 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Game1TutorialCheck = true;
             GameManager.instance.GameData.StageChoiceTutorialCheck = true;
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300470);
+            GameManager.instance.GameData.Diamond += 800;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
+            GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
             DataManager.SaveFile(GameManager.instance.GameData);
         }
 
@@ -25,10 +27,11 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Game2TutorialCheck = true;
             GameManager.instance.GameData.DeckUITutorialCheck = true;
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300596);
-            //12031,0에 해당하는 것을 1로 바꾸기 
+            GameManager.instance.GameData.Diamond += 800;
             GameManager.instance.GameData.MonsterDragLevel[12031] = (int)GameData.MonsterDrag.UNLOCK;
             GameManager.instance.GameData.Gold += 100;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
+            GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
             DataManager.SaveFile(GameManager.instance.GameData);
         }
         
@@ -37,7 +40,9 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.ShopDragTutorialCheck = true;
             GameManager.instance.GameData.Game3TutorialCheck = true; 
             GameManager.instance.GameData.ObtainedGachaIDs.Add(300530);
+            GameManager.instance.GameData.Diamond += 800;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
+            GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
             DataManager.SaveFile(GameManager.instance.GameData);
         }        
     }

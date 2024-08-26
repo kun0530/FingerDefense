@@ -146,6 +146,7 @@ public class CharacterUpgradePanel : MonoBehaviour
         // 업그레이드 이벤트 호출
         OnCharacterUpgraded?.Invoke(upgradeData.NeedCharId, upgradeData.UpgradeResultId);
         // 데이터 저장
+        GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;
         DataManager.SaveFile(GameManager.instance.GameData);
         upgradeButton.onClick.RemoveAllListeners(); // 업그레이드 버튼 리스너 제거
         // UI 갱신
