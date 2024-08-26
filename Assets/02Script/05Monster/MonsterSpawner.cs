@@ -35,6 +35,7 @@ public class MonsterSpawner : MonoBehaviour
     public TutorialController gameTutorial2;
     public TutorialController gameTutorial3;
     public TutorialObserver tutorialObserver;
+    
     public event Action<MonsterController> onResetMonster;
     
     private void Awake()
@@ -83,7 +84,8 @@ public class MonsterSpawner : MonoBehaviour
         stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
         
         factory.poolTransform = poolTransform; // To-Do: 추후 삭제
-        spawnPosition = new Vector2(spawnTransform.position.x, spawnTransform.position.y);
+        var position = spawnTransform.position;
+        spawnPosition = new Vector2(position.x, position.y);
     }
 
     private void Update()
@@ -136,7 +138,7 @@ public class MonsterSpawner : MonoBehaviour
         else if (DataManager.LoadFile().Game2TutorialCheck == false)
         {
             //게임2 튜토리얼
-            for(int i=0; i<2; i++)
+            for(var i=0; i<2; i++)
             {
                 var monsterGo = factory.GetMonster(monsterTable.Get(11001));
                 if (stageManager)
@@ -149,10 +151,9 @@ public class MonsterSpawner : MonoBehaviour
                     {
                         monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
                     }
-                   
-
+                    
                     var monsterController = monsterGo.GetComponent<MonsterController>();
-                    if (monsterController != null)
+                    if (!ReferenceEquals(monsterController, null))
                     {
                         monsterController.IsTutorialMonster = true; // 튜토리얼 몬스터로 설정
                     }

@@ -19,6 +19,8 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Diamond += 800;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
             GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+            GameManager.instance.GameData.AddItem(8005,1);
+            
             DataManager.SaveFile(GameManager.instance.GameData);
         }
 

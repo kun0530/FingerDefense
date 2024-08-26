@@ -374,7 +374,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 1
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!4 &205933968
@@ -2457,7 +2457,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 0
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!1001 &629077114
@@ -2595,6 +2595,8 @@ MonoBehaviour:
   - {fileID: 548341833}
   - {fileID: 2001993600}
   - {fileID: 471313819}
+  skipButton: {fileID: 6236211675427889076}
+  skipIndex: 0
 --- !u!4 &648396254
 Transform:
   m_ObjectHideFlags: 0
@@ -3002,7 +3004,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 0
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!4 &672088848
@@ -3030,6 +3032,7 @@ GameObject:
   m_Component:
   - component: {fileID: 730911742}
   - component: {fileID: 730911743}
+  - component: {fileID: 730911744}
   m_Layer: 0
   m_Name: SFX
   m_TagString: Untagged
@@ -3148,6 +3151,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &730911744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730911741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0f1ff591cf849d1ab98859586b6880, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &791470851
 GameObject:
   m_ObjectHideFlags: 0
@@ -3729,67 +3744,6 @@ MonoBehaviour:
   - {fileID: 1162252479}
   - {fileID: 500202483}
   - {fileID: 791470851}
---- !u!1 &1000919087
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1000919088}
-  - component: {fileID: 1000919089}
-  m_Layer: 0
-  m_Name: 07. Tutorial Monster DragLock Trigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1000919088
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000919087}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1430129138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1000919089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000919087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  observedMonsters: []
-  tutorialText: {fileID: 653720208}
-  tutorialImage: {fileID: 0}
-  monsterSpawnParent: {fileID: 1327133109483166374}
-  isRemove: 0
-  isAdd: 0
-  isDragLock: 1
-  isState: 1
-  isDebuff: 0
-  stop:
-    buffType: 0
-    damageTerm: 0
-    isPercentage: 0
-    buffValue: 0
-    isPermanent: 0
-    lastingTime: 0
-    effectNo: 0
 --- !u!1 &1002259783
 GameObject:
   m_ObjectHideFlags: 0
@@ -4296,67 +4250,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeEffect: {fileID: 6178526770960340653}
   isFadeIn: 0
---- !u!1 &1134215871
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1134215872}
-  - component: {fileID: 1134215873}
-  m_Layer: 0
-  m_Name: 09. Tutorial Monster Stop Trigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1134215872
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1134215871}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1430129138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1134215873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1134215871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  observedMonsters: []
-  tutorialText: {fileID: 653720208}
-  tutorialImage: {fileID: 0}
-  monsterSpawnParent: {fileID: 1327133109483166374}
-  isRemove: 0
-  isAdd: 0
-  isDragLock: 0
-  isState: 0
-  isDebuff: 1
-  stop:
-    buffType: 1
-    damageTerm: 0
-    isPercentage: 1
-    buffValue: -1
-    isPermanent: 1
-    lastingTime: 0
-    effectNo: 0
 --- !u!1 &1141308894
 GameObject:
   m_ObjectHideFlags: 0
@@ -4402,67 +4295,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141308894}
   m_CullTransparentMesh: 1
---- !u!1 &1145687397
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1145687398}
-  - component: {fileID: 1145687399}
-  m_Layer: 0
-  m_Name: 08. Tutorial Character Disable Trigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1145687398
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1145687397}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1430129138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1145687399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1145687397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  observedMonsters: []
-  tutorialText: {fileID: 653720208}
-  tutorialImage: {fileID: 0}
-  monsterSpawnParent: {fileID: 3606417200051115221}
-  isRemove: 1
-  isAdd: 0
-  isDragLock: 0
-  isState: 0
-  isDebuff: 0
-  stop:
-    buffType: 0
-    damageTerm: 0
-    isPercentage: 0
-    buffValue: 0
-    isPermanent: 0
-    lastingTime: 0
-    effectNo: 0
 --- !u!1 &1147530911
 GameObject:
   m_ObjectHideFlags: 0
@@ -4585,80 +4417,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162252479}
   m_CullTransparentMesh: 1
---- !u!1 &1171662406
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1171662407}
-  - component: {fileID: 1171662409}
-  - component: {fileID: 1171662408}
-  m_Layer: 0
-  m_Name: 10. Tutorial Dialog
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1171662407
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171662406}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1430129138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1171662408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171662406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 535bf06a08df03340b083d61e974ea15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogSystem: {fileID: 1171662409}
---- !u!114 &1171662409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171662406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 282a12112638e044295e849e2d6fbe62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  systemDialog:
-  - skeletonGraphic: {fileID: 493080880877717929}
-    nameText: {fileID: 5947291290492634370}
-    dialogText: {fileID: 8792727332735717445}
-  dialogData:
-  - speakerIndex: 0
-    name: "\uCF00\uC774"
-    dialog: "\uC774\uC0C1\uC73C\uB85C \uCE90\uB9AD\uD130 \uD3B8\uC131 \uD29C\uD1A0\uB9AC\uC5BC\uC744
-      \uB9C8\uCE58\uB3C4\uB85D \uD560\uAC8C\uC694!"
-    objectsToActivate: []
-    objectsToDeactivate: []
-  isFirstDialog: 0
-  currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
-  dialogTextPanel: {fileID: 6169798351630867688}
-  dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!1 &1190626881
 GameObject:
   m_ObjectHideFlags: 0
@@ -4963,7 +4721,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 1
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!1 &1266557093
@@ -5654,16 +5412,8 @@ MonoBehaviour:
   tutorials:
   - {fileID: 1226408739}
   - {fileID: 1121553917}
-  - {fileID: 672088846}
-  - {fileID: 625281324}
-  - {fileID: 1000919089}
-  - {fileID: 1691646970}
-  - {fileID: 1145687399}
-  - {fileID: 1134215873}
-  - {fileID: 1171662408}
-  - {fileID: 1369895631}
-  - {fileID: 1007393461}
-  - {fileID: 1513270934}
+  skipButton: {fileID: 6236211675427889076}
+  skipIndex: 0
 --- !u!4 &1430129138
 Transform:
   m_ObjectHideFlags: 0
@@ -5678,14 +5428,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1226408738}
+  - {fileID: 1992895484}
   - {fileID: 1121553916}
   - {fileID: 672088848}
   - {fileID: 625281323}
-  - {fileID: 1000919088}
-  - {fileID: 1691646969}
-  - {fileID: 1145687398}
-  - {fileID: 1134215872}
-  - {fileID: 1171662407}
   - {fileID: 1369895632}
   - {fileID: 1007393462}
   - {fileID: 1513270933}
@@ -5752,6 +5498,8 @@ MonoBehaviour:
   - {fileID: 249752568}
   - {fileID: 1070235375}
   - {fileID: 207501126}
+  skipButton: {fileID: 6236211675427889076}
+  skipIndex: 0
 --- !u!1 &1495458296
 GameObject:
   m_ObjectHideFlags: 0
@@ -6335,7 +6083,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 1
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!1 &1577279523
@@ -6559,7 +6307,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 1
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!114 &1659415479
@@ -6653,51 +6401,6 @@ MonoBehaviour:
   gameTutorial: {fileID: 1479793482}
   game2Tutorial: {fileID: 1430129137}
   game3Tutorial: {fileID: 648396253}
---- !u!1 &1691646968
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1691646969}
-  - component: {fileID: 1691646970}
-  m_Layer: 0
-  m_Name: '05. Tutorial Character List Check '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1691646969
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1691646968}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1430129138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1691646970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1691646968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6a226556658c2f4c88b0df03a7e8256, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentObject: {fileID: 3606417200051115221}
 --- !u!1 &1843066736
 GameObject:
   m_ObjectHideFlags: 0
@@ -6769,7 +6472,7 @@ MonoBehaviour:
     objectsToDeactivate: []
   isFirstDialog: 0
   currentDialogIndex: 0
-  nextButton: {fileID: 4153343531288420766}
+  nextButton: {fileID: 5888263253575002041}
   dialogTextPanel: {fileID: 6169798351630867688}
   dialogCanvasGroup: {fileID: 634704750564217158}
 --- !u!1 &1895731881
@@ -6885,6 +6588,67 @@ MonoBehaviour:
   isAdd: 0
   isDragLock: 0
   isState: 0
+  isDebuff: 0
+  stop:
+    buffType: 0
+    damageTerm: 0
+    isPercentage: 0
+    buffValue: 0
+    isPermanent: 0
+    lastingTime: 0
+    effectNo: 0
+--- !u!1 &1992895483
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1992895484}
+  - component: {fileID: 1992895485}
+  m_Layer: 0
+  m_Name: 11. Tutorial Clear Active (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1992895484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992895483}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430129138}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1992895485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992895483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24495ca2365961a479a1748d9359815e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedMonsters: []
+  tutorialText: {fileID: 0}
+  tutorialImage: {fileID: 0}
+  monsterSpawnParent: {fileID: 0}
+  isRemove: 0
+  isAdd: 0
+  isDragLock: 1
+  isState: 1
   isDebuff: 0
   stop:
     buffType: 0
@@ -7755,7 +7519,6 @@ GameObject:
   - component: {fileID: 1901728253489356874}
   - component: {fileID: 2322747228201806768}
   - component: {fileID: 5981789038739156784}
-  - component: {fileID: 4153343531288420766}
   - component: {fileID: 634704750564217158}
   m_Layer: 5
   m_Name: Dialog System
@@ -9922,50 +9685,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8925539128788809264}
   m_CullTransparentMesh: 1
---- !u!114 &4153343531288420766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1150501932833708041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 2322747228201806768}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4155192496606717369
 GameObject:
   m_ObjectHideFlags: 0
@@ -10599,6 +10318,7 @@ GameObject:
   - component: {fileID: 5888263253575002040}
   - component: {fileID: 3758008290251977008}
   - component: {fileID: 4382195352859077867}
+  - component: {fileID: 5888263253575002041}
   m_Layer: 5
   m_Name: Image (3)
   m_TagString: Untagged
@@ -11211,6 +10931,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4953981281664896251}
   m_CullTransparentMesh: 1
+--- !u!114 &5888263253575002041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4953981281664896251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 2322747228201806768}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 730911744}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlaySfxSound
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5907009749108829610
 MonoBehaviour:
   m_ObjectHideFlags: 0

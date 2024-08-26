@@ -12,7 +12,7 @@ public class ItemSlotController : MonoBehaviour
     private ItemTable itemTable;
     private AssetListTable assetListTable;
 
-    private List<ItemSlotUI> itemSlots = new List<ItemSlotUI>(); // 아이템 슬롯 리스트
+    public List<ItemSlotUI> itemSlots = new List<ItemSlotUI>(); // 아이템 슬롯 리스트
     private List<ItemSlotUI> emptySlots = new List<ItemSlotUI>(); // 빈 슬롯 리스트
     private HashSet<int> addedItems = new HashSet<int>(); // 추가된 아이템 ID를 관리
 
