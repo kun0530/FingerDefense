@@ -206,7 +206,7 @@ public class MonsterGimmickPanel : MonoBehaviour
             ModalWindow.Create(window =>
             {
                 window.SetHeader("스테이지 클리어 필요")
-                    .SetBody($"이 업그레이드를 구매하려면 스테이지 {upgradeData.NeedClearStage}를 클리어해야 합니다.")
+                    .SetBody($"이 업그레이드를 구매하려면 스테이지 {upgradeData.NeedClearStage-13000}를 클리어해야 합니다.")
                     .AddButton("확인", () => { })
                     .Show();
             });

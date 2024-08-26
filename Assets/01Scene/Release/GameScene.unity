@@ -4127,13 +4127,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8047a2c806e14d96965911ddef841f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultLandScapeMode: 4
-  defaultPortraitMode: 1
-  currentScreenMode: 2
+  defaultScreenMode: 2
   targetWidth: 20
   targetHeight: 20
   bottomY: -6
-  limitAspectRatio: 2
+  lowerLimitAspectRatio: 1
+  upperLimitAspectRatio: 2
   zoomOutWidth: 25
   zoomTime: 0.25
   letterBoxColor: {r: 0, g: 0, b: 0, a: 0}
@@ -6017,7 +6016,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 3829646944594429377, guid: 5222ab65f806ff34385f77b891356cc9, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 9cd33f999e49a52408c53bb4c9f37157, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -6115,12 +6114,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605d856722902487297f0482a0f50334, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgms:
-  - {fileID: 8300000, guid: 9cd33f999e49a52408c53bb4c9f37157, type: 3}
-  - {fileID: 8300000, guid: c3e8f2182f23169459cbdbaa837c1e50, type: 3}
-  - {fileID: 8300000, guid: 9e816bebbe6d8ef4b8269b367aa4fdc0, type: 3}
-  - {fileID: 8300000, guid: 052f4fd2ac3ec4d90b65462991e3e7ee, type: 3}
-  - {fileID: 8300000, guid: 7740e450968065d4398d1f68c4f55341, type: 3}
+  bgmAddresses:
+  - Stage1Bgm
+  - Stage2Bgm
+  - Stage3Bgm
+  - Stage4Bgm
+  - Stage5Bgm
 --- !u!1 &1513270932
 GameObject:
   m_ObjectHideFlags: 0

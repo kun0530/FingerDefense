@@ -21,10 +21,7 @@ public class BgmSound : MonoBehaviour
 
     private void OnDisable()
     {
-        if (isAutoPlay)
-        {
-            bgmManager?.PlayMainBgm();
-        }
+        bgmManager?.StopAudioClip();
     }
 
     public void PlayBgm()
@@ -32,8 +29,4 @@ public class BgmSound : MonoBehaviour
         bgmManager?.PlayAudioClip(bgm);
     }
 
-    public void PlayMainBgm()
-    {
-        bgmManager?.PlayMainBgm();
-    }
 }
