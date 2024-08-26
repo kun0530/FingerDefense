@@ -16,6 +16,8 @@ public class PlayerAttackBehavior : MonoBehaviour
             skillAttack = value;
             if (skillAttack != null)
                 skillAttack.coolTimeBar = skillAttackCoolTimeBar;
+            else
+                skillAttackCoolTimeBar?.transform.parent?.gameObject.SetActive(false);
         }
     }
 
