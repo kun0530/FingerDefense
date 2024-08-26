@@ -66,7 +66,7 @@ public class ItemSlotController : MonoBehaviour
         for (var i = 0; i < 2; i++)
         {
             var emptySlot = Instantiate(itemSlotPrefab, itemSlotParent);
-            emptySlot.Setup(null, null, 0);
+            _ = emptySlot.Setup(null, null, 0);
             emptySlot.onClickItemSlot = HandleEmptySlotClick;
             emptySlots.Add(emptySlot);
         }
@@ -102,7 +102,7 @@ public class ItemSlotController : MonoBehaviour
                 else if (assetListTable.table.TryGetValue(itemData.IconNo, out var assetPath))
                 {
                     itemSlot = Instantiate(itemSlotPrefab, itemSelectParent);
-                    itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
+                    _ = itemSlot.Setup(itemData, assetPath, purchasedItem.itemCount);
                     itemSlot.onClickItemSlot = HandleItemSlotClick;
                     itemSlot.OnLongPress = slot =>
                     {
@@ -186,7 +186,7 @@ public class ItemSlotController : MonoBehaviour
             if (itemTable.table.TryGetValue(clickedSlot.ItemId, out var itemData))
             {
                 var newSlot = Instantiate(itemSlotPrefab, itemSelectParent);
-                newSlot.Setup(itemData, clickedSlot.ItemSprite.name, removeCount);
+                _ = newSlot.Setup(itemData, clickedSlot.ItemSprite.name, removeCount);
                 newSlot.onClickItemSlot = HandleItemSlotClick;
                 newSlot.OnLongPress = slot => itemInfoSlot.SetItemInfoSlot(itemData);
                 newSlot.OnLongPressRelease = () => itemInfoSlot.gameObject.SetActive(false);

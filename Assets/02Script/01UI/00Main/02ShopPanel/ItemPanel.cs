@@ -87,41 +87,44 @@ public class ItemPanel : MonoBehaviour
 
     private void CheckPurchase(int costPerItem, int itemId)
     {
-        SliderModalWindow.Create()
-            .SetHeader("구매 확인")
-            .SetBody(1)
-            .SetCost(costPerItem)
-            .SetDescription(90766)
-            .AddButton("확인", () =>
-            {
-                int itemCount = (int)SliderModalWindow.GetCurrentSliderValue(); // 현재 슬라이더 값을 가져옴
-                int totalCost = costPerItem * itemCount;
+        SliderModalWindow.Create(window =>
+        {
+            window.SetHeader("구매 확인")
+                .SetBody(1)
+                .SetCost(costPerItem)
+                .SetDescription(90766)
+                .AddButton("확인", () =>
+                {
+                    int itemCount = (int)SliderModalWindow.GetCurrentSliderValue(); // 현재 슬라이더 값을 가져옴
+                    int totalCost = costPerItem * itemCount;
 
-                if (GameManager.instance.GameData.Gold >= totalCost)
-                {
-                    // 골드가 충분한 경우
-                    GameManager.instance.GameData.Gold -= totalCost;
-                    GameManager.instance.GameData.AddItem(itemId, itemCount); // 슬라이더 값만큼 아이템 추가
-                    DataManager.SaveFile(GameManager.instance.GameData);
-                    itemSlotController.RefreshItemSlots(); // 아이템 슬롯 갱신
-                    // 구매 성공 메시지 표시
-                    ShowPurchaseResult("구매 성공", $"아이템 {itemCount}개를 {totalCost} 골드로 구매했습니다.");
-                }
-                else
-                {
-                    // 골드가 부족한 경우
-                    ShowPurchaseResult("구매 실패", "골드가 부족합니다.");
-                }
-            })
-            .Show();
+                    if (GameManager.instance.GameData.Gold >= totalCost)
+                    {
+                        // 골드가 충분한 경우
+                        GameManager.instance.GameData.Gold -= totalCost;
+                        GameManager.instance.GameData.AddItem(itemId, itemCount); // 슬라이더 값만큼 아이템 추가
+                        DataManager.SaveFile(GameManager.instance.GameData);
+                        itemSlotController.RefreshItemSlots(); // 아이템 슬롯 갱신
+                        // 구매 성공 메시지 표시
+                        ShowPurchaseResult("구매 성공", $"아이템 {itemCount}개를 {totalCost} 골드로 구매했습니다.");
+                    }
+                    else
+                    {
+                        // 골드가 부족한 경우
+                        ShowPurchaseResult("구매 실패", "골드가 부족합니다.");
+                    }
+                })
+                .Show();
+        });
     }
 
     private void ShowPurchaseResult(string header, string message)
     {
-        ModalWindow.Create()
-            .SetHeader(header)
-            .SetBody(message)
-            .AddButton("확인", () => { })
-            .Show();
+        ModalWindow.Create(window =>
+        {
+            window.SetHeader(header)
+                .SetBody(message)
+                .AddButton("확인", () => { });
+        });
     }
 }

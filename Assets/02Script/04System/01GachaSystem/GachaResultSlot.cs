@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class GachaResultSlot : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class GachaResultSlot : MonoBehaviour
     public TextMeshProUGUI duplicationCountText;
     public TextMeshProUGUI firstGachaText;
     public RectTransform CharacterUIParent;
+
     public void Setup(GachaData data, AssetListTable assetListTable, StringTable stringTable, bool isNew)
     {
         // 등급 별로 별 아이콘 생성
@@ -21,19 +23,11 @@ public class GachaResultSlot : MonoBehaviour
         {
             Instantiate(gradeStarPrefab, gradeStarParent);
         }
-        
+
         var assetName = assetListTable.Get(data.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
         {
-            var characterObject = Resources.Load<GameObject>($"Prefab/06GachaCharacterUI/{assetName}");
-            if (characterObject != null)
-            {
-                Instantiate(characterObject, CharacterUIParent);
-            }
-            else
-            {
-                Logger.LogWarning($"Prefab/06GachaCharacterUI/{assetName} 경로에 게임 오브젝트가 없습니다.");
-            }
+            Addressables.LoadAssetAsync<GameObject>($"Prefab/06GachaCharacterUI/{assetName}").Completed += OnCharacterLoaded;
         }
         else
         {
@@ -53,5 +47,17 @@ public class GachaResultSlot : MonoBehaviour
         // 예시로 assetListTable과 stringTable에서 필요한 정보를 가져옵니다.
         // duplicationIcon.sprite = assetListTable.GetAsset(data.AssetNo);
         // duplicationCountText.text = stringTable.GetString(data.NameId);
+    }
+
+    private void OnCharacterLoaded(AsyncOperationHandle<GameObject> obj)
+    {
+        if (obj.Status == AsyncOperationStatus.Succeeded)
+        {
+            Instantiate(obj.Result, CharacterUIParent);
+        }
+        else
+        {
+            Logger.LogWarning($"Addressables 로드 실패: {obj.OperationException}");
+        }
     }
 }

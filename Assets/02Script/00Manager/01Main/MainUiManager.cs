@@ -57,8 +57,8 @@ public class MainUiManager : MonoBehaviour
         {
             StageUI.SetActive(true);
             StageUI.transform.SetAsLastSibling();
-            Variables.LoadTable.isNextStage = false;
         }
+        
         
         foreach (var upgradeData in upgradeTable.upgradeTable.Values)
         {

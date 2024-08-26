@@ -62,8 +62,7 @@ public class MonsterSpawner : MonoBehaviour
             }
         }
         Logger.Log($"{stageId}스테이지의 몬스터 수: {MonsterCount}");
-
-        factory.Init(monsters);
+        factory.Init(monsters).Forget();
 
         currentWaveData = waveTable.Get(stageId, waveId);
         if (currentWaveData != null)
@@ -107,6 +106,7 @@ public class MonsterSpawner : MonoBehaviour
 
     private async UniTask SpawnRandomMonster()
     {
+        if (currentWaveData == null) return;
         //각 게임 튜토리얼에 맞춰서 몬스터를 소환한다. 
         if (DataManager.LoadFile().Game1TutorialCheck==false)
         {
@@ -209,7 +209,7 @@ public class MonsterSpawner : MonoBehaviour
             Logger.Log($"현재 웨이브: {waveId}, 이번 몬스터 수: {currentWaveData.Repeat}");
             var repeatCount = 0;
             var monsters = currentWaveData.monsters;
-        
+
             while (repeatCount++ < currentWaveData.Repeat)
             {
                 if ((stageManager?.CurrentState ?? StageState.NONE) == StageState.GAME_OVER)
@@ -217,19 +217,15 @@ public class MonsterSpawner : MonoBehaviour
 
                 var spwanMonsterId = Utils.WeightedRandomPick(monsters);
                 var monsterGo = factory.GetMonster(monsterTable.Get(spwanMonsterId));
-            
+
                 if (stageManager)
                 {
                     monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                     monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
                     monsterGo.ResetMonsterData();
                 }
-            
-                // while (Time.timeScale == 0f)
-                // {
-                //     await UniTask.Yield(PlayerLoopTiming.Update);
-                // }
-
+                
+                // 기존 반복 작업의 지연 시간 적용
                 await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.RepeatTerm), ignoreTimeScale: false, cancellationToken: this.GetCancellationTokenOnDestroy());
             }
 
@@ -242,7 +238,7 @@ public class MonsterSpawner : MonoBehaviour
                 isWaveTerm = false;
                 isWaveEnd = true;
                 Logger.Log("모든 몬스터가 소환되었습니다.");
-            }    
+            }
         }
     }
 

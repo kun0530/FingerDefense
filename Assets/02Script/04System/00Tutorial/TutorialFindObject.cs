@@ -1,16 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TutorialFindObject : TutorialBase
 {
-    private GameObject findObject;
+    public GameObject findObject;
     private bool isClick = false;
     
     public override void Enter()
     {
-        findObject= GameObject.FindWithTag("Modal");
+        FindModalAsync().Forget();
+    }
+    private async UniTask FindModalAsync()
+    {
+        await UniTask.Yield();  // 한 프레임 대기
+
+        while (findObject == null)
+        {
+            findObject = GameObject.FindWithTag("Modal");
+            await UniTask.Yield();  // 다음 프레임까지 대기
+        }
+
         if (findObject != null)
         {
             findObject.GetComponentInChildren<Button>().onClick.AddListener(() =>
@@ -19,7 +31,6 @@ public class TutorialFindObject : TutorialBase
             });
         }
     }
-
     public override void Execute(TutorialController controller)
     {
         if (isClick)

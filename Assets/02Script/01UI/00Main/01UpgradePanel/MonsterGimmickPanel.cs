@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class MonsterGimmickPanel : MonoBehaviour
 {
@@ -15,6 +17,10 @@ public class MonsterGimmickPanel : MonoBehaviour
     public TextMeshProUGUI GimmickRangeLevelText;
     public TextMeshProUGUI GimmickDamageLevelText;
     public TextMeshProUGUI GimmickDurationLevelText;
+    
+    public GameObject[] GimmickRangeLockImages;
+    public GameObject[] GimmickDamageLockImages;
+    public GameObject[] GimmickDurationLockImages;
     
     private void Awake()
     {
@@ -38,31 +44,49 @@ public class MonsterGimmickPanel : MonoBehaviour
             if (upgradeData.Type == 1)
             {
                 string assetName = assetListTable.Get(upgradeData.AssetNo);
-                Sprite sprite = Resources.Load<Sprite>($"Prefab/10UpgradeUI/{assetName}");
 
-                if (sprite == null)
+                if (!string.IsNullOrEmpty(assetName))
                 {
-                    Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 이미지를 찾을 수 없습니다.");
-                    continue;
+                    string assetPath = $"Prefab/10UpgradeUI/{assetName}";
+                    Addressables.LoadAssetAsync<Sprite>(assetPath).Completed += (AsyncOperationHandle<Sprite> handle) =>
+                    {
+                        if (handle.Status == AsyncOperationStatus.Succeeded)
+                        {
+                            Sprite sprite = handle.Result;
+
+                            switch (upgradeData.UpStatType)
+                            {
+                                case 0:
+                                    SetupButtonGroup(GimmickRangeUpgradeButtons, upgradeData, sprite);
+                                    break;
+                                case 1:
+                                    SetupButtonGroup(GimmickDamageUpgradeButtons, upgradeData, sprite);
+                                    break;
+                                case 2:
+                                    SetupButtonGroup(GimmickDurationUpgradeButtons, upgradeData, sprite);
+                                    break;
+                                default:
+                                    Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 이미지를 Addressables에서 찾을 수 없습니다.");
+                        }
+                    };
                 }
-
-                switch (upgradeData.UpStatType)
+                else
                 {
-                    case 0:
-                        SetupButtonGroup(GimmickRangeUpgradeButtons, upgradeData, sprite);
-                        break;
-                    case 1:
-                        SetupButtonGroup(GimmickDamageUpgradeButtons, upgradeData, sprite);
-                        break;
-                    case 2:
-                        SetupButtonGroup(GimmickDurationUpgradeButtons, upgradeData, sprite);
-                        break;
-                    default:
-                        Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
-                        break;
+                    Debug.LogWarning($"AssetNo {upgradeData.AssetNo}에 해당하는 AssetName을 찾을 수 없습니다.");
                 }
             }
         }
+
+        // 현재 업그레이드 레벨에 따른 잠금 이미지 처리
+        UpdateLockImages(GimmickRangeUpgradeButtons, GimmickRangeLockImages, 0);
+        UpdateLockImages(GimmickDamageUpgradeButtons, GimmickDamageLockImages, 1);
+        UpdateLockImages(GimmickDurationUpgradeButtons, GimmickDurationLockImages, 2);
     }
 
     private void SetupButtonGroup(Button[] buttons, UpgradeData upgradeData, Sprite sprite)
@@ -90,21 +114,46 @@ public class MonsterGimmickPanel : MonoBehaviour
                     }
                     else if (targetLevel <= currentLevel)
                     {
-                        ModalWindow.Create()
-                            .SetHeader("이미 업그레이드 완료")
-                            .SetBody("이 업그레이드는 이미 완료되었습니다.")
-                            .AddButton("확인", () => { })
-                            .Show();
+                        ModalWindow.Create(window =>
+                        {
+                            window.SetHeader("이미 업그레이드 완료")
+                                .SetBody("이 업그레이드는 이미 완료되었습니다.")
+                                .AddButton("확인", () => { })
+                                .Show();
+                        });
                     }
                     else
                     {
-                        ModalWindow.Create()
-                            .SetHeader("업그레이드 필요")
-                            .SetBody("이 업그레이드를 진행하려면 이전 업그레이드를 먼저 완료해 주세요.")
-                            .AddButton("확인", () => { })
-                            .Show();
+                        ModalWindow.Create(window =>
+                        {
+                            window.SetHeader("업그레이드 필요")
+                                .SetBody("이 업그레이드를 진행하려면 이전 업그레이드를 먼저 완료해 주세요.")
+                                .AddButton("확인", () => { })
+                                .Show();
+                        });
                     }
                 });
+            }
+        }
+    }
+
+    private void UpdateLockImages(Button[] buttons, GameObject[] lockImages, int upStatType)
+    {
+        var playerUpgradeLevel = GameManager.instance.GameData.MonsterGimmickLevel
+            .Find(x => x.monsterGimmick == upStatType);
+
+        int currentLevel = playerUpgradeLevel.level;
+
+        for (int i = 0; i < lockImages.Length; i++)
+        {
+            // 현재 레벨 이하의 버튼들은 잠금 해제
+            if (i < currentLevel)
+            {
+                lockImages[i].SetActive(false);
+            }
+            else
+            {
+                lockImages[i].SetActive(true);
             }
         }
     }
@@ -129,32 +178,38 @@ public class MonsterGimmickPanel : MonoBehaviour
         // 현재 버튼에 해당하는 업그레이드 가격과 스테이지 조건을 검사
         if (playerGold >= upgradeData.UpgradePrice && stageClearNum >= upgradeData.NeedClearStage)
         {
-            ModalWindow.Create()
-                .SetHeader("구매 확인")
-                .SetBody($"{upgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
-                .AddButton("확인", () =>
-                {
-                    GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;
-                    ApplyGimmickUpgrade(upgradeData);
-                })
-                .AddButton("취소", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("구매 확인")
+                    .SetBody($"{upgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
+                    .AddButton("확인", () =>
+                    {
+                        GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;
+                        ApplyGimmickUpgrade(upgradeData);
+                    })
+                    .AddButton("취소", () => { })
+                    .Show();
+            });
         }
         else if (playerGold < upgradeData.UpgradePrice)
         {
-            ModalWindow.Create()
-                .SetHeader("구매 실패")
-                .SetBody("골드가 부족합니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("구매 실패")
+                    .SetBody("골드가 부족합니다.")
+                    .AddButton("확인", () => { })
+                    .Show();
+            });
         }
         else if (stageClearNum < upgradeData.NeedClearStage)
         {
-            ModalWindow.Create()
-                .SetHeader("스테이지 클리어 필요")
-                .SetBody($"이 업그레이드를 구매하려면 스테이지 {upgradeData.NeedClearStage}를 클리어해야 합니다.")
-                .AddButton("확인", () => { })
-                .Show();
+            ModalWindow.Create(window =>
+            {
+                window.SetHeader("스테이지 클리어 필요")
+                    .SetBody($"이 업그레이드를 구매하려면 스테이지 {upgradeData.NeedClearStage}를 클리어해야 합니다.")
+                    .AddButton("확인", () => { })
+                    .Show();
+            });
         }
     }
 
@@ -179,12 +234,31 @@ public class MonsterGimmickPanel : MonoBehaviour
         // 업그레이드 후 데이터 저장
         DataManager.SaveFile(GameManager.instance.GameData);
 
-        // UI 갱신 로직 추가 (예: 버튼 비활성화 등)
+        // UI 갱신 로직 추가
         UpdateUIAfterGimmickUpgrade(upgradeData);
     }
 
     private void UpdateUIAfterGimmickUpgrade(UpgradeData upgradeData)
     {
-        // 이 메서드에서 UI를 갱신하는 로직을 추가합니다.
+        // 업그레이드 후 UI 갱신
+        UpdateLockImages(GimmickRangeUpgradeButtons, GimmickRangeLockImages, 0);
+        UpdateLockImages(GimmickDamageUpgradeButtons, GimmickDamageLockImages, 1);
+        UpdateLockImages(GimmickDurationUpgradeButtons, GimmickDurationLockImages, 2);
+
+        switch (upgradeData.UpStatType)
+        {
+            case 0:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            case 1:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            case 2:
+                // 추가적인 UI 갱신 로직이 필요한 경우 여기에 작성
+                break;
+            default:
+                Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
+                break;
+        }
     }
 }
