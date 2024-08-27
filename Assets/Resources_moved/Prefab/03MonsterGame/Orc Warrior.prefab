@@ -28,10 +28,11 @@ Transform:
   m_GameObject: {fileID: 2249773231190066906}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: -0.007, y: 0, z: 0}
+  m_LocalScale: {x: -2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2744200803282094879}
   m_Father: {fileID: 4243192042935209091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3730008304784327934
@@ -184,7 +185,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2744200803282094879}
   - {fileID: 8001085274610503971}
   - {fileID: 1949870997162456925}
   - {fileID: 990494063282069622}
@@ -209,7 +209,7 @@ MonoBehaviour:
   effects: []
   moveTargetPos: {x: 0, y: 0, z: 0}
   findRange: 3
-  isDirectedRight: 1
+  isDirectedRight: 0
   speedMultiplier: 1
   monsterAni: {fileID: 0}
   shadowImage: {fileID: 2823733302893190135}
@@ -447,11 +447,11 @@ Transform:
   m_GameObject: {fileID: 9205917112209280397}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0177, y: 0.0303, z: 0}
-  m_LocalScale: {x: 0.65159845, y: 0.18848181, z: 1}
+  m_LocalPosition: {x: 0.00885, y: 0.01515, z: 0}
+  m_LocalScale: {x: 0.32579923, y: 0.094240904, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4243192042935209091}
+  m_Father: {fileID: 8001085274610503971}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2823733302893190135
 SpriteRenderer:
