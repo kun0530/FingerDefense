@@ -31,7 +31,27 @@ public class ItemSlotController : MonoBehaviour
 
     private void Start()
     {
+        CheckAndProvideItemsForTutorial();
         RefreshItemSlots();   
+    }
+
+    private void CheckAndProvideItemsForTutorial()
+    {
+        if (!GameManager.instance.GameData.Game2TutorialCheck)
+        {
+            // 지급할 아이템 ID와 개수를 설정
+            int itemIdToCheck = 8005; // 예시로 8005 아이템
+            int itemCountToProvide = 1;
+
+            // 아이템이 이미 있는지 확인
+            var gameItem = GameManager.instance.GameData.Items.FirstOrDefault(item => item.itemId == itemIdToCheck);
+            if (gameItem.Equals(default((int itemId, int itemCount))))
+            {
+                // 아이템이 없으면 지급
+                GameManager.instance.GameData.AddItem(itemIdToCheck, itemCountToProvide);
+                Logger.Log($"Item ID {itemIdToCheck} has been provided for 1-2 tutorial.");
+            }
+        }
     }
 
 
@@ -225,10 +245,9 @@ public class ItemSlotController : MonoBehaviour
             Logger.Log($"Removed item {itemId} from LoadTable");
         }
     }
+    
     public void OnStartButtonClick()
     {
-        bool isTutorialCompleted = GameManager.instance.GameData.Game2TutorialCheck;
-
         // 빈 슬롯에서 아이템 사용 처리
         foreach (var emptySlot in emptySlots)
         {
@@ -237,20 +256,12 @@ public class ItemSlotController : MonoBehaviour
             int usedCount = emptySlot.GetItemCount(); // 실제 사용한 아이템 개수
             if (usedCount > 0)
             {
-                if (isTutorialCompleted)
-                {
-                    // 튜토리얼이 완료된 경우에만 실제로 아이템을 사용합니다.
-                    ApplyItemUsage(emptySlot.ItemId, usedCount);
+                // 튜토리얼 완료 여부와 관계없이 아이템을 사용합니다.
+                ApplyItemUsage(emptySlot.ItemId, usedCount);
 
-                    // 사용한 아이템을 LoadTable에서 업데이트
-                    UpdateItemInLoadTable(emptySlot.ItemId, usedCount);
-                    DataManager.SaveFile(GameManager.instance.GameData);
-                }
-                else
-                {
-                    // 튜토리얼 중에는 실제로 아이템 수량을 차감하지 않음.
-                    Logger.Log($"튜토리얼이 완료되지 않아 아이템 ID {emptySlot.ItemId}의 수량을 차감하지 않습니다.");
-                }
+                // 사용한 아이템을 LoadTable에서 업데이트
+                UpdateItemInLoadTable(emptySlot.ItemId, usedCount);
+                DataManager.SaveFile(GameManager.instance.GameData);
 
                 // UI에서 아이템 개수를 업데이트 및 슬롯 초기화
                 emptySlot.UpdateItemCount(0);
@@ -261,6 +272,7 @@ public class ItemSlotController : MonoBehaviour
         // 사용 후 아이템 슬롯을 새로고침
         RefreshItemSlots();
     }
+
 
     private void ApplyItemUsage(int itemId, int usedCount)
     {
@@ -303,4 +315,6 @@ public class ItemSlotController : MonoBehaviour
         }
     }
 
+    
+    
 }

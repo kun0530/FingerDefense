@@ -119,11 +119,10 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                 monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
 
-                if (gameTutorial2.gameObject.activeSelf)
+                if (gameTutorial.gameObject.activeSelf)
                 {
                     monsterGo.gameObject.AddComponent<TutorialGameTrigger>();
                 } 
-                
                 
                 var monsterController = monsterGo.GetComponent<MonsterController>();
                 if (monsterController != null)
@@ -134,17 +133,23 @@ public class MonsterSpawner : MonoBehaviour
                 monsterGo.ResetMonsterData();
             }    
         }
+        
         else if (DataManager.LoadFile().Game2TutorialCheck == false)
         {
             //게임2 튜토리얼
             for(var i=0; i<2; i++)
-            {
+            { 
                 var monsterGo = factory.GetMonster(monsterTable.Get(11001));
                 if (stageManager)
                 {
                     monsterGo.transform.position = spawnPosition + Random.insideUnitCircle * spawnRadius;
                     monsterGo.moveTargetPos = Utils.GetRandomPositionBetweenTwoPositions(stageManager.castleLeftBottomPos.position, stageManager.castleRightTopPos.position);
                     
+                    if (monsterGo.transform.parent != poolTransform)
+                    {
+                        monsterGo.transform.SetParent(poolTransform);
+                        Logger.Log($"Parenting Corrected: {monsterGo.transform.parent?.name ?? "No Parent"}");
+                    }
                     // TutorialObserver를 직접 찾아서 AddMonster 호출 (수정 예정)
                     if (gameTutorial2.gameObject.activeSelf)
                     {

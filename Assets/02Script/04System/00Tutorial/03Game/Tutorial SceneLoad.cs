@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class TutorialSceneLoad : TutorialBase
@@ -19,7 +20,6 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Diamond += 800;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
             GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
-            GameManager.instance.GameData.AddItem(8005,1);
             
             DataManager.SaveFile(GameManager.instance.GameData);
         }
@@ -34,6 +34,7 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Gold += 100;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
             GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+            Variables.LoadTable.ItemId.Clear();
             DataManager.SaveFile(GameManager.instance.GameData);
         }
         
@@ -45,6 +46,7 @@ public class TutorialSceneLoad : TutorialBase
             GameManager.instance.GameData.Diamond += 800;
             GameManager.instance.GameData.StageClear[Variables.LoadTable.StageId] = true;
             GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+            
             DataManager.SaveFile(GameManager.instance.GameData);
         }        
     }
@@ -58,6 +60,12 @@ public class TutorialSceneLoad : TutorialBase
 
     public override void Exit()
     {
+        
+    }
+
+    private void ResetItemStates()
+    {
+       
     }
 }
 
