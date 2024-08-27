@@ -35,7 +35,7 @@ public class GachaSystem : MonoBehaviour
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
         upgradeTable = DataTableManager.Get<UpgradeTable>(DataTableIds.Upgrade);
-        
+
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(ClearGachaResults);
@@ -47,9 +47,7 @@ public class GachaSystem : MonoBehaviour
 
     public void PerformGacha(int times)
     {
-        // 결과 창 초기화
         ClearGachaResults();
-
         gachaResultPanel.SetActive(false);
         bool isSuccess = false;
 
@@ -59,9 +57,13 @@ public class GachaSystem : MonoBehaviour
             if (result != null)
             {
                 bool isNew = true;
+                bool isAlreadyUpgraded = false;
+
+                // ObtainedGachaIDs에서 중복 여부 확인
                 foreach (var id in GameManager.instance.GameData.ObtainedGachaIDs)
                 {
-                    var upgradedVersion = upgradeTable.upgradeTable.Values.FirstOrDefault(x => x.UpgradeResultId == result.Id);
+                    var upgradedVersion =
+                        upgradeTable.upgradeTable.Values.FirstOrDefault(x => x.UpgradeResultId == result.Id);
                     if (id == result.Id || (upgradedVersion != null && id == upgradedVersion.NeedCharId))
                     {
                         isNew = false;
@@ -69,17 +71,30 @@ public class GachaSystem : MonoBehaviour
                     }
                 }
 
-                if (isNew)
+                // characterIds에 업그레이드 상태가 있는지 확인
+                if (GameManager.instance.GameData.characterIds.Contains(result.Id))
+                {
+                    var upgradedVersion =
+                        upgradeTable.upgradeTable.Values.FirstOrDefault(x => x.NeedCharId == result.Id);
+                    if (upgradedVersion != null &&
+                        GameManager.instance.GameData.characterIds.Contains(upgradedVersion.UpgradeResultId))
+                    {
+                        isAlreadyUpgraded = true;
+                    }
+                }
+
+                // 새로운 캐릭터고 이미 업그레이드된 상태가 아니면 추가
+                if (isNew && !isAlreadyUpgraded)
                 {
                     GameManager.instance.GameData.ObtainedGachaIDs.Add(result.Id);
+                    GameManager.instance.GameData.characterIds.Add(result.Id);
                     Logger.Log($"Obtained Gacha ID: {result.Id}, Grade: {result.Grade}");
                     DataManager.SaveFile(GameManager.instance.GameData);
-
                     RefreshUI();
                 }
                 else
                 {
-                    Logger.Log($"Duplicate Gacha ID: {result.Id}, Grade: {result.Grade}");
+                    Logger.Log($"Duplicate or upgraded Gacha ID: {result.Id}, Grade: {result.Grade}");
                     AddMileage(gachaTable.table[result.Id].Grade);
                 }
 
@@ -90,12 +105,12 @@ public class GachaSystem : MonoBehaviour
                     Logger.Log("3성 캐릭터 획득!");
                 }
 
-                // 결과 슬롯 생성 (결과는 모든 뽑기마다 생성)
-                SpawnResultSlot(result, isNew);
+                // 결과 슬롯 생성
+                SpawnResultSlot(result, isNew && !isAlreadyUpgraded);
             }
         }
 
-        // 하나라도 3성(Grade 2) 결과가 있으면 성공 컷신, 아니면 실패 컷신
+        // 컷신 재생
         PrepareAndPlayDirectorAsync(isSuccess ? gachaSuccessDirector : gachaFailDirector).Forget();
     }
 
@@ -106,21 +121,21 @@ public class GachaSystem : MonoBehaviour
         {
             videoPlayer.Stop();
             videoPlayer.frame = 0;
-            videoPlayer.Prepare();  
+            videoPlayer.Prepare();
             ResetRenderTexture(videoPlayer.targetTexture);
-            
+
             // 비디오 준비가 완료될 때까지 무조건 대기
             await PrepareVideoAsync(videoPlayer);
 
             videoPlayer.Play();
-            director.time = 0;  // 타임라인을 처음부터 재생
+            director.time = 0; // 타임라인을 처음부터 재생
             director.Play();
         }
         else
         {
             // 비디오 플레이어가 없을 경우 바로 타임라인 재생
             Logger.LogWarning("비디오 플레이어가 없습니다. 타임라인을 직접 재생합니다.");
-            director.time = 0;  // 타임라인을 처음부터 재생
+            director.time = 0; // 타임라인을 처음부터 재생
             director.Play();
         }
     }
@@ -217,6 +232,7 @@ public class GachaSystem : MonoBehaviour
 
         GameManager.instance.GameData.Mileage += mileage;
     }
+
     private void ResetRenderTexture(RenderTexture renderTexture)
     {
         if (renderTexture != null)

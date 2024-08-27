@@ -273,9 +273,9 @@ public class StageManager : MonoBehaviour
 
     private void StageClear()
     {
-        if (Variables.LoadTable.StageId >= GameManager.instance.GameData.stageClearNum)
+        if (Variables.LoadTable.StageId >= GameManager.instance.GameData.StageClearNum)
         {
-            GameManager.instance.GameData.stageClearNum = Variables.LoadTable.StageId;
+            GameManager.instance.GameData.StageClearNum = Variables.LoadTable.StageId;
             Logger.Log($"현재 최고 스테이지 클리어 ID: {Variables.LoadTable.StageId}");
         }
 

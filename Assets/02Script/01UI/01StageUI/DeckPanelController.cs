@@ -25,12 +25,18 @@ public class DeckPanelController : MonoBehaviour
 
         if (isCharacterPanelActive)
         {
+            DeckPanel.gameObject.SetActive(false);
+            CharacterPanel.gameObject.SetActive(true);
             CharacterPanel.SetAsLastSibling();
+            
             changeButton.GetComponentInChildren<TextMeshProUGUI>().text = "<b>캐릭터</b>/아이템";
         }
         else
         {
+            CharacterPanel.gameObject.SetActive(false);
             DeckPanel.SetAsLastSibling();
+            DeckPanel.gameObject.SetActive(true);
+            
             changeButton.GetComponentInChildren<TextMeshProUGUI>().text = "캐릭터/<b>아이템</b>";
         }
 
