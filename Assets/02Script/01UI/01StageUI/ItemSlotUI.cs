@@ -26,6 +26,8 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
     public Action<ItemSlotUI> OnLongPress;
     public Action OnLongPressRelease;
     
+    public static event Action<ItemSlotUI> ItemSlotClicked;
+    
     public async UniTaskVoid Setup(ItemData item, string assetPath, int count)
     {
         Logger.Log($"Setup called with Item ID: {item?.Id}, Count: {count}");
@@ -90,7 +92,6 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
     {
         Logger.Log($"Updating item count to: {currentCount} for Item ID: {ItemId}");
         itemCount.text = currentCount.ToString();
-        
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -105,6 +106,7 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
         {
             // 일반 터치 시 슬롯 클릭 처리
             onClickItemSlot?.Invoke(this);
+            ItemSlotClicked?.Invoke(this);
         }
 
         isLongPress = false;    

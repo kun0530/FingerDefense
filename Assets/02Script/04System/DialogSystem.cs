@@ -189,7 +189,7 @@ public class DialogSystem : MonoBehaviour
                 break;
             }
             textMesh.text += t;
-            await UniTask.Delay(10);
+            await UniTask.Delay(25);
         }
         isTyping = false;
     }

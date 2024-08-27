@@ -243,7 +243,7 @@ public class StageManager : MonoBehaviour
         else
         {
             TimeScaleController.SetTimeScale(0f);
-            soundManager?.sfxAudioSource.Stop();
+            soundManager.sfxAudioSource.Stop();
         }
 
         switch (currentState)
