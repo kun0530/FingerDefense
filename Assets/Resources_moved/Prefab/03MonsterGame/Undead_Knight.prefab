@@ -32,7 +32,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8180484276226463649}
   - {fileID: 3297422418830194948}
   - {fileID: 8898827163614205655}
   - {fileID: 2747580020457989752}
@@ -70,8 +69,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.076862425, y: 0.574402}
-  m_Size: {x: 0.85626227, y: 1.2837682}
+  m_Offset: {x: 0.16208184, y: 0.555876}
+  m_Size: {x: 1.0267012, y: 1.3208201}
   m_Direction: 0
 --- !u!114 &8367928526987688654
 MonoBehaviour:
@@ -112,7 +111,7 @@ MonoBehaviour:
   effects: []
   moveTargetPos: {x: 0, y: 0, z: 0}
   findRange: 3
-  isDirectedRight: 1
+  isDirectedRight: 0
   speedMultiplier: 1
   monsterAni: {fileID: 0}
   shadowImage: {fileID: 3248356680154980580}
@@ -661,10 +660,11 @@ Transform:
   m_GameObject: {fileID: 6995566243564559241}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 0.215, y: -0.01, z: 0}
+  m_LocalScale: {x: -2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8180484276226463649}
   m_Father: {fileID: 233157827345083265}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7270741317752532722
@@ -779,12 +779,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7432253194772994142}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.01, y: 0.015, z: 0}
-  m_LocalScale: {x: 0.6918838, y: 0.18359247, z: 1}
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.009, y: 0.0039, z: 0}
+  m_LocalScale: {x: -0.3459419, y: 0.08808766, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 233157827345083265}
+  m_Father: {fileID: 3297422418830194948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3248356680154980580
 SpriteRenderer:
