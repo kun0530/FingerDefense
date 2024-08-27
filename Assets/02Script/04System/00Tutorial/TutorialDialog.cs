@@ -14,10 +14,7 @@ public class TutorialDialog : TutorialBase
         
         foreach (var systemDialog in dialogSystem.systemDialog)
         {
-            if (systemDialog.skeletonGraphic != null)
-            {
-                systemDialog.skeletonGraphic.gameObject.SetActive(true);    
-            }
+            systemDialog.skeletonGraphic.gameObject.SetActive(true);
             systemDialog.nameText.gameObject.SetActive(true);
             systemDialog.dialogText.gameObject.SetActive(true);
         }

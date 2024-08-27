@@ -242,11 +242,6 @@ public class PlayerCharacterSpawner : MonoBehaviour
         activePlayerCharacters[positionIndex] = playerCharacter;
         playerCharacter.Status.Init();
         playerCharacter.gameObject.SetActive(true);
-
-        if (tutorial.gameObject.activeSelf)
-        {
-            playerCharacter.gameObject.AddComponent<TutorialGameTrigger>();    
-        }
         
         if (characterButtons[selectedCharacterIndex] != null)
         {
