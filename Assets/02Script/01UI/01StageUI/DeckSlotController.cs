@@ -74,7 +74,7 @@ public class DeckSlotController : MonoBehaviour
         int arrangementLevel = GameManager.instance.GameData.PlayerUpgradeLevel
             .Find(x => x.playerUpgrade == (int)GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT).level;
         maxCharacterSlots = 3 + arrangementLevel; // 기본 3개 + 업그레이드 레벨
-    
+
         foreach (var slot in filterSlots)
         {
             Destroy(slot.gameObject);
@@ -94,6 +94,7 @@ public class DeckSlotController : MonoBehaviour
         CreateFilteringSlots();
         LoadCharacterSelection();
     }
+
 
     private void CreateCharacterSlots()
     {
@@ -121,9 +122,10 @@ public class DeckSlotController : MonoBehaviour
 
     private void CreateFilteringSlots()
     {
-        var obtainedGachaIds = GameManager.instance.GameData.ObtainedGachaIDs;
-        Logger.Log($"Total obtained Gacha IDs: {obtainedGachaIds.Count}");
-        foreach (var characterId in obtainedGachaIds)
+        var characterIds = GameManager.instance.GameData.characterIds;
+        Logger.Log($"Total character IDs: {characterIds.Count}");
+    
+        foreach (var characterId in characterIds)
         {
             var characterData = playerCharacterTable.Get(characterId);
             if (characterData != null)
@@ -137,18 +139,11 @@ public class DeckSlotController : MonoBehaviour
             }
             else
             {
+                Logger.LogWarning($"Character ID {characterId} is invalid or not found in playerCharacterTable.");
             }
         }
     }
-
-    private void AddEmptyCharacterSlot()
-    {
-        var slot = Instantiate(characterSlotPrefab, characterSlotParent);
-        slot.ChoicePanel.SetActive(false);
-        slot.OnSlotClick = HandleCharacterSlotClick;
-        characterSlots.Add(slot);
-    }
-
+    
     private void HandleCharacterSlotClick(CharacterSlotUI clickedSlot)
     {
         // 슬롯이 잠겨있는지 확인
@@ -305,8 +300,8 @@ public class DeckSlotController : MonoBehaviour
             if (characterId != 0)
             {
                 var characterData = playerCharacterTable.Get(characterId);
-        
-                // 필터링 슬롯에 없는 캐릭터는 내려지게 함
+
+                // 필터링 슬롯에 없는 캐릭터는 제거되게 함
                 if (!filterSlots.Any(s => s.characterData != null && s.characterData.Id == characterId))
                 {
                     Logger.Log($"Character ID {characterId} is not in filter slots, removing from character slots.");
@@ -337,6 +332,7 @@ public class DeckSlotController : MonoBehaviour
         UpdateChoicePanels();
         SortCharacterSlots();
     }
+
     private void HandleLongPressRelease(CharacterSlotUI clickedSlot)
     {
         // 롱터치 후 상태창 활성화

@@ -173,7 +173,7 @@ public class MonsterGimmickPanel : MonoBehaviour
     private void TryUpgradeGimmick(UpgradeData upgradeData)
     {
         int playerGold = GameManager.instance.GameData.Gold;
-        int stageClearNum = GameManager.instance.GameData.stageClearNum;
+        int stageClearNum = GameManager.instance.GameData.StageClearNum;
 
         // 현재 버튼에 해당하는 업그레이드 가격과 스테이지 조건을 검사
         if (playerGold >= upgradeData.UpgradePrice && stageClearNum >= upgradeData.NeedClearStage)

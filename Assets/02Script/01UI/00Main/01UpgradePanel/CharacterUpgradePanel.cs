@@ -41,7 +41,7 @@ public class CharacterUpgradePanel : MonoBehaviour
     }
     public void RefreshPanel()
     {
-        obtainedGachaIds = GameManager.instance.GameData.ObtainedGachaIDs;
+        obtainedGachaIds = GameManager.instance.GameData.characterIds;
         LoadUpgradableCharacters();
     }
     private void LoadUpgradableCharacters()
@@ -138,10 +138,10 @@ public class CharacterUpgradePanel : MonoBehaviour
     private void ApplyUpgrade(UpgradeData upgradeData)
     {
         // 업그레이드 적용 로직 (예: 캐릭터의 등급을 업그레이드)
-        var existingIndex = GameManager.instance.GameData.ObtainedGachaIDs.IndexOf(upgradeData.NeedCharId);
+        var existingIndex = GameManager.instance.GameData.characterIds.IndexOf(upgradeData.NeedCharId);
         if (existingIndex >= 0)
         {
-            GameManager.instance.GameData.ObtainedGachaIDs[existingIndex] = upgradeData.UpgradeResultId;
+            GameManager.instance.GameData.characterIds[existingIndex] = upgradeData.UpgradeResultId;
         }
         // 업그레이드 이벤트 호출
         OnCharacterUpgraded?.Invoke(upgradeData.NeedCharId, upgradeData.UpgradeResultId);

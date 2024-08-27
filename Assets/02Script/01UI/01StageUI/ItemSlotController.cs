@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ItemSlotController : MonoBehaviour
+public class ItemSlotController : MonoBehaviour,IResourceObserver
 {
     public RectTransform itemSlotParent; // 빈 슬롯이 위치할 부모 객체
     public RectTransform itemSelectParent; // 아이템 슬롯이 위치할 부모 객체
@@ -26,9 +26,15 @@ public class ItemSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-                              
+        GameManager.instance.GameData.RegisterObserver(this);                          
     }
-
+    
+    private void OnDisable()
+    {
+        // 옵저버 해제
+        GameManager.instance.GameData.RemoveObserver(this);
+    }
+    
     private void Start()
     {
         CheckAndProvideItemsForTutorial();
@@ -315,6 +321,32 @@ public class ItemSlotController : MonoBehaviour
         }
     }
 
-    
+    public void UpdateSlotCount(int itemId, int newCount)
+    {
+        var itemSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == itemId);
+
+        if (itemSlot != null)
+        {
+            itemSlot.UpdateItemCount(newCount);
+            Logger.Log($"Item ID {itemId} 슬롯의 카운트가 {newCount}로 업데이트되었습니다.");
+        }
+        else
+        {
+            Logger.LogWarning($"아이템 ID {itemId}에 해당하는 슬롯을 찾을 수 없습니다.");
+        }
+    }
+
+
+    public void OnResourceUpdate(ResourceType resourceType, int newValue)
+    {
+        if (resourceType == ResourceType.ItemCount)
+        {
+            // ItemCount가 업데이트된 경우 해당 아이템의 ID와 수량을 전달받아 슬롯을 갱신
+            int itemId = GameManager.instance.GameData.Items.FirstOrDefault(item => item.itemCount == newValue).itemId;
+            UpdateSlotCount(itemId, newValue);
+        }
+    }
+
+
     
 }

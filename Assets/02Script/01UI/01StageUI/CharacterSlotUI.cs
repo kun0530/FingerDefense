@@ -137,7 +137,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             PowerImage.gameObject.SetActive(true);
         }
 
-        powerText.text = $"+{characterData.Power}";
+        powerText.text = $"{characterData.Power}";
         powerText.gameObject.transform.SetAsLastSibling();
 
         upgradeLevelText.text = $"+{characterData.Plus}";
