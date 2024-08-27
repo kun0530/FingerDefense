@@ -280,22 +280,22 @@ public class DeckSlotController : MonoBehaviour
 
     private void SortCharacterSlots()
     {
-        var unlockedSlots = characterSlots
-            .Where(slot => !slot.LockImage.gameObject.activeSelf) 
-            .OrderBy(slot => slot.characterData?.Class ?? int.MaxValue)
-            .ThenByDescending(slot => slot.characterData?.Grade ?? int.MinValue)
-            .ThenByDescending(slot => slot.characterData?.Element ?? int.MinValue)
+        // filterringSlotParent의 자식인 CharacterSlotUI들을 가져옴
+        var slots = filterringSlotParent.GetComponentsInChildren<CharacterSlotUI>();
+
+        // 슬롯들을 Power 기준으로 오름차순으로 정렬
+        var sortedSlots = slots
+            .Where(slot => slot.characterData != null)  // 유효한 캐릭터 데이터가 있는 슬롯만 대상으로 함
+            .OrderByDescending(slot => slot.characterData.Power)  // Power 오름차순
+            .ThenBy(slot => slot.characterData.Class)  // 추가 정렬 기준: Class
+            .ThenByDescending(slot => slot.characterData.Grade)  // 추가 정렬 기준: Grade 내림차순
+            .ThenByDescending(slot => slot.characterData.Element)  // 추가 정렬 기준: Element 내림차순
             .ToList();
 
-        
-        int index = 0;
-        foreach (var t in characterSlots)
+        // 정렬된 슬롯들의 순서를 UI에 반영
+        for (int i = 0; i < sortedSlots.Count; i++)
         {
-            if (!t.LockImage.gameObject.activeSelf) 
-            {
-                t.transform.SetSiblingIndex(index);
-                index++;
-            }
+            sortedSlots[i].transform.SetSiblingIndex(i);
         }
     }
 

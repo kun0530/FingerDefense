@@ -25,6 +25,9 @@ public class StageSlot : MonoBehaviour
     private GameObject deckMask;
     private GameObject dragMask;
     private GameManager gameManager;
+    
+    public GameObject firstRewardImage;
+    public GameObject clearImage; 
 
     [SerializeField] private GameObject deckUI;
     private StagePanelController stagePanelController;
