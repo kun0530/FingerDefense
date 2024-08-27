@@ -51,10 +51,10 @@ public class DeckSlotController : MonoBehaviour
 
     private void OnEnable()
     {
-        LoadCharacterSelection();
         if (filterringSlotParent != null)
         {
             RefreshCharacterSlots();
+            LoadCharacterSelection();
         }
         else
         {
@@ -70,6 +70,12 @@ public class DeckSlotController : MonoBehaviour
 
     public void RefreshCharacterSlots()
     {
+        if (!characterSlotParent.gameObject.activeInHierarchy)
+        {
+            Logger.LogWarning("Character slot parent is inactive, skipping slot refresh.");
+            return;
+        }
+
         // 업그레이드 상태에 따라 최대 캐릭터 슬롯 개수 설정
         int arrangementLevel = GameManager.instance.GameData.PlayerUpgradeLevel
             .Find(x => x.playerUpgrade == (int)GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT).level;
@@ -102,21 +108,27 @@ public class DeckSlotController : MonoBehaviour
         {
             var slot = Instantiate(characterSlotPrefab, characterSlotParent);
 
-            if (i < maxCharacterSlots)
+            if (slot != null)
             {
-                slot.SetLocked(false);
-                slot.ChoicePanel.SetActive(false);
-                slot.OnSlotClick = HandleCharacterSlotClick;
-                slot.OnLongPress = HandleLongPressRelease;
-                slot.OnLongPressRelease = HandleLongPressReleaseComplete;
-                
+                if (i < maxCharacterSlots)
+                {
+                    slot.SetLocked(false);
+                    slot.ChoicePanel.SetActive(false);
+                    slot.OnSlotClick = HandleCharacterSlotClick;
+                    slot.OnLongPress = HandleLongPressRelease;
+                    slot.OnLongPressRelease = HandleLongPressReleaseComplete;
+                }
+                else
+                {
+                    slot.SetLocked(true);
+                }
+
+                characterSlots.Add(slot);
             }
             else
             {
-                slot.SetLocked(true); 
+                Logger.LogWarning("Failed to instantiate CharacterSlotUI.");
             }
-
-            characterSlots.Add(slot);
         }
     }
 
@@ -124,25 +136,43 @@ public class DeckSlotController : MonoBehaviour
     {
         var characterIds = GameManager.instance.GameData.characterIds;
         Logger.Log($"Total character IDs: {characterIds.Count}");
-    
-        foreach (var characterId in characterIds)
+
+        // 이미 존재하는 슬롯을 재사용하거나 새로운 슬롯을 생성합니다.
+        for (var i = 0; i < characterIds.Count; i++)
         {
+            CharacterSlotUI slot;
+            if (i < filterSlots.Count)
+            {
+                slot = filterSlots[i];
+            }
+            else
+            {
+                slot = Instantiate(characterSlotPrefab, filterringSlotParent);
+                filterSlots.Add(slot);
+            }
+
+            var characterId = characterIds[i];
             var characterData = playerCharacterTable.Get(characterId);
             if (characterData != null)
             {
-                var characterSlot = Instantiate(characterSlotPrefab, filterringSlotParent);
-                characterSlot.SetCharacterSlot(characterData);
-                characterSlot.OnSlotClick = HandleCharacterSlotClick;
-                characterSlot.OnLongPress = HandleLongPressRelease;
-                characterSlot.OnLongPressRelease = HandleLongPressReleaseComplete;
-                filterSlots.Add(characterSlot);
+                Logger.Log($"Updating slot for character: {characterData.Name}, Power: {characterData.Power}");
+                slot.SetCharacterSlot(characterData);
+                slot.OnSlotClick = HandleCharacterSlotClick;
+                slot.OnLongPress = HandleLongPressRelease;
+                slot.OnLongPressRelease = HandleLongPressReleaseComplete;
+
+                // 슬롯의 데이터를 다시 설정하여 이미지와 텍스트를 초기화합니다.
+                slot.UpdateUI().Forget();
+                slot.gameObject.SetActive(true);
             }
             else
             {
                 Logger.LogWarning($"Character ID {characterId} is invalid or not found in playerCharacterTable.");
+                slot.gameObject.SetActive(false);
             }
         }
     }
+
     
     private void HandleCharacterSlotClick(CharacterSlotUI clickedSlot)
     {
@@ -310,7 +340,7 @@ public class DeckSlotController : MonoBehaviour
                 }
 
                 // Index 체크 추가
-                if (i < characterSlots.Count)
+                if (i < characterSlots.Count && characterData != null)
                 {
                     var slot = characterSlots[i];
                     slot.SetCharacterSlot(characterData);
@@ -324,7 +354,7 @@ public class DeckSlotController : MonoBehaviour
                 }
                 else
                 {
-                    Logger.LogWarning($"Character slot index {i} is out of range. Skipping slot assignment.");
+                    Logger.LogWarning($"Character slot index {i} is out of range or characterData is null. Skipping slot assignment.");
                 }
             }
         }
@@ -332,6 +362,7 @@ public class DeckSlotController : MonoBehaviour
         UpdateChoicePanels();
         SortCharacterSlots();
     }
+
 
     private void HandleLongPressRelease(CharacterSlotUI clickedSlot)
     {
