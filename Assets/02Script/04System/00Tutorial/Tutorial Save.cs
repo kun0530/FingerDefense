@@ -44,8 +44,7 @@ public class TutorialSave : TutorialBase
             Logger.Log("저장 완료");
         }
         else
-        {
-            Logger.LogError("TutorialSave.cs: Enter() - saveObject is not tagged");
+        {   
         }
     }
 

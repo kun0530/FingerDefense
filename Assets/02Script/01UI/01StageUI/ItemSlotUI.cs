@@ -27,12 +27,28 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
     public Action OnLongPressRelease;
     
     public static event Action<ItemSlotUI> ItemSlotClicked;
+
+    public GameObject ActiveTitle;
+    public GameObject PassiveTitle;
     
     public async UniTaskVoid Setup(ItemData item, string assetPath, int count)
     {
         Logger.Log($"Setup called with Item ID: {item?.Id}, Count: {count}");
         ItemId = item?.Id ?? 0;
+        
+        //item.ItemType 1이라면 passiveTitle을 활성화, 2라면  activeTitle을 활성화
 
+        if (item != null)
+        {
+            if (item.ItemType == 1)
+            {
+                PassiveTitle.SetActive(true);
+            }
+            else if (item.ItemType == 2)
+            {
+                ActiveTitle.SetActive(true);
+            }
+        }
         if (item != null && !string.IsNullOrEmpty(assetPath))
         {
             var handle = Addressables.LoadAssetAsync<Sprite>($"Prefab/07GameItem/{assetPath}");
@@ -64,6 +80,31 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
         color.a = 1f; 
         itemIcon.color = color;
         
+        var itemTable = DataTableManager.Get<ItemTable>(DataTableIds.Item);
+        if (itemTable.table.TryGetValue(itemId, out var itemData))
+        {
+            // 기존의 타이틀들을 비활성화
+            PassiveTitle.SetActive(false);
+            ActiveTitle.SetActive(false);
+
+            // 아이템의 타입에 따라 적절한 타이틀을 활성화
+            if (itemData.ItemType == 1)
+            {
+                PassiveTitle.SetActive(true);
+                Logger.Log("PassiveTitle activated.");
+            }
+            else if (itemData.ItemType == 2)
+            {
+                ActiveTitle.SetActive(true);
+                Logger.Log("ActiveTitle activated.");
+            }
+
+            originalLimit = itemData.Limit;
+        }
+        else
+        {
+            Logger.LogError($"ItemData for ItemId {itemId} not found.");
+        }
         ChoicePanel.SetAsLastSibling();
     }
 
@@ -72,6 +113,10 @@ public class ItemSlotUI : MonoBehaviour,IPointerUpHandler, IPointerDownHandler
         ItemId = 0;
         itemIcon.sprite = null;
         itemCount.text = "";
+        
+        PassiveTitle.SetActive(false);
+        ActiveTitle.SetActive(false);
+        
         var color = itemIcon.color;
         color.a = 0f;
         itemIcon.color = color;
