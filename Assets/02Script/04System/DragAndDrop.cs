@@ -28,7 +28,7 @@ public class DragAndDrop : MonoBehaviour
 
     private void Start()
     {
-        stageManager = GameObject.FindWithTag("StageManager").GetComponent<StageManager>();
+        stageManager = GameObject.FindWithTag("StageManager")?.GetComponent<StageManager>();
     }
 
     private void OnEnable()
