@@ -48,7 +48,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
             Addressables.LoadAssetAsync<GameObject>($"Prefab/00CharacterUI/{assetName}").Completed += OnCharacterPrefabLoaded;
         }
 
-        for (var i = 0; i <= characterData.Grade; i++)
+        for (var i = 0; i < characterData.Grade+1; i++)
         {
             var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
             gradeInstance.sprite = gradeImage;
