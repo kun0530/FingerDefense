@@ -32,7 +32,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
 
     public TextMeshProUGUI powerText;
     
-    private void OnEnable()
+    private void Awake()
     {
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
@@ -41,7 +41,12 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
     public void SetCharacterSlot(PlayerCharacterData characterData)
     {
         this.characterData = characterData;
-
+        
+        if(assetListTable == null)
+        {
+            return;
+        }
+        
         var assetName = assetListTable.Get(characterData.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
         {

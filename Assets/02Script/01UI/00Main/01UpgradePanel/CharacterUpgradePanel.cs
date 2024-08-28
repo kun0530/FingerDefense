@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,27 +38,41 @@ public class CharacterUpgradePanel : MonoBehaviour
     
     public void Start()
     {
-        RefreshPanel();       
+               
     }
+
+    private void OnEnable()
+    {
+        GachaSystem.OnCharacterSlotUpdated += RefreshPanel;
+        RefreshPanel();
+    }
+    
+    private void OnDisable()
+    {
+        GachaSystem.OnCharacterSlotUpdated -= RefreshPanel;
+    }
+    
     public void RefreshPanel()
     {
+        Logger.Log("RefreshPanel called");
         obtainedGachaIds = GameManager.instance.GameData.characterIds;
-        LoadUpgradableCharacters();
+        LoadUpgradableCharacters(obtainedGachaIds);
     }
-    private void LoadUpgradableCharacters()
+    private void LoadUpgradableCharacters(List<int> obtainedCharacterIds)
     {
-        // 기존 슬롯 초기화
         ClearSlot(characterUpgradeSlotContent);
 
-        foreach (var upgradeData in upgradeTable.upgradeTable.Values)
+        foreach (var characterId in obtainedCharacterIds)
         {
-            if (upgradeData.Type == 2 && obtainedGachaIds.Contains(upgradeData.NeedCharId))
+            var characterData = playerCharacterTable.Get(characterId);
+            if (characterData != null)
             {
-                var characterData = playerCharacterTable.Get(upgradeData.NeedCharId);
-                if (characterData != null)
+                var characterSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotContent);
+                characterSlot.SetCharacterSlot(characterData);
+
+                var upgradeData = upgradeTable.upgradeTable.Values.FirstOrDefault(up => up.NeedCharId == characterId);
+                if (upgradeData != null)
                 {
-                    var characterSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotContent);
-                    characterSlot.SetCharacterSlot(characterData);
                     characterSlot.OnSlotClick = (slot) => DisplayUpgradeOptions(upgradeData, characterData);
                 }
             }
@@ -112,7 +127,6 @@ public class CharacterUpgradePanel : MonoBehaviour
         // 업그레이드 버튼 활성화 또는 비활성화
         upgradeButton.onClick.RemoveAllListeners();
         upgradeButton.onClick.AddListener(TryUpgradeCharacter);
-        Logger.Log($"Upgrade button added listener for {upgradeData.Name}");
     }
 
     private void TryUpgradeCharacter()
@@ -162,7 +176,7 @@ public class CharacterUpgradePanel : MonoBehaviour
         ClearSlot(characterUpgradeResultSlotContent);
         characterUpgradeGoldText.text = "";
         characterUpgradeResultText.text = "";
-        LoadUpgradableCharacters();  // 업그레이드 가능한 캐릭터 목록 다시 로드
+        LoadUpgradableCharacters(obtainedGachaIds);  // 업그레이드 가능한 캐릭터 목록 다시 로드
     }
 
 

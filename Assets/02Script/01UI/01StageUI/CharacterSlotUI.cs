@@ -66,6 +66,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             Logger.LogWarning("CharacterData is null in SetCharacterSlot.");
             return;
         }
+        
 
         this.characterData = characterData;
         ClearGradeImages();
