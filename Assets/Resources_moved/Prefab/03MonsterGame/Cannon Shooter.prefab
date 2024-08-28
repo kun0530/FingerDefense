@@ -104,10 +104,11 @@ Transform:
   m_GameObject: {fileID: 3278072908890329463}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.03, y: -0.03, z: 0}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3490434171181591292}
   m_Father: {fileID: 4999464007678745772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7981417446501118631
@@ -229,7 +230,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3490434171181591292}
   - {fileID: 2932281176511951588}
   - {fileID: 2902827549607761523}
   - {fileID: 2822481967169551579}
@@ -254,7 +254,7 @@ MonoBehaviour:
   effects: []
   moveTargetPos: {x: 0, y: 0, z: 0}
   findRange: 3
-  isDirectedRight: 1
+  isDirectedRight: 0
   speedMultiplier: 1
   monsterAni: {fileID: 0}
   shadowImage: {fileID: 994186403260060407}
@@ -313,8 +313,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.043275774, y: 0.7343359}
-  m_Size: {x: 1.1945215, y: 1.5186718}
+  m_Offset: {x: -0.049194813, y: 0.6840241}
+  m_Size: {x: 1.3720925, y: 1.6192954}
   m_Direction: 0
 --- !u!1 &4981396162917425013
 GameObject:
@@ -677,7 +677,7 @@ Transform:
   m_LocalScale: {x: 1.0289416, y: 0.22210291, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4999464007678745772}
+  m_Father: {fileID: 2932281176511951588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &994186403260060407
 SpriteRenderer:

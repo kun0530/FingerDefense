@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Coffee.UIExtensions;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class TutorialFindObject : TutorialBase
     public GameObject findObject;
     private bool isClick = false;
     
+    public UnmaskRaycastFilter unmaskRaycastFilter;
     public override void Enter()
     {
         FindModalAsync().Forget();
@@ -25,6 +27,7 @@ public class TutorialFindObject : TutorialBase
 
         if (findObject != null)
         {
+            unmaskRaycastFilter.transform.SetAsLastSibling();
             findObject.GetComponentInChildren<Button>().onClick.AddListener(() =>
             {
                 isClick = true;

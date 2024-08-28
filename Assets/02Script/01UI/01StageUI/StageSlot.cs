@@ -25,6 +25,9 @@ public class StageSlot : MonoBehaviour
     private GameObject deckMask;
     private GameObject dragMask;
     private GameManager gameManager;
+    
+    public GameObject firstRewardImage;
+    public GameObject clearImage; 
 
     [SerializeField] private GameObject deckUI;
     private StagePanelController stagePanelController;
@@ -121,42 +124,7 @@ public class StageSlot : MonoBehaviour
         {
             Logger.LogWarning($"Prefab name not found for Monster ID: {monsterId}");
         }
-
-        // TO-DO: Addressable로 변경 예정 
-        // if (assetListTable == null)
-        // {
-        //     Logger.LogError("AssetListTable is not set.");
-        //     return;
-        // }
-        //
-        // // AssetListTable을 사용하여 프리팹 이름 가져오기
-        // string prefabName = assetListTable.Get(monsterId);
-        // if (!string.IsNullOrEmpty(prefabName))
-        // {
-        //     // Addressables를 사용하여 프리팹 로드
-        //     Addressables.LoadAssetAsync<GameObject>($"Prefab/01MonsterUI/{prefabName}").Completed += handle =>
-        //     {
-        //         if (handle.Status == AsyncOperationStatus.Succeeded)
-        //         {
-        //             GameObject monsterPrefab = handle.Result;
-        //             var monsterSlot = Instantiate(monsterSlotPrefab, monsterSlotParent);
-        //             var monsterInstance = Instantiate(monsterPrefab, monsterSlot.transform); // monsterSlot의 자식으로 추가
-        //             monsterInstance.transform.localPosition = new Vector3(0, 3, 0); // 필요한 경우 위치 조정
-        //             monsterInstance.transform.localScale = Vector3.one; // 필요한 경우 스케일 조정
-        //
-        //             var monsterText = monsterSlot.GetComponentInChildren<TextMeshProUGUI>();
-        //             //monsterText.text = monsterId.ToString();
-        //         }
-        //         else
-        //         {
-        //             Logger.LogWarning($"Prefab not found for {prefabName}");
-        //         }
-        //     };
-        // }
-        // else
-        // {
-        //     Logger.LogWarning($"Prefab name not found for Monster ID: {monsterId}");
-        // }
+        
     }
 
     private void AddRewardSlot(int rewardId, int rewardValue)

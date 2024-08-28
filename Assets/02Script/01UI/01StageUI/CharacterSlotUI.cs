@@ -52,7 +52,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         }
     }
 
-    private void OnEnable()
+    private void Awake()
     {
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         stringTable = DataTableManager.Get<StringTable>(DataTableIds.String);
@@ -60,16 +60,36 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
     public void SetCharacterSlot(PlayerCharacterData characterData)
     {
+        if (characterData == null)
+        {
+            Logger.LogWarning("CharacterData is null in SetCharacterSlot.");
+            return;
+        }
+
         this.characterData = characterData;
         UpdateUI().Forget();
     }
 
-    private async UniTaskVoid UpdateUI()
+    public async UniTaskVoid UpdateUI()
     {
-        // 현재 오브젝트가 파괴될 때 작업을 취소하기 위한 CancellationToken을 가져옵니다.
+        // 객체 파괴 시 작업 취소를 위한 CancellationToken
         CancellationToken cancellationToken = this.GetCancellationTokenOnDestroy();
 
-        // 기존 Grade 이미지를 제거
+        // characterData가 null인지 확인
+        if (characterData == null)
+        {
+            Logger.LogWarning("CharacterData is null in UpdateUI.");
+            return;
+        }
+
+        // gradeParent가 null인지 확인
+        if (gradeParent == null)
+        {
+            Logger.LogWarning("GradeParent is null in UpdateUI.");
+            return;
+        }
+        
+        // 기존 Grade 이미지 제거
         foreach (Transform child in gradeParent)
         {
             Destroy(child.gameObject);
@@ -78,13 +98,11 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         var assetName = assetListTable.Get(characterData.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
         {
-            // Addressables로 프리팹 로드
             var handle = Addressables.LoadAssetAsync<GameObject>($"Prefab/00CharacterUI/{assetName}");
-            GameObject prefab = await handle.WithCancellation(cancellationToken); // 외부 CancellationToken 적용
+            GameObject prefab = await handle.WithCancellation(cancellationToken);
 
             if (prefab != null)
             {
-                // 기존 인스턴스가 존재하면 제거
                 if (spineInstance != null)
                 {
                     Destroy(spineInstance);
@@ -99,7 +117,6 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             }
         }
 
-        // 새로운 Grade 이미지 추가
         for (var i = 0; i <= characterData.Grade; i++)
         {
             var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
@@ -114,21 +131,23 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             elementImage.gameObject.SetActive(true);
         }
 
-        var skillId = assetListTable.Get(characterData.SkillIcon);
-        if (!string.IsNullOrEmpty(skillId))
+        if (SkillIcon != null)
         {
-            // Addressables로 스킬 아이콘 로드
-            var skillHandle = Addressables.LoadAssetAsync<Sprite>($"Prefab/09SkillIcon/{skillId}");
-            Sprite skillSprite = await skillHandle.WithCancellation(cancellationToken); // 외부 CancellationToken 적용
+            var skillId = assetListTable.Get(characterData.SkillIcon);
+            if (!string.IsNullOrEmpty(skillId))
+            {
+                var skillHandle = Addressables.LoadAssetAsync<Sprite>($"Prefab/09SkillIcon/{skillId}");
+                Sprite skillSprite = await skillHandle.WithCancellation(cancellationToken);
 
-            if (skillSprite != null)
-            {
-                SkillIcon.sprite = skillSprite;
-                SkillIcon.gameObject.SetActive(true);
-            }
-            else
-            {
-                Logger.LogWarning($"Skill icon not found for {skillId}");
+                if (skillSprite != null)
+                {
+                    SkillIcon.sprite = skillSprite;
+                    SkillIcon.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Logger.LogWarning($"Skill icon not found for {skillId}");
+                }
             }
         }
 
@@ -137,10 +156,9 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             PowerImage.gameObject.SetActive(true);
         }
 
-        powerText.text = $"+{characterData.Power}";
-        powerText.gameObject.transform.SetAsLastSibling();
+        powerText.SetText($"{characterData.Power}");
+        upgradeLevelText.SetText($"+{characterData.Plus}");
 
-        upgradeLevelText.text = $"+{characterData.Plus}";
         ChoicePanel.transform.SetAsLastSibling();
     }
 
@@ -151,15 +169,8 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         characterData = null;
 
         // 캐릭터 이름, 레벨 등 텍스트 초기화
-        if (upgradeLevelText != null)
-        {
-            upgradeLevelText.text = "";
-        }
-
-        if (powerText != null)
-        {
-            powerText.text = "";
-        }
+        upgradeLevelText.SetText("");
+        powerText.SetText("");
 
         // 스파인 인스턴스 삭제
         if (spineInstance != null)
@@ -168,6 +179,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             spineInstance = null;
         }
 
+        // 기존 Grade 이미지 제거
         if (gradeParent != null)
         {
             foreach (Transform child in gradeParent)
@@ -176,25 +188,29 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             }
         }
 
+        // 엘리먼트 이미지 초기화
         var elementImage = elementParent.GetComponent<Image>();
         if (elementImage != null)
         {
+            elementImage.sprite = null;
             elementImage.gameObject.SetActive(false);
         }
-        
-        if(SkillIcon != null)
+
+        // 스킬 아이콘 초기화
+        if (SkillIcon != null)
         {
+            SkillIcon.sprite = null;
             SkillIcon.gameObject.SetActive(false);
         }
 
+        // 파워 이미지 초기화
         if (PowerImage != null)
         {
             PowerImage.gameObject.SetActive(false);
         }
-        
 
         // 슬롯 재활용 가능 상태로 설정
-        ChoicePanel.gameObject.SetActive(false);
+        ChoicePanel.SetActive(false);
         gameObject.SetActive(true);
     }
 

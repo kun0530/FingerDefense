@@ -20,8 +20,6 @@ public class TutorialObserver : TutorialBase
     public bool isState = false;
     public bool isDebuff = false;
     
-    private bool isTutorialComplete = false;
-    
     [SerializeField] private ItemDebuffMonster stop;
 
     public void Awake()
@@ -110,7 +108,7 @@ public class TutorialObserver : TutorialBase
 
             foreach (var monsterTrigger in observedMonsters)
             {
-                var monsterController = monsterTrigger?.GetComponent<MonsterController>();
+                var monsterController = monsterTrigger.GetComponent<MonsterController>();
 
                 if (monsterController != null)
                 {

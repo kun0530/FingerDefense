@@ -69,12 +69,24 @@ public class TutorialController : MonoBehaviour
     private void CompletedAllTutorials()
     {
         currentTutorial = null;
+        
+        ResetAllTutorialData();
+        
         DataManager.SaveFile(gameManager.GameData);
         //해당 게임 오브젝트를 비활성화
         gameObject.SetActive(false);
         
     }
-    
+
+    private void ResetAllTutorialData()
+    {
+        var allMonsters = FindObjectsOfType<MonsterController>();
+        foreach (var monster in allMonsters)
+        {
+            monster.ResetMonsterData();  // 몬스터 상태 초기화
+        }    
+    }
+
     private void SkipTutorial()
     {
         ModalWindow.Create(window =>

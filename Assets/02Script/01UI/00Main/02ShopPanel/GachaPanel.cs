@@ -72,6 +72,7 @@ public class GachaPanel : MonoBehaviour
                           {
                               gameManager.GameData.Diamond -= diamondNeeded;
                               gameManager.GameData.Ticket = 0; // 티켓을 모두 사용
+                              gameManager.GameData.NotifyObservers(ResourceType.Ticket, gameManager.GameData.Ticket);
                               gameManager.GameData.NotifyObservers(ResourceType.Diamond, gameManager.GameData.Diamond);
                               gachaSystem.PerformGacha(ticketCountRequired);
                           }
