@@ -110,6 +110,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
                 spineInstance = Instantiate(prefab, classParent);
                 spineInstance.transform.localPosition = Vector3.zero;
+                prefab.transform.SetAsFirstSibling();
             }
             else
             {
@@ -154,10 +155,13 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (PowerImage != null)
         {
             PowerImage.gameObject.SetActive(true);
+            PowerImage.transform.SetAsLastSibling();
         }
 
         powerText.SetText($"{characterData.Power}");
+        powerText.transform.SetAsLastSibling();
         upgradeLevelText.SetText($"+{characterData.Plus}");
+        upgradeLevelText.transform.SetAsLastSibling();
 
         ChoicePanel.transform.SetAsLastSibling();
     }

@@ -31,19 +31,11 @@ public class StagePanelController : MonoBehaviour, IBeginDragHandler, IDragHandl
     }
     private void SetCurrentIndexBasedOnClearedStages()
     {
-        int lastClearedStage = 0;
-        var stageClear = GameManager.instance.GameData.StageClear;
-
-        foreach (var kvp in stageClear)
-        {
-            if (kvp.Value)
-            {
-                lastClearedStage = kvp.Key;
-            }
-        }
-
+        // int lastClearedStage = 0;
+        var stageClear = GameManager.instance.GameData.StageClearNum;
+        
         // lastClearedStage에 따른 currentIndex 및 leftPadding 설정
-        switch (lastClearedStage)
+        switch (stageClear)
         {
             case 13001:
                 currentIndex = 1;

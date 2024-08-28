@@ -60,6 +60,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         {
             elementImage.sprite = elementImages[characterData.Element];
             elementImage.gameObject.SetActive(true);
+            
         }
         upgradeLevelText.text = $"+ {characterData.Plus}";
         
@@ -82,6 +83,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         {
             var spineInstance = Instantiate(obj.Result, classParent);
             spineInstance.transform.localPosition = Vector3.zero;
+            spineInstance.transform.SetAsFirstSibling();
         }
         else
         {
@@ -95,6 +97,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         {
             SkillIcon.sprite = obj.Result;
             SkillIcon.gameObject.SetActive(true);
+            
         }
         else
         {

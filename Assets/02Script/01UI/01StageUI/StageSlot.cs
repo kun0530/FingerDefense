@@ -70,12 +70,11 @@ public class StageSlot : MonoBehaviour
 
     public void Configure(StageData stageData)
     {
-        //해당 슬롯에 스테이지 이름 설정 =>stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 
-        stageNameText.text =
-            DataTableManager.Get<StringTable>(DataTableIds.String).Get(stageData.StageNameId.ToString());
+        //해당 슬롯에 스테이지 이름 설정 => stageData.StageNameId을 토대로 StringTable에서 찾아서 가져오기 
+        stageNameText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(stageData.StageNameId.ToString());
         monsterText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(98921.ToString());
         rewardText.text = DataTableManager.Get<StringTable>(DataTableIds.String).Get(98931.ToString());
-
+        
         StageId = stageData.StageId;
         if (stageData.Monster1Id != 0) AddMonsterSlot(stageData.Monster1Id);
         if (stageData.Monster2Id != 0) AddMonsterSlot(stageData.Monster2Id);
@@ -86,6 +85,7 @@ public class StageSlot : MonoBehaviour
             AddRewardSlot(stageData.Reward1Id, stageData.Reward1Value);
         if (stageData.Reward2Id != 0 && stageData.Reward2Value != 0)
             AddRewardSlot(stageData.Reward2Id, stageData.Reward2Value);
+        
     }
 
     private void AddMonsterSlot(int monsterId)
@@ -209,7 +209,7 @@ public class StageSlot : MonoBehaviour
         // 이전 스테이지가 클리어되었는지 확인 (첫 번째 스테이지는 예외 처리됨)
         bool isPreviousStageCleared =
             gameManager.GameData.StageClear.TryGetValue(StageId - 1, out bool previousCleared) && previousCleared;
-
+        
         if (isStageCleared || isPreviousStageCleared)
         {
             LoadStage(); // 스테이지를 로드하는 공통 메서드 호출

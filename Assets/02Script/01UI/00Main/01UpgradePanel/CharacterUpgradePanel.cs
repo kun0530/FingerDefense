@@ -72,28 +72,36 @@ public class CharacterUpgradePanel : MonoBehaviour
         ClearSlot(characterUpgradeSlotParent); // 기존 슬롯 비우기
         var selectedSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotParent);
         selectedSlot.SetCharacterSlot(characterData);
-
+        selectedSlot.powerText.transform.SetAsLastSibling();
+        selectedSlot.upgradeLevelText.transform.SetAsLastSibling();
+        
         // 앵커 값을 중앙으로 설정하고, 스케일을 2로 조정
         RectTransform selectedSlotRect = selectedSlot.GetComponent<RectTransform>();
         selectedSlotRect.anchorMin = new Vector2(0.5f, 0.5f); // 중앙 앵커
         selectedSlotRect.anchorMax = new Vector2(0.5f, 0.5f); // 중앙 앵커
         selectedSlotRect.pivot = new Vector2(0.5f, 0.5f); // 피벗도 중앙으로 설정
-        selectedSlotRect.localScale = new Vector3(2f, 2f, 2f); // 스케일을 2로 설정
+        selectedSlotRect.localPosition = Vector3.zero; // 부모의 중앙으로 위치 설정
+        selectedSlotRect.localScale = Vector3.one * 2; // 스케일 2배로 설정
         
         // UpgradeResultId를 기반으로 업그레이드 결과 표시
-        ClearSlot(characterUpgradeResultSlotContent); // 기존 결과 슬롯 비우기
+        ClearSlot(characterUpgradeResultSlotContent); 
+        
         var resultCharacterData = playerCharacterTable.Get(upgradeData.UpgradeResultId);
         if (resultCharacterData != null)
         {
             var resultSlot = Instantiate(characterUpgradeSlot, characterUpgradeResultSlotContent);
             resultSlot.SetCharacterSlot(resultCharacterData);
+
+            resultSlot.powerText.transform.SetAsLastSibling();
+            resultSlot.upgradeLevelText.transform.SetAsLastSibling();
             
             // 앵커 값과 스케일을 동일하게 설정
             RectTransform resultSlotRect = resultSlot.GetComponent<RectTransform>();
             resultSlotRect.anchorMin = new Vector2(0.5f, 0.5f); 
             resultSlotRect.anchorMax = new Vector2(0.5f, 0.5f);
             resultSlotRect.pivot = new Vector2(0.5f, 0.5f);
-            resultSlotRect.localScale = new Vector3(2f, 2f, 2f);
+            resultSlotRect.localPosition = Vector3.zero; // 부모의 중앙으로 위치 설정
+            resultSlotRect.localScale = Vector3.one * 2; // 스케일 2배로 설정
             
             characterUpgradeResultText.text = stringTable.Get(upgradeData.Name.ToString()); // 업그레이드 설명 표시
         }
