@@ -56,21 +56,11 @@ public class DeckSlotController : MonoBehaviour
             RefreshCharacterSlots();
             LoadCharacterSelection();
         }
-        else
-        {
-            Logger.LogError("CharacterPanel is not assigned in DeckSlotController.");
-        }
-
         foreach (var slot in characterSlots)
         {
             slot.ClearGradeImages();
         }
-        
-
     }
-
-    
-
     private void OnDisable()
     {
         SaveCharacterSelection();
@@ -88,18 +78,20 @@ public class DeckSlotController : MonoBehaviour
         int arrangementLevel = GameManager.instance.GameData.PlayerUpgradeLevel
             .Find(x => x.playerUpgrade == (int)GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT).level;
         maxCharacterSlots = 3 + arrangementLevel; // 기본 3개 + 업그레이드 레벨
-
+        
+        foreach (var slot in characterSlots)
+        {
+            slot.ClearSlot();
+            Destroy(slot.gameObject);
+        }
+        characterSlots.Clear();
+        
         foreach (var slot in filterSlots)
         {
             Destroy(slot.gameObject);
         }
         filterSlots.Clear();
-
-        foreach (var slot in characterSlots)
-        {
-            Destroy(slot.gameObject);
-        }
-        characterSlots.Clear();
+        
         addedCharacters.Clear();
         activeChoicePanelSlots.Clear();
 
@@ -216,7 +208,10 @@ public class DeckSlotController : MonoBehaviour
                     {
                         slot.SetCharacterSlot(clickedSlot.characterData);
                         slot.ChoicePanel.SetActive(false);
-                        if (clickedSlot.characterData != null) addedCharacters.Add(clickedSlot.characterData.Id);
+                        if (clickedSlot.characterData != null)
+                        {
+                            addedCharacters.Add(clickedSlot.characterData.Id);
+                        }
                         activeChoicePanelSlots.Add(clickedSlot);
                         UpdateChoicePanels();
                         break;
@@ -237,17 +232,19 @@ public class DeckSlotController : MonoBehaviour
 
                 clickedSlot.ClearSlot();  // 데이터를 초기화하고 슬롯을 재사용 가능 상태로 만듭니다.
                 characterInfoSlot.gameObject.SetActive(false);
+                clickedSlot.SetLocked(false);
+                
+                characterInfoSlot.gameObject.SetActive(false);
             }
-    
         }
         else
         {
-            characterInfoSlot.gameObject.SetActive(true);
-            characterInfoSlot.SetCharacterInfo(clickedSlot.characterData);
+            if (clickedSlot.characterData != null)
+            {
+                characterInfoSlot.gameObject.SetActive(true);
+                characterInfoSlot.SetCharacterInfo(clickedSlot.characterData);    
+            }
         }
-        
-        
-        
         UpdateCharacterIds();
     }
     
