@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 public static class DataManager
 {
-    private static readonly string saveFileName = "CBTGameData.json";
+    private static readonly string saveFileName = "OBTGameData.json";
     
     private static readonly string keyFileName = "encryptionKey.dat";
     private static readonly string ivFileName = "encryptionIV.dat";

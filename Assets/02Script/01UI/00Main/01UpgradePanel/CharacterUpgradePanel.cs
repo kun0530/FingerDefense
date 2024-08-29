@@ -61,17 +61,20 @@ public class CharacterUpgradePanel : MonoBehaviour
             var characterData = playerCharacterTable.Get(characterId);
             if (characterData != null)
             {
-                var characterSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotContent);
-                characterSlot.SetCharacterSlot(characterData);
-
                 var upgradeData = upgradeTable.upgradeTable.Values.FirstOrDefault(up => up.NeedCharId == characterId);
+
+                // 업그레이드가 가능한 캐릭터만 슬롯에 추가
                 if (upgradeData != null)
                 {
+                    var characterSlot = Instantiate(characterUpgradeSlot, characterUpgradeSlotContent);
+                    characterSlot.SetCharacterSlot(characterData);
+
                     characterSlot.OnSlotClick = (slot) => DisplayUpgradeOptions(upgradeData, characterData);
                 }
             }
         }
     }
+
 
     private void DisplayUpgradeOptions(UpgradeData upgradeData, PlayerCharacterData characterData)
     {
@@ -159,18 +162,22 @@ public class CharacterUpgradePanel : MonoBehaviour
         {
             GameManager.instance.GameData.characterIds[existingIndex] = upgradeData.UpgradeResultId;
         }
+        
         // 업그레이드 이벤트 호출
         OnCharacterUpgraded?.Invoke(upgradeData.NeedCharId, upgradeData.UpgradeResultId);
         // 데이터 저장
         GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;
         DataManager.SaveFile(GameManager.instance.GameData);
+        
         upgradeButton.onClick.RemoveAllListeners(); // 업그레이드 버튼 리스너 제거
         // UI 갱신
         ClearSlot(characterUpgradeSlotParent);
         ClearSlot(characterUpgradeResultSlotContent);
         characterUpgradeGoldText.text = "";
         characterUpgradeResultText.text = "";
+        
         LoadUpgradableCharacters(obtainedGachaIds);  // 업그레이드 가능한 캐릭터 목록 다시 로드
+        
     }
 
 

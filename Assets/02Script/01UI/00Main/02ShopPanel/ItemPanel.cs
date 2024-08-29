@@ -39,57 +39,57 @@ public class ItemPanel : MonoBehaviour
             case 0:
                 itemId = 8005;
                 cost = 5000;
-                stage = 13001;
+                stage = 13005;
                 break;
             case 1:
                 itemId = 8006;
                 cost = 5000;
-                stage = 13001;
+                stage = 13005;
                 break;
             case 2:
                 itemId = 8007;
                 cost = 10000;
-                stage = 13001;
+                stage = 13010;
                 break;
             case 3:
                 itemId = 8008;
                 cost = 10000;
-                stage = 13001;
+                stage = 13010;
                 break;
             case 4:
                 itemId = 8009;
                 cost = 10000;
-                stage = 13001;
+                stage = 13010;
                 break;
             case 5:
                 itemId = 8010;
                 cost = 20000;
-                stage = 13001;
+                stage = 13015;
                 break;
             case 6:
                 itemId = 8011;
                 cost = 20000;
-                stage = 13001;
+                stage = 13015;
                 break;
             case 7:
                 itemId = 8012;
                 cost = 20000;
-                stage = 13001;
+                stage = 13015;
                 break;
             case 8:
                 itemId = 8013;
                 cost = 20000;
-                stage = 13001;
+                stage = 13015;
                 break;
             case 9:
                 itemId = 8014;
                 cost = 20000;
-                stage = 13001;
+                stage = 13015;
                 break;
             case 10:
                 itemId = 8015;
                 cost = 20000;
-                stage = 13001;
+                stage = 13015;
                 break;
         }
 

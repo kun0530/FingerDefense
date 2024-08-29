@@ -134,7 +134,7 @@ public class StageSlot : MonoBehaviour
         // AssetListTable에서 리워드에 해당하는 프리팹 경로 또는 스프라이트 이름 가져오기
         string assetPath = assetListTable.Get(rewardId);
 
-        if (rewardId == 409 || rewardId == 410 || rewardId == 416)
+        if (rewardId == 409 || rewardId == 424 || rewardId == 416)
         {
             // 이미지 비활성화
             rewardImage.gameObject.SetActive(false);

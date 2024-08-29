@@ -35,7 +35,7 @@ public class TutorialMonsterDisableCheck : TutorialBase
 
     private void CheckMonsters()
     {
-        if (monsterSpawnParent == null) return;
+        if (!monsterSpawnParent) return;
 
         bool isTargetMonsterDisabled = true; // 타겟 몬스터(12031)가 비활성화되었는지 확인
         bool anyOtherMonsterActive = false;  // 타겟 몬스터 외 다른 몬스터가 활성화 상태인지 확인
@@ -50,6 +50,9 @@ public class TutorialMonsterDisableCheck : TutorialBase
                     if (child.gameObject.activeSelf)
                     {
                         isTargetMonsterDisabled = false; // 타겟 몬스터가 활성화되어 있으면 false로 설정
+                        
+                        // 떨어졌을때 몬스터가 활성화되어 있는 경우, 그 몬스터를 움직이지 못하게 설정
+                        
                     }
                 }
                 else if (child.gameObject.activeSelf)
@@ -57,13 +60,14 @@ public class TutorialMonsterDisableCheck : TutorialBase
                     anyOtherMonsterActive = true; // 다른 몬스터가 활성화된 상태
                 }
             }
+            
+            
         }
 
         if (isTargetMonsterDisabled && anyOtherMonsterActive)
         {
             // 타겟 몬스터가 비활성화되어 있고, 다른 몬스터가 활성화 상태일 때만 타겟 몬스터를 재생성
-            DisplayMessage("다시 특수몬스터를 통해 남은 몬스터를 처치하세요!", 2f).Forget();
-            monsterSpawner?.RespawnSpecificMonster(targetMonsterId);
+            monsterSpawner.RespawnSpecificMonster(targetMonsterId);
         }
         else if (!anyOtherMonsterActive)
         {
@@ -75,26 +79,18 @@ public class TutorialMonsterDisableCheck : TutorialBase
                 controller.SetNextTutorial(); // 다음 튜토리얼 단계로 넘어감
             }
         }
-        else if (!isTargetMonsterDisabled)
+        else
         {
             // 타겟 몬스터가 활성화되어 있는 상태에서 "드래그를 통해 모든 몬스터를 처치하세요" 메시지를 표시
-            noticeText.text = stringTable.Get("특수몬스터를 드래그 해서 모두 처치하세요!");
+            noticeText.text = "드래그를 통해 모든 몬스터를 처치하세요!";
         }
     }
-
-    private async UniTaskVoid DisplayMessage(string message, float duration)
-    {
-        noticeText.text = message;
-        await UniTask.Delay((int)(duration * 1000));
-        noticeText.text = stringTable.Get("특수몬스터를 드래그 해서 모두 처치하세요!"); // 메시지 복원
-    }
-
+    
     public override void Enter()
     {
         isDisable = false; // Enter에서 초기화
         noticeText.gameObject.SetActive(true); // noticeText를 활성화
         MonitorMonstersAsync().Forget(); // Enter 시 모니터링 시작
-        noticeText.text = stringTable.Get("특수몬스터를 드래그 해서 모두 처치하세요!"); // 초기 메시지 설정
     }
 
     public override void Execute(TutorialController controller)
