@@ -65,13 +65,13 @@ public class CharacterFeaturePanel : MonoBehaviour
                 switch (upgradeData.UpStatType)
                 {
                     case 3:
-                        AssignUpgradeDataToButton(characterArrangementButtons, upgradeData, sprite);
+                        AssignUpgradeDataToButton(characterArrangementButtons, upgradeData, sprite, new int[] { 99651,99661,99671,99681,99691 }, new int[] { 99652, 99662, 99672, 99682, 99692 });
                         break;
                     case 4:
-                        AssignUpgradeDataToButton(characterHpUpgradeButtons, upgradeData, sprite);
+                        AssignUpgradeDataToButton(characterHpUpgradeButtons, upgradeData, sprite, new int[] { 99701,99711,99721,99731,99741 }, new int[] { 99702, 99712, 99722, 99732, 99742 });
                         break;
                     case 5:
-                        AssignUpgradeDataToButton(characterEnhancedGradeButtons, upgradeData, sprite);
+                        AssignUpgradeDataToButton(characterEnhancedGradeButtons, upgradeData, sprite, new int[] { 99751,99761,99771,99781,99791 }, new int[] { 99752, 99762, 99772, 99782, 99792 });
                         break;
                     default:
                         Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
@@ -85,7 +85,7 @@ public class CharacterFeaturePanel : MonoBehaviour
         };
     }
 
-    private void AssignUpgradeDataToButton(Button[] buttons, UpgradeData upgradeData, Sprite sprite)
+    private void AssignUpgradeDataToButton(Button[] buttons, UpgradeData upgradeData, Sprite sprite, int[] headerStringIDs, int[] bodyStringIDs)
     {
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -93,6 +93,9 @@ public class CharacterFeaturePanel : MonoBehaviour
             {
                 var button = buttons[i];
                 button.image.sprite = sprite;
+                
+                string headerText = stringTable.Get(headerStringIDs[i].ToString());
+                string bodyText = stringTable.Get(bodyStringIDs[i].ToString());
 
                 button.onClick.RemoveAllListeners(); // 중복 이벤트 방지를 위해 기존 리스너 제거
                 button.onClick.AddListener(() =>
@@ -104,7 +107,7 @@ public class CharacterFeaturePanel : MonoBehaviour
 
                     if (upgradeData.Level == currentLevel + 1)
                     {
-                        TryUpgradeFeature(upgradeData);
+                        TryUpgradeFeature(upgradeData, headerText, bodyText);
                     }
                     else if (upgradeData.Level <= currentLevel)
                     {
@@ -146,7 +149,7 @@ public class CharacterFeaturePanel : MonoBehaviour
         }
     }
 
-    private void TryUpgradeFeature(UpgradeData upgradeData)
+    private void TryUpgradeFeature(UpgradeData upgradeData,string header, string body)
     {
         int playerGold = GameManager.instance.GameData.Gold;
         int stageClearNum = GameManager.instance.GameData.StageClearNum;
@@ -156,8 +159,8 @@ public class CharacterFeaturePanel : MonoBehaviour
         {
             ModalWindow.Create(window =>
             {
-                window.SetHeader("구매 확인")
-                    .SetBody($"{upgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
+                window.SetHeader(header)
+                    .SetBody(body)
                     .AddButton("확인", () =>
                     {
                         GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;

@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class TutorialSceneLoad : TutorialBase
@@ -63,12 +62,6 @@ public class TutorialSceneLoad : TutorialBase
 
     public override void Exit()
     {
-        
-    }
-
-    private void ResetItemStates()
-    {
-       
     }
 }
 

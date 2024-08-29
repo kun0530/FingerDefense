@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +29,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
 
     public TextMeshProUGUI powerText;
     
-    private void OnEnable()
+    private void Awake()
     {
         assetListTable = DataTableManager.Get<AssetListTable>(DataTableIds.Asset);
         skillTable = DataTableManager.Get<SkillTable>(DataTableIds.Skill);
@@ -41,14 +38,19 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
     public void SetCharacterSlot(PlayerCharacterData characterData)
     {
         this.characterData = characterData;
-
+        
+        if(assetListTable == null)
+        {
+            return;
+        }
+        
         var assetName = assetListTable.Get(characterData.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
         {
             Addressables.LoadAssetAsync<GameObject>($"Prefab/00CharacterUI/{assetName}").Completed += OnCharacterPrefabLoaded;
         }
 
-        for (var i = 0; i <= characterData.Grade; i++)
+        for (var i = 0; i < characterData.Grade+1; i++)
         {
             var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
             gradeInstance.sprite = gradeImage;
@@ -60,6 +62,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         {
             elementImage.sprite = elementImages[characterData.Element];
             elementImage.gameObject.SetActive(true);
+            
         }
         upgradeLevelText.text = $"+ {characterData.Plus}";
         
@@ -82,6 +85,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         {
             var spineInstance = Instantiate(obj.Result, classParent);
             spineInstance.transform.localPosition = Vector3.zero;
+            spineInstance.transform.SetAsFirstSibling();
         }
         else
         {
@@ -95,6 +99,7 @@ public class CharacterUpgradeSlotUI : MonoBehaviour
         {
             SkillIcon.sprite = obj.Result;
             SkillIcon.gameObject.SetActive(true);
+            
         }
         else
         {

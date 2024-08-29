@@ -19,6 +19,7 @@ public class TutorialObserver : TutorialBase
     public bool isDragLock = false;
     public bool isState = false;
     public bool isDebuff = false;
+    public bool isDrag = false;
     
     [SerializeField] private ItemDebuffMonster stop;
 
@@ -127,6 +128,11 @@ public class TutorialObserver : TutorialBase
                 controller.SetNextTutorial();
             }
         }
+        
+        if (isDrag)
+        {
+            controller.SetNextTutorial();
+        }
     }
 
     public override void Exit()
@@ -192,7 +198,12 @@ public class TutorialObserver : TutorialBase
                 {
                     stop.GiveBuff(monsterController);
                 }
-            }
+
+                if (isDrag)
+                {
+                    monsterController.Status.Data.DragType = (int)MonsterData.DragTypes.NORMAL;
+                }
+            }    
         }
     }
 }

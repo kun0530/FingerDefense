@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Playables;
 using UnityEngine.Video;
 using Cysharp.Threading.Tasks;
+using Random = UnityEngine.Random;
 
 public class GachaSystem : MonoBehaviour
 {
@@ -28,7 +30,9 @@ public class GachaSystem : MonoBehaviour
     private float midGradeProbability = 20f;
 
     public GameObject gachaResultPanel;
-
+    
+    public static event Action OnCharacterSlotUpdated;
+    
     private void Start()
     {
         gachaTable = DataTableManager.Get<GachaTable>(DataTableIds.Gacha);
@@ -90,7 +94,8 @@ public class GachaSystem : MonoBehaviour
                     GameManager.instance.GameData.characterIds.Add(result.Id);
                     Logger.Log($"Obtained Gacha ID: {result.Id}, Grade: {result.Grade}");
                     DataManager.SaveFile(GameManager.instance.GameData);
-                    RefreshUI();
+                    
+                    OnCharacterSlotUpdated?.Invoke();
                 }
                 else
                 {
@@ -133,8 +138,6 @@ public class GachaSystem : MonoBehaviour
         }
         else
         {
-            // 비디오 플레이어가 없을 경우 바로 타임라인 재생
-            Logger.LogWarning("비디오 플레이어가 없습니다. 타임라인을 직접 재생합니다.");
             director.time = 0; // 타임라인을 처음부터 재생
             director.Play();
         }
@@ -203,21 +206,6 @@ public class GachaSystem : MonoBehaviour
         }
 
         spawnedSlots.Clear();
-    }
-
-    private void RefreshUI()
-    {
-        CharacterUpgradePanel upgradePanel = FindObjectOfType<CharacterUpgradePanel>();
-        if (upgradePanel != null)
-        {
-            upgradePanel.RefreshPanel();
-        }
-
-        DeckSlotController deckSlotController = FindObjectOfType<DeckSlotController>();
-        if (deckSlotController != null)
-        {
-            deckSlotController.RefreshCharacterSlots();
-        }
     }
 
     private void AddMileage(int grade)

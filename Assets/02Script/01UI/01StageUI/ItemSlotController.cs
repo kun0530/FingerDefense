@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -46,7 +45,7 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
         if (!GameManager.instance.GameData.Game2TutorialCheck)
         {
             // 지급할 아이템 ID와 개수를 설정
-            int itemIdToCheck = 8005; // 예시로 8005 아이템
+            int itemIdToCheck = 8007; 
             int itemCountToProvide = 1;
 
             // 아이템이 이미 있는지 확인
@@ -346,7 +345,4 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
             UpdateSlotCount(itemId, newValue);
         }
     }
-
-
-    
 }

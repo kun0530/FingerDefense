@@ -43,7 +43,8 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     public bool isLongPress = false;
 
     private GameObject spineInstance;
-
+    private bool isUpdating = false;
+    
     public void SetLocked(bool isLocked)
     {
         if (LockImage != null)
@@ -65,13 +66,20 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             Logger.LogWarning("CharacterData is null in SetCharacterSlot.");
             return;
         }
+        
 
         this.characterData = characterData;
+        ClearGradeImages();
+  
         UpdateUI().Forget();
     }
 
     public async UniTaskVoid UpdateUI()
     {
+        if (isUpdating) return; // 이미 업데이트 중인 경우 중복 호출 방지
+        isUpdating = true;
+        
+        ClearGradeImages();
         // 객체 파괴 시 작업 취소를 위한 CancellationToken
         CancellationToken cancellationToken = this.GetCancellationTokenOnDestroy();
 
@@ -81,20 +89,9 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             Logger.LogWarning("CharacterData is null in UpdateUI.");
             return;
         }
-
-        // gradeParent가 null인지 확인
-        if (gradeParent == null)
-        {
-            Logger.LogWarning("GradeParent is null in UpdateUI.");
-            return;
-        }
         
-        // 기존 Grade 이미지 제거
-        foreach (Transform child in gradeParent)
-        {
-            Destroy(child.gameObject);
-        }
-
+        ClearGradeImages();
+        
         var assetName = assetListTable.Get(characterData.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
         {
@@ -110,6 +107,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
                 spineInstance = Instantiate(prefab, classParent);
                 spineInstance.transform.localPosition = Vector3.zero;
+                prefab.transform.SetAsFirstSibling();
             }
             else
             {
@@ -117,12 +115,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             }
         }
 
-        for (var i = 0; i <= characterData.Grade; i++)
-        {
-            var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
-            gradeInstance.sprite = gradeImage;
-            gradeInstance.transform.SetParent(gradeParent, false);
-        }
+        CreateGradeImages(characterData.Grade);
 
         var elementImage = elementParent.GetComponent<Image>();
         if (elementImage != null && characterData.Element >= 0 && characterData.Element < elementImages.Length)
@@ -154,12 +147,34 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (PowerImage != null)
         {
             PowerImage.gameObject.SetActive(true);
+            PowerImage.transform.SetAsLastSibling();
         }
 
         powerText.SetText($"{characterData.Power}");
+        powerText.gameObject.SetActive(true);
+        powerText.transform.SetAsLastSibling();
+        
+        
         upgradeLevelText.SetText($"+{characterData.Plus}");
+        upgradeLevelText.transform.SetAsLastSibling();
 
         ChoicePanel.transform.SetAsLastSibling();
+    }
+
+    public void ClearGradeImages()
+    {
+        // 모든 기존 GradeImage를 제거
+        foreach (Transform child in gradeParent)
+        {
+            DestroyImmediate(child.gameObject); // Immediate로 즉시 삭제
+        }
+
+        // 자식 오브젝트가 남아있지 않도록 명확하게 처리
+        while (gradeParent.childCount > 0)
+        {
+            Transform child = gradeParent.GetChild(0);
+            DestroyImmediate(child.gameObject);
+        }
     }
 
 
@@ -179,14 +194,7 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             spineInstance = null;
         }
 
-        // 기존 Grade 이미지 제거
-        if (gradeParent != null)
-        {
-            foreach (Transform child in gradeParent)
-            {
-                Destroy(child.gameObject);
-            }
-        }
+        ClearGradeImages();
 
         // 엘리먼트 이미지 초기화
         var elementImage = elementParent.GetComponent<Image>();
@@ -248,6 +256,18 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             isLongPress = true;
             OnLongPress?.Invoke(this); // 롱터치 시 설명창만 활성화
+        }
+    }
+    
+    private void CreateGradeImages(int grade)
+    {
+        // Grade가 0이면 1개, 1이면 2개, 2이면 3개의 이미지를 생성
+        int count = grade + 1;
+        for (int i = 0; i < count; i++)
+        {
+            var gradeInstance = new GameObject("GradeImage").AddComponent<Image>();
+            gradeInstance.sprite = gradeImage;
+            gradeInstance.transform.SetParent(gradeParent, false);
         }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,7 +63,7 @@ public class GachaPanel : MonoBehaviour
             ModalWindow.Create(window =>
             {
                 window.SetHeader("구매 확인")
-                      .SetBody($"티켓이 부족합니다. {ticketsNeeded}개를 {diamondNeeded} 다이아로 구매해서 {ticketCountRequired}회 뽑기를 진행하시겠습니까?")
+                      .SetBody($"티켓이 부족합니다. {ticketsNeeded}개를 {diamondNeeded} 크리스탈로 구매해서 {ticketCountRequired}회 뽑기를 진행하시겠습니까?")
                       .AddButton("확인", () =>
                       {
                           if (currentDiamonds >= diamondNeeded)
@@ -81,7 +79,7 @@ public class GachaPanel : MonoBehaviour
                               ModalWindow.Create(innerWindow =>
                               {
                                   innerWindow.SetHeader("구매 실패")
-                                             .SetBody("다이아몬드가 부족합니다.")
+                                             .SetBody("크리스탈이 부족합니다.")
                                              .AddButton("확인", () => { })
                                              .Show();
                               });
@@ -96,7 +94,7 @@ public class GachaPanel : MonoBehaviour
             ModalWindow.Create(window =>
             {
                 window.SetHeader("구매 실패")
-                      .SetBody("티켓 또는 다이아몬드가 부족합니다.")
+                      .SetBody("티켓 또는 크리스탈이 부족합니다.")
                       .AddButton("확인", () => { })
                       .Show();
             });

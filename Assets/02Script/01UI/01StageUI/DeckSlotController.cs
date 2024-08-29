@@ -61,7 +61,15 @@ public class DeckSlotController : MonoBehaviour
             Logger.LogError("CharacterPanel is not assigned in DeckSlotController.");
         }
 
+        foreach (var slot in characterSlots)
+        {
+            slot.ClearGradeImages();
+        }
+        
+
     }
+
+    
 
     private void OnDisable()
     {
@@ -157,12 +165,14 @@ public class DeckSlotController : MonoBehaviour
             {
                 Logger.Log($"Updating slot for character: {characterData.Name}, Power: {characterData.Power}");
                 slot.SetCharacterSlot(characterData);
+                
+                // 슬롯의 데이터를 다시 설정하여 이미지와 텍스트를 초기화합니다.
+                //slot.ClearSlot();
+                slot.UpdateUI().Forget();
+                
                 slot.OnSlotClick = HandleCharacterSlotClick;
                 slot.OnLongPress = HandleLongPressRelease;
                 slot.OnLongPressRelease = HandleLongPressReleaseComplete;
-
-                // 슬롯의 데이터를 다시 설정하여 이미지와 텍스트를 초기화합니다.
-                slot.UpdateUI().Forget();
                 slot.gameObject.SetActive(true);
             }
             else
