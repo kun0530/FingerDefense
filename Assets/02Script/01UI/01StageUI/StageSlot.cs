@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
-
 
 public class StageSlot : MonoBehaviour
 {

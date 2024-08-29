@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -36,11 +35,6 @@ public class CharacterUpgradePanel : MonoBehaviour
         playerCharacterTable ??= DataTableManager.Get<PlayerCharacterTable>(DataTableIds.PlayerCharacter);
     }
     
-    public void Start()
-    {
-               
-    }
-
     private void OnEnable()
     {
         GachaSystem.OnCharacterSlotUpdated += RefreshPanel;
@@ -54,10 +48,10 @@ public class CharacterUpgradePanel : MonoBehaviour
     
     public void RefreshPanel()
     {
-        Logger.Log("RefreshPanel called");
         obtainedGachaIds = GameManager.instance.GameData.characterIds;
         LoadUpgradableCharacters(obtainedGachaIds);
     }
+    
     private void LoadUpgradableCharacters(List<int> obtainedCharacterIds)
     {
         ClearSlot(characterUpgradeSlotContent);

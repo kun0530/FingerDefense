@@ -1,4 +1,3 @@
-using Coffee.UIExtensions;
 using UnityEngine;
 
 [RequireComponent(typeof(DialogSystem))]

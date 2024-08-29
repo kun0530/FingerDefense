@@ -57,13 +57,13 @@ public class MonsterGimmickPanel : MonoBehaviour
                             switch (upgradeData.UpStatType)
                             {
                                 case 0:
-                                    SetupButtonGroup(GimmickRangeUpgradeButtons, upgradeData, sprite);
+                                    SetupButtonGroup(GimmickRangeUpgradeButtons, upgradeData, sprite, new int[] { 99501, 99511, 99521, 99531, 99541 }, new int[] { 99502, 99512, 99522, 99532, 99542 });
                                     break;
                                 case 1:
-                                    SetupButtonGroup(GimmickDamageUpgradeButtons, upgradeData, sprite);
+                                    SetupButtonGroup(GimmickDamageUpgradeButtons, upgradeData, sprite, new int[] { 99551,99561,99571,99581,99591 }, new int[] { 99552,99562,99572,99582,99592 });
                                     break;
                                 case 2:
-                                    SetupButtonGroup(GimmickDurationUpgradeButtons, upgradeData, sprite);
+                                    SetupButtonGroup(GimmickDurationUpgradeButtons, upgradeData, sprite, new int[] { 99601,99611,99621,99631,99641 }, new int[] { 99602,99612,99622,99632,99642 });
                                     break;
                                 default:
                                     Debug.LogWarning($"알 수 없는 UpStatType: {upgradeData.UpStatType}");
@@ -89,13 +89,16 @@ public class MonsterGimmickPanel : MonoBehaviour
         UpdateLockImages(GimmickDurationUpgradeButtons, GimmickDurationLockImages, 2);
     }
 
-    private void SetupButtonGroup(Button[] buttons, UpgradeData upgradeData, Sprite sprite)
+    private void SetupButtonGroup(Button[] buttons, UpgradeData upgradeData, Sprite sprite, int[] headerStringIDs, int[] bodyStringIDs)
     {
         for (int i = 0; i < buttons.Length; i++)
         {
             var button = buttons[i];
             button.image.sprite = sprite;
-
+            
+            string headerText = stringTable.Get(headerStringIDs[i].ToString());
+            string bodyText = stringTable.Get(bodyStringIDs[i].ToString());
+            
             // 각 버튼에 대해 해당 레벨에 맞는 UpgradeData를 찾아 설정
             int targetLevel = i + 1;
             UpgradeData targetUpgradeData = FindUpgradeDataByLevel(upgradeData.UpStatType, targetLevel);
@@ -110,7 +113,7 @@ public class MonsterGimmickPanel : MonoBehaviour
 
                     if (targetLevel == currentLevel + 1)
                     {
-                        TryUpgradeGimmick(targetUpgradeData);
+                        TryUpgradeGimmick(targetUpgradeData, headerText, bodyText);
                     }
                     else if (targetLevel <= currentLevel)
                     {
@@ -170,7 +173,7 @@ public class MonsterGimmickPanel : MonoBehaviour
         return null;
     }
 
-    private void TryUpgradeGimmick(UpgradeData upgradeData)
+    private void TryUpgradeGimmick(UpgradeData upgradeData, string headerText, string bodyText)
     {
         int playerGold = GameManager.instance.GameData.Gold;
         int stageClearNum = GameManager.instance.GameData.StageClearNum;
@@ -180,8 +183,8 @@ public class MonsterGimmickPanel : MonoBehaviour
         {
             ModalWindow.Create(window =>
             {
-                window.SetHeader("구매 확인")
-                    .SetBody($"{upgradeData.UpgradePrice} 골드를 사용해서 업그레이드를 진행하시겠습니까?")
+                window.SetHeader(headerText)
+                    .SetBody(bodyText)
                     .AddButton("확인", () =>
                     {
                         GameManager.instance.GameData.Gold -= upgradeData.UpgradePrice;

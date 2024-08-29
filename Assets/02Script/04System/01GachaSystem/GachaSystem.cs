@@ -94,7 +94,6 @@ public class GachaSystem : MonoBehaviour
                     GameManager.instance.GameData.characterIds.Add(result.Id);
                     Logger.Log($"Obtained Gacha ID: {result.Id}, Grade: {result.Grade}");
                     DataManager.SaveFile(GameManager.instance.GameData);
-
                     
                     OnCharacterSlotUpdated?.Invoke();
                 }

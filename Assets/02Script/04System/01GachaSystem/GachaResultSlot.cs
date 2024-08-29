@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -43,10 +41,6 @@ public class GachaResultSlot : MonoBehaviour
         {
             firstGachaText.gameObject.SetActive(false);
         }
-        // 데이터에 따라 아이콘과 기타 정보 설정
-        // 예시로 assetListTable과 stringTable에서 필요한 정보를 가져옵니다.
-        // duplicationIcon.sprite = assetListTable.GetAsset(data.AssetNo);
-        // duplicationCountText.text = stringTable.GetString(data.NameId);
     }
 
     private void OnCharacterLoaded(AsyncOperationHandle<GameObject> obj)
