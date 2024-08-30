@@ -135,7 +135,6 @@ public class DeckSlotController : MonoBehaviour
     private void CreateFilteringSlots()
     {
         var characterIds = GameManager.instance.GameData.characterIds;
-        Logger.Log($"Total character IDs: {characterIds.Count}");
 
         // 이미 존재하는 슬롯을 재사용하거나 새로운 슬롯을 생성합니다.
         for (var i = 0; i < characterIds.Count; i++)
@@ -155,7 +154,6 @@ public class DeckSlotController : MonoBehaviour
             var characterData = playerCharacterTable.Get(characterId);
             if (characterData != null)
             {
-                Logger.Log($"Updating slot for character: {characterData.Name}, Power: {characterData.Power}");
                 slot.SetCharacterSlot(characterData);
                 
                 // 슬롯의 데이터를 다시 설정하여 이미지와 텍스트를 초기화합니다.
@@ -169,7 +167,6 @@ public class DeckSlotController : MonoBehaviour
             }
             else
             {
-                Logger.LogWarning($"Character ID {characterId} is invalid or not found in playerCharacterTable.");
                 slot.gameObject.SetActive(false);
             }
         }
@@ -181,7 +178,6 @@ public class DeckSlotController : MonoBehaviour
         // 슬롯이 잠겨있는지 확인
         if (clickedSlot.LockImage.gameObject.activeSelf)
         {
-            Logger.Log("이 슬롯은 잠겨있어 캐릭터를 배치할 수 없습니다.");
             return; // 슬롯이 잠겨있다면 아무 동작도 하지 않음
         }
         
@@ -191,13 +187,11 @@ public class DeckSlotController : MonoBehaviour
             {
                 if (clickedSlot.characterData != null && addedCharacters.Contains(clickedSlot.characterData.Id))
                 {
-                    Logger.Log("이미 추가된 캐릭터입니다.");
                     return;
                 }
 
                 if (addedCharacters.Count >= 8)
                 {
-                    Logger.Log("최대 8개까지만 추가 가능합니다.");
                     return;
                 }
 
@@ -275,12 +269,10 @@ public class DeckSlotController : MonoBehaviour
             if (filteredCharacters.Contains(slot.characterData))
             {
                 slot.gameObject.SetActive(true);
-                Logger.Log($"Character ID: {slot.characterData.Id} is visible.");
             }
             else
             {
                 slot.gameObject.SetActive(false);
-                Logger.Log($"Character ID: {slot.characterData.Id} is hidden.");
             }
         }
     }
@@ -341,7 +333,6 @@ public class DeckSlotController : MonoBehaviour
                 // 필터링 슬롯에 없는 캐릭터는 제거되게 함
                 if (!filterSlots.Any(s => s.characterData != null && s.characterData.Id == characterId))
                 {
-                    Logger.Log($"Character ID {characterId} is not in filter slots, removing from character slots.");
                     Variables.LoadTable.characterIds[i] = 0; // 캐릭터 ID 초기화
                     continue;
                 }
@@ -361,7 +352,6 @@ public class DeckSlotController : MonoBehaviour
                 }
                 else
                 {
-                    Logger.LogWarning($"Character slot index {i} is out of range or characterData is null. Skipping slot assignment.");
                 }
             }
         }

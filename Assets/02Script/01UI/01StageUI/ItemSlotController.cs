@@ -54,7 +54,6 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
             {
                 // 아이템이 없으면 지급
                 GameManager.instance.GameData.AddItem(itemIdToCheck, itemCountToProvide);
-                Logger.Log($"Item ID {itemIdToCheck} has been provided for 1-2 tutorial.");
             }
         }
     }
@@ -114,8 +113,7 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
 
         foreach (var purchasedItem in purchasedItems)
         {
-            Logger.Log($"Item ID: {purchasedItem.itemId}, Count: {purchasedItem.itemCount}");
-
+            
             if (itemTable.table.TryGetValue(purchasedItem.itemId, out var itemData))
             {
                 var itemSlot = itemSlots.FirstOrDefault(slot => slot.ItemId == purchasedItem.itemId);
@@ -131,14 +129,12 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
                     itemSlot.onClickItemSlot = HandleItemSlotClick;
                     itemSlot.OnLongPress = slot =>
                     {
-                        Logger.Log($"Long press detected on item ID: {itemData.Id}");
                         itemInfoSlot.SetItemInfoSlot(itemData);
                         itemInfoSlot.gameObject.SetActive(true);
                     };
 
                     itemSlot.OnLongPressRelease = () =>
                     {
-                        Logger.Log($"Long press released on item ID: {itemData.Id}");
                         itemInfoSlot?.gameObject.SetActive(false);
                     };
 
@@ -237,7 +233,6 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
             addCount += existingItem.itemCount;
         }
         Variables.LoadTable.ItemId.Add((itemId, addCount));
-        Logger.Log($"Saved item {itemId} with limit {addCount} to LoadTable");
     }
 
     private void RemoveItemFromLoadTable(int itemId)
@@ -246,8 +241,6 @@ public class ItemSlotController : MonoBehaviour,IResourceObserver
         if (itemToRemove != default)
         {
             Variables.LoadTable.ItemId.Remove(itemToRemove);
-
-            Logger.Log($"Removed item {itemId} from LoadTable");
         }
     }
     

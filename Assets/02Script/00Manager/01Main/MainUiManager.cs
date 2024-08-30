@@ -66,7 +66,6 @@ public class MainUiManager : MonoBehaviour
                 if (GameManager.instance.GameData.MonsterDragLevel.TryAdd(upgradeData.UpgradeResultId, (int)GameData.MonsterDrag.LOCK))
                 {
                     DataManager.SaveFile(GameManager.instance.GameData);
-                    Logger.Log($"MonsterDragLevel added: {upgradeData.UpgradeResultId}, {GameData.MonsterDrag.LOCK}");
                 }
             }
             else if (upgradeData.Type == 1)
@@ -79,7 +78,6 @@ public class MainUiManager : MonoBehaviour
                                 x.monsterGimmick == (int)GameData.MonsterGimmick.ATTACKRANGE))
                         {
                             gameManager.GameData.MonsterGimmickLevel.Add(((int)GameData.MonsterGimmick.ATTACKRANGE, 0));
-                            Logger.Log($"MonsterGimmickLevel added: {GameData.MonsterGimmick.ATTACKRANGE}, 0");
                         }
 
                         break;
@@ -89,7 +87,6 @@ public class MainUiManager : MonoBehaviour
                                 x.monsterGimmick == (int)GameData.MonsterGimmick.ATTACKDAMAGE))
                         {
                             gameManager.GameData.MonsterGimmickLevel.Add(((int)GameData.MonsterGimmick.ATTACKDAMAGE, 0));
-                            Logger.Log($"MonsterGimmickLevel added: {GameData.MonsterGimmick.ATTACKDAMAGE}, 0");
                         }
 
                         break;
@@ -100,7 +97,6 @@ public class MainUiManager : MonoBehaviour
                         {
                             gameManager.GameData.MonsterGimmickLevel.Add(((int)GameData.MonsterGimmick.ATTACKDURATION,
                                 0));
-                            Logger.Log($"MonsterGimmickLevel added: {GameData.MonsterGimmick.ATTACKDURATION}, 0");
                         }
 
                         break;
@@ -117,7 +113,6 @@ public class MainUiManager : MonoBehaviour
                         {
                             gameManager.GameData.PlayerUpgradeLevel.Add((
                                 (int)GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT, 0));
-                            Logger.Log($"PlayerUpgradeLevel added: {GameData.PlayerUpgrade.CHARACTER_ARRANGEMENT}, 0");
                         }
 
                         break;
@@ -127,7 +122,6 @@ public class MainUiManager : MonoBehaviour
                                 x.playerUpgrade == (int)GameData.PlayerUpgrade.PLAYER_HEALTH))
                         {
                             gameManager.GameData.PlayerUpgradeLevel.Add(((int)GameData.PlayerUpgrade.PLAYER_HEALTH, 0));
-                            Logger.Log($"PlayerUpgradeLevel added: {GameData.PlayerUpgrade.PLAYER_HEALTH}, 0");
                         }
 
                         break;
@@ -137,7 +131,6 @@ public class MainUiManager : MonoBehaviour
                                 x.playerUpgrade == (int)GameData.PlayerUpgrade.INCREASE_DRAG))
                         {
                             gameManager.GameData.PlayerUpgradeLevel.Add(((int)GameData.PlayerUpgrade.INCREASE_DRAG, 0));
-                            Logger.Log($"PlayerUpgradeLevel added: {GameData.PlayerUpgrade.INCREASE_DRAG}, 0");
                         }
 
                         break;

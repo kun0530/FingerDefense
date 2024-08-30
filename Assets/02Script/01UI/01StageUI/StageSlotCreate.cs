@@ -221,6 +221,9 @@ public class StageSlotCreate : MonoBehaviour
                 slot.firstRewardImage.SetActive(true);
                 slot.clearImage.SetActive(true);
             }
+            
+            
+
         }
     }
 }
