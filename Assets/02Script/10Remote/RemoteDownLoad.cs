@@ -37,16 +37,16 @@ public class RemoteDownLoad : MonoBehaviour
                     await handle;
                 }
 
-                Debug.Log("All assets preloaded.");
+                Logger.Log("All assets preloaded.");
             }
             else
             {
-                Debug.LogError("Failed to load resource locations.");
+                Logger.LogError("Failed to load resource locations.");
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Preload failed: {e.Message}");
+            Logger.LogError($"Preload failed: {e.Message}");
         }
     }
 
