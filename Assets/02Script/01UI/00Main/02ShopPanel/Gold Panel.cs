@@ -26,7 +26,6 @@ public class GoldPanel : MonoBehaviour
     }
     private void OnClickGoldBuyButton(int index)
     {
-        Logger.Log($"GoldBuyButton {index} Clicked");
         switch (index)
         {
             case 0:

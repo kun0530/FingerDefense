@@ -24,6 +24,8 @@ public class SoundManager : MonoBehaviour
     [Header("진동 토글")]
     public Toggle vibrationToggle;
 
+    
+    
     private void Awake()
     {
         if (!AudioManager.masterMixer)
@@ -72,6 +74,11 @@ public class SoundManager : MonoBehaviour
         if (volume == AudioManager.minVolume)
             volume = AudioManager.muteVolume;
         AudioManager.MasterVolume = volume;
+
+        AudioSettings.OnAudioConfigurationChanged += (change) =>
+        {
+            AudioManager.MasterVolume = volume;
+        };
     }
 
     public void SetMasterMute(bool isMute)
@@ -92,6 +99,11 @@ public class SoundManager : MonoBehaviour
         if (volume == AudioManager.minVolume)
             volume = AudioManager.muteVolume;
         AudioManager.BgmVolume = volume;
+        
+        AudioSettings.OnAudioConfigurationChanged += (change) =>
+        {
+            AudioManager.BgmVolume = volume;
+        };
     }
 
     public void SetBgmMute(bool isMute)
@@ -112,6 +124,11 @@ public class SoundManager : MonoBehaviour
         if (volume == AudioManager.minVolume)
             volume = AudioManager.muteVolume;
         AudioManager.SfxVolume = volume;
+        
+        AudioSettings.OnAudioConfigurationChanged += (change) =>
+        {
+            AudioManager.SfxVolume = volume;
+        };
     }
 
     public void SetSfxMute(bool isMute)

@@ -26,7 +26,6 @@ public class CrystalPanel : MonoBehaviour
     }
     private void OnClickCrystalBuyButton(int index)
     {
-        Logger.Log($"CrystalButton {index} Clicked");
         switch (index)
         {
             case 0:
@@ -48,7 +47,6 @@ public class CrystalPanel : MonoBehaviour
                 ShowPurchaseConfirmation(index, 90733, 8080);
                 break;
             default:
-                Logger.LogWarning("Invalid CrystalBuyButton Clicked");
                 break;
         }
     }

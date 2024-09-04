@@ -29,7 +29,6 @@ public class ItemPanel : MonoBehaviour
 
     private void OnClickItemBuyButton(int index)
     {
-        Logger.Log($"ItemBuyButton {index} Clicked");
         int cost = 0;
         int itemId = 0;
         int stage = 0;

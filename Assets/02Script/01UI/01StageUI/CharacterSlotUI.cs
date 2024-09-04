@@ -63,13 +63,13 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (characterData == null)
         {
-            Logger.LogWarning("CharacterData is null in SetCharacterSlot.");
+            ClearSlot();
             return;
         }
         
 
         this.characterData = characterData;
-        ClearGradeImages();
+        // ClearGradeImages();
   
         UpdateUI().Forget();
     }
@@ -80,17 +80,16 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         isUpdating = true;
         
         ClearGradeImages();
-        // 객체 파괴 시 작업 취소를 위한 CancellationToken
-        CancellationToken cancellationToken = this.GetCancellationTokenOnDestroy();
-
         // characterData가 null인지 확인
         if (characterData == null)
         {
-            Logger.LogWarning("CharacterData is null in UpdateUI.");
+            ClearSlot();
+            isUpdating = false;
             return;
         }
         
-        ClearGradeImages();
+        // 객체 파괴 시 작업 취소를 위한 CancellationToken
+        CancellationToken cancellationToken = this.GetCancellationTokenOnDestroy();
         
         var assetName = assetListTable.Get(characterData.AssetNo);
         if (!string.IsNullOrEmpty(assetName))
@@ -108,10 +107,6 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 spineInstance = Instantiate(prefab, classParent);
                 spineInstance.transform.localPosition = Vector3.zero;
                 prefab.transform.SetAsFirstSibling();
-            }
-            else
-            {
-                Logger.LogWarning($"Prefab not found for {assetName}");
             }
         }
 
@@ -137,10 +132,6 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                     SkillIcon.sprite = skillSprite;
                     SkillIcon.gameObject.SetActive(true);
                 }
-                else
-                {
-                    Logger.LogWarning($"Skill icon not found for {skillId}");
-                }
             }
         }
 
@@ -159,6 +150,8 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         upgradeLevelText.transform.SetAsLastSibling();
 
         ChoicePanel.transform.SetAsLastSibling();
+        
+        isUpdating = false;
     }
 
     public void ClearGradeImages()
@@ -233,11 +226,11 @@ public class CharacterSlotUI : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         }
         else
         {
-            // 일반 터치 시 캐릭터 편성 처리
-            OnSlotClick?.Invoke(this);
+            if (characterData != null)
+            {
+                OnSlotClick?.Invoke(this);     
+            }
         }
-
-
         isLongPress = false;
     }
 
