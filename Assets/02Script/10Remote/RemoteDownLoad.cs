@@ -52,11 +52,33 @@ public class RemoteDownLoad : MonoBehaviour
 
     private void LoadGameSceneWrapper()
     {
-        // 버튼 클릭 시, 미리 로드된 에셋을 해제하고 씬을 전환합니다.
-        UnloadAllAddressableAssets();
-        LoadGameScene();
+        if (GameManager.instance.GameData.NicknameCheck)
+        {
+            UnloadAllAddressableAssets();
+            LoadGameScene();
+            return;
+        }
+
+        ModalWindow.Create(window =>
+        {
+            window.SetHeader("스킵 확인")
+                .SetBody("튜토리얼을 스킵하시겠습니까?")
+                .AddButton("확인", () =>
+                {
+                    SkipTutorial();
+                    UnloadAllAddressableAssets();
+                    LoadGameScene();
+                })
+                .AddButton("취소", () =>
+                {
+                    UnloadAllAddressableAssets();
+                    LoadGameScene();
+                })
+                .Show();
+        });
     }
 
+    // 버튼 클릭 시, 미리 로드된 에셋을 해제하고 씬을 전환합니다.
     private void UnloadAllAddressableAssets()
     {
         foreach (var handle in handles)
@@ -68,5 +90,33 @@ public class RemoteDownLoad : MonoBehaviour
     private void LoadGameScene()
     {
         SceneManager.LoadScene(1); // 씬 전환
+    }
+
+    private void SkipTutorial()
+    {
+        var saveData = GameManager.instance.GameData;
+        saveData.PlayerName = "Skip";
+
+        saveData.ObtainedGachaIDs.Add(300470);
+        saveData.ObtainedGachaIDs.Add(300596);
+        saveData.ObtainedGachaIDs.Add(300530);
+        saveData.characterIds.Add(300470);
+        saveData.characterIds.Add(300596);
+        saveData.characterIds.Add(300530);
+
+        saveData.Gold = 1000;
+        saveData.Diamond = 1000;
+        saveData.Ticket = 10;
+
+        saveData.NicknameCheck = true;
+        saveData.StageChoiceTutorialCheck = true;
+        saveData.DeckUITutorialCheck = true;
+        saveData.Game1TutorialCheck = true;
+        saveData.Game2TutorialCheck = true;
+        saveData.Game3TutorialCheck = true;
+        saveData.ShopDragTutorialCheck = true;
+        saveData.ShopGimmickTutorialCheck = true;
+        saveData.ShopCharacterTutorialCheck = true;
+        saveData.ShopFeatureTutorialCheck = true;
     }
 }
